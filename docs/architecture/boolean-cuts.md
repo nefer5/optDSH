@@ -2,6 +2,14 @@
 
 2026-09-26，M2.2 首版。自动宿主采集暂不增加，保持手动刷新。
 
+## v0.1.1资源加载修复（2026-09-26）
+
+同会话工作台迁到官方Host后，viewer原先以绝对根路径`/csg-worker.js`创建Worker，实际返回404，未启动任何布尔计算。现以`new URL('./csg-worker.js', import.meta.url)`定位，使Worker跟随viewer部署路径；不放宽认证或CSP。
+
+Tabbit复核官方路径下Worker、csg-core、Manifold JS和WASM均200，WASM MIME为application/wasm；当前6组Boolean均得到非空网格。选择OBJ58后界面回读“闭合近似裁切 · 3680三角面”，实体视图与固定视图已显示裁剪外形。单批Worker约71ms，不含完整加载/渲染成本。
+
+DOM冒烟增加真实runCSG分支的Worker URL断言，合成场景没有Boolean时不能空测加载路径。6项CSG计算测试通过。证据保留在本机runs/csg-loading，未运行Zemax追迹或写入模型。
+
 ## 固定语义
 
 高频模式为 Standard Lens / Even Asphere Lens + Rectangular Volume + Boolean Native。

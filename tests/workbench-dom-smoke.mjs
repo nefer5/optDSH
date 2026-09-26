@@ -10,17 +10,20 @@ const memory=new Map();const localStorage={getItem:k=>memory.get(k)??null,setIte
 const resizeObservers=[],frameCallbacks=[];let draws=0;
 class Renderer{constructor(){this.domElement=document.createElement('canvas');}setPixelRatio(){}setScissorTest(){}setSize(){}setClearColor(){}clear(){}setViewport(){}setScissor(){}render(){draws++;}dispose(){}}
 window.HTMLElement.prototype.getBoundingClientRect=function(){return {left:0,top:0,bottom:600,width:800,height:600};};
-const posts=[];
-const context=vm.createContext({window,document,console,crypto:webcrypto,URL,URLSearchParams,Blob,CustomEvent:window.CustomEvent,devicePixelRatio:1,localStorage,sessionStorage:localStorage,location:{origin:"http://127.0.0.1:3080",pathname:"/api/optdsh-workbench/view",search:"",href:"http://127.0.0.1:3080/api/optdsh-workbench/view"},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,requestAnimationFrame:fn=>{frameCallbacks.push(fn);return frameCallbacks.length;},ResizeObserver:class{constructor(fn){this.fn=fn;this.targets=[];resizeObservers.push(this);}observe(target){this.targets.push(target);}disconnect(){}},Worker:class{postMessage(){}terminate(){}},fetch:async(url,options)=>{const body=options?.body?JSON.parse(options.body):{};if(body.action==='submit')posts.push(url);return {ok:true,json:async()=>body.action==='list'?{sessions:[]}:structuredClone(view)};}});
+const posts=[],workerUrls=[];
+const context=vm.createContext({window,document,console,crypto:webcrypto,URL,URLSearchParams,Blob,CustomEvent:window.CustomEvent,devicePixelRatio:1,localStorage,sessionStorage:localStorage,location:{origin:"http://127.0.0.1:3080",pathname:"/api/optdsh-workbench/view",search:"",href:"http://127.0.0.1:3080/api/optdsh-workbench/view"},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,requestAnimationFrame:fn=>{frameCallbacks.push(fn);return frameCallbacks.length;},ResizeObserver:class{constructor(fn){this.fn=fn;this.targets=[];resizeObservers.push(this);}observe(target){this.targets.push(target);}disconnect(){}},Worker:class{constructor(url){workerUrls.push(String(url));}postMessage(){}terminate(){}},fetch:async(url,options)=>{const body=options?.body?JSON.parse(options.body):{};if(body.action==='submit')posts.push(url);return {ok:true,json:async()=>body.action==='list'?{sessions:[]}:structuredClone(view)};}});
 const cache=new Map();
 async function load(spec,parent){
  if(spec==='/vendor/three.module.js'){if(!cache.has(spec)){cache.set(spec,new vm.SyntheticModule(Object.keys(THREE),function(){for(const k of Object.keys(THREE))this.setExport(k,k==='WebGLRenderer'?Renderer:THREE[k]);},{context}));}return cache.get(spec);}
  const name=spec==='./canvas-bridge.js'?path.resolve('web/shared/canvas-bridge.js'):path.resolve(parent?path.dirname(parent.identifier):'web/optics',spec);
  if(cache.has(name))return cache.get(name);
- const m=new vm.SourceTextModule(fs.readFileSync(name,'utf8'),{context,identifier:name});cache.set(name,m);await m.link(load);return m;
+ const m=new vm.SourceTextModule(fs.readFileSync(name,'utf8'),{context,identifier:name,initializeImportMeta(meta){meta.url='http://127.0.0.1:3080/api/optdsh-workbench/assets/'+path.basename(name);}});cache.set(name,m);await m.link(load);return m;
 }
 const app=await load('./workbench.js');await app.evaluate();
 assert.equal(document.querySelectorAll('.view-pane').length,2);
+const Viewer=cache.get(path.resolve('web/optics/viewer.js')).namespace.OpticsViewer;
+Viewer.prototype.runCSG.call({pendingCSG:{revision:'worker-probe',objects:[{booleanDisplay:{status:'supported'}}]},container:{dispatchEvent(){}},csgBusy:false});
+assert.deepEqual(workerUrls,['http://127.0.0.1:3080/api/optdsh-workbench/assets/csg-worker.js']);
 assert.equal(document.querySelectorAll('#object-list button').length,3);
 assert.equal(document.querySelector('#error').hidden,true);
 const buttons=[...document.querySelectorAll('#object-list button')];

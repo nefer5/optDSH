@@ -1,6 +1,6 @@
 # optDSH
 
-当前版本：**v0.1.0 · 功能预览**。[更新记录](CHANGELOG.md) · [版本规则](docs/governance/versioning.md)
+当前版本：**v0.1.1 · 功能预览**。[更新记录](CHANGELOG.md) · [版本规则](docs/governance/versioning.md)
 
 面向光学建模、镜头设计与非序列布局的专家—Agent 协作工作台。
 

@@ -52,7 +52,7 @@ export class OpticsViewer {
     const s=this.pendingCSG;this.pendingCSG=null;
     if(!s.objects.some(o=>o.booleanDisplay?.status==='supported'))return;
     if(!this.worker){
-      this.worker=new Worker('/csg-worker.js',{type:'module'});
+      this.worker=new Worker(new URL('./csg-worker.js',import.meta.url),{type:'module'});
       this.worker.onmessage=({data})=>{clearTimeout(this.csgTimeout);this.csgBusy=false;if(data.revision===this.revision)this.applyCSG(data);this.runCSG();};
       this.worker.onerror=()=>this.failCSG('布尔计算模块加载失败，保留标记');
     }
