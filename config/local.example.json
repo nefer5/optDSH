@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 0,
+  "status": "design-only-not-dsh-native-config",
+  "agent": {
+    "backend": "dsh",
+    "surface": "web",
+    "mode": "standard",
+    "model": null,
+    "modelPrinciple": "non-frontier-baseline",
+    "endpoint": null,
+    "imageInputVerified": false
+  },
+  "optics": {
+    "backend": "synthetic",
+    "allowModelWrites": false,
+    "connectionMode": null
+  },
+  "dataPolicy": {
+    "deployment": "personal-synthetic",
+    "companyPolicyRequiredForCompanyData": true,
+    "externalTelemetryAllowed": false,
+    "externalModelFallbackAllowed": false,
+    "note": "Design intent only; enforcement and actual egress remain unverified."
+  }
+}

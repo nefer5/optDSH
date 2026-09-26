@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-09-25",
+  "repository": "https://github.com/deepseek-ai/deepseek-harness",
+  "observedMasterCommit": "477b4f420553e8a52c2fbccc464d7561b239c443",
+  "observedMasterCommitDate": "2026-09-24T13:39:59Z",
+  "package": "@deepseek-ai/dsh",
+  "observedDistTags": {
+    "latest": "0.1.5-rc.3",
+    "alpha": "0.1.7-alpha.2",
+    "next": "0.1.7-rc.2"
+  },
+  "candidatePackageVersion": "0.1.5-rc.3",
+  "installed": true,
+  "installedVersion": "0.1.5-rc.3",
+  "installedAt": "2026-09-26",
+  "webStartupValidated": true,
+  "modelInvocationValidated": true,
+  "validated": false,
+  "note": "Web and three-provider text/file-tool smoke tests verified. Full optics/multimodal baseline not validated. Master and npm package are not asserted equivalent."
+}

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 0,
+  "intentId": "demo-intent-001",
+  "sessionId": "demo-session-001",
+  "modelId": "demo-nsc-001",
+  "revision": 1,
+  "selectedObjectIds": ["demo-lens-001"],
+  "instruction": "查询选中对象的参考坐标、位置和姿态，并说明该数据来自哪个模型版本。只读，不做修改。",
+  "submitted": true
+}

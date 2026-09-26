@@ -1,0 +1,22 @@
+{
+  "name": "optdsh-workbench",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Project-local DeepSeek Harness runtime for the optDSH workbench",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dsh:version": "dsh --version",
+    "dsh:help": "dsh --help"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.1.5-rc.3",
+    "manifold-3d": "3.5.4",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.13"
+  }
+}

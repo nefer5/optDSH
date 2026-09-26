@@ -1,0 +1,4 @@
+{
+  "$comment": "会话画板v2。由当前DSH聊天绑定独立board；不再配置固定目标或扫描Canvas收件箱。",
+  "enabled": true
+}

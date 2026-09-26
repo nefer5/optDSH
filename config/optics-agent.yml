@@ -1,0 +1,28 @@
+# Pinned DSH 0.1.5-rc.3 adapter. Agent-scoped capability restriction is enforced
+# by the local runner, independently of instructions or the user's question.
+- id: session-log-deepseek
+  config:
+    enabled: false
+- id: session-title-llm
+  disabled: true
+- id: tools
+  config:
+    mode: native
+- id: headless-runner
+  disabled: true
+- insert:
+    - id: optdsh-readonly-runner
+      name: ../scripts/dsh-optics-runner.mjs
+    - id: optics-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: optics
+        transport: stdio
+        command: python
+        args: ['-X', 'utf8', 'scripts/optics-mcp.py']
+        cwd: !!js process.cwd()
+        env:
+          OPTDSH_REQUEST_FILE: !!js process.env.OPTDSH_REQUEST_FILE
+        toolCallTimeoutMs: 45000
+        failOnStartupError: true
+

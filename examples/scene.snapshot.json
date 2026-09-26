@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 0,
+  "provenance": "synthetic",
+  "modelId": "demo-nsc-001",
+  "revision": 1,
+  "capturedAt": "2026-09-25T00:00:00Z",
+  "units": { "length": "mm", "angle": "deg" },
+  "objects": [
+    {
+      "objectId": "demo-lens-001",
+      "sourceIndex": 1,
+      "name": "合成镜片占位体",
+      "type": "preview-lens",
+      "referenceObjectId": null,
+      "worldTransform": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 20, 0, 0, 0, 1],
+      "geometry": { "kind": "placeholder", "fidelity": "schematic-only" }
+    },
+    {
+      "objectId": "demo-detector-001",
+      "sourceIndex": 2,
+      "name": "合成探测器占位体",
+      "type": "preview-detector",
+      "referenceObjectId": null,
+      "worldTransform": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 50, 0, 0, 0, 1],
+      "geometry": { "kind": "placeholder", "fidelity": "schematic-only" }
+    }
+  ]
+}

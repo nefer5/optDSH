@@ -1,0 +1,24 @@
+# Explicit project policy for the pinned DSH runtime; no model credentials.
+- id: session-log-deepseek
+  config:
+    enabled: false
+# Use the official in-browser workspace picker for an embedded/remote browser.
+- id: directory-picker
+  disabled: true
+- insert:
+    - id: optdsh-directory-picker
+      name: '@deepseek-ai/dsh-host-directory-picker-browse'
+    - id: optdsh-directory-picker-ui
+      name: '@deepseek-ai/dsh-client-ui-directory-picker-browse'
+    - id: optdsh-agent-canvas
+      name: ../plugins/optdsh-agent-canvas/lib/index.js
+    - id: optdsh-optics-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: optics
+        transport: stdio
+        command: python
+        args: ['-X', 'utf8', 'scripts/optics-mcp.py']
+        cwd: !!js process.cwd()
+        toolCallTimeoutMs: 45000
+        failOnStartupError: false

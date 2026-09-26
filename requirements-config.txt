@@ -1,0 +1,2 @@
+# YAML configuration support; already present in the configured optics environment.
+PyYAML==6.0.3

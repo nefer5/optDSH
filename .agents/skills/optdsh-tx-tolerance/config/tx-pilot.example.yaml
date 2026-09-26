@@ -1,0 +1,53 @@
+# Tx未补偿功能测试；对象号仅为示例，换模型必须重新核对。
+# 位置扰动单位mm，倾斜单位deg；0.01 mm = 10 μm。
+# modelId/revision占位符只能用于plan，真实执行前必须替换。
+schemaVersion: 1
+scope: tx
+kind: functional-pilot
+modelId: REPLACE_WITH_VERIFIED_MODEL_ID
+expectedRevision: REPLACE_WITH_VERIFIED_REVISION
+sources:
+  indices:
+  - 2
+  - 3
+  - 4
+  - 5
+  motion: rigid-group
+lenses:
+- index: 7
+  expectedType: Even Asphere Lens
+  expectedDirectChildren:
+  - 8
+- index: 11
+  expectedType: Compound Lens
+  expectedDirectChildren: []
+perturbations:
+  XPosition: 0.01
+  YPosition: 0.01
+  TiltAboutX: 0.01
+  TiltAboutY: 0.01
+detector:
+  index: 36
+  xPixels: 1000
+  yPixels: 256
+  xRangeDeg:
+  - -2
+  - 2
+  yRangeDeg:
+  - -12
+  - 12
+metric:
+  method: equal-tail
+  frame: Detector Rectangle local X radial-projection angle (pilot H convention)
+  integrationTolerance: 0.005
+  definitionStatus: pilot convention, not manufacturing acceptance
+trace:
+  raysPerSource: 25000
+  seed: 260926
+  split: true
+  scatter: false
+  polarization: true
+compensation:
+  enabled: false
+  reason: First test is uncompensated single-factor response; 6D bounds/pivot not
+    confirmed.

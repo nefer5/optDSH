@@ -1,0 +1,42 @@
+# Local dependencies and generated files
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+dist/
+build/
+.pytest_cache/
+.DS_Store
+
+# Local settings, credentials and runtime state
+.env
+.env.*
+!.env.example
+config/local.json
+config/*.local.*
+temp/
+.dsh/
+.agent-canvas/
+.runtime/
+artifacts/
+runs/
+*.log
+
+# Commercial model / simulation data (keep outside Git)
+test/zmx/
+*.paf
+*.PAF
+*.zmx
+*.ZMX
+*.zos
+*.ZOS
+*.zar
+*.ZAR
+*.zrd
+*.ZRD
+*.zda
+*.ZDA
+*.step
+*.stp
+*.iges
+*.igs

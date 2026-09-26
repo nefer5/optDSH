@@ -1,0 +1,123 @@
+{
+  "provenance": "synthetic",
+  "sourceFile": "synthetic://optdsh/bridge-demo",
+  "mode": "NonSequential",
+  "lengthUnit": "Millimeters",
+  "objectCount": 3,
+  "objects": [
+    {
+      "sourceIndex": 1,
+      "comment": "Demo reference",
+      "type": "Null Object",
+      "referenceIndex": 0,
+      "insideOfIndex": 0,
+      "material": "",
+      "localPositionMM": [
+        0,
+        0,
+        0
+      ],
+      "localTiltDegrees": [
+        0,
+        0,
+        0
+      ],
+      "zosMatrix": [
+        true,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "sourceIndex": 2,
+      "comment": "Demo lens",
+      "type": "Standard Lens",
+      "referenceIndex": 1,
+      "insideOfIndex": 0,
+      "material": "N-BK7",
+      "localPositionMM": [
+        0,
+        0,
+        20
+      ],
+      "localTiltDegrees": [
+        0,
+        0,
+        0
+      ],
+      "zosMatrix": [
+        true,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        20
+      ],
+      "shapeParameters": {
+        "Clear1": 6,
+        "Clear2": 6,
+        "Edge1": 7,
+        "Edge2": 7,
+        "Thickness": 3,
+        "Radius1": 40,
+        "Radius2": -40,
+        "Conic1": 0,
+        "Conic2": 0
+      }
+    },
+    {
+      "sourceIndex": 3,
+      "comment": "Demo detector",
+      "type": "Detector Rectangle",
+      "referenceIndex": 1,
+      "insideOfIndex": 0,
+      "material": "",
+      "localPositionMM": [
+        0,
+        0,
+        50
+      ],
+      "localTiltDegrees": [
+        0,
+        0,
+        0
+      ],
+      "zosMatrix": [
+        true,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        50
+      ],
+      "shapeParameters": {
+        "XHalfWidth": 8,
+        "YHalfWidth": 8
+      }
+    }
+  ]
+}
