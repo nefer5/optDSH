@@ -9,6 +9,11 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
   }
   function parseCanvasMessage(data) {
     const rpcId=data?.source?.rpcId;
+    if(typeof rpcId==='string'&&rpcId.startsWith('optics-')){
+      const texts=(data.content||[]).filter(p=>p.type==='text').map(p=>p.text),tagged=texts.find(t=>t.startsWith('<optdsh_optics_context>')&&t.endsWith('</optdsh_optics_context>'));
+      if(!tagged)return null;
+      try{const context=JSON.parse(tagged.slice('<optdsh_optics_context>'.length,-'</optdsh_optics_context>'.length));if(context.requestId!==rpcId)return null;return {note:texts.filter(t=>t!==tagged).join('\n'),context:{...context,kind:'optics'}};}catch{return null;}
+    }
     if(typeof rpcId!=='string'||!rpcId.startsWith('canvas-'))return null;
     const parts=data.content||[],texts=parts.filter(p=>p.type==='text').map(p=>p.text);
     const tagged=texts.find(t=>t.startsWith('<optdsh_canvas_context>')&&t.endsWith('</optdsh_canvas_context>'));
@@ -27,22 +32,28 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
     try{const context=JSON.parse(line);if(!Array.isArray(context.elements))return null;return {note:context.note||'请查看当前画板。',context:{submissionId:rpcId,revision:Number(header[2]),...context}};}catch{return null;}
   }
   function registerCanvasMessages(ctx) {
-    ctx.slots.inject('conversation.chat.node',()=>{
+    const installed=new Set(),disposers=[];
+    const refresh=key=>{
+      if(key&&key!=='conversation.chat.node')return;
       const bases=ctx.slots.entriesOfSlot('conversation.chat.node').filter(e=>['user','steering'].includes(e.options.key));
-      const disposers=bases.map(base=>ctx.slots.register({name:'conversation.chat.node',key:base.options.key,
-        locale:base.locale||'chat',priority:(base.options.priority||0)-100},function CanvasMessage(props){
-        const parsed=parseCanvasMessage(props.node?.data);if(!parsed)return h(base.component,props);
-        const node={...props.node,data:{...props.node.data,content:[{type:'text',text:parsed.note}]}};
-        return h('div',{'data-canvas-message':true},h(base.component,{...props,node}),
-          h('details',{'data-canvas-context':true,style:{margin:'4px 0 12px auto',maxWidth:'90%',color:'var(--dsw-alias-label-tertiary,#888)',fontSize:12}},
-            h('summary',{style:{cursor:'pointer',userSelect:'none'}},parsed.context.kind==='feedback'?'画板修改反馈':'返回画板内容'),
-            h('pre',{style:{whiteSpace:'pre-wrap',overflowWrap:'anywhere',maxHeight:260,overflow:'auto',fontSize:11,opacity:0.8}},JSON.stringify(parsed.context,null,2))));
-      }));return()=>disposers.forEach(dispose=>dispose());
-    });
+      for(const base of bases){if(installed.has(base.options.key))continue;installed.add(base.options.key);
+        disposers.push(ctx.slots.register({name:'conversation.chat.node',key:base.options.key,locale:base.locale||'chat',priority:(base.options.priority||0)-100},function ContextMessage(props){
+          const parsed=parseCanvasMessage(props.node?.data);if(!parsed)return h(base.component,props);
+          const node={...props.node,data:{...props.node.data,content:[{type:'text',text:parsed.note}]}};
+          return h('div',{'data-canvas-message':true},h(base.component,{...props,node}),
+            h('details',{'data-canvas-context':true,style:{margin:'4px 0 12px auto',maxWidth:'90%',color:'var(--dsw-alias-label-tertiary,#888)',fontSize:12}},
+              h('summary',{style:{cursor:'pointer',userSelect:'none'}},parsed.context.kind==='optics'?'镜片引用与模型版本':parsed.context.kind==='feedback'?'画板修改反馈':'返回画板内容'),
+              h('pre',{style:{whiteSpace:'pre-wrap',overflowWrap:'anywhere',maxHeight:260,overflow:'auto',fontSize:11,opacity:.8}},JSON.stringify(parsed.context,null,2))));
+        }));
+      }
+    };
+    ctx.on?.('slots/changed',refresh);
+    ctx.slots.inject('conversation.chat.node',()=>{refresh();return()=>disposers.forEach(dispose=>dispose?.());});
   }
   function CanvasBody({sessionId}) {
     const frame=React.useRef(null),[channel]=React.useState(()=>crypto.randomUUID());
     const [state,setState]=React.useState(null),[error,setError]=React.useState(''),[ready,setReady]=React.useState(false);
+    const [transportReady,setTransportReady]=React.useState(false);
     const [snapshot,setSnapshot]=React.useState(''),[attempt,setAttempt]=React.useState(0);
     React.useEffect(()=>{
       let live=true;
@@ -50,23 +61,10 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
       refresh();const timer=setInterval(refresh,2500);return()=>{live=false;clearInterval(timer);};
     },[sessionId]);
     React.useEffect(()=>{
-      setReady(false);setError('');let live=true;
-      const listener=async event=>{
-        const m=event.data;
-        if(event.origin!==ORIGIN||event.source!==frame.current?.contentWindow||m?.type!=='optdsh-canvas-request'||m.channel!==channel)return;
-        const target=event.source;
-        try {
-          if(!['load','save','submit','status','preview_edit','apply_edit','reject_edit'].includes(m.action))throw new Error('Unsupported embedded action');
-          if(snapshot&&m.action!=='load')throw new Error('历史快照只读');
-          const result=await api(sessionId,snapshot?'snapshot':m.action,snapshot?{submissionId:snapshot}:m.payload||{});
-          if(!live)return;
-          setState(result);setReady(true);setError('');clearTimeout(timeout);
-          target.postMessage({type:'optdsh-canvas-response',channel,id:m.id,result},ORIGIN);
-        }catch(e){if(live){setError(e.message);target.postMessage({type:'optdsh-canvas-response',channel,id:m.id,error:e.message},ORIGIN);}}
-      };
-      window.addEventListener('message',listener);
-      const timeout=setTimeout(()=>{if(live)setError('若画板未显示，请确认 AgentCanvas 服务已启动，然后重试。');},12000);
-      return()=>{live=false;clearTimeout(timeout);window.removeEventListener('message',listener);};
+      setReady(false);setError('');setTransportReady(false);let live=true,bridge;
+      const loading=window.__optdshCanvasTransport?Promise.resolve(window.__optdshCanvasTransport):import('/api/optdsh-canvas/transport');
+      loading.then(({attachCanvasBridge})=>{if(!live)return;bridge=attachCanvasBridge({frame:frame.current,sessionId,channel,snapshot,onState:setState,onError:setError,onReady:()=>setReady(true)});setTransportReady(true);}).catch(e=>{if(live)setError(e.message);});
+      return()=>{live=false;bridge?.dispose();};
     },[sessionId,channel,snapshot,attempt]);
     const src=ORIGIN+'/?embed=dsh&parentOrigin='+encodeURIComponent(location.origin)+'&channel='+channel;
     const rows=(state?.submissions||[]).slice(-12).reverse();
@@ -77,7 +75,7 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
         h('button',{onClick:()=>{setAttempt(x=>x+1);setError('');}},'重新打开'),
         snapshot&&h('button',{onClick:()=>setSnapshot('')},'返回当前画板')),
       error&&h('p',{role:'alert',style:{padding:'0 8px',color:'#bd572f'}},error),
-      h('iframe',{key:sessionId+snapshot+attempt,ref:frame,src,title:snapshot?'历史画板快照':'本会话绑定画板',style:{flex:'1 1 auto',width:'100%',minHeight:320,border:0}}),
+      h('iframe',{key:sessionId+snapshot+attempt,ref:frame,src:transportReady?src:undefined,title:snapshot?'历史画板快照':'本会话绑定画板',style:{flex:'1 1 auto',width:'100%',minHeight:320,border:0}}),
       rows.length>0&&h('details',{style:{padding:8,maxHeight:180,overflow:'auto'},open:true},h('summary',null,'本会话提交记录'),
         rows.map(s=>h('div',{key:s.id,style:{display:'flex',gap:8,marginTop:6,alignItems:'center'}},
           h('button',{onClick:()=>setSnapshot(s.id)},'版本 '+s.revision),

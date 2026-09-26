@@ -1,5 +1,7 @@
 # 持续会话与AgentCanvas
 
+> 本文为3081旧适配的历史说明。当前入口已改为[官方Host同会话工作台](../guides/shared-workbench.md)，旧聊天/旧CanvasBridge写路径停用，历史数据保留。
+
 2026-09-26。本文描述3081本地适配；官方3080现已另有[会话画板v2](canvas-session-boards.md)，两者的入口与存储不同。
 
 ## 使用

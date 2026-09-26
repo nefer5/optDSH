@@ -12,8 +12,6 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from optdsh_optics.domain import OpticsError
 from optdsh_optics.service import Bridge
-from optdsh_optics.agent_jobs import AgentJobs
-from optdsh_optics.canvas_bridge import CanvasBridge
 
 
 def main():
@@ -23,8 +21,6 @@ def main():
     args = parser.parse_args()
     config = json.loads(Path(args.config).read_text(encoding="utf-8"))
     bridge = Bridge(config, ROOT)
-    agent_jobs = AgentJobs(bridge, ROOT)
-    canvas_bridge = CanvasBridge(agent_jobs, ROOT)
     token = secrets.token_urlsafe(32)
     authority = f"127.0.0.1:{args.port}"
     cookie_name = f"optdsh-optics-{args.port}"
@@ -84,7 +80,13 @@ def main():
                           "/mesh.js": ("mesh.js", "application/javascript; charset=utf-8"),
                           "/mesh-data.js": ("mesh-data.js", "application/javascript; charset=utf-8"),
                           "/style.css": ("workbench.css", "text/css; charset=utf-8")}
-                if url.path in assets:
+                if url.path == '/':
+                    host_file=ROOT/'.runtime/dsh-host.json'
+                    host=json.loads(host_file.read_text(encoding='utf-8')) if host_file.exists() else {'url':'http://127.0.0.1:3080'}
+                    self.send_response(303)
+                    self.send_header('Location',host['url']+'/#optdsh-workbench=1')
+                    self.end_headers()
+                elif url.path in assets:
                     file, mime = assets[url.path]
                     self.send(200, (ROOT / "web/optics" / file).read_bytes(), mime)
                 elif url.path in ("/vendor/three.module.js", "/vendor/three.core.js"):
@@ -93,7 +95,7 @@ def main():
                     file = ROOT / "node_modules/manifold-3d" / url.path.rsplit("/", 1)[-1]
                     self.send(200, file.read_bytes(), "application/wasm" if file.suffix == ".wasm" else "application/javascript; charset=utf-8")
                 elif url.path == "/api/agent/jobs":
-                    result=agent_jobs.list();result['canvasBindings']=canvas_bridge.status();self.send(200, result)
+                    self.send(410, {'error':{'code':'LEGACY_CHAT_RETIRED','message':'Open the official-host workbench; legacy transcripts are preserved.'}})
                 elif url.path == "/api/snapshot":
                     self.send(200, bridge.view())
                 elif url.path in ("/api/list", "/api/object", "/api/relative", "/api/selection"):
@@ -110,19 +112,7 @@ def main():
                 self.send(403, {"error": {"code": "AUTH_REQUIRED", "message": "Access denied"}})
                 return
             if self.path in ("/api/agent/jobs", "/api/agent/cancel", "/api/conversations", "/api/canvas/connect", "/api/canvas/disconnect", "/api/canvas/complete"):
-                try:
-                    size=int(self.headers.get("Content-Length", "0"))
-                    if not 0 < size <= 16384: raise ValueError("Invalid body size")
-                    body=json.loads(self.rfile.read(size))
-                    if self.path=='/api/conversations':result=agent_jobs.create_conversation()
-                    elif self.path=='/api/canvas/connect':result=canvas_bridge.connect(body['conversationId'])
-                    elif self.path=='/api/canvas/disconnect':result=canvas_bridge.stop(body['conversationId'])
-                    elif self.path=='/api/canvas/complete':result=canvas_bridge.complete(body['conversationId'],body['submissionId'])
-                    else:result=agent_jobs.submit(body) if self.path.endswith('jobs') else agent_jobs.cancel(body['id'])
-                    self.send(202, result)
-                except OpticsError as exc: self.send(409, {"error":exc.payload()})
-                except OSError: self.send(503, {"error":{"code":"LOCAL_SERVICE_UNAVAILABLE","message":"Check AgentCanvas service and project registration"}})
-                except (ValueError, KeyError, TypeError): self.send(400, {"error":{"code":"INVALID_ARGUMENT","message":"Invalid query body"}})
+                self.send(410, {'error':{'code':'LEGACY_CHAT_RETIRED','message':'Use the official DSH workbench conversation.'}})
                 return
             if self.path != "/api/refresh":
                 self.send(404, {"error": {"code": "NOT_FOUND", "message": "No mutation endpoint exists"}})

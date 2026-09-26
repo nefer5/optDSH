@@ -1,5 +1,24 @@
 # Figma 前端评审入口
 
+## 葱哥修改意见1（2026-09-26，已落实到前端）
+
+[用户意见画板](https://www.figma.com/design/JQmZzgAjNxgreXoqLrzRL9?node-id=31-104)：PC四栏同比缩放，在Figma比例基础上微调会话占比；取消650px上限，允许会话拖至半屏；区分输入/消息区域、左右气泡替代身份标签、略缩聊天字号并折叠底层画板数据。
+
+按后续澄清采用比例布局，3D原宽度的10%转给会话；Figma用户画板未修改。原图中光学示意继续使用动态Three.js模型，未转换成静态图片。实际操作及比例见[同会话工作台](shared-workbench.md)，报告在runs/ui-feedback/260926-01/report.html。
+
+## 方案05：双页面、同会话（2026-09-26，待评审）
+
+四张图属于同一方案的不同状态/入口，当前准备实施的范围如下：
+
+| 顺序与范围 | 画板 | 实施内容 |
+|---|---|---|
+| 01 本期 | [光学工作台主界面](https://www.figma.com/design/JQmZzgAjNxgreXoqLrzRL9?node-id=17-54) | 保留光学布局，精简会话改接同一DSH会话；画板不常驻 |
+| 02 本期 | [主界面的画板弹窗](https://www.figma.com/design/JQmZzgAjNxgreXoqLrzRL9?node-id=25-87) | 01点击画板后的状态；快速绘图、保存、显式发送、进入完整会话 |
+| 03 本期只做衔接 | [复用完整DSH](https://www.figma.com/design/JQmZzgAjNxgreXoqLrzRL9?node-id=17-316) | 现有官方页面不重建；完成同会话跳转、消息/画板互通与返回入口 |
+| 04 后续可选 | [下翻分析区](https://www.figma.com/design/JQmZzgAjNxgreXoqLrzRL9?node-id=17-380) | 本期暂不实施，后续按分析作业需要增加报告和参数对比 |
+
+Figma标题和排布已同步：第一排01/02，第二排03/04。完整画板协作集中在已有DSH完整会话。交付目标是一套工作台改造加同会话衔接，不是四套新页面。此处为实施范围梳理，尚未修改产品。架构与一致性说明见[整合方案](../architecture/workbench-convergence.md)。
+
 ## 最新画板（升级后已同步，2026-09-26）
 
 - [04 最新工作台 / 字号优化 / 自由拖动板块](https://www.figma.com/design/JQmZzgAjNxgreXoqLrzRL9?node-id=15-54)

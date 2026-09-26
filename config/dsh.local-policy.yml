@@ -22,3 +22,7 @@
         cwd: !!js process.cwd()
         toolCallTimeoutMs: 45000
         failOnStartupError: false
+
+- insert:
+    - id: optdsh-workbench
+      name: ../plugins/optdsh-workbench/lib/index.js

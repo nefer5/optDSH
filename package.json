@@ -1,6 +1,6 @@
 {
   "name": "optdsh-workbench",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "Project-local DeepSeek Harness runtime for the optDSH workbench",

@@ -25,5 +25,15 @@ export class ReferenceEditor {
     };for(const n of this.el.childNodes)visit(n);
     return {references:[...new Map(references.map(r=>[r.objectId,r])).values()],segments,question:segments.map(s=>s.type==='text'?s.text:'['+s.label+']').join('').trim()};
   }
+  serialize(){
+    const parts=[];const visit=n=>{if(n.nodeType===3){parts.push({type:'text',text:n.textContent});return;}if(n.nodeType!==1)return;const ref=this.refs.get(n.dataset.refKey);if(ref){parts.push({type:'object',ref:{...ref}});return;}if(n.tagName==='BR')parts.push({type:'text',text:'\n'});for(const child of n.childNodes)visit(child);if(n.tagName==='DIV')parts.push({type:'text',text:'\n'});};
+    for(const child of this.el.childNodes)visit(child);return parts;
+  }
+  restore(parts){
+    this.el.replaceChildren();this.refs.clear();this.range=null;
+    for(const p of Array.isArray(parts)?parts.slice(0,2048):[]){if(p.type==='text'&&typeof p.text==='string')this.el.append(document.createTextNode(p.text));else if(p.type==='object'&&p.ref&&typeof p.ref.objectId==='string'&&typeof p.ref.label==='string'){
+      const key=crypto.randomUUID(),chip=document.createElement('span'),remove=document.createElement('button');this.refs.set(key,{...p.ref});chip.className='object-token';chip.contentEditable='false';chip.dataset.refKey=key;chip.textContent=p.ref.label;remove.dataset.remove='true';remove.tabIndex=-1;remove.textContent='×';chip.append(remove);this.el.append(chip);
+    }}
+  }
   markStale(snapshot){for(const chip of this.el.querySelectorAll('[data-ref-key]')){const ref=this.refs.get(chip.dataset.refKey);chip.classList.toggle('stale',!snapshot||ref?.modelId!==snapshot.modelId||ref?.revision!==snapshot.revision);}}
 }

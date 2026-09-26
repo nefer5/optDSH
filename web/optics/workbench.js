@@ -1,3 +1,4 @@
+import {opticsApi} from './optics-api.js';
 import {initWorkbenchAgent} from './workbench-agent.js';
 import {OpticsViewer} from './viewer.js';
 import {CATEGORIES} from './mesh.js';
@@ -18,7 +19,7 @@ try{viewer=new OpticsViewer($('viewport-wrap'),$('viewports'),{bindings,onSelect
 $('viewport-wrap').addEventListener('viewer-error',e=>error(e.detail));navigationHelp();
 $('viewport-wrap').addEventListener('csg-status',e=>{const d=e.detail;$('csg-status').textContent=d.status+(d.elapsedMs!==undefined?' · '+Math.round(d.elapsedMs)+' ms':'');renderDetails();});
 $('show-operands').onchange=e=>{if(viewer){viewer.showOperands=e.target.checked;viewer.updateStyle();}};
-async function api(path,options={}){const r=await fetch(path,options),d=await r.json();if(!r.ok)throw new Error((d.error?.code||r.status)+' · '+(d.error?.message||'请求失败'));return d;}
+const api=opticsApi;
 function showChoices(ids,event={}){const menu=$('pick-options');menu.replaceChildren();const title=document.createElement('strong');title.textContent='此方向命中多个对象，请选择';menu.append(title);for(const id of ids){const o=snapshot().objects.find(x=>x.objectId===id),b=document.createElement('button');b.textContent=o.label;b.onclick=()=>selectObject(id,event);menu.append(b);}const close=document.createElement('button');close.textContent='取消';close.onclick=()=>menu.hidden=true;menu.append(close);menu.hidden=false;}
 function renderCategories(){const counts={};for(const o of snapshot()?.objects||[])counts[category(o)]=(counts[category(o)]||0)+1;$('category-chips').replaceChildren(...Object.entries(CATEGORIES).map(([key,c])=>{const b=document.createElement('button'),dot=document.createElement('i');b.className='category-chip'+(hiddenCategories.has(key)?' off':'');b.dataset.category=key;b.setAttribute('aria-pressed',String(!hiddenCategories.has(key)));dot.style.backgroundColor='#'+c.color.toString(16).padStart(6,'0');b.append(dot,document.createTextNode(c.label+' '+(counts[key]||0)));b.onclick=()=>{hiddenCategories.has(key)?hiddenCategories.delete(key):hiddenCategories.add(key);renderCategories();filterObjects();};return b;}));}
 function filterObjects(){const q=$('search').value.toLowerCase();visibleRows=(snapshot()?.objects||[]).filter(o=>(o.label+' '+o.type).toLowerCase().includes(q)&&!hiddenCategories.has(category(o))&&(!$('respect-hidden').checked||o.zemaxHidden!==true));
@@ -85,4 +86,4 @@ $('settings').onclick=()=>{fillBindings(bindings);$('navigation-dialog').showMod
 $('navigation-form').oninput=checkBindings;$('reset-bindings').onclick=()=>fillBindings(DEFAULT_BINDINGS);
 $('navigation-form').onsubmit=e=>{e.preventDefault();const value=getBindings();if(validateBindings(value))return;bindings=value;try{localStorage.setItem('optdsh.navigation.v1',JSON.stringify(value));}catch{error('设置已临时应用，但浏览器拒绝持久保存');}navigationHelp();$('navigation-dialog').close();};
 initWorkbenchAgent({getSnapshot:snapshot,getSelected:selected,getSelections:()=>[...selectedIds].map(id=>snapshot().objects.find(o=>o.objectId===id)).filter(Boolean),selectObject,api,highlight:ids=>{viewer?.highlight(ids);$('show-operands').checked=true;$('isolate').classList.remove('active');}});
-await load();setInterval(load,3000);
+await load();setInterval(()=>{if(!document.hidden)void load();},3000);

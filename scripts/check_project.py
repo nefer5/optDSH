@@ -9,11 +9,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def check():
     errors = []
-    required = ["README.md", "AGENTS.md", "docs/README.md", "planning/STATUS.md", "planning/ROADMAP.md"]
+    required = ["README.md", "AGENTS.md", "CHANGELOG.md", "docs/README.md", "planning/STATUS.md", "planning/ROADMAP.md"]
     for name in required:
         if not (ROOT / name).is_file():
             errors.append(f"Missing required file: {name}")
-    files = [ROOT / "README.md", ROOT / "AGENTS.md"]
+    files = [ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "CHANGELOG.md"]
     files += list((ROOT / "docs").rglob("*.md"))
     files += list((ROOT / "planning").rglob("*.md"))
     files += list((ROOT / ".agents/skills").rglob("SKILL.md"))
@@ -34,6 +34,14 @@ def check():
                 json.loads(path.read_text(encoding="utf-8"))
             except (ValueError, OSError):
                 errors.append(f"Invalid JSON: {path.relative_to(ROOT)}")
+    try:
+        package=json.loads((ROOT/'package.json').read_text(encoding='utf-8'))
+        lock=json.loads((ROOT/'package-lock.json').read_text(encoding='utf-8'))
+        version=package['version']
+        if not re.fullmatch(r'\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?',version):errors.append('Invalid project SemVer')
+        if lock.get('version')!=version or lock.get('packages',{}).get('',{}).get('version')!=version:errors.append('Package/lockfile versions differ')
+        if f'## {version} ' not in (ROOT/'CHANGELOG.md').read_text(encoding='utf-8'):errors.append('Current version missing from CHANGELOG')
+    except (OSError,ValueError,KeyError,TypeError):errors.append('Missing or invalid project version metadata')
     sys.path.insert(0,str(ROOT/'src'))
     from optdsh_optics.config_io import load_config
     for path in (ROOT/'.agents/skills').glob('*/config/*.example.yaml'):

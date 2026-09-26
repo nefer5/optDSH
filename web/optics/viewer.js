@@ -28,7 +28,11 @@ export class OpticsViewer {
     });
     this.keyHandler=e=>{if(editableTarget(e.target)||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;if(e.key.toLowerCase()===this.bindings.focus.toLowerCase()&&this.container.contains(document.activeElement)){e.preventDefault();this.focus();}};
     window.addEventListener('keydown',this.keyHandler);
-    this.observer=new ResizeObserver(()=>this.render());this.observer.observe(container);
+    // Inner pane resizing does not resize the shared WebGL canvas container.
+    // Observe each scissored viewport too; coalesce callbacks into one GPU redraw.
+    this.resizeFrame=null;
+    this.observer=new ResizeObserver(()=>{if(this.resizeFrame!==null)return;this.resizeFrame=requestAnimationFrame(()=>{this.resizeFrame=null;this.render();});});
+    this.observer.observe(container);for(const view of this.views)this.observer.observe(view.element);
     this.renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();container.dispatchEvent(new CustomEvent('viewer-error',{detail:'WebGL上下文丢失，请刷新页面'}));});
   }
   setSnapshot(snapshot) {

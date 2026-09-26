@@ -7,14 +7,15 @@ const view={snapshot,events:[],busy:false,error:null};
 // linkedom does not implement the browser select value setter.
 Object.defineProperty(window.HTMLSelectElement.prototype,'value',{get(){return this._value??this.querySelector('option')?.getAttribute('value')??'';},set(v){this._value=v;},configurable:true});
 const memory=new Map();const localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v)};
-class Renderer{constructor(){this.domElement=document.createElement('canvas');}setPixelRatio(){}setScissorTest(){}setSize(){}setClearColor(){}clear(){}setViewport(){}setScissor(){}render(){}dispose(){}}
+const resizeObservers=[],frameCallbacks=[];let draws=0;
+class Renderer{constructor(){this.domElement=document.createElement('canvas');}setPixelRatio(){}setScissorTest(){}setSize(){}setClearColor(){}clear(){}setViewport(){}setScissor(){}render(){draws++;}dispose(){}}
 window.HTMLElement.prototype.getBoundingClientRect=function(){return {left:0,top:0,bottom:600,width:800,height:600};};
 const posts=[];
-const context=vm.createContext({window,document,console,crypto:webcrypto,URL,URLSearchParams,Blob,CustomEvent:window.CustomEvent,devicePixelRatio:1,localStorage,navigator:{clipboard:{writeText:async()=>{}}},setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,requestAnimationFrame:()=>1,ResizeObserver:class{observe(){}disconnect(){}},Worker:class{postMessage(){}terminate(){}},fetch:async(url,options)=>{if(options?.method==='POST')posts.push(url);return {ok:true,json:async()=>url.includes('/api/agent/jobs')?{jobs:[]}:structuredClone(view)};}});
+const context=vm.createContext({window,document,console,crypto:webcrypto,URL,URLSearchParams,Blob,CustomEvent:window.CustomEvent,devicePixelRatio:1,localStorage,sessionStorage:localStorage,location:{origin:"http://127.0.0.1:3080",pathname:"/api/optdsh-workbench/view",search:"",href:"http://127.0.0.1:3080/api/optdsh-workbench/view"},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,requestAnimationFrame:fn=>{frameCallbacks.push(fn);return frameCallbacks.length;},ResizeObserver:class{constructor(fn){this.fn=fn;this.targets=[];resizeObservers.push(this);}observe(target){this.targets.push(target);}disconnect(){}},Worker:class{postMessage(){}terminate(){}},fetch:async(url,options)=>{const body=options?.body?JSON.parse(options.body):{};if(body.action==='submit')posts.push(url);return {ok:true,json:async()=>body.action==='list'?{sessions:[]}:structuredClone(view)};}});
 const cache=new Map();
 async function load(spec,parent){
  if(spec==='/vendor/three.module.js'){if(!cache.has(spec)){cache.set(spec,new vm.SyntheticModule(Object.keys(THREE),function(){for(const k of Object.keys(THREE))this.setExport(k,k==='WebGLRenderer'?Renderer:THREE[k]);},{context}));}return cache.get(spec);}
- const name=path.resolve(parent?path.dirname(parent.identifier):'web/optics',spec);
+ const name=spec==='./canvas-bridge.js'?path.resolve('web/shared/canvas-bridge.js'):path.resolve(parent?path.dirname(parent.identifier):'web/optics',spec);
  if(cache.has(name))return cache.get(name);
  const m=new vm.SourceTextModule(fs.readFileSync(name,'utf8'),{context,identifier:name});cache.set(name,m);await m.link(load);return m;
 }
@@ -32,4 +33,7 @@ assert.equal(document.querySelector('[data-view=fixed] .roll-value').textContent
 document.querySelector('#flip-fixed').click();assert.ok(document.querySelector('.view-pane[data-view=fixed] .direction-label').textContent.includes('−X'));
 document.querySelector('[data-view=fixed] [data-roll="reset"]').click();assert.equal(document.querySelector('[data-view=fixed] .roll-value').textContent,'0°');
 assert.equal(document.querySelectorAll('.global-gizmo text').length,6);
+const viewObserver=resizeObservers.find(o=>o.targets.some(t=>t.id==='viewport-wrap'));
+assert.equal(viewObserver.targets.filter(t=>t.classList.contains('view-surface')).length,2);
+const pending=frameCallbacks.length,beforeDraw=draws;viewObserver.fn();viewObserver.fn();assert.equal(frameCallbacks.length,pending+1);frameCallbacks.pop()();assert.ok(draws>beforeDraw);
 console.log('PASS: real module startup, two views, compact list, multi-select, draft isolation, roll/flip/reset, axis labels; WebGL renderer stubbed.');

@@ -14,6 +14,14 @@
 
 ## 存放边界
 
+版本和交付：[版本与Git同步](governance/versioning.md) · [更新记录](../CHANGELOG.md)。
+
+当前运行入口：[同会话光学工作台](guides/shared-workbench.md)（本期01/02/03已实测）；此前架构复盘保留实现原因与后续设计。
+
+工作台布局交互：[面板分隔线规则与验证](guides/panel-resizing.md)。
+
+当前架构复盘：[DSH与光学工作台整合建议](architecture/workbench-convergence.md)，区分已实现的两条链路和待实施的同会话方案。
+
 - docs只放长期规范、架构、操作指南和研究资料；新文档进入相应分类，不平铺根目录。
 - planning保存当前状态、路线和待办；Skill包保存领域流程及`config/xxx.example.yaml`样例；项目config保存本机工作配置。
 - runs保存正式报告、当次配置及证据；artifacts保存服务日志、诊断和历史产物。报告默认HTML，细则见运行包规范。

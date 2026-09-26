@@ -23,7 +23,7 @@
 
 - 所有正式Skill/分析运行统一使用公共run包：`runs/<workflow>/YYMMDD-NN/`，开始排他分配一次，整条链路沿用，不覆盖、不重复嵌套。默认人读报告`report.html`；执行前保存实际配置快照，执行消费run内配置；结果、输入证据、状态和SHA-256随包。通用规范见[运行包规范](docs/governance/run-bundles.md)，不在各Skill重复维护。服务日志/临时诊断仍用artifacts，凭据不入run。
 
-- 浏览器偏好（2026-09-26用户指定）：DSH与光学工作台仅使用系统默认浏览器打开和操作，不再使用Tabbit；启动入口交给系统默认关联。
+- 浏览器偏好（2026-09-26最新指示）：用户已改回Tabbit，撤销此前“不使用Tabbit”的约束；打开与操作遵循当前用户选择。启动入口仍使用系统默认关联；本轮注册表HTTP/HTTPS仍读到MSEdgeHTM，关联生效待核实，不自动修改系统设置。
 
 - 性能是持续约束：以每分钟一次镜片参数修改作为当前基线。布尔计算移出UI线程，按几何依赖缓存，限制缓存容量并释放GPU/WASM资源；四视图共享几何，颜色/相机操作不触发布尔重算。性能结论必须区分采集、网格重建、显示和长时间运行证据。
 
@@ -44,8 +44,11 @@
 | 分析/评测/仿真及报告 | [运行包规范](docs/governance/run-bundles.md)：短ID、配置冻结、HTML、证据校验 |
 | Zemax连接、对象读写、数据契约 | [数据契约](docs/architecture/contracts.md)、[N02复用与副作用](docs/research/opt-assist-reuse.md)，再读optics-contract Skill |
 | 几何/布尔/多视图性能 | [布尔裁切与性能](docs/architecture/boolean-cuts.md)，遵守每分钟一次参数修改基线 |
+| 面板布局/分隔线 | [面板调整规则](docs/guides/panel-resizing.md)：窗口缩放保持比例；手动拖动优先相邻面板；内部视口改变须同步WebGL重绘 |
+| 版本、提交与Git同步 | [版本规范](docs/governance/versioning.md)：根package.json为项目版本源，锁文件/CHANGELOG/标签一致；推送前检查私有数据排除 |
 | 会话、画板、专家提交 | [持续会话](docs/architecture/conversations-canvas.md)、[官方画板](docs/architecture/canvas-session-boards.md)，按产品入口区分适配 |
-| 本地启动/认证/部署 | [运行指南](docs/guides/local-runtime.md)、[开发与数据出口](docs/governance/development.md) |
+| 本地启动/认证/部署 | [运行指南](docs/guides/local-runtime.md)、[同会话工作台](docs/guides/shared-workbench.md)、[开发与数据出口](docs/governance/development.md) |
+| 官方Web与光学工作台整合 | [同会话工作台](docs/guides/shared-workbench.md)为现行入口；[架构复盘](docs/architecture/workbench-convergence.md)保留演进与后续设计。不得恢复旧headless聊天写路径 |
 
 `docs/archive/`只用于历史追溯；关键约束迁移或新增后必须同步本表及docs导航。正式结果在runs，当前状态在planning，不混入docs。
 
