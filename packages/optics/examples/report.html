@@ -1,0 +1,130 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tx 镜片装配误差 · 未补偿响应</title><style>:root{--paper:#f9f8f2;--ink:#29372f;--muted:#626d63;--green:#365846;--wash:#eaf0e7;--line:#d5ddcf;--amber:#78592e}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#e8eae3;color:var(--ink);font:15px/1.85 "Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;font-variant-numeric:tabular-nums}main{max-width:1192px;margin:32px auto;padding:28px 56px;background:var(--paper);border-top:5px solid var(--green)}a{color:var(--green);text-underline-offset:4px}a:focus-visible,summary:focus-visible{outline:3px solid #819e79;outline-offset:4px}header,footer{display:flex;justify-content:space-between;align-items:center;gap:20px;border-bottom:1px solid var(--line);padding-bottom:20px}header b{font-size:12px;letter-spacing:1px}.badge{font-size:12px;border:1px solid #b4c1ac;padding:5px 12px;color:var(--green);background:var(--wash)}.hero{padding:30px 0 22px}.eyebrow,.meta,.muted{color:var(--muted);font-size:13px}.eyebrow{margin:0 0 12px}h1{font-size:34px;line-height:1.45;letter-spacing:-.5px;margin:0 0 14px}h3{font-size:16px;margin:20px 0 10px}p{margin:12px 0}.meta{margin:0}nav{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:10px 0;margin:0 0 28px;border-block:1px solid #b8c6b1;background:var(--paper);box-shadow:0 5px 0 var(--paper)}nav a{text-decoration:none;padding:10px 12px;font-size:13px}nav a:hover{background:var(--wash)}.chapter{margin-bottom:46px;scroll-margin-top:92px}h2{display:flex;align-items:center;gap:18px;background:var(--wash);border-left:4px solid var(--green);padding:16px 19px;font-size:21px;font-weight:600;line-height:1.5;margin:0 0 22px}h2 span{font-size:30px;font-weight:400;color:#657e5c}.lead{font-size:18px;line-height:1.9;margin:0 0 20px}.objective{border-left:2px solid #aabb9d;padding:12px 20px;background:#f1f3e9}.objective b{font-size:13px;color:var(--green)}.objective p{margin:6px 0}.setup{display:grid;grid-template-columns:1fr 1fr;column-gap:30px;margin:0}.setup>div{display:grid;grid-template-columns:102px minmax(0,1fr);gap:12px;border-bottom:1px solid var(--line);padding:14px 0;font-size:13px;min-width:0}.setup dt{color:var(--muted)}.setup dd{margin:0;overflow-wrap:anywhere}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--wash);padding:23px;margin:24px 0}.metrics article{border-left:1px solid #c0cfb8;padding-left:24px;min-width:0}.metrics article:first-child{border:0;padding-left:0}.metrics span{font-size:12px;color:var(--muted)}.metrics strong{display:block;font-size:30px;font-weight:600;color:var(--green);overflow-wrap:anywhere}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}caption{text-align:left;color:var(--muted);font-size:12px;padding-bottom:12px}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left}th{font-weight:500;background:#edf0e6;color:var(--muted)}td:first-child{overflow-wrap:anywhere}.number{white-space:nowrap;text-align:left}.limitations{border-top:3px solid #b4a178;background:#f3f0e5;padding:0 22px 14px;margin-top:26px}.limitations h3{color:var(--amber)}li{margin:7px 0}.warning{padding:14px 18px;background:#f4e9df;border-left:3px solid #946443;overflow-wrap:anywhere}details{border:1px solid var(--line);margin:12px 0;background:#fcfbf6}summary{cursor:pointer;padding:13px 17px;font-size:13px;color:var(--green)}details[open] summary{border-bottom:1px solid var(--line)}details>ul{padding:0 22px 12px 38px;overflow-wrap:anywhere}pre{font:12px/1.75 Consolas,monospace;margin:0;padding:18px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:520px;overflow:auto}footer{border-top:1px solid var(--line);border-bottom:0;padding:18px 0 0;font-size:11px;color:var(--muted)}
+@media(max-width:850px){main{margin:0;padding:24px}.setup{grid-template-columns:1fr}h1{font-size:29px}nav a{padding:9px 6px;font-size:12px}.metrics strong{font-size:25px}}
+@media(max-width:560px){body{font-size:14px}main{padding:19px}header{align-items:flex-start;gap:10px}header b{font-size:10px}.badge{font-size:10px;padding:4px 8px}h1{font-size:25px}.lead{font-size:16px}h2{font-size:18px;gap:12px;padding:14px 12px}h2 span{font-size:26px}nav{grid-template-columns:1fr 1fr}.chapter{scroll-margin-top:128px;margin-bottom:32px}.setup>div{grid-template-columns:84px minmax(0,1fr);font-size:12px;gap:10px}.metrics{grid-template-columns:1fr;padding:16px;gap:12px}.metrics article{border-left:0;border-top:1px solid var(--line);padding:12px 0 0}.metrics article:first-child{padding:0}.table-wrap table{min-width:540px}.limitations{padding-inline:16px}footer{align-items:flex-start;font-size:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{size:A4;margin:15mm}body{background:white;font-size:10pt}main{margin:0;padding:0;max-width:none;background:white}nav{display:none}.hero{padding:18px 0}h1{font-size:24px}h2{font-size:16px;padding:10px 12px;break-after:avoid}h2 span{font-size:22px}.chapter{margin-bottom:24px;scroll-margin-top:0}.lead{font-size:12pt}.setup>div,table{font-size:9pt}.metrics strong{font-size:24px}.table-wrap{overflow:visible}table{min-width:0!important}tr,.objective,.metrics{break-inside:avoid}details{display:none}footer a{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body><main id="top"><header><b>optDSH / OPTICAL STUDY</b><span class="badge">合成演示 · 非实测</span></header><div class="hero"><p class="eyebrow">研究记录 · 260927-03</p><h1>Tx 镜片装配误差 · 未补偿响应</h1><p class="meta">2026-09-27 04:23 +0800 · report-style · 完成 <span class="muted">(completed)</span></p></div><nav aria-label="报告目录"><a href="#background">01　研究背景</a><a href="#setup">02　Setup</a><a href="#results">03　结果与分析</a><a href="#evidence">04　证据与后续</a></nav><section class="chapter" id="background"><h2><span>01</span>研究背景与目标</h2><p class="lead">发射镜片安装到镜筒后，微小偏心和倾斜可能改变远场能量分布。正式开展公差抽样前，需要先检查单因素扰动、探测采样和H向指标之间的关系。</p><div class="objective"><b>本次要回答的问题</b><p>以两片镜片的独立扰动为例，展示H-D86全角的名义值和变化量如何汇报。本页只演示报告结构与阅读顺序，全部数值为合成，不代表真实镜头性能。</p></div></section><section class="chapter" id="setup"><h2><span>02</span>Setup · 文件、对象与关键条件</h2><dl class="setup"><div><dt>模型文件</dt><dd>synthetic-tx-demo.zmx</dd></div><div><dt>模型与版本</dt><dd>synthetic-tx / synthetic-r1</dd></div><div><dt>光源组</dt><dd>OBJ2[comment未记录], OBJ3[comment未记录], OBJ4[comment未记录], OBJ5[comment未记录] · rigid-group</dd></div><div><dt>扰动镜片</dt><dd>OBJ7[comment未记录] · Even Asphere Lens / OBJ11[comment未记录] · Compound Lens</dd></div><div><dt>扰动幅度</dt><dd>X偏心 ±0.01 mm；Y偏心 ±0.01 mm；绕X倾斜 ±0.01 deg；绕Y倾斜 ±0.01 deg</dd></div><div><dt>探测采样</dt><dd>OBJ36[comment未记录] · 1000 × 256 像素</dd></div><div><dt>角域范围</dt><dd>H [-2, 2]° / V [-12, 12]°</dd></div><div><dt>追迹设置</dt><dd>每源 25000 条 · 种子 260926</dd></div><div><dt>追迹选项</dt><dd>分裂 开；散射 关；偏振 开</dd></div><div><dt>指标口径</dt><dd>等尾能量区间（Tx D86为7%–93%）</dd></div><div><dt>评价坐标</dt><dd>Detector Rectangle local X radial-projection angle (pilot H convention)</dd></div><div><dt>补偿设置</dt><dd>未补偿</dd></div><div><dt>数据性质</dt><dd>合成演示；未连接Zemax、未执行追迹</dd></div><div><dt>机械分组</dt><dd>两片镜片独立扰动；四die光源保持名义刚体状态</dd></div></dl><p class="muted">以上为关键条件摘录；未记录字段保留未知。完整参数在下方折叠区，不能据模板补成实际运行事实。</p><details><summary>完整解析配置（展开查看）</summary><pre>{
+  &quot;schemaVersion&quot;: 1,
+  &quot;scope&quot;: &quot;tx&quot;,
+  &quot;kind&quot;: &quot;functional-pilot&quot;,
+  &quot;modelId&quot;: &quot;synthetic-tx&quot;,
+  &quot;expectedRevision&quot;: &quot;synthetic-r1&quot;,
+  &quot;sources&quot;: {
+    &quot;indices&quot;: [
+      2,
+      3,
+      4,
+      5
+    ],
+    &quot;motion&quot;: &quot;rigid-group&quot;
+  },
+  &quot;lenses&quot;: [
+    {
+      &quot;index&quot;: 7,
+      &quot;expectedType&quot;: &quot;Even Asphere Lens&quot;,
+      &quot;expectedDirectChildren&quot;: [
+        8
+      ]
+    },
+    {
+      &quot;index&quot;: 11,
+      &quot;expectedType&quot;: &quot;Compound Lens&quot;,
+      &quot;expectedDirectChildren&quot;: []
+    }
+  ],
+  &quot;perturbations&quot;: {
+    &quot;XPosition&quot;: 0.01,
+    &quot;YPosition&quot;: 0.01,
+    &quot;TiltAboutX&quot;: 0.01,
+    &quot;TiltAboutY&quot;: 0.01
+  },
+  &quot;detector&quot;: {
+    &quot;index&quot;: 36,
+    &quot;xPixels&quot;: 1000,
+    &quot;yPixels&quot;: 256,
+    &quot;xRangeDeg&quot;: [
+      -2,
+      2
+    ],
+    &quot;yRangeDeg&quot;: [
+      -12,
+      12
+    ]
+  },
+  &quot;metric&quot;: {
+    &quot;method&quot;: &quot;equal-tail&quot;,
+    &quot;frame&quot;: &quot;Detector Rectangle local X radial-projection angle (pilot H convention)&quot;,
+    &quot;integrationTolerance&quot;: 0.005,
+    &quot;definitionStatus&quot;: &quot;pilot convention, not manufacturing acceptance&quot;
+  },
+  &quot;trace&quot;: {
+    &quot;raysPerSource&quot;: 25000,
+    &quot;seed&quot;: 260926,
+    &quot;split&quot;: true,
+    &quot;scatter&quot;: false,
+    &quot;polarization&quot;: true
+  },
+  &quot;compensation&quot;: {
+    &quot;enabled&quot;: false,
+    &quot;reason&quot;: &quot;First test is uncompensated single-factor response; 6D bounds/pivot not confirmed.&quot;
+  },
+  &quot;provenance&quot;: &quot;synthetic&quot;,
+  &quot;report&quot;: {
+    &quot;title&quot;: &quot;Tx 镜片装配误差 · 未补偿响应&quot;,
+    &quot;background&quot;: &quot;发射镜片安装到镜筒后，微小偏心和倾斜可能改变远场能量分布。正式开展公差抽样前，需要先检查单因素扰动、探测采样和H向指标之间的关系。&quot;,
+    &quot;objective&quot;: &quot;以两片镜片的独立扰动为例，展示H-D86全角的名义值和变化量如何汇报。本页只演示报告结构与阅读顺序，全部数值为合成，不代表真实镜头性能。&quot;,
+    &quot;setup&quot;: {
+      &quot;数据性质&quot;: &quot;合成演示；未连接Zemax、未执行追迹&quot;,
+      &quot;机械分组&quot;: &quot;两片镜片独立扰动；四die光源保持名义刚体状态&quot;
+    }
+  }
+}</pre></details><details><summary>运行环境记录（展开查看）</summary><pre>{
+  &quot;expectedFile&quot;: &quot;synthetic-tx-demo.zmx&quot;,
+  &quot;backend&quot;: &quot;synthetic&quot;
+}</pre></details></section><section class="chapter" id="results"><h2><span>03</span>结果、解释与适用边界</h2><p class="lead">示例工况的H-D86全角为1.200°–1.208°；变化量与0.004°角域像素同量级。</p><div class="metrics"><article><span>名义 H-D86 全角</span><strong>1.2°</strong></article><article><span>已记录工况</span><strong>6</strong></article><article><span>补偿状态</span><strong>未补偿</strong></article></div><div class="table-wrap"><table><caption>各工况 H-D86 全角；Δ 相对名义工况，单位 °</caption><thead><tr><th>工况</th><th>H-D86 / °</th><th>Δ / °</th><th>耗时 / s</th></tr></thead><tbody><tr><td>nominal</td><td class="number">1.2</td><td class="number">+0</td><td class="number">2.10</td></tr><tr><td>L1 · X偏心 −10 μm</td><td class="number">1.204</td><td class="number">+0.004</td><td class="number">2.30</td></tr><tr><td>L1 · X偏心 +10 μm</td><td class="number">1.204</td><td class="number">+0.004</td><td class="number">2.20</td></tr><tr><td>L2 · Y倾斜 −0.01°</td><td class="number">1.208</td><td class="number">+0.008</td><td class="number">2.40</td></tr><tr><td>L2 · Y倾斜 +0.01°</td><td class="number">1.204</td><td class="number">+0.004</td><td class="number">2.30</td></tr><tr><td>nominal-repeat</td><td class="number">1.2</td><td class="number">+0</td><td class="number">2.10</td></tr></tbody></table></div><h3>结果解释</h3><p>这个合成案例演示一种需要谨慎解释的结果：数值有变化，但变化可能受到离散采样限制。在完成采样和物理探测口径收敛前，不据此排序镜片敏感度，也不形成制造公差结论。</p><div class="limitations"><h3>结论边界与检查</h3><ul><li>全部数值、文件名和耗时均为合成演示，不是实测。</li><li>H-D86采用探测器局部X径向投影角的7%–93%等尾区间；并非自动等同于XZ笛卡尔角。</li><li>像素宽度0.004°，没有进行采样收敛或四die整体6D补偿。</li></ul></div></section><section class="chapter" id="evidence"><h2><span>04</span>证据与后续</h2><h3>下一步</h3><ul><li>真实分析前核对文件、modelId/revision与对象机械分组。</li><li>分别加密角域像素、提高光线数和扩大物理探测口径，检查指标收敛。</li><li>名义口径稳定后，再设计四die整体6D补偿与联合误差抽样。</li></ul><p class="muted">本页是合成设计样例；参数和示例结果内嵌，不关联真实模型或运行证据。</p><details><summary>完整结果数据（展开查看）</summary><pre>{
+  &quot;status&quot;: &quot;completed&quot;,
+  &quot;compensationPerformed&quot;: false,
+  &quot;manufacturingConclusion&quot;: false,
+  &quot;cases&quot;: [
+    {
+      &quot;name&quot;: &quot;nominal&quot;,
+      &quot;D86FullHDeg&quot;: 1.2,
+      &quot;elapsedSeconds&quot;: 2.1
+    },
+    {
+      &quot;name&quot;: &quot;L1 · X偏心 −10 μm&quot;,
+      &quot;D86FullHDeg&quot;: 1.204,
+      &quot;elapsedSeconds&quot;: 2.3
+    },
+    {
+      &quot;name&quot;: &quot;L1 · X偏心 +10 μm&quot;,
+      &quot;D86FullHDeg&quot;: 1.204,
+      &quot;elapsedSeconds&quot;: 2.2
+    },
+    {
+      &quot;name&quot;: &quot;L2 · Y倾斜 −0.01°&quot;,
+      &quot;D86FullHDeg&quot;: 1.208,
+      &quot;elapsedSeconds&quot;: 2.4
+    },
+    {
+      &quot;name&quot;: &quot;L2 · Y倾斜 +0.01°&quot;,
+      &quot;D86FullHDeg&quot;: 1.204,
+      &quot;elapsedSeconds&quot;: 2.3
+    },
+    {
+      &quot;name&quot;: &quot;nominal-repeat&quot;,
+      &quot;D86FullHDeg&quot;: 1.2,
+      &quot;elapsedSeconds&quot;: 2.1
+    }
+  ],
+  &quot;report&quot;: {
+    &quot;summary&quot;: &quot;示例工况的H-D86全角为1.200°–1.208°；变化量与0.004°角域像素同量级。&quot;,
+    &quot;interpretation&quot;: &quot;这个合成案例演示一种需要谨慎解释的结果：数值有变化，但变化可能受到离散采样限制。在完成采样和物理探测口径收敛前，不据此排序镜片敏感度，也不形成制造公差结论。&quot;,
+    &quot;nextSteps&quot;: [
+      &quot;真实分析前核对文件、modelId/revision与对象机械分组。&quot;,
+      &quot;分别加密角域像素、提高光线数和扩大物理探测口径，检查指标收敛。&quot;,
+      &quot;名义口径稳定后，再设计四die整体6D补偿与联合误差抽样。&quot;
+    ]
+  }
+}</pre></details></section><footer><span>optDSH · 可追溯的光学研究记录</span><a href="#top">返回顶部 ↑</a></footer></main></body></html>

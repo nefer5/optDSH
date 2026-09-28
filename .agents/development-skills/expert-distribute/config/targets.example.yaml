@@ -1,0 +1,6 @@
+# Paths resolve relative to this YAML file. Copy to .agents/distribution-targets.local.yaml.
+projects:
+  - path: ..
+    hosts: codex,opencode,claude,dsh
+  - path: ../../AgentTyvate
+    hosts: codex,opencode,claude

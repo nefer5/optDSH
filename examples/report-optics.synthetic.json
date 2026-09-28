@@ -1,0 +1,133 @@
+{
+  "config": {
+    "schemaVersion": 1,
+    "scope": "tx",
+    "kind": "functional-pilot",
+    "modelId": "synthetic-tx",
+    "expectedRevision": "synthetic-r1",
+    "sources": {
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "motion": "rigid-group"
+    },
+    "lenses": [
+      {
+        "index": 7,
+        "expectedType": "Even Asphere Lens",
+        "expectedDirectChildren": [
+          8
+        ]
+      },
+      {
+        "index": 11,
+        "expectedType": "Compound Lens",
+        "expectedDirectChildren": []
+      }
+    ],
+    "perturbations": {
+      "XPosition": 0.01,
+      "YPosition": 0.01,
+      "TiltAboutX": 0.01,
+      "TiltAboutY": 0.01
+    },
+    "detector": {
+      "index": 36,
+      "xPixels": 1000,
+      "yPixels": 256,
+      "xRangeDeg": [
+        -2,
+        2
+      ],
+      "yRangeDeg": [
+        -12,
+        12
+      ]
+    },
+    "metric": {
+      "method": "equal-tail",
+      "frame": "Detector Rectangle local X radial-projection angle (pilot H convention)",
+      "integrationTolerance": 0.005,
+      "definitionStatus": "pilot convention, not manufacturing acceptance"
+    },
+    "trace": {
+      "raysPerSource": 25000,
+      "seed": 260926,
+      "split": true,
+      "scatter": false,
+      "polarization": true
+    },
+    "compensation": {
+      "enabled": false,
+      "reason": "First test is uncompensated single-factor response; 6D bounds/pivot not confirmed."
+    },
+    "provenance": "synthetic",
+    "report": {
+      "title": "Tx 镜片装配误差 · 未补偿响应",
+      "background": "发射镜片安装到镜筒后，微小偏心和倾斜可能改变远场能量分布。正式开展公差抽样前，需要先检查单因素扰动、探测采样和H向指标之间的关系。",
+      "objective": "以两片镜片的独立扰动为例，展示H-D86全角的名义值和变化量如何汇报。本页只演示报告结构与阅读顺序，全部数值为合成，不代表真实镜头性能。",
+      "setup": {
+        "数据性质": "合成演示；未连接Zemax、未执行追迹",
+        "机械分组": "两片镜片独立扰动；四die光源保持名义刚体状态"
+      }
+    }
+  },
+  "runtime": {
+    "expectedFile": "synthetic-tx-demo.zmx",
+    "backend": "synthetic"
+  },
+  "result": {
+    "status": "completed",
+    "compensationPerformed": false,
+    "manufacturingConclusion": false,
+    "cases": [
+      {
+        "name": "nominal",
+        "D86FullHDeg": 1.2,
+        "elapsedSeconds": 2.1
+      },
+      {
+        "name": "L1 · X偏心 −10 μm",
+        "D86FullHDeg": 1.204,
+        "elapsedSeconds": 2.3
+      },
+      {
+        "name": "L1 · X偏心 +10 μm",
+        "D86FullHDeg": 1.204,
+        "elapsedSeconds": 2.2
+      },
+      {
+        "name": "L2 · Y倾斜 −0.01°",
+        "D86FullHDeg": 1.208,
+        "elapsedSeconds": 2.4
+      },
+      {
+        "name": "L2 · Y倾斜 +0.01°",
+        "D86FullHDeg": 1.204,
+        "elapsedSeconds": 2.3
+      },
+      {
+        "name": "nominal-repeat",
+        "D86FullHDeg": 1.2,
+        "elapsedSeconds": 2.1
+      }
+    ],
+    "report": {
+      "summary": "示例工况的H-D86全角为1.200°–1.208°；变化量与0.004°角域像素同量级。",
+      "interpretation": "这个合成案例演示一种需要谨慎解释的结果：数值有变化，但变化可能受到离散采样限制。在完成采样和物理探测口径收敛前，不据此排序镜片敏感度，也不形成制造公差结论。",
+      "nextSteps": [
+        "真实分析前核对文件、modelId/revision与对象机械分组。",
+        "分别加密角域像素、提高光线数和扩大物理探测口径，检查指标收敛。",
+        "名义口径稳定后，再设计四die整体6D补偿与联合误差抽样。"
+      ]
+    }
+  },
+  "notes": [
+    "全部数值、文件名和耗时均为合成演示，不是实测。",
+    "H-D86采用探测器局部X径向投影角的7%–93%等尾区间；并非自动等同于XZ笛卡尔角。",
+    "像素宽度0.004°，没有进行采样收敛或四die整体6D补偿。"
+  ]
+}

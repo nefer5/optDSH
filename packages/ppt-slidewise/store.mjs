@@ -1,0 +1,17 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import {validate} from './model.mjs';
+import {hash} from './assets.mjs';
+export const root=path.resolve(import.meta.dirname,'../..');
+export const data=process.env.PPT_SLIDEWISE_DATA_DIR?path.resolve(process.env.PPT_SLIDEWISE_DATA_DIR):path.join(root,'data/ppt-slidewise');
+export function dir(id){if(!/^[a-z0-9-]{1,64}$/.test(id))throw Error('Invalid document ID');return path.join(data,id);}
+export function revision(id,n){if(!Number.isInteger(n)||n<1)throw Error('Invalid revision');const current=read(id);return n===current.revision?current:JSON.parse(fs.readFileSync(path.join(dir(id),'history',`${n}.json`),'utf8'));}
+export function read(id){return JSON.parse(fs.readFileSync(path.join(dir(id),'document.json'),'utf8'));}
+export function save(id,deck,expected,note){validate(deck);const d=dir(id);fs.mkdirSync(d,{recursive:true});const lock=path.join(d,'write.lock');let fd;try{fd=fs.openSync(lock,'wx');}catch{throw Error('BUSY: another write in progress');}
+ try {let old=null;const dest=path.join(d,'document.json');if(fs.existsSync(dest))old=read(id);if((old?.revision||0)!==expected)throw Error('CONFLICT: reload latest revision before saving');
+ if(old && hash(old.deck)===hash(deck) && (note??old.note??'')===(old.note??''))return old;
+ if(old){fs.mkdirSync(path.join(d,'history'),{recursive:true});fs.writeFileSync(path.join(d,'history',`${old.revision}.json`),JSON.stringify(old,null,2),{flag:'wx'});}
+ const record={id,revision:expected+1,updatedAt:new Date().toISOString(),deck,note:note??old?.note??''};const pending=path.join(d,crypto.randomUUID()+'.tmp');fs.writeFileSync(pending,JSON.stringify(record,null,2));fs.renameSync(pending,dest);return record;
+ }finally{fs.closeSync(fd);fs.unlinkSync(lock);}}
+export function rendererKey(){const dist=path.join(import.meta.dirname,'dist');const files=[];function walk(d){if(!fs.existsSync(d))return;for(const f of fs.readdirSync(d).sort()){const p=path.join(d,f);if(fs.statSync(p).isDirectory())walk(p);else files.push([path.relative(dist,p),hash(fs.readFileSync(p))]);}}walk(dist);return hash(files);}
+export function cachedExport(id){const r=read(id),file=path.join(dir(id),'export-cache.json');if(!fs.existsSync(file))return null;const c=JSON.parse(fs.readFileSync(file,'utf8'));if(c.revision===r.revision&&c.contentHash===hash(r.deck)&&c.renderer===rendererKey()&&fs.existsSync(c.path)&&hash(fs.readFileSync(c.path))===c.sha256)return {...c,cached:true};return null;}
+export function exported(id,revision,bytes){const r=read(id);if(r.revision!==revision)throw Error('CONFLICT: export belongs to stale revision');const dest=path.join(dir(id),`revision-${revision}.pptx`);fs.writeFileSync(dest,bytes);fs.writeFileSync(path.join(dir(id),'export-cache.json'),JSON.stringify({revision,contentHash:hash(r.deck),renderer:rendererKey(),path:dest,sha256:hash(bytes)},null,2));return dest;}
+export function setStage(id,stage,basis){const allowed=['planning','content-reviewed','sample-reviewed','production','delivered'];if(!allowed.includes(stage)||!basis?.trim())throw Error('Stage and explicit decision basis required');const r=read(id),file=path.join(dir(id),'workflow.json');const state=fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):{events:[]};state.events.push({stage,basis,revision:r.revision,at:new Date().toISOString(),actor:'agent-recorded'});state.current=stage;fs.writeFileSync(file,JSON.stringify(state,null,2));return state;}

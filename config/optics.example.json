@@ -1,7 +1,6 @@
 {
   "backend": "synthetic",
-  "python": "E:/Proj-2026-N02_opt-assist/.venv/Scripts/python.exe",
-  "sourceRoot": "E:/Proj-2026-N02_opt-assist",
+  "python": ".venv/Scripts/python.exe",
   "expectedFile": null,
   "instance": 1
 }

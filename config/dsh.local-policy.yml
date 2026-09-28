@@ -17,8 +17,8 @@
       config:
         serverName: optics
         transport: stdio
-        command: python
-        args: ['-X', 'utf8', 'scripts/optics-mcp.py']
+        command: !!js process.cwd() + "/.venv/Scripts/python.exe"
+        args: ['-X', 'utf8', 'packages/optics/scripts/mcp.py']
         cwd: !!js process.cwd()
         toolCallTimeoutMs: 45000
         failOnStartupError: false
@@ -26,3 +26,20 @@
 - insert:
     - id: optdsh-workbench
       name: ../plugins/optdsh-workbench/lib/index.js
+    - id: optdsh-forms
+      name: ../plugins/optdsh-forms/lib/index.js
+
+# Native project expert preset; Standard remains the default.
+- id: agent-presets
+  config:
+    default: standard
+    roots:
+      - path: !!js process.cwd() + '/.agents/dsh-presets'
+        trust: user
+- insert:
+    - id: optdsh-expert-spawn
+      name: '@deepseek-ai/dsh-subagent-spawn-in-process'
+      config:
+        providerName: optdsh-visual-designer
+    - id: optdsh-experts
+      name: ../plugins/optdsh-experts/lib/index.js

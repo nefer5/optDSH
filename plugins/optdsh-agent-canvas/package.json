@@ -23,5 +23,11 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "4.0.2"
-  }
+  },
+  "files": [
+    "lib",
+    "web",
+    "config",
+    "README.md"
+  ]
 }

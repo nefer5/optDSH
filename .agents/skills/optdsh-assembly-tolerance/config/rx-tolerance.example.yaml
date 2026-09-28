@@ -1,0 +1,41 @@
+# 装调规划模板；null为待确认，位置mm、转角deg。不是可执行仿真配置。
+schemaVersion: 1
+status: draft
+assemblyOrder: lenses_into_barrel_then_coupling
+modelId: null
+revision: null
+rx:
+  metric:
+    kind: rectangular_spot_size
+    axes:
+    - H
+    - V
+    extentRule: null
+    limitHMM: null
+    limitVMM: null
+    referenceFrame: null
+  compensator:
+    objectRole: spad
+    dofs:
+    - x
+    - y
+    - z
+    - rx
+    - ry
+    - rz
+    objectId: null
+    frame: null
+    pivot: null
+    bounds: null
+internalErrors: null
+barrelPlacementErrors: null
+sampling:
+  distribution: null
+  correlations: null
+  sampleCount: null
+  seed: null
+minimumCapturedEnergyFraction: null
+units:
+  translation: mm
+  rotation: deg
+scope: rx

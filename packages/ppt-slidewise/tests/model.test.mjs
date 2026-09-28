@@ -1,0 +1,4 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {fromPlan,validate,font} from '../model.mjs';
+test('Chinese aliases and stable element IDs',()=>{assert.equal(font('KaiTi'),'楷体');const d=fromPlan({slides:[{title:'结论',body:['依据'],font:'仿宋'}]});assert.equal(d.slides[0].elements[1].fontFamily,'仿宋');assert.equal(d.slides[0].elements[1].id,'s1-body');});
+test('reject remote image and non-finite coordinates',()=>{assert.throws(()=>fromPlan({slides:[{title:'x',image:'https://example.com/a.png'}]}),/embedded/);const d=fromPlan({slides:[{title:'x'}]});d.slides[0].elements[0].x=NaN;assert.throws(()=>validate(d),/Invalid x/);});
+test('unknown fonts and repeated IDs rejected',()=>{assert.throws(()=>font('不存在字体'));const d=fromPlan({slides:[{title:'x'}]});d.slides[0].elements.push({...d.slides[0].elements[0]});assert.throws(()=>validate(d),/Duplicate/);});

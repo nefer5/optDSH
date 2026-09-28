@@ -1,0 +1,18 @@
+import React,{useEffect,useRef,useState} from 'react';import {createRoot} from 'react-dom/client';
+import {SlidewiseEditor,type SlidewiseEditorHandle} from '@textcortex/slidewise';
+import '@textcortex/slidewise/style.css';import './style.css';import {exportDeck} from './export';
+const id=new URLSearchParams(location.search).get('id')||'';
+async function api(body?:unknown,action=''){const r=await fetch(`/api/${id}${action}`,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const v=await r.json();if(!r.ok)throw Error(v.error);return v;}
+function App(){const [record,setRecord]=useState<any>(null),[message,setMessage]=useState('正在读取…'),[dirty,setDirty]=useState(false),[note,setNote]=useState('');const editor=useRef<SlidewiseEditorHandle>(null);
+ async function load(){try{const r=await api();setRecord(r);setNote(r.note);setDirty(false);setMessage(`已读取版本 ${r.revision}`);}catch(e:any){setMessage(e.message);}}
+ useEffect(()=>{load();},[]);
+ useEffect(()=>{(window as any).__pptTools={ready:()=>!!editor.current,goToSlide:(slideId:string)=>{if(!record?.deck.slides.some((s:any)=>s.id===slideId))throw Error('Unknown slide');editor.current?.goToSlide(slideId);}};return()=>{delete (window as any).__pptTools;};},[record]);
+ async function save(deck=editor.current!.getDeck()){const r=await api({deck,revision:record.revision,note});setRecord(r);setDirty(false);setMessage(`已保存版本 ${r.revision}，回聊天说“继续”即可`);return r;}
+ async function output(deck=editor.current!.getDeck(),download=true){try{const r=await save(deck);const blob=await exportDeck(r.deck);const bytes=new Uint8Array(await blob.arrayBuffer());let s='';for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode(...bytes.subarray(i,i+8192));const result=await api({revision:r.revision,base64:btoa(s)},'/export');setMessage('已导出：'+result.path);if(download){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${id}-v${r.revision}.pptx`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}return result;}catch(e:any){setMessage(e.message);throw e;}}
+ useEffect(()=>{if(record&&(new URLSearchParams(location.search).get('export')==='1')&&!(window as any).__started){(window as any).__started=true;exportDeck(record.deck).then(async blob=>{let s='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode(...bytes.subarray(i,i+8192));(window as any).__exportResult=await api({revision:record.revision,base64:btoa(s)},'/export');}).catch(e=>(window as any).__exportError=e.message);}},[record]);
+ useEffect(()=>{const h=(e:BeforeUnloadEvent)=>{if(dirty){e.preventDefault();e.returnValue='';}};addEventListener('beforeunload',h);return()=>removeEventListener('beforeunload',h);},[dirty]);
+ return <><header><strong>PPT · SlideWise</strong><span>{record?.deck.title}</span><button onClick={()=>{if(!dirty||confirm('有未保存修改，仍要读取最新稿件吗？'))load();}}>读取最新稿件</button><button disabled={!record} onClick={()=>save().catch(e=>setMessage(e.message))}>保存给 Agent</button><button disabled={!record} onClick={()=>output().catch(()=>{})}>导出 PPTX</button><span role="status">{dirty?'有未保存修改 · ':''}{message}</span></header>
+ <div className="feedback"><label>修改意见 <input aria-label="修改意见" value={note} onChange={e=>{setNote(e.target.value);setDirty(true);}} placeholder="例如：第2页结论更明确，第3页图放大"/></label><small>保存后回原聊天继续；字体使用本机已安装字体，迁移机器需重新检查。</small></div>
+ {record&&<main><SlidewiseEditor key={id+':'+record.revision} ref={editor} deck={record.deck} onChange={()=>setDirty(true)} onSave={d=>save(d).catch(e=>setMessage(e.message))} onExport={d=>output(d).catch(()=>{})}/></main>}</>;
+}
+createRoot(document.getElementById('root')!).render(<App/>);

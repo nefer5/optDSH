@@ -1,0 +1,140 @@
+caller: 公差配置 Skill · 结构化交互示例（不执行）
+form:
+  version: 2
+  title: 公差分析 · 临时配置
+  description: 演示盲装件、耦合件、逐轴误差和方法选择。对象及预填数值均为合成示例，不关联当前 Zemax；提交仅保存结构化配置。
+  resources:
+    objects:
+      label: 合成对象候选
+      revision: demo-catalog-v1
+      notice: 仅演示；真实调用应由 Skill 提供已核对身份和版本的候选快照。
+      options:
+        - {value: demo-lens-a, label: '示例镜片 A', kind: lens, movable: true}
+        - {value: demo-lens-b, label: '示例镜片 B', kind: lens, movable: true}
+        - {value: demo-control, label: '示例耦合控制件', kind: control, movable: true}
+        - {value: demo-die-1, label: '示例光源 die1', kind: source, movable: true}
+        - {value: demo-die-2, label: '示例光源 die2', kind: source, movable: true}
+        - {value: demo-detector-1, label: '示例探测面 1', kind: detector}
+        - {value: demo-detector-2, label: '示例探测面 2', kind: detector}
+  rules:
+    - {kind: disjoint, left: /blindParts, right: /coupledParts, by: objectId, message: 同一个对象不能同时作为盲装件和耦合控制件。}
+  groups:
+    - id: blind
+      title: 盲装与随机误差
+      description: 添加镜片，再选择要扰动的自由度。Min/Max 与 μ/σ 两种输入独立保留。
+      fields:
+        - id: statistics
+          type: object
+          label: 随机误差输入
+          required: true
+          fields:
+            - {id: inputMode, type: select, label: 输入方式, required: true, options: [{value: range, label: Min / Max 范围}, {value: sigma, label: 均值 μ / 标准差 σ}]}
+            - {id: truncationSigma, type: number, label: 截断倍数 nσ, min: 1, max: 6, required: true, help: 仅记录输入；范围换算由后续业务适配器负责。}
+        - id: blindParts
+          type: array
+          label: 盲装镜片
+          itemLabel: 盲装件
+          addLabel: ＋ 添加盲装镜片
+          required: true
+          minItems: 1
+          maxItems: 30
+          uniqueBy: objectId
+          fields:
+            - {id: objectId, type: reference, label: 盲装对象, source: objects, filter: {kind: lens}, required: true}
+            - id: axes
+              type: record
+              label: 随机偏移自由度
+              required: true
+              minItems: 1
+              options: [{value: x, label: X, unit: mm}, {value: y, label: Y, unit: mm}, {value: z, label: Z, unit: mm}, {value: Tx, label: 绕 X 倾斜, unit: deg}, {value: Ty, label: 绕 Y 倾斜, unit: deg}, {value: Tz, label: 绕 Z 倾斜, unit: deg}]
+              fields:
+                - {id: min, type: number, label: Min, required: true, when: {path: /statistics/inputMode, equals: range}}
+                - {id: max, type: number, label: Max, required: true, when: {path: /statistics/inputMode, equals: range}}
+                - {id: mean, type: number, label: 均值 μ, required: true, when: {path: /statistics/inputMode, equals: sigma}}
+                - {id: sigma, type: number, label: 标准差 σ, exclusiveMin: 0, required: true, when: {path: /statistics/inputMode, equals: sigma}}
+              rules:
+                - {kind: lessThan, left: min, right: max, when: {path: /statistics/inputMode, equals: range}, message: 随机偏移的 Min 必须小于 Max。}
+    - id: coupling
+      title: 耦合件与行程
+      description: 控制对象与随动成员分别选择，行程按自由度逐行填写。
+      fields:
+        - id: coupledParts
+          type: array
+          label: 耦合件
+          itemLabel: 耦合组
+          addLabel: ＋ 添加耦合件
+          uniqueBy: objectId
+          fields:
+            - {id: objectId, type: reference, label: 耦合控制对象, source: objects, filter: {movable: true}, required: true}
+            - {id: memberIds, type: multiselect, label: 随动成员, source: objects, filter: {movable: true}, help: 不得包含控制对象本身；这里仅记录选择，不验证实际机械参考链。}
+            - id: axes
+              type: record
+              label: 补偿行程
+              required: true
+              minItems: 1
+              options: [{value: x, label: X, unit: mm}, {value: y, label: Y, unit: mm}, {value: z, label: Z, unit: mm}, {value: Tx, label: 绕 X 倾斜, unit: deg}, {value: Ty, label: 绕 Y 倾斜, unit: deg}, {value: Tz, label: 绕 Z 倾斜, unit: deg}]
+              fields:
+                - {id: min, type: number, label: Min, required: true}
+                - {id: max, type: number, label: Max, required: true}
+              rules:
+                - {kind: lessThan, left: min, right: max, message: 补偿行程的 Min 必须小于 Max。}
+          rules:
+            - {kind: excludes, left: memberIds, right: objectId, message: 随动成员不能包含控制对象本身。}
+    - id: targets
+      title: 目标与探测面
+      description: 多个目标按行添加；源和探测面候选由调用方提供。
+      fields:
+        - id: targets
+          type: array
+          label: 分析目标
+          addLabel: ＋ 添加目标
+          layout: table
+          uniqueBy: name
+          fields:
+            - {id: name, type: text, label: 目标名, required: true}
+            - {id: sourceId, type: reference, label: 光源, source: objects, filter: {kind: source}, required: true}
+            - {id: detectorId, type: reference, label: 探测面, source: objects, filter: {kind: detector}, required: true}
+            - {id: axis, type: select, label: 局部轴, options: [X, Y], required: true}
+            - {id: minPowerRatio, type: number, label: 最低功率保持率, min: 0, max: 1}
+    - id: analysis
+      title: 方法与采样
+      description: 选择方法后只显示相关参数；完整草稿保留各方法分支，生效配置仅输出当前分支。
+      fields:
+        - id: analysis
+          type: object
+          label: 分析方法
+          required: true
+          fields:
+            - {id: method, type: select, label: 补偿方法, required: true, options: [{value: coordinate, label: 逐轴扫描}, {value: OD, label: OD 局部优化}, {value: DLS, label: DLS 局部优化}, {value: none, label: 不补偿}]}
+            - {id: runs, type: number, label: Monte Carlo 样本数, integer: true, min: 1, required: true}
+            - {id: raysPerSource, type: number, label: 每源光线数, integer: true, min: 1, required: true}
+            - {id: seed, type: number, label: 制造误差随机种子, integer: true, min: 0, required: true}
+            - {id: cycles, type: number, label: 局部优化循环数, integer: true, min: 1, required: true, when: {path: method, in: [OD, DLS]}}
+        - id: custom
+          type: object
+          label: 逐轴扫描设置
+          required: true
+          when: {path: /analysis/method, equals: coordinate}
+          fields:
+            - {id: rounds, type: number, label: 扫描轮数, integer: true, min: 1, max: 8, required: true}
+            - {id: stepFraction, type: number, label: 初始步长比例, exclusiveMin: 0, max: 1, required: true}
+            - {id: shrinkFactor, type: number, label: 每轮缩步比例, exclusiveMin: 0, exclusiveMax: 1, required: true}
+values:
+  statistics: {inputMode: range, truncationSigma: 2}
+  blindParts:
+    - objectId: demo-lens-a
+      axes:
+        x: {min: -0.02, max: 0.02}
+        z: {min: -0.05, max: 0.05}
+        Tx: {min: -0.1, max: 0.1}
+  coupledParts:
+    - objectId: demo-control
+      memberIds: [demo-die-1, demo-die-2]
+      axes:
+        x: {min: -0.5, max: 0.5}
+        z: {min: -0.5, max: 0.5}
+  targets:
+    - {name: die1, sourceId: demo-die-1, detectorId: demo-detector-1, axis: X, minPowerRatio: 0.95}
+    - {name: die2, sourceId: demo-die-2, detectorId: demo-detector-2, axis: X, minPowerRatio: 0.95}
+  analysis: {method: coordinate, runs: 3, raysPerSource: 10000, seed: 42}
+  custom: {rounds: 2, stepFraction: 0.25, shrinkFactor: 0.5}

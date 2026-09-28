@@ -1,0 +1,35 @@
+# 自定义脚本分析；按当前真实快照填写objectId/revision，不能用单独编号代替。
+schemaVersion: 1
+modelId: null
+expectedRevision: null
+geometryConfirmed: false
+distanceMode: global-z
+statistics: {truncationSigma: 2, inputMode: range} # sigma方式：每轴填mean、sigma，后端计算min/max
+blindParts:
+  - objectId: null
+    axes:
+      x: {min: null, max: null} # 位置mm；Tx/Ty/Tz为deg
+coupledParts:
+  - objectId: null
+    memberIds: [] # 明确已通过模型参考链刚体随动的成员
+    axes:
+      z: {min: null, max: null}
+targets:
+  - {name: die1, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+  - {name: die2, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+analysis:
+  mode: custom
+  method: coordinate # coordinate / OD / DLS / none
+  runs: 3
+  cycles: 1 # OD/DLS独立局部优化，重复Fixed_1_Cycle次数
+  raysPerSource: 10000
+  seed: 42 # 制造误差抽样种子
+custom:
+  referenceChainConfirmed: false # 用户先在Zemax剔除非预期参考链传递后确认
+  compensationScope: last
+  finalState: copy-file
+  rounds: 2 # 逐轴补偿轮数1–8
+  stepFraction: 0.25 # 初始步长=(max-min)*此系数，(0,1]
+  shrinkFactor: 0.5 # 每轮缩步系数，(0,1)
+  raySeed: 12345 # 脚本追迹复用同一seed，与制造误差seed分开
+# σ示例（需把inputMode改为sigma）：x: {mean: 0, sigma: 0.005}

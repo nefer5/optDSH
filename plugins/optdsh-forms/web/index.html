@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>课题背景 · optDSH</title><link rel="stylesheet" href="./style.css"><script type="module" src="./app.js"></script></head>
+<body>
+<header class="topbar"><a class="brand" href="./view"><span class="brand-mark">◈</span> optDSH <span class="brand-sub">研究参数</span></a><span class="preview-tag">MVP · 03</span><a class="back" href="/">打开官方 DSH ↗</a></header>
+<div id="fatal" role="alert" hidden></div>
+<div class="shell" id="shell" hidden>
+  <aside class="sidebar"><div class="eyebrow">RESEARCH PARAMETERS</div><h2>课题参数簿</h2><label class="study-label" for="study-select">当前课题</label><select id="study-select"></select><div id="form-select-wrap"><label class="study-label" for="form-select">配置页面</label><select id="form-select"></select></div><div class="sidebar-rule"></div><nav id="groups" aria-label="参数分组"></nav><div class="sidebar-bottom"><span class="mode-dot"></span><strong id="mode-label">长期配置</strong><p id="mode-note"></p><button id="demo" class="subtle">体验公差临时配置 ↗</button><a id="return-study" hidden href="./view">返回课题参数</a></div></aside>
+  <main><div class="page-heading"><div><div class="eyebrow" id="kicker">课题背景 / PERSISTENT</div><h1 id="title"></h1><p id="description"></p></div><span id="state" class="state">尚未保存</span></div>
+    <p id="resource-note" class="resource-note" hidden></p>
+    <div class="content-grid"><section class="editor"><div class="section-head"><span id="section-number">01</span><div><h2 id="section-title"></h2><p id="section-description"></p></div></div><form id="form" novalidate></form><div class="form-footer"><span>保留未填项；切换模式不丢失其他分支输入。</span><button id="next" class="subtle">下一组 →</button></div></section>
+    <aside class="context"><div class="context-heading"><span class="eyebrow">CONFIGURATION PREVIEW</span><h2>给 Agent 的配置</h2><p>按原始层级保留数值、对象和列表。</p></div><div class="preview-tabs"><button id="preview-data" class="active">生效配置</button><button id="preview-text">文字摘要</button></div><div class="completion"><span id="count"></span><progress id="progress" value="0" max="1"></progress></div><pre id="summary"></pre><button id="copy" class="copy">复制当前生效配置</button><details><summary>保存位置与读取方式</summary><code id="storage"></code><p>values 保留全部分支；activeValues 只含当前显示分支。提交不会自动执行分析。</p><code id="request-id"></code></details></aside></div>
+    <footer class="actions"><div><strong id="save-title">让背景随课题保留</strong><p id="status" role="status" aria-live="polite"></p></div><div class="action-buttons"><button id="reload" class="subtle">重新载入</button><button id="save" class="secondary">保存背景</button><button id="submit" class="primary" hidden>提交本次信息</button><button id="clone" class="primary" hidden>继续修改</button></div></footer>
+  </main>
+</div></body></html>

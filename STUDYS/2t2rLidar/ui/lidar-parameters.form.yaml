@@ -1,0 +1,116 @@
+version: 2
+title: 2T2R LiDAR · 结构化参数
+description: 以模块、数值和参数表维护研究条件。字段参考线扫项目的参数形态；未预填研究数值，不代表与其执行器配置格式直接兼容。
+groups:
+  - id: system
+    title: 系统与发射
+    description: 数值带单位保存；两路通道可以按行增加，参数彼此独立。
+    fields:
+      - id: target
+        type: object
+        label: 系统目标
+        fields:
+          - {id: range_m, type: number, label: 目标距离, unit: m, min: 0}
+          - {id: reflectivity, type: number, label: 目标反射率, min: 0, max: 1}
+          - {id: hfov_deg, type: number, label: 水平视场总角宽, unit: '°', min: 0, max: 360}
+          - {id: vfov_deg, type: number, label: 垂直视场总角宽, unit: '°', min: 0, max: 180}
+      - id: tx
+        type: array
+        layout: table
+        label: 发射通道
+        addLabel: ＋ 添加发射通道
+        uniqueBy: name
+        maxItems: 16
+        fields:
+          - {id: name, type: text, label: 通道名, required: true, placeholder: Tx1}
+          - {id: wavelength_nm, type: number, label: 波长, unit: nm, min: 1}
+          - {id: pulse_energy_nj, type: number, label: 单发能量, unit: nJ, min: 0}
+          - {id: pulse_fwhm_ps, type: number, label: 脉宽 FWHM, unit: ps, min: 0}
+          - {id: prf_hz, type: number, label: 重复频率, unit: Hz, min: 0}
+          - {id: efficiency, type: number, label: 光学效率, min: 0, max: 1}
+  - id: rx
+    title: 接收光学
+    description: 根据孔径形状显示相关尺寸；切换后保留原分支，只有当前分支进入生效配置。
+    fields:
+      - id: rx
+        type: object
+        label: 接收入口与视场
+        fields:
+          - {id: aperture_shape, type: select, label: 孔径形状, options: [{value: rectangle, label: 矩形}, {value: circle, label: 圆形}]}
+          - {id: aperture_width_mm, type: number, label: 孔径全宽, unit: mm, min: 0, when: {path: aperture_shape, equals: rectangle}}
+          - {id: aperture_height_mm, type: number, label: 孔径全高, unit: mm, min: 0, when: {path: aperture_shape, equals: rectangle}}
+          - {id: aperture_diameter_mm, type: number, label: 孔径直径, unit: mm, min: 0, when: {path: aperture_shape, equals: circle}}
+          - {id: efficiency, type: number, label: 接收光学效率, min: 0, max: 1}
+          - {id: ifov_h_mrad, type: number, label: 通道 H 视场, unit: mrad, min: 0}
+          - {id: ifov_v_mrad, type: number, label: 通道 V 视场, unit: mrad, min: 0}
+  - id: detector
+    title: SPAD 与读出
+    description: 区分器件参数、读出模式与门控。这里只记录输入，不在前端推导器件总数或物理结果。
+    fields:
+      - id: spad
+        type: object
+        label: 器件与时间参数
+        fields:
+          - {id: h_binning, type: number, label: H binning, integer: true, min: 1}
+          - {id: v_binning, type: number, label: V binning, integer: true, min: 1}
+          - {id: fill_factor, type: number, label: 填充因子, min: 0, max: 1}
+          - {id: dcr_cps, type: number, label: 单 SPAD 暗计数率, unit: cps, min: 0}
+          - {id: dead_time_ns, type: number, label: SPAD 死时间, unit: ns, min: 0}
+          - {id: jitter_fwhm_ps, type: number, label: 时间抖动 FWHM, unit: ps, min: 0}
+      - id: readout
+        type: object
+        label: 读出与门控
+        fields:
+          - {id: mode, type: select, label: 研究读出方式, options: [{value: independent_multi, label: 独立多命中}, {value: shared_multitdc, label: 共享多 TDC}]}
+          - {id: tdc_count, type: number, label: TDC 数量, integer: true, min: 1, when: {path: mode, equals: shared_multitdc}}
+          - {id: tdc_dead_time_ns, type: number, label: TDC 死时间, unit: ns, min: 0}
+          - {id: time_bin_ps, type: number, label: 时间量化间隔, unit: ps, min: 0}
+          - {id: gate_start_ns, type: number, label: 门起点, unit: ns}
+          - {id: gate_width_ns, type: number, label: 门宽, unit: ns, min: 0}
+  - id: spectrum
+    title: 光谱采样表
+    description: 同一组数据可采用基础形状或手动采样。采样点按波长递增，不能重复。
+    fields:
+      - id: spectral
+        type: object
+        label: 滤光片透过率
+        fields:
+          - {id: mode, type: select, label: 光谱输入方式, options: [{value: basic, label: 基础形状}, {value: manual, label: 手动采样点}]}
+          - id: basic
+            type: object
+            label: 基础形状参数
+            when: {path: /spectral/mode, equals: basic}
+            fields:
+              - {id: shape, type: select, label: 通带形状, options: [{value: rectangle, label: 矩形}, {value: gaussian, label: 高斯}]}
+              - {id: center_nm, type: number, label: 中心波长, unit: nm, min: 1}
+              - {id: width_nm, type: number, label: 通带全宽或 FWHM, unit: nm, min: 0}
+              - {id: amplitude, type: number, label: 峰值透过率, min: 0, max: 1}
+          - id: manual_points
+            type: array
+            layout: table
+            label: 波长 — 透过率采样点
+            addLabel: ＋ 添加采样点
+            when: {path: /spectral/mode, equals: manual}
+            ascendingBy: wavelength_nm
+            minItems: 2
+            fields:
+              - {id: wavelength_nm, type: number, label: 波长, unit: nm, min: 1, required: true}
+              - {id: value, type: number, label: 透过率, min: 0, max: 1, required: true}
+  - id: timing
+    title: 逐发时序表
+    description: 每一发独立填写时间与能量。时间必须严格递增；不会自动排序或替你修改输入。
+    fields:
+      - id: exposure
+        type: object
+        label: 列内发射计划
+        fields:
+          - {id: gate_mode, type: select, label: 门控方式, options: [{value: per_pulse, label: 逐发门控}, {value: column, label: 整列门控}]}
+          - id: pulses
+            type: array
+            layout: table
+            label: 逐发时间与能量
+            addLabel: ＋ 添加一发
+            ascendingBy: time_offset_ns
+            fields:
+              - {id: time_offset_ns, type: number, label: 列内时间偏移, unit: ns, min: 0, required: true}
+              - {id: energy_nj, type: number, label: 单发能量, unit: nJ, min: 0, required: true}

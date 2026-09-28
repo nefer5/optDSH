@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools==82.0.1"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "optdsh-optics"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["numpy==2.5.1", "pythonnet==3.1.0", "PyYAML==6.0.3"]
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.package-data]
+optdsh_optics = ["*.css"]

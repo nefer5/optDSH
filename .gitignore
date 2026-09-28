@@ -40,3 +40,30 @@ test/zmx/
 *.stp
 *.iges
 *.igs
+
+# Generated project expert adapters, resource copies and local receipts
+.agents/.distribution/
+.agents/resources/
+.codex/agents/visual-designer.toml
+.opencode/agents/visual-designer.md
+.claude/agents/visual-designer.md
+
+.agents/dsh-presets/
+
+# Owned persistent application state and service logs
+data/
+logs/
+*.egg-info/
+# Study private inputs/configs and immutable local evidence
+STUDYS/**/configs/*.local.*
+STUDYS/**/models/
+STUDYS/**/runs/
+
+# Private expert preferences and local-only reference screenshots
+/.agents/experts/visual-designer/preferences.md
+/.agents/experts/visual-designer/private/
+/.agents/experts/visual-designer/library/**/*.png
+/.agents/distribution-targets.local.yaml
+
+# Personal scratch notes stay local
+/test/个人临时笔记.md

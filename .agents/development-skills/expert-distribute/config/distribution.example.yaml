@@ -1,0 +1,3 @@
+expert: visual-designer
+# Comma-separated host names; omit both only/exclude for all four.
+only: codex,opencode,claude,dsh

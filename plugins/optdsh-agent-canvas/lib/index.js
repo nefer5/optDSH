@@ -7,12 +7,13 @@ import {canvasMessage} from './messages.js';
 
 export const name = 'optdsh-agent-canvas';
 export const inject = ['connection', 'sessionController', 'tools', 'agents', 'systemPrompt'];
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
+const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-export function apply(ctx) {
+export function apply(ctx, options={}) {
+  const ROOT=resolve(options.projectRoot||process.cwd());
   const config=JSON.parse(readFileSync(resolve(ROOT,'config/agent-canvas-bridge.json'),'utf8'));
   if(config.enabled===false)return;
-  const store = new BoardStore(resolve(ROOT,'.runtime/agent-canvas-boards'));
+  const store = new BoardStore(resolve(ROOT,'data/canvas/boards'));
   const stop = new AbortController();
   ctx.effect(() => () => stop.abort(), 'canvas shutdown');
   ctx.on('session/event',(session,event)=>store.observe(session.id,event));
@@ -35,8 +36,8 @@ export function apply(ctx) {
   }
   registerCanvasTools(ctx,store,binding);
   ctx.systemPrompt.section({name:'optdsh:canvas',order:80,text:
-    '本项目官方Web会话画板已支持双向协作。用户要求画图/修改画板时，先canvas_read，再canvas_propose_edit。允许修改用户绘制的图形，包括带绑定文字的方框；移动必须update原ID，标签/箭头会联动，不能用复制代替移动。用户拒绝并给出反馈时，按意见重新读取并生成建议稿。工具自动绑定当前聊天；未应用前不得声称已改原图。正常回复只说明改动，不输出proposalId/revision、端口/协议或反复添加免责声明水印。不要使用旧agent-canvas CLI、inbox或扫描4173猜接口。图片/手绘像素未解析，画板坐标为px而非光学模型坐标；不能修改Zemax。'});
-  ctx.effect(()=>ctx.connection.fetch.register({path:'/api/optdsh-canvas/transport',methods:['GET'],requestBody:'buffered',fetch:async()=>new Response(readFileSync(resolve(ROOT,'web/shared/canvas-bridge.js')),{headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store'}})}),'shared canvas transport');
+    '本项目官方Web会话画板已支持双向协作。用户要求画图/修改画板时，先canvas_read，再canvas_propose_edit。允许修改用户绘制的图形，包括带绑定文字的方框；移动必须update原ID，标签/箭头会联动，不能用复制代替移动。用户拒绝并给出反馈时，按意见重新读取并生成建议稿。工具自动绑定当前聊天；未应用前不得声称已改原图。正常回复只说明改动，不输出proposalId/revision、端口/协议或反复添加免责声明水印。不要使用旧agent-canvas CLI、inbox或扫描4173猜接口。图片/手绘像素未解析，画板坐标为px而非光学模型坐标；画板编辑不修改Zemax，光学分析执行另按对应Skill和授权流程处理。'});
+  ctx.effect(()=>ctx.connection.fetch.register({path:'/api/optdsh-canvas/transport',methods:['GET'],requestBody:'buffered',fetch:async()=>new Response(readFileSync(resolve(PACKAGE_ROOT,'web/transport.js')),{headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store'}})}),'shared canvas transport');
   ctx.effect(() => ctx.connection.fetch.register({
     path:'/api/optdsh-canvas', methods:['POST'], requestBody:'buffered',
     async fetch(request) {

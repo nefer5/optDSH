@@ -1,0 +1,12 @@
+{
+  "name": "optdsh-experts",
+  "version": "0.1.1",
+  "type": "module",
+  "private": true,
+  "files": [
+    "lib",
+    "web",
+    "config",
+    "README.md"
+  ]
+}

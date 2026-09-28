@@ -3,10 +3,16 @@ import argparse
 import json
 import math
 from pathlib import Path
+import sys
 
-def check(case):
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file())
+sys.path.insert(0,str(ROOT/'packages/optics/src'))
+from optdsh_optics.config_io import load_config
+
+def check(case,scope=None):
+    if not isinstance(case,dict):raise ValueError('Configuration must be a mapping')
     missing=[];errors=[]
-    scope=case.get('scope','both')
+    scope=scope if scope is not None else case.get('scope','both')
     if scope not in ('tx','rx','both'):raise ValueError('scope must be tx, rx or both')
     sides=('tx','rx') if scope=='both' else (scope,)
     paths=['modelId','revision','tx.metric.referenceFrame','rx.metric.referenceFrame','tx.metric.definition','tx.metric.limitDeg','rx.metric.extentRule','rx.metric.limitHMM','rx.metric.limitVMM',
@@ -24,6 +30,13 @@ def check(case):
         return obj
     for path in paths:
         if value(path) is None or value(path)=='':missing.append(path)
+    for path in ('modelId','revision'):
+        identity=value(path)
+        if identity is not None and (not isinstance(identity,str) or identity.startswith('REPLACE_')):
+            errors.append(path+': expected confirmed model identity')
+    for path in ('tx','rx','sampling'):
+        if path in ('tx','rx') and path not in sides:continue
+        if case.get(path) is not None and not isinstance(case[path],dict):errors.append(path+': expected mapping')
     for path in ('tx.metric.limitDeg','rx.metric.limitHMM','rx.metric.limitVMM'):
         if path.split('.')[0] not in sides:continue
         n=value(path)
@@ -43,8 +56,9 @@ def check(case):
     if 'tx' in sides and (value('tx.metric.kind')!='D86' or value('tx.metric.axis')!='H' or value('tx.metric.angleType')!='full' or value('tx.metric.energyFraction')!=.86):errors.append('Tx metric differs from confirmed H D86 full-angle')
     if 'rx' in sides and (value('rx.metric.kind')!='rectangular_spot_size' or value('rx.metric.axes')!=['H','V']):errors.append('Rx metric differs from confirmed rectangular H/V')
     return {'scope':scope,'specComplete':not missing and not errors,'executionImplemented':False,'readyToRun':False,'missing':missing,'errors':errors,
-            'nextStep':'补齐指标口径、对象/坐标、补偿范围与误差/采样规格；尚无仿真执行器。'}
+            'nextStep':'补齐当前侧完整装调规格；6D补偿和Monte Carlo执行器未实现。Tx未补偿功能试跑使用独立pilot配置，不由本预检阻塞。'}
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('case',type=Path);args=parser.parse_args()
-    print(json.dumps(check(json.loads(args.case.read_text(encoding='utf-8'))),ensure_ascii=False,indent=2))
+    parser=argparse.ArgumentParser();parser.add_argument('case',type=Path)
+    parser.add_argument('--scope',choices=('tx','rx','both'));args=parser.parse_args()
+    print(json.dumps(check(load_config(args.case),scope=args.scope),ensure_ascii=False,indent=2))

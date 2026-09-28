@@ -1,12 +1,13 @@
 window.__ModuleLoader__.load({id:'optdsh-workbench',factory:require=>{
  const React=require('react'),h=React.createElement;
- const inject=['slots','sessions'];
+ const inject=['slots','sessions','uiWorkspace'];
  function apply(ctx){
-  async function navigate(){
+  let navigation=0;
+ async function navigate(){const turn=++navigation;
    const hash=new URLSearchParams(location.hash.slice(1));
    if(hash.has('optdsh-workbench')){location.replace('/api/optdsh-workbench/view');return;}
    const id=hash.get('optdsh-session');if(!id)return;
-   try{await ctx.sessions.refresh();ctx.sessions.open(id);history.replaceState(null,'',location.pathname+location.search);}
+   try{await ctx.sessions.refresh();if(turn!==navigation)return;ctx.uiWorkspace.openSession(id);if(turn!==navigation)return;history.replaceState(null,'',location.pathname+location.search);}
    catch(e){console.error('无法打开工作台关联会话',e);}
   }
   ctx.effect(()=>{window.addEventListener('hashchange',navigate);void navigate();return()=>window.removeEventListener('hashchange',navigate);},'workbench session navigation');

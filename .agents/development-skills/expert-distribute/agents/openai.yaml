@@ -1,0 +1,4 @@
+interface:
+  display_name: "专家分发"
+  short_description: "集中维护专家定义，向三种 Agent 宿主分发并核验版本与内容漂移"
+  default_prompt: "使用 $expert-distribute 核对视觉设计专家的源定义，并预览本项目三种宿主的分发状态。"

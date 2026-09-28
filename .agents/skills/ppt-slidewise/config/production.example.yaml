@@ -1,0 +1,41 @@
+title: 工程路线评审
+# 通用结构示例。实际任务替换正文、来源和图片，不照搬示例结论。
+theme:
+  background: '#FFFFFF'
+  blue: '#607C94'
+  accent: '#843F46'
+  bodyFont: 微软雅黑
+  bodySize: 34
+slides:
+  - layout: analysis
+    title: 将核心结论写在标题中
+    sections:
+      - heading: 现有约束
+        body: 写清任务边界、关键瓶颈及依据。
+      - heading: 方案变化
+        body: 写清机制如何改变，以及复杂度转移到哪里。
+      - heading: 研究判断
+        body: 写清收益、代价及下一步值得检查的接口。
+    takeaway: 用一句话连接后续对比或案例。
+    source: 来源编号与时间
+  - layout: comparison
+    title: 按统一维度比较技术路线
+    rows:
+      - [路线, 优势, 代价, 适用条件]
+      - [方案甲, 已核实的优势, 核心约束, 明确场景]
+      - [方案乙, 已核实的优势, 核心约束, 明确场景]
+    takeaway: 写出带条件的判断。
+    source: 来源编号
+# 专利卡示例（使用时取消注释并填写真实图片路径）
+#  - layout: patent-card
+#    title: 文献号｜一句话技术机制
+#    meta: 申请单位 · 文献号 · 最早优先权
+#    sections:
+#      - {heading: 解决问题, body: 要解决的工程问题}
+#      - {heading: 技术方案, body: 技术机制与模块关系}
+#      - {heading: 权要关键组合, body: 独立项必要特征与从属细化分开}
+#      - {heading: 研究启示, body: 与总体判断的联系及可比较的设计接口}
+#    images:
+#      - {path: figures/diagram.png, caption: 图号 · PDF页码}
+#    imageArrangement: horizontal
+#    source: 原文链接或来源编号

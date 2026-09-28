@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "targets": {
+    "codex": {
+      "directory": ".codex/agents",
+      "extension": ".toml",
+      "format": "codex-toml",
+      "verified_cli_version": "0.157.0"
+    },
+    "opencode": {
+      "directory": ".opencode/agents",
+      "extension": ".md",
+      "format": "opencode-v1",
+      "verified_cli_version": "1.17.14"
+    },
+    "claude": {
+      "directory": ".claude/agents",
+      "extension": ".md",
+      "format": "claude-code",
+      "verified_cli_version": "2.1.205"
+    },
+    "dsh": {
+      "directory": ".agents/dsh-presets",
+      "extension": ".yml",
+      "format": "dsh-preset",
+      "verified_cli_version": "0.1.5-rc.3"
+    }
+  }
+}

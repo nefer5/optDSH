@@ -1,0 +1,10 @@
+{
+  "migratedAt": "2026-09-27",
+  "mappings": {
+    "runs/tx": "STUDYS/2t2rLidar/runs/tx",
+    "runs/rx-fov": "STUDYS/2t2rLidar/runs/rx-fov",
+    "runs/rx-report": "STUDYS/2t2rLidar/runs/rx-report"
+  },
+  "note": "Historical absolute paths inside frozen run evidence remain original; use this mapping to locate moved packages. File bytes and run IDs unchanged.",
+  "audit": "runs\\study-move\\260927-01"
+}

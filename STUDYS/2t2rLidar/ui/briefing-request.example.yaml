@@ -1,0 +1,14 @@
+caller: 2t2rLidar 资料梳理 Skill · 调用示例
+form:
+  version: 1
+  title: 本次资料梳理 · 补充信息
+  description: 演示 Skill 临时收集信息。答案仅属于本次请求，不会修改研究背景；提交不会启动分析。
+  groups:
+    - id: task
+      title: 本次关注的问题
+      fields:
+        - {id: question, type: textarea, label: 想让 Agent 回答什么, required: true, placeholder: 把本次最想弄清的问题写在这里}
+        - {id: focus, type: select, label: 关注模块, required: true, options: [系统整体, Tx 发射, Rx 接收, 扫描与时序]}
+        - {id: output, type: select, label: 希望的输出形式, options: [简洁解释, 参数对照表, 待验证问题清单]}
+        - {id: notes, type: textarea, label: 本次补充条件, placeholder: 只对本次任务有效的背景或限制}
+        - {id: distinguishSources, type: boolean, label: 是否区分已知事实与推测}

@@ -1,0 +1,8 @@
+{
+  "name": "optdsh-forms",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "dependencies": { "yaml": "2.9.1" }
+}

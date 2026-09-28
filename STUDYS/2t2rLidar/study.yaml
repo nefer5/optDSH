@@ -1,0 +1,10 @@
+version: 1
+form: ui/background.form.yaml
+values: configs/background.local.yaml
+defaultForm: parameters
+forms:
+  parameters:
+    title: LiDAR 结构化参数
+    form: ui/lidar-parameters.form.yaml
+    values: configs/parameters.local.yaml
+requestExample: ui/tolerance-request.example.yaml

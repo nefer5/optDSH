@@ -1,5 +1,5 @@
 {
-  "name": "optdsh-workbench",
+  "name": "optdsh",
   "version": "0.1.1",
   "private": true,
   "type": "module",
@@ -9,7 +9,9 @@
   },
   "scripts": {
     "dsh:version": "dsh --version",
-    "dsh:help": "dsh --help"
+    "dsh:help": "dsh --help",
+    "test": "node scripts/maintenance/test.mjs",
+    "check": ".venv/Scripts/python.exe scripts/maintenance/check_project.py"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.3",
@@ -18,5 +20,8 @@
   },
   "devDependencies": {
     "linkedom": "0.18.13"
-  }
+  },
+  "workspaces": [
+    "plugins/*"
+  ]
 }

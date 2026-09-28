@@ -1,0 +1,29 @@
+version: 2
+title: 先聊聊这份PPT要做什么
+groups:
+  - id: purposeGroup
+    title: 1. 主要用途
+    fields:
+      - id: purpose
+        type: select
+        label: 选一个接近的方向
+        nullable: true
+        options: [同步进展、说明现状, 比较方案、支持决策, 讲解知识、分享方法]
+      - id: purposeCustom
+        type: textarea
+        label: 自己补充
+        nullable: true
+        placeholder: 也可以直接写你的用途或想让对方带走的一点
+  - id: scopeGroup
+    title: 2. 内容体量
+    fields:
+      - id: scope
+        type: select
+        label: 大致选一档即可
+        nullable: true
+        options: [简短报告（约5–10分钟）, 常规报告（约10–30分钟）, 长篇内容（30分钟以上或完整阅读材料）]
+      - id: scopeCustom
+        type: textarea
+        label: 自己补充
+        nullable: true
+        placeholder: 自定义时长、特殊要求，或写暂时不确定

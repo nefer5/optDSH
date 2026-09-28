@@ -1,0 +1,33 @@
+version: 1
+title: 2T2R LiDAR · 研究背景
+description: 把需要反复解释的背景放在这里。未知参数可以留空，后续随研究补充。
+groups:
+  - id: overview
+    title: 研究概况
+    description: 先让 Agent 理解你在研究什么，以及这次研究的边界。
+    fields:
+      - {id: objective, type: textarea, label: 研究目标, placeholder: '例如：梳理双发双收架构中，各模块对探测性能的影响。', help: 示例仅提示填写方式，不代表已确认的研究目标。}
+      - {id: scenario, type: text, label: 应用场景, placeholder: 使用场景、目标物或关注的工作距离}
+      - {id: constraints, type: textarea, label: 已知约束与暂不讨论的内容, placeholder: 尺寸、成本、方案限制，或本阶段不展开的问题}
+  - id: tx
+    title: Tx 发射模块
+    description: 记录方案背景；器件型号、数量与关键参数可以逐步补充。
+    fields:
+      - {id: txArchitecture, type: textarea, label: 发射结构与器件, placeholder: 各发射通道如何组成，有哪些已确定的器件？}
+      - {id: wavelength, type: number, label: 工作波长, unit: nm, min: 1, help: 未确认时留空，不使用默认值。}
+      - {id: txNotes, type: textarea, label: Tx 其他关键参数, placeholder: 功率、脉宽、发散角等，请连同单位和条件一起填写}
+  - id: rx
+    title: Rx 接收模块
+    description: 接收光学、探测器和读出结构的共同背景。
+    fields:
+      - {id: rxArchitecture, type: textarea, label: 接收结构与器件, placeholder: 接收通道、镜头、滤光片与探测器的关系}
+      - {id: detector, type: text, label: 探测器型号或类型, placeholder: 型号未知时可先填写类型}
+      - {id: rxNotes, type: textarea, label: Rx 其他关键参数, placeholder: 有效面积、像素排列、PDE、读出方式等，请注明来源或待确认项}
+  - id: system
+    title: 扫描与系统
+    description: 各模块怎样配合，以及 Agent 需要遵守的术语和口径。
+    fields:
+      - {id: scanner, type: textarea, label: 扫描方式与通道关系, placeholder: 扫描器件、通道分工和时序关系}
+      - {id: horizontalFov, type: number, label: 水平视场总角宽, unit: '°', min: 0, max: 360, help: 填写总角宽；若尚未确定，请留空。}
+      - {id: verticalFov, type: number, label: 垂直视场总角宽, unit: '°', min: 0, max: 180}
+      - {id: conventions, type: textarea, label: 术语、依据与补充说明, placeholder: 统一的 H/V 定义、资料路径、数据来源，或需要 Agent 注意的事项}

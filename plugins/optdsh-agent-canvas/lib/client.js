@@ -37,12 +37,20 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
       if(key&&key!=='conversation.chat.node')return;
       const bases=ctx.slots.entriesOfSlot('conversation.chat.node').filter(e=>['user','steering'].includes(e.options.key));
       for(const base of bases){if(installed.has(base.options.key))continue;installed.add(base.options.key);
-        disposers.push(ctx.slots.register({name:'conversation.chat.node',key:base.options.key,locale:base.locale||'chat',priority:(base.options.priority||0)-100},function ContextMessage(props){
-          const parsed=parseCanvasMessage(props.node?.data);if(!parsed)return h(base.component,props);
+        // Keep the context wrapper outside Side Chat's -100 annotation wrapper.
+        // Resolve the next renderer on every render so either plugin load order,
+        // and a later disable/unload, preserves the remaining renderer chain.
+        const priority=-200,messageKey=base.options.key;
+        disposers.push(ctx.slots.register({name:'conversation.chat.node',key:messageKey,locale:base.locale||'chat',priority},function ContextMessage(props){
+          const next=ctx.slots.entries('conversation.chat.node')
+            .filter(e=>e.options.key===messageKey&&e.component!==ContextMessage&&(e.options.priority??0)>priority)
+            .sort((a,b)=>(a.options.priority??0)-(b.options.priority??0))[0];
+          if(!next)return null;
+          const parsed=parseCanvasMessage(props.node?.data);if(!parsed)return h(next.component,props);
           const node={...props.node,data:{...props.node.data,content:[{type:'text',text:parsed.note}]}};
-          return h('div',{'data-canvas-message':true},h(base.component,{...props,node}),
+          return h('div',{'data-canvas-message':true},h(next.component,{...props,node}),
             h('details',{'data-canvas-context':true,style:{margin:'4px 0 12px auto',maxWidth:'90%',color:'var(--dsw-alias-label-tertiary,#888)',fontSize:12}},
-              h('summary',{style:{cursor:'pointer',userSelect:'none'}},parsed.context.kind==='optics'?'镜片引用与模型版本':parsed.context.kind==='feedback'?'画板修改反馈':'返回画板内容'),
+              h('summary',{style:{cursor:'pointer',userSelect:'none'}},parsed.context.kind==='optics'?(parsed.context.selection?'镜片引用与模型版本':'光学上下文'):parsed.context.kind==='feedback'?'画板修改反馈':'返回画板内容'),
               h('pre',{style:{whiteSpace:'pre-wrap',overflowWrap:'anywhere',maxHeight:260,overflow:'auto',fontSize:11,opacity:.8}},JSON.stringify(parsed.context,null,2))));
         }));
       }

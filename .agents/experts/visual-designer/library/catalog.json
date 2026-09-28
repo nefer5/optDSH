@@ -1,0 +1,415 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "minimal/01-dark",
+      "file": "styles/minimal/01-dark.png",
+      "title": "Apple · 暗色聚焦",
+      "style": "minimal",
+      "source_url": "https://www.apple.com/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "首页顶部",
+      "tags": [
+        "dark",
+        "product",
+        "centered"
+      ],
+      "notes": "styles/minimal/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "9aabe7ee2ee4263d111d9070446f78263852b386afdfc295e016c52424ba72ec"
+    },
+    {
+      "id": "minimal/02-light",
+      "file": "styles/minimal/02-light.png",
+      "title": "Apple · 亮色聚焦",
+      "style": "minimal",
+      "source_url": "https://www.apple.com/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "scrollY=790",
+      "tags": [
+        "light",
+        "product",
+        "centered"
+      ],
+      "notes": "styles/minimal/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "46af3d0f4f6b8e111665bc9ef373f89c5cf70085bcd852efbfb0b37f6772c233"
+    },
+    {
+      "id": "editorial/01-cover",
+      "file": "styles/editorial/01-cover.png",
+      "title": "Kinfolk · 封面节奏",
+      "style": "editorial",
+      "source_url": "https://www.kinfolk.com/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "首页顶部",
+      "tags": [
+        "light",
+        "serif",
+        "editorial"
+      ],
+      "notes": "styles/editorial/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "12078146145989c53575a2cc46de9e7a477a93f75ad8c21b7b51ed1479ce7c2f"
+    },
+    {
+      "id": "editorial/02-story",
+      "file": "styles/editorial/02-story.png",
+      "title": "Kinfolk · 图文叙事",
+      "style": "editorial",
+      "source_url": "https://www.kinfolk.com/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "scrollY=900",
+      "tags": [
+        "photography",
+        "editorial"
+      ],
+      "notes": "styles/editorial/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "7d34510cedcd7b21bff13b4807a4f6277eef9f6e399b96f2adbb3327956fefde"
+    },
+    {
+      "id": "functional/01-entry",
+      "file": "styles/functional/01-entry.png",
+      "title": "GOV.UK · 任务入口",
+      "style": "functional",
+      "source_url": "https://www.gov.uk/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "首页顶部，收起cookie提示",
+      "tags": [
+        "light",
+        "service",
+        "grid"
+      ],
+      "notes": "styles/functional/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "c8bbd69638d852305a8ac44496a46575014538f22931020ace1b68b4181314bf"
+    },
+    {
+      "id": "functional/02-directory",
+      "file": "styles/functional/02-directory.png",
+      "title": "GOV.UK · 分类目录",
+      "style": "functional",
+      "source_url": "https://www.gov.uk/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "scrollY=760",
+      "tags": [
+        "light",
+        "service",
+        "balanced"
+      ],
+      "notes": "styles/functional/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "b285c3cb7c63bf6977972b620ceeb983f6659dbcc9149183945e48d68de80ea4"
+    },
+    {
+      "id": "expressive/01-color",
+      "file": "styles/expressive/01-color.png",
+      "title": "Stripe · 色彩表达",
+      "style": "expressive",
+      "source_url": "https://stripe.com/en-us",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "首页顶部，含地区提示",
+      "tags": [
+        "light",
+        "vivid",
+        "campaign"
+      ],
+      "notes": "styles/expressive/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "19af16f9da1f2a3aa48e6a1cbdb4b756ec56eb86d051a63881ade2c3a7ce2948"
+    },
+    {
+      "id": "expressive/02-type",
+      "file": "styles/expressive/02-type.png",
+      "title": "Juan Mora Romero · 字体表达",
+      "style": "expressive",
+      "source_url": "https://www.juanmoraromero.com/",
+      "discovery_url": "https://www.cssdesignawards.com/sites/juan-mora-romero/50122/",
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "首页加载完成后",
+      "tags": [
+        "dark",
+        "type-led",
+        "asymmetric"
+      ],
+      "notes": "styles/expressive/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "64c3799b5e697909607b599d30e67a34b7983f4db1df8492abb103df2b110280"
+    },
+    {
+      "id": "technical-craft/01-hero",
+      "file": "styles/technical-craft/01-hero.png",
+      "title": "Heron AI · 图纸首屏",
+      "style": "technical-craft",
+      "source_url": "https://heronaiapp.com/",
+      "discovery_url": "https://www.cssdesignawards.com/sites/heron-ai/50037/",
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "首页首屏，含cookie条",
+      "tags": [
+        "light",
+        "grain",
+        "technical"
+      ],
+      "notes": "styles/technical-craft/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "457ed9d8bd09e56475e4d7e090925f6985c056f5487988795f4438a82288aabf"
+    },
+    {
+      "id": "technical-craft/02-grid",
+      "file": "styles/technical-craft/02-grid.png",
+      "title": "Heron AI · 工程网格",
+      "style": "technical-craft",
+      "source_url": "https://heronaiapp.com/",
+      "discovery_url": "https://www.cssdesignawards.com/sites/heron-ai/50037/",
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "Problems标题滚入视口",
+      "tags": [
+        "light",
+        "grid",
+        "technical"
+      ],
+      "notes": "styles/technical-craft/README.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "529635d35ecd5ae2a05098a7d890c895f3b68d59a57a3dfd76643f70c43d8bae"
+    },
+    {
+      "id": "editorial/03-anthropic-hero",
+      "file": "styles/editorial/03-anthropic-hero.png",
+      "title": "Anthropic · 人文科技",
+      "style": "editorial",
+      "source_url": "https://www.anthropic.com/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "首页顶部",
+      "tags": [
+        "light",
+        "warm",
+        "mixed-type"
+      ],
+      "notes": "styles/editorial/anthropic.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "86c3e597ef9aedd10a1972160bc35db3a8783420325e5af104210289f8eefd55"
+    },
+    {
+      "id": "editorial/04-anthropic-cards",
+      "file": "styles/editorial/04-anthropic-cards.png",
+      "title": "Anthropic · 阅读卡片",
+      "style": "editorial",
+      "source_url": "https://www.anthropic.com/",
+      "discovery_url": null,
+      "captured_on": "2026-09-26",
+      "viewport": [
+        1280,
+        900
+      ],
+      "state": "scrollY=1000",
+      "tags": [
+        "light",
+        "warm",
+        "editorial"
+      ],
+      "notes": "styles/editorial/anthropic.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "db95c6b64f661c00f2793af4924fa34db24509c91300efcfd4099115bde96676"
+    },
+    {
+      "id": "product-ui/conductor",
+      "file": "collections/product-ui/conductor.png",
+      "title": "Conductor",
+      "style": "functional",
+      "collection": "product-ui",
+      "source_url": "https://onepagelove.com/conductor",
+      "asset_url": "https://assets.onepagelove.com/cdn-cgi/image/trim=982;0;4176;0,width=1280,height=766,fit=cover,format=jpg,quality=85/wp-content/uploads/2026/02/opl-master-conctor.jpg",
+      "live_url": "https://www.conductor.build/",
+      "source_published_on": "2026-02-05",
+      "captured_on": "2026-09-27",
+      "viewport": [
+        1280,
+        766
+      ],
+      "state": "OPL archived screenshot element; not live product verification",
+      "tags": [
+        "dark",
+        "dense",
+        "workbench",
+        "multi-pane"
+      ],
+      "notes": "collections/product-ui/conductor.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "1ce1d5ff63f478d63379cd9382237d811dbfa07e3047a8b5d37cabaed59eb296"
+    },
+    {
+      "id": "product-ui/mirror",
+      "file": "collections/product-ui/mirror.png",
+      "title": "Mirror",
+      "style": "expressive",
+      "collection": "product-ui",
+      "source_url": "https://onepagelove.com/mirror",
+      "asset_url": "https://assets.onepagelove.com/cdn-cgi/image/trim=128;0;7782;0,width=1280,height=618,fit=cover,format=jpg,quality=85/wp-content/uploads/2025/08/opl-master-16.jpg",
+      "live_url": "https://mirror-hq.com/",
+      "source_published_on": "2025-08-25",
+      "captured_on": "2026-09-27",
+      "viewport": [
+        1280,
+        618
+      ],
+      "state": "OPL archived screenshot element; not live product verification",
+      "tags": [
+        "dark",
+        "color-coded",
+        "cards",
+        "product"
+      ],
+      "notes": "collections/product-ui/mirror.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "69c45abe0804ec58abb6e860ad6383c4dadd2615db6620f2d080994748c9bbe4"
+    },
+    {
+      "id": "product-ui/lightyear-2024",
+      "file": "collections/product-ui/lightyear-2024.png",
+      "title": "Lightyear · 2024",
+      "style": "functional",
+      "collection": "product-ui",
+      "source_url": "https://onepagelove.com/lightyear-2024",
+      "asset_url": "https://assets.onepagelove.com/cdn-cgi/image/trim=149;0;3949;0,width=1280,height=544,fit=cover,format=jpg,quality=85/wp-content/uploads/2024/08/opl-master-5.jpg",
+      "live_url": "https://www.runlightyear.com/",
+      "source_published_on": "2024-08-19",
+      "captured_on": "2026-09-27",
+      "viewport": [
+        1280,
+        544
+      ],
+      "state": "OPL archived screenshot element; not live product verification",
+      "tags": [
+        "light",
+        "mint",
+        "staged-flow",
+        "code-panel"
+      ],
+      "notes": "collections/product-ui/lightyear-2024.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "7895bc0647d6d47ae85c1e938c1b05b1f884d4d26d9cb7885f89b1e578ea75c2"
+    },
+    {
+      "id": "product-ui/anytype",
+      "file": "collections/product-ui/anytype.png",
+      "title": "Anytype · 2022",
+      "style": "functional",
+      "collection": "product-ui",
+      "source_url": "https://onepagelove.com/anytype",
+      "asset_url": "https://assets.onepagelove.com/cdn-cgi/image/trim=2093;0;1933;0,width=1280,height=749,fit=cover,format=jpg,quality=85/wp-content/uploads/2022/09/opl-master-9.jpg",
+      "live_url": "https://anytype.io/",
+      "source_published_on": "2022-10-27",
+      "captured_on": "2026-09-27",
+      "viewport": [
+        1280,
+        750
+      ],
+      "state": "OPL archived screenshot element; not live product verification",
+      "tags": [
+        "light",
+        "object-cards",
+        "workspace",
+        "cyan"
+      ],
+      "notes": "collections/product-ui/anytype.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "4d36d54a399d1efabbbd226174070da79d3ee3919d5515ae0a2ecbfae280cb24"
+    },
+    {
+      "id": "product-ui/wow-page",
+      "file": "collections/product-ui/wow-page.png",
+      "title": "WOW-page · 历史存档",
+      "style": "expressive",
+      "collection": "product-ui",
+      "source_url": "https://onepagelove.com/wow-page",
+      "asset_url": "https://assets.onepagelove.com/cdn-cgi/image/width=2560,fit=scale-down,format=jpg,quality=85/wp-content/uploads/2022/09/opl-maste-wow.jpg",
+      "live_url": null,
+      "source_published_on": "2022-09-30",
+      "captured_on": "2026-09-27",
+      "viewport": [
+        1920,
+        6422
+      ],
+      "state": "OPL archived screenshot element; not live product verification",
+      "tags": [
+        "bold",
+        "modular",
+        "typographic",
+        "campaign"
+      ],
+      "notes": "collections/product-ui/wow-page.md",
+      "visual_review": "reviewed",
+      "rights": "Reference only; rights remain with original creators; publication clearance not established.",
+      "sha256": "0cd42333cd6ac0cc2d778e7721301be4aba621bdcf947e089b46e79867b658d6"
+    }
+  ]
+}

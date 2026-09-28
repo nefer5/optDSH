@@ -1,265 +1,112 @@
 # 当前状态
 
-更新：2026-09-26。
+更新：2026-09-28。此文件只维护当前能力和待办，不继续追加阶段流水。重整前完整状态在docs/archive/20260927-before-restructure.zip。
 
-## v0.1.1布尔模块加载修复（2026-09-26，已实测）
+提交前离线检查（2026-09-28）：`npm test`通过134项插件、11项PPT、105项光学和19项专家分发测试，以及工作台DOM冒烟与项目文档检查；PPT生产构建通过。本次没有新增真实模型、Zemax或浏览器交互验收，既有待验证项仍保留。
 
-- 已定位并修正官方Host迁移后的Worker绝对根路径404，使用相对viewer模块URL，不更改认证/CSP或布尔算法。
-- Tabbit当前真实模型6/6裁剪成功（约71ms Worker单批）；Worker/Manifold JS/WASM均200，OBJ58显示3680三角面的闭合近似裁切。实体与固定视图已检查。
-- 新增部署前缀下的Worker创建分支回归；CSG 6项测试及DOM冒烟通过。根项目版本、锁文件、README、CHANGELOG更新为0.1.1；对应提交与标签以Git记录为准。
+| 能力 | 当前状态 |
+|---|---|
+| 官方DSH 0.1.5-rc.3 / Standard | 已接入；近期仅glm-5.3-flash产品验证 |
+| ppt-slidewise | 项目级首版；直接调用与DSH+glm-5.3-flash生成/修改/导出闭环已实测，七种中文字体浏览器实际命中与LibreOffice渲染确认；PowerPoint像素保真、复杂模板未验，证据runs/ppt/260927-01 |
 
-## v0.1.0版本基线（2026-09-26）
+PPT内容策划增量：已展开六步流程、首轮1–2题/每题三选项加自定义输入，并按用户最新要求设R1内容逻辑文档、R2实际1–2页样例PPT两处审查。简短表单两个分组的实际控件已验证；早期GLM样本出现用途明确后越步生成，后续样本取消/超时。最新双审查协议已落Skill和文档、链接检查通过，但完整模型遵循回归尚未通过，记录runs/ppt/260927-02；勿将首版导出闭环等同策划质量验收。
+| 同会话光学工作台 | 共享官方控制器及实时消息流；本地回显/去重/重连、选中文字引用；双窗口GLM两轮验证通过，证据runs/chat-sync/260927-01 |
+| 画板 | 按会话BoardStore、临时弹窗、反向编辑/预览/确认；编辑器暂依赖N05 |
+| 几何与视图 | 近似镜片、6组布尔曾实测；双视图、固定轴向、分隔线和多选引用 |
+| 模型连接/保存 | 手动实例探测/确认，版本和身份检查；两次真实保存记录在runs/model-save |
+| Tx装调 | 已接原生NSC灵敏度/MC/OD副本执行；低样本少量自由度实测，完整6D装调质量未验 |
+| Tx自定义分析 | 已实现脚本独立MC、仅末样本OD/DLS或逐轴补偿、网格RMS/散点/局部扫描与最终副本；新92对象模型预处理后2MC/OD1轮通过独立复测，两die角宽改善；完整6D与采样收敛未验 |
+| Tx原生公差 | 正式工作台三页双主题、真对象/全局Z、串行作业与取消；原生TDE/MFE编译及TXT/ZTD、MC/SAVE端点回读。浏览器启动至结果闭环已实测 |
+| Rx FOV | 实例2副本扫描已实测；本轮DSH+GLM完成9点及独立中心复测，当前中心结果相差6.2倍，重复性异常，不能作为定量视场验收 |
+| 视觉专家 | 原生专家Preset/子Agent接入GLM已验证；资源分发保留library层级，公共素材读取统一；不等于设计质量或像素能力验证 |
+| 结构重整 | 已验证：模块归位、独立Python/连接源码、认证去日志依赖、数据迁移、根入口与平台文档收敛 |
 
-- 根版本由初始化占位0.0.1升为0.1.0，版本规则、CHANGELOG、锁文件一致性检查及工作台版本显示已建立。DSH依赖保持0.1.5-rc.3；内部画板插件0.5.0、工作台插件0.1.0独立维护。
-- 本轮离线回归：64项Node、54项Python、工作台DOM冒烟和项目检查通过；实际认证HTTP已显示v0.1.0。main和附注标签v0.1.0已推送并核验，基线提交bc14897。
-- 用户随后报告布尔计算模块加载失败、Web裁剪未生效；单元布尔计算通过不能证明当前浏览器模块加载。版本基线同步后优先专项修复，不将此问题写成已解决。
+规则入口已按平台通用、插件/光学后端、领域研究分层；根AGENTS不把光学只读或性能约束施加给普通DSH任务。模块开发规则归对应目录AGENTS，产品指令明确按本轮任务适用。
 
-## 分隔线交互修复（2026-09-26，已实测）
+## 证据入口
 
-- 根据用户实机反馈和Blender/VS Code公开资料，手动拖动改为边界驱动：相邻两栏优先一增一减，碰到最小尺寸才向外传递，替换此前全局同比再分配。窗口变化仍保存比例，聊天可扩大半屏。
-- 上下拖动原先DOM已变化但WebGL未同步：补上内部view-surface尺寸观察并按帧合并重绘；移除多余30px相对偏移。横线8px与扩大命中区、拖动高亮、Esc撤销、双击复位与键盘微调已接入。
-- Tabbit实测list左边界-80px时右边界及远端面板不动；上下+100px后真实GPU viewport与DOM吻合；刷新恢复/Esc/50:50/半屏验证通过。17项相关Node及DOM冒烟通过，报告runs/splitters/260926-01/report.html。
-- 规则入口docs/guides/panel-resizing.md，AGENTS已路由；没有新增依赖、改变模型或声称长期性能验证。
+- STUDYS/2t2rLidar/runs/tx、rx-fov、rx-report：10个研究运行包已整体迁入，102个文件哈希不变；内容和原始执行配置保留。
+- runs/model-switch、runs/model-save、runs/save-ui：绑定和保存证据。
+- runs/workbench、runs/ui-feedback、runs/splitters、runs/experts：既有平台验收。
+- runs/restructure：本轮迁移清单、原源码快照、历史run哈希与验证报告。
 
-## Figma修改意见1前端优化（2026-09-26，已实测）
+研究导航：STUDYS/2t2rLidar/README.md。平台docs不再维护光学分析流程，执行约束以Skill为准。
 
-- 读取用户Figma 31:104及文字意见，并结合后续澄清：四栏同比缩放，默认43.89/10.22/14.53/31.35%；取消会话650px上限，比例保存为v5，旧像素宽度不继承。双击分隔线或Home恢复默认。
-- 消息13px、角色左右气泡与分色、输入区独立底色；移除可见身份行和空气泡，支持安全的加粗/行内代码。画板结构化内容及旧提交默认折叠，普通代码不误隐藏。
-- Tabbit验证1280/1920/3440宽度默认比例一致、无横向溢出；3440屏会话可拖到1720px，刷新持久保存；深浅主题和折叠实测。17项相关Node测试、实际应用DOM冒烟与项目检查通过。最后截图和报告在runs/ui-feedback/260926-01。
-- 本轮只改前端与静态资源映射，未发送模型请求、未写Zemax；用户Figma意见页保留不动。
+2t2rLidar通用术语与H/V方向已从N02提炼至docs/2t2rLidar，来源路径/哈希随文档；控制角关系已于2026-09-27获用户确认继续沿用，没有变化。当前为文档契约采用，未修改执行器、现有配置或重新标定模型。
 
-## 本期01/02/03同会话工作台（2026-09-26，已实测）
+## Rx Skill 表单路径真实模型验收（2026-09-27）
 
-- 新增optdsh-workbench薄插件：官方3080认证页面承载原光学布局，精简会话直接使用官方sessionController；同会话完整Web跳转与返回、画板按需弹窗已实现。3081保持独立只读后端，旧AgentJobs/CanvasBridge入口410，不再从工作台启动headless进程。
-- 完整Web与弹窗复用web/shared/canvas-bridge.js及唯一BoardStore。修复实机发现的官方消息slot延迟注册，镜片/画板技术内容默认折叠；精简消息过滤系统注入。对绑定会话保留只读光学＋画板工具白名单。
-- 3轮glm-5.3-flash真实验收在同session完成：真实OBJ7/11只读查询、官方API追问、画板提交；重复ID去重、内容冲突、旧版本拒绝。Host真实重启后绑定与消息恢复；模型文件SHA256不变。
-- Tabbit两标签实际验证工作台、完整会话跳转、真实WebGL、共享画板、默认折叠和弹窗关闭后未发送说明保留。53项Node、54项Python及真实应用DOM冒烟通过；后者WebGL为stub，不能替代Tabbit证据。
-- 新入口scripts/open-optics.ps1（支持-NoBrowser）；使用与边界见docs/guides/shared-workbench.md，run报告在runs/workbench/260926-01。当前精简会话约1.8秒更新已记录消息，非逐token流式；多窗口画板冲突保留原机制，长期并发/内存表现待观察。04下翻区未实施。
+- 用户指定官方DSH + glm-5.3-flash，未运行OpenCode模型。主Skill分流参数收集/提交读取/真实分析，执行参考按需加载；新增CLI --brief减少模型上下文，源配置不覆盖、清空保留null。
+- 两个Standard真实会话四回合：两次创建仅skill+pwsh各一次，墙钟38.83/32.74秒；提交读回仅一次pwsh，28.73秒；pending检查仅一次pwsh，16.44秒。工具累计0.58–0.63秒，模型调用占主要时间。未发现轮询、重复创建或光学调用。
+- 首轮“未填任何值”表述不准确，已修正为保留样例值待核对并复测通过；H=5/V=3、面积120及initial=null读回正确，未补默认值。
+- 124项Node串行及文档检查通过。原生轨迹、输入、分段指标与评分封于runs/skill-eval/260927-01；260927-02是Setup表述完善的报告整理包，复制前者证据，未新增模型调用。样本量有限，无原始Skill基线，不声称速度提升比例；未验证真实光学执行或自动唤醒。
+## 下一步
 
-## 四张草稿的实施范围（2026-09-26，设计梳理）
+- 参数配置发现入口（2026-09-27）：新增项目级`.agents/skills/dsh-forms`，描述包含用户指定五个触发词，按Study公共参数契约、Skill临时参数、完整配置审查分流。Skill格式/引用/项目文档检查通过；官方FileSystemSkillProvider离线指向项目技能目录能发现并加载正文，现有Study的list/read命令通过。实现能力仍由独立optdsh-forms提供；未新增全局意图钩子/提交回调，未做GLM选择新Skill的行为实测。旧会话是否刷新技能目录需按宿主核对。
 
-- 本期准备做01工作台主界面、02其画板弹窗，并完成03与现有完整DSH同会话衔接；不重建完整DSH界面。04下翻分析区留待后续。
-- Figma四图标题、说明和排布已同步，入口见docs/guides/figma-workbench.md。仅整理范围，未启动产品改造。
+- Rx Skill复盘（2026-09-27）：已明确参考面积来自当次用户/Study定义，不能用源或detector面积替换；新增重复性与分层计时验收，取消Agent短命令自动停启常驻3081的指导。当前CLI端口门禁未改；后续公共ZOS实例级互斥、工作台busy/缓存处理及服务共存实测仍待实现。详见[经验复盘](../.experience/rx-skill-dsh-glm-review.md)。本轮为Skill/文档优化，未重跑GLM或Zemax。
 
-## 05A画板按需弹窗（2026-09-26，设计）
+- 划词客户端冲突修复：用户发现Side Chat与自有画板插件同时注册user/-100导致HARNESS加载失败；画板包装器改为-200并动态串联后续渲染器，18项定向测试通过。Side Chat已恢复启用、3080空闲重启；浏览器刷新和批注交互待用户确认，不能以市场live推断客户端成功。
 
-- 用户确认画板不常驻工作台；05A右栏改为默认精简会话，新增临时画板弹窗草稿。快速绘图/标注/发送在弹窗，建议与多轮修改主要进入同一DSH完整会话。
-- Figma 17:54更新，25:87为弹窗状态，05C缩略稿同步；截图检查通过，设计说明同步。仅设计，未改运行产品。
-- 用户已撤销“不使用Tabbit”约束，AGENTS与共享环境已更新偏好；系统关联只读仍显示MSEdgeHTM，未自动更改设置。
+- DSH市场/划词（2026-09-27）：项目Web profile固定安装dshmarket 1.66.2、dsh-ui-quote-selection 0.1.0、@ahggg/dsh-side-chat 0.7.3；空闲后3080重启，两个划词插件activation=live且市场诊断无问题。Side Chat声明peer范围较旧，交互兼容待验；用户选择不建Tabbit组、自行体验，菜单共存与侧聊模型请求尚未验证。市场目录与30会话读回此前通过。见[调研记录](../docs/dsh-plugin-research.md)。
 
-## 双页面同会话草稿（2026-09-26，设计）
+- 真实Rx小扫描（2026-09-27）：用户要求DSH完全权限，官方设置已持久化并回读。260927-10只读预检通过；11为9点×20000光线、脚本34.6s、扫描循环20.532s；12为独立中心点、脚本15.5s、循环1.531s。两次primaryUnchanged/copyClosed均true，3081最终恢复且版本仍r-2f894e5021e1a8215f58。
+- 当前中心norm_eff_spad从9点中的0.201416%变为独立点0.032469%，同配置声明seed下相差6.20倍。数据链/安全检查通过，定量重复性未通过；未记录命中数/权重方差，不把异常直接归因几何、噪声或顺序bug。没有扩大扫描或覆盖旧run。
+- GLM半宽面积误算、归一化混淆和过强几何归因已被监督纠正；Windows Job等待常驻3081使工具不返回，外层接管服务生命周期才完成，不算完全自主成功。完整计时、原生轨迹和独立复算见runs/rx-agent/260927-01/report.html。
 
-- 用户指出两端空间紧张，修订为独立光学工作台＋精简会话/画板，按钮新开官方完整Web同会话；不将工作台挤入官方侧栏。
-- Figma原文件新增05A/B/C三张可编辑草稿并截图检查，原04保留。下翻区建议只放作业、报告、参数对比；草稿各窗口独立，已保存画板与提交共享，版本冲突不静默覆盖。
-- 双页面共享Host/controller、画板模块与同session为待实现目标；未改运行服务或Zemax。见[设计方案](../docs/architecture/workbench-convergence.md)及[Figma入口](../docs/guides/figma-workbench.md)。
+- 研究参数表单 MVP 0.3：独立optdsh-forms保留v1/v2结构化编辑；新增create --config直接从旧YAML推断表单、标量列表/JSON回退和submitted后原结构导出，原文件不改写；清空输入统一保留键写null，以提交结果供Agent读取，已通过5项针对性测试及浏览器读回；已提交页明确标只读，继续修改会保值创建新请求，已浏览器验证。Rx原样例无需专用UI：浏览器填写/保存/提交、CLI导出、原Rx纯离线15点validate/plan已验证，未连接模型/未生成run。支持Skill随包表单YAML；自动加载Skill自定义JS/CSS仍未实现，分发设计见插件skill-packaging.md。默认并发全仓测试遇到其他模块Windows临时rename EPERM，串行复测通过；光学105、分发16、DOM/文档检查通过。配置/范围联动与v0.2验证见插件README。
 
-## DSH与光学工作台架构复盘（2026-09-26，仅审查）
+1. 本轮已完成：74项Node、87项光学Python及16项专家分发测试，DOM/文档检查；真实92对象采集、6/6裁剪和画板弹窗通过，26会话可读、16份画板保留、270历史run文件哈希不变。测试夹具约890 MiB已可恢复移出，后续成功测试自动清理自有沙箱。
+2. Tx原生执行已接入，使用[Tx执行流程](../.agents/skills/optdsh-assembly-tolerance/references/tx.md)和v1 YAML；旧H-D86试跑保留。后续按实际任务做光线/像素收敛及多自由度装调验证；DLS已可选，本轮未实测。
+3. 画板独立打包暂缓；不宣称当前整个产品完全自包含。
 
-- 已核对本地实现：光学Python服务＋MCP、自制3081聊天/headless runner，与官方3080画板插件分属两条交互链；共用DSH库和存储不等于同一会话控制器。3081旧画板和受限工具不能自动继承官方画板v4。
-- 建议让官方DSH统一会话和交互，以光学插件复用现有几何/桥接；先同聊天对象引用＋画板闭环，再布局迁移、旧适配退役和仿真作业整合。详见[复盘](../docs/architecture/workbench-convergence.md)。
-- 未改运行代码、未重启服务、未连接宿主或调用模型。上游声明支持页签/会话输入与引用；完整布局和光学同会话集成仍待探针，不宣称已接入。
 
-## 画板v4协作体验（2026-09-26）
+## Tx原生公差本轮验证
 
-- 自然语言与画板技术数据分离，聊天默认灰色折叠；兼容旧提交，不改历史。拒绝建议可展开修改意见并发回原聊天，交付幂等。
-- 解除用户/绑定图形限制：移动原图与文字/连线联动，删除维护引用；不再用复制代替移动。项目专项Skill同步，全局Skill未改。
-- 28项Node、116项Canvas逻辑测试与构建通过；GLM实测100px移动→拒绝反馈→150px重新提案并应用，原ID保持。证据artifacts/canvas-v4-validation。
-- 浏览器自动验证被工具策略中止（URL无法可靠识别）；折叠和反馈下拉的实机视觉仍待验。详见[画板说明](../docs/architecture/canvas-session-boards.md)。
+- `runs/tx-native/260927-05`：独立Sensitivity、MC=0、2千光线/源、OBJ7 x±0.01 mm；原生SAVE两端点模型回读die1/die2，主模型不变且副本关闭，28份清单文件哈希一致。
+- `runs/tx-native/260927-04`：3样本OD初试发现各样本约0.000106 mm超出−0.05 mm行程，均正确标无效；增大MF行程惩罚权重后复核，未隐去失效样本。该开发期包progress.json在封包后更新过，历史清单不重写；不用它做最终完整性证明。
+- `runs/tx-native/260927-06`：由正式工作台点击一次启动，3080代理→3081→原生工具；1MC/OD1轮/每源1000光线。OBJ1控制Z±0.05 mm，成员die1—4；die1 0.540717→0.483158 mrad，die2 0.575255→0.516101 mrad；补偿−0.0500000099 mm，在1e−7 mm数值容差内有效。低采样仅功能验证，不代表光学收敛/良率。
+- 用户确认专用探测器OBJ37/38采用GetMatrix全局Z=10011 mm、H=局部X；局部Z=1 mm不作为传播距离。原模型采集字段、dirty、MFE/TDE摘要及磁盘哈希前后相同；独立副本关闭。
+- 修复Windows轮询读取导致progress原子替换短暂拒绝：有界重试，进度写入失败不再取消原生求解；新增跨进程采集排他锁，避免服务重启后与原生作业交叉。
+- 93项光学Python（含6项原生配置边界）、12项相关Node和真实DOM模块检查通过；浏览器浅深主题/真实对象/任务状态可读、真实start仅一次。未进行高样本MC或DLS对照。
 
-## Tx YAML落实与docs分类（2026-09-26）
 
-- Tx现支持安全YAML读取，Skill包内样例为config/tx-pilot.example.yaml；本机config/tx-pilot.local.yaml由旧JSON等价转换，产品workflow_guide优先读YAML。原始YAML及规范化参数随run归档，旧JSON显式输入兼容。
-- 54项Python测试通过；配置Python环境实际plan通过，占位符execute在连接Zemax之前拒绝。校验重复键、非有限数值、安全解析、样例等价和原始字节冻结；没有重新追迹。
-- 26份docs按governance/architecture/guides/workflows/research/archive分类，decisions保留；总入口docs/README.md。历史草案标记归档，AGENTS增加工作内容到必读约束表，README缩短为核心入口。链接与代码引用已同步，项目检查通过。
-- 依赖声明requirements-config.txt固定PyYAML==6.0.3，使用既有环境中的同版本；未安装依赖或修改N02/全局规范。以下条目为此前阶段历史，当前状态以上述更新为准。
+## Tx自定义分析（2026-09-27）
 
-## 配置型Skill范式（2026-09-26）
+- 用户确认仅补偿最后MC，保存最终副本，活动原模型不变；保留OD/DLS独立局部优化并增加逐轴扫描。不调用OpenTolerancing，不写/执行TDE。独立误差采样与固定光线seed分开。
+- 参考链硬预检：旧绑定test-2模型OBJ7仍影响多个后续对象，已正确拒绝；不自动拆链。随后探测到API实例2已打开“2T2R-高线-4die-v0.52.1-NONSEQ_0926-公差分析-1.zmx”（90对象），未静默重绑或修改新模型。
+- 实测使用独立CopySystem加载历史已准备的runs/tx-native/260927-06/prepared.zos，非新模型的直接执行：runs/tx-custom/260927-01为2MC/逐轴1轮/每源1000光线，约41.4秒；02为2MC/OD1轮，约91.7秒。两次原模型不变、副本关闭；第一样本after=null，仅末样本补偿；终点局部扫描、NPZ、末MC/最终模型和HTML已保存，文件哈希核对通过。
+- 02末样本die1约0.602428→0.538862 mrad、die2约0.606347→0.532304 mrad；低采样仅验证功能，非收敛/良率结论。DLS入口复用官方局部优化枚举，本轮未实测。
+- 102项光学Python通过（新增9项网格/抽样/末态/参考链/取消边界），报告资源路径隔离测试通过。工作台custom模式/参数切换已只读实测，报告散点/光斑图浏览器已查看；当前新模型尚未通过正式UI启动custom。
+- 项目.venv固定matplotlib 3.10.9及传递依赖，requirements已锁定；未改全局Python。新增授权报告路由可按已完成job打开HTML及同包图片/数据，阻止路径越界；native报告HTTP200回读通过。后端和DSH已重载。
 
-- 用户指定：配置优先YAML，Skill包内必须附带YAML样例。已写入铁律OPT-14，同步AGENTS与运行包规范。
-- 本次为规范更新；既有Tx等JSON执行入口尚未迁移，不将YAML规范当作已经支持的运行能力。历史run保持原格式。
+- Tx提交反馈已区分后端明确预检拒绝（未启动）与网络/响应不明（提交状态待核实）。耦合成员关系错误改为列出控制对象与无关成员，说明独立耦合件和刚体成员的区别；不改变参考关系、不放宽预检。
 
-## 公共运行包与HTML报告（2026-09-26）
 
-- 已只读核对N02运行规范、公共分配器、Study配置和HTML报告实现，将共性要求提升至AGENTS、项目铁律OPT-13与docs/governance/run-bundles.md。
-- 公共run_bundle模块原子分配runs/<workflow>/YYMMDD-NN；执行前冻结配置、离线HTML、JSON证据和文件SHA-256。Tx plan/execute与离线baseline入口已接入；失败也保存报告。服务诊断保留artifacts，未改全局规则或N02。
-- 上一轮Tx证据校验复制到runs/tx/260926-01，报告report.html；配置从旧result.json提取，原始文件在original，旧路径保留。本次未重新追迹，旧运行环境/代码版本未保存的部分明确unknown。
-- 51项Python测试通过；Tx计划/校验失败与合成离线指标CLI实测。报告在系统默认Edge引擎完成桌面渲染检查。新包装器未另做Zemax实跑，原光学执行逻辑未修改。
+## σ输入、依赖预检与当前模型修复（2026-09-27）
 
-## Tx独立公差功能测试（2026-09-26，已实测）
+- 用户要求本轮不调用子代理，已中止先前启动的视觉子代理，后续由主Agent完成。盲装页支持range/sigma，保留μ；sigma方式按nσ显示Min/Max且后端重新计算，不信任派生字段。浏览器验证±2σ/±3σ联动，耦合行程不变。
+- Capture增加6D位姿Solve、活动参数Pickup与源采样元数据；预检按对象/列追踪直接和间接Pickup，修复“只看RefObject导致跑完OD才发现OBJ4随动”的漏洞。网页Analysis Rays覆盖要求Fixed+数值回读，Layout/Power不得随采样变化。
+- 原位修复已获用户授权。model-repair/260927-02冻结OBJ4/5的四项位姿Pickup，当前名义位姿不变；03按用户确认把OBJ2/3 Power设Fixed 1 W、Analysis Rays设Fixed 10000，Layout=0不变并保存。两包保留旧磁盘ZMX/ZDA和当前内存CopySystem备份。01因4.4e-16矩阵浮点差异触发精确比较，成功恢复旧Solve且未Save；02改数值容差后通过。03报告生成曾因sources列表类型失败，模型修改已回读成功，只续封报告，未重放模型写入。
+- runs/tx-custom/260927-04：修复后的当前模型直接通过正式服务执行2MC、OD1轮、每源2000光线；约283.4秒完成，无未声明随动，主模型不变、副本关闭、42份产物哈希一致。原模型Analysis Rays=10000，运行副本按目标切为2000/0与0/2000，Power保持1 W。
+- 本次是功能验证而非补偿改善验收：OD候选被拒绝，die2功率保持率约94.4%<95%，联合目标也未改善；最终保留末MC的补偿前位置。候选和最终值均在result，未伪报优化成功。
+- 报告新增每轴“角宽灵敏度+名义功率保持率”双纵轴图，共用补偿增量横轴，离散点连线明确。真实HTML五张图均加载并已查看。
+- 105项光学Python、σ/提交反馈4项Node通过；未做大样本或DLS对照。光学后端与DSH均已重载，旧revision草稿不自动迁移。
 
-- 新增独立Tx/Rx Skill与scope预检；对象序号、扰动范围、采样/指标都从配置读取。Tx配置config/tx-pilot.local.json，示例examples/tx-pilot.example.json。Rx规格不阻塞Tx。
-- 内存CopySystem上完成18工况：两片镜片各X/Y±10μm、倾斜X/Y±0.01°，首尾名义重复；四die采样，其他源禁用。分析光线数Pickup在副本中改Fixed；镜片参考链重挂与所有非目标世界位姿检查通过。
-- 试跑定义：探测器局部X径向投影角、7%–93%能量区间。名义H-D86全角1.172°，扰动范围1.172–1.176°；差异仅一个H像素0.004°，不作敏感度排名或制造结论。
-- 主模型回读、dirty与磁盘SHA256不变，副本关闭无错误，3081桥接恢复。结果artifacts/tx-tolerance/pilot-03/report.md及result.json。48项Python测试与项目检查通过；后补的进程锁/异常审计保护尚未用故障注入完整覆盖。
-- 下一步先做像素/光线/物理探测口径收敛；6D补偿、Monte Carlo与Rx追迹未实现。本次直接运行确定性工具，不代表GLM自主执行已验证。
+## 新模型预处理与OD复测（2026-09-27）
 
-## 官方画板反向编辑v3（2026-09-26）
+- 用户授权先备份再预处理当前optdsh-test-2.zmx。runs/model-repair/260927-04保留磁盘ZMX及未保存内存ZOS备份，解除源位姿Pickup，解耦OBJ7下游参考链，OBJ7/11保持全局位姿重定参考，die2挂die1形成配置所需刚体；两目标源Analysis Fixed10000、Power Fixed1 W，Layout原值保留。全部92对象世界矩阵及形状参数保持；保存后回读通过，10份清单文件哈希一致。
+- runs/tx-consistency/260927-01、03、04：同缓存NSDD与网格RMS一致；MFE/NSTR与显式种子API追迹采样不同；改变单核/默认种子未消除差异。02的SourceDiode Sobol设置回读失败，副本安全关闭，不声称Sobol可用。
+- runs/tx-custom/260927-05：正式服务2MC、OD1轮、每源5000光线、OBJ7 x/z/Tx扰动，die1控制die2刚体XYZ各±0.5 mm。337.8秒完成；末样本die1角宽0.578104→0.463870 mrad，die2 0.607242→0.448868 mrad，名义功率保持99.716%/98.496%，候选采用、行程通过；MFE也改善。预处理后的主模型未变、副本关闭、43份产物哈希一致。
+- 记录每批sameTraceNsddRmsMM/命中数及优化器实际MFE证据，HTML区分内部优化和独立复测。105项Python离线测试通过；真实HTML五张图加载，灵敏度/功率同图已目视确认。当前目标无质心/指向约束，最终光斑中心明显平移；低样本功能验证不外推良率或光学收敛。
 
-- 用户实机确认v2会话打开/绘图/发送成功，新增需求为Agent操作画板。
-- 原生canvas_read/canvas_propose_edit已接入；元素级建议稿、只读预览、显式应用/拒绝、版本冲突保护和原生撤销接线完成。
-- 项目专项`.agents/skills/optdsh-canvas/SKILL.md`已由真实GLM发现调用；本机主目录通用Skill未改。GLM实际生成蓝色圆形＋文字，接口验证原图保留/应用幂等/跨会话拒绝通过。
-- 19项Node、116项Canvas UI逻辑测试与构建通过；新建议稿UI实际点击与Undo仍待用户验收。详见[会话画板v3说明](../docs/architecture/canvas-session-boards.md)，证据artifacts/canvas-edit-validation。
+## 视觉专家统一中心（2026-09-28）
 
-## 官方会话画板v2（2026-09-26）
+- visual-designer 0.7.0：optDSH为唯一源，AgentTyvate目录Junction和转发分发器已配置；两边偏好合并，新增用户专利全景研究台的配色参考（黑白灰、青绿、少量洋红，原始截图与取样保留）。
+- 源/私人记录即时同源；中心fleet分发optDSH四宿主和Tyvate三宿主，预检所有目标冲突。公共源移除光学专属正文，按目标项目AGENTS路由；个人偏好和截图Git忽略。
+- 公共源码导出器生成27项文字/来源/模板文件，排除个人偏好、所有PNG及本机路径设置；第三方图片仍只本机参考。旧源和分发资源有哈希核对及备份。
+- 19项中心Python测试、6项专家Node测试通过；新旧宿主模型遵循未复测，运行中DSH未重载。入口：.agents/README.md。
 
-- 已取代固定会话投递探针：标题栏画板入口、一聊天一board、嵌入编辑模式、版本保存/历史快照、官方prompt复用Agent、稳定requestId去重和显式确认处理。
-- 11项Node边界测试、Canvas原有113项UI逻辑测试和构建通过；两个新聊天三次真实GLM投递（A1/B1/A2）通过，未认证401、跨board拒绝、重复入队保护通过。
-- 独立Canvas项目/旧提交保留，3081适配未迁移；默认Edge视觉/实际点击仍待验（CUA不可用）。详见[使用与验证](../docs/architecture/canvas-session-boards.md)。下方分期1与审查为历史记录。
+PPT 0.2：语义版式、本地素材等比嵌入、用户修改diff、样页槽位模板、结构/字面事实预检、过程记录及渲染/导出缓存已实现；10项针对性单测与构建通过。真实浏览器逐页预览及PPTX缓存复用已验证；新会话GLM以项目测试证据为准，不将CLI能力等同模型遵循。
 
-## 装调Skill：对象映射与离线指标（2026-09-26）
-
-- 本轮桥接重新启动且真实采集90对象成功。候选清单区分源/探测器/镜片/布尔结果与构造体，保留modelId/revision；机械镜筒归属仍未确认。
-- 用户确认Tx四颗die（当前OBJ2–5）作为一个刚体整体6D耦合。已保存本机config/assembly-tolerance.local.json；Rx1(940)/Rx2(905)优先级待答，候选SPAD为61/76。
-- 公差Skill新增baseline.py与数据定义参考，确定性内核支持显式定义的带权角域86%区间及矩形H/V，报告二维矩形实际能量比例；不隐式套用相邻项目90%口径。
-- 8项新增测试与合成CSV命令通过，全部44项Python测试通过；Skill格式和项目检查通过。产物artifacts/tolerance-baseline。
-- 没有执行追迹/模型扰动/补偿优化，也未取得有新追迹与版本证明的真实名义D86或Rx尺寸；目前交付为基线准备，不是公差分析结果。
-
-## AgentCanvas 初稿审查（2026-09-26）
-
-- 当前官方插件仅验证固定会话的一次投递；当前聊天绑定、绑定画板入口、独立board身份和连续提交尚不满足使用闭环。
-- 源码核对及隔离探针发现静态目标会话、重复resume、去重状态未读取、提前complete和取消边界问题；详细证据及修订验收见[初稿审查](../docs/archive/agent-canvas-review.md)。本次只检查和记录，未改运行实现。
-
-## AgentCanvas 接入分期1已实现（2026-09-26）
-
-- 插件 `plugins/optdsh-agent-canvas`：Host 侧桥接（Canvas 定向 wait→resume 会话→followup→回答→complete 回执）+ Client 侧右侧"画板"页签（iframe 载入 4173，失败提示改用系统浏览器）。经 `config/dsh.local-policy.yml` 以 `--patch` insert 本地路径装载，无需 pnpm/plugin add；client 模块由 host Loader entries 自动进浏览器 boot 图。
-- 端到端探针通过：合成提交（两矩形+箭头+文字）→ 桥接领取 → session-c5b27910 内 turn completed（glm-5.3-flash 复述元素结构正确）→ Canvas complete 回执、inbox 清空、state.json 幂等记录、消息持久化到 storages/session_projcache。证据 `.runtime/agent-canvas-bridge/state.json`。
-- 关键实现事实：空会话 resume 后 followup 会因 prompt 组装缺 `{{model}}` 报错，需按 `config/optics-model.json` 在 resume 时 installModelSelection；消息主体持久化在 storages/session_projcache（jsonl.zstd 仅会话头）；Loader entry 相对路径相对 patch 文件目录解析且不支持目录导入。
-- 待验收：浏览器视觉（右侧画板页签+iframe 实际渲染、聊天中消息可见）；绑定状态显示、忙时排队、崩溃恢复与去重为分期2。
-
-## 持续会话、画板与领域Skill（2026-09-26）
-
-- 3081工作台已复用官方DSH AgentRegistry.resume；连续三轮GLM测试使用同一个sessionId，能记住前轮定义的“耦合基准A”。服务持久索引保存会话/任务，异常中断不自动重发。
-- 新增“新会话/会话选择/连接画板/确认画板已处理”；Canvas接收者绑定指定聊天，不扫共享待处理箱。合成定向提交实际进入第三轮并得到正确上下文回答；原画板scene内容比对一致（autosave导致revision计数增长，不能用整包哈希误判）。
-- 新建optdsh-expert-collaboration和optdsh-assembly-tolerance项目Skill；GLM实际调用workflow_guide读取两者，预检明确未具备公差执行器。
-- 用户确认：Tx H-D86全角、光源6D补偿；Rx矩形H/V光斑、SPAD 6D补偿；先装镜筒再耦合。作为近期优先业务，参数模板与预检已交付；未运行公差仿真。
-- 36项Python、19项JS及真实应用DOM冒烟通过；三轮结束后再次采集90对象成功，dirty保持、ZMX哈希不变。证据artifacts/conversation-validation。
-- 仍未完成：官方Web原生嵌入、画板图片像素/回画、失败会话自动修复、离线旧提交重投与默认浏览器完整交互验收。当前Canvas模式是3081会话绑定，区别于下方官方Web设计提案。
-
-## Agent Canvas 接入提案（2026-09-26，设计）
-
-- 已只读核对固定版本DSH的右侧页签/会话输入声明与AgentCanvas提交、等待、目标选择和版本接口；建议原生薄插件＋独立画板服务。
-- 先验证官方Web同聊天接收画板，再做Agent建议稿与光学标注；离线定向领取、崩溃去重、嵌入模式与图片能力为明确验收项。
-- 详见[接入设计](../docs/archive/agent-canvas-integration.md)。未安装插件、修改相邻项目、连接/领取画板提交或调用模型。
-
-## 最新连接复核（2026-09-26 06:21，本地时间）
-
-- 用户提出待验证假设：进程嵌套及子进程退出可能影响API连接。后续正常测试遇到复现时对齐DSH/MCP退出、采集worker连接/退出、extension实例与LicenseStatus的时间，不先认定根因、不为此另开定时监控。当前DSH查询经HTTP读桥接快照，ZOS采集worker由桥接刷新独立启动，两条路径须分开核查。
-
-- 用户确认API已连接后，显式refresh成功，90对象、2.39秒、两次读取一致、dirty前后均true；revision未变化。
-- zai/glm-5.3-flash多引用OBJ59/60实际查询完成，16.6秒，返回20mm原点距离、世界ΔZ=-20mm、局部ΔZ=+20mm，工具无错误且结果未过期。
-- 证据artifacts/layout-v4-validation/glm-multi-recheck.json；这是本次恢复，不宣称间歇性NotAuthorized原因已解决。
-
-## 方案04已实现（2026-09-26）
-
-- 用户实机反馈字号偏小后，主要文字调整为13–14px，按钮/辅助文字约12px；保留28px单行对象列表与紧凑顶栏，未缩放3D画面。
-
-- 双视图四列、固定投影反向与CW/CCW 45°、全局XYZ方向标及原点轴开关；多选对象嵌入指令草稿、服务端版本校验。
-- 用户执行中补充已纳入：28px列表单行编号/备注、超长省略/悬停全文；顶部合并紧凑入口、低频选项折叠，分类筛选放列表内；大列表窗口化。
-- 32项Python+19项JS通过，实际应用DOM模块冒烟通过（WebGL替身，不是浏览器视觉验证）。HTTP资源200，源ZMX哈希未变。
-- 重启桥接时宿主再次NotAuthorized，保留历史快照且拒绝新查询；本轮没有新的GLM真实多选验收。默认浏览器入口已打开，CUA无法连接Edge，未改用Tabbit。
-- 默认浏览器排版/IME/Undo/GPU与真实多对象查询待验；详见docs/guides/workbench-v4.md和artifacts/layout-v4-validation。
-
-## 运行入口修复（2026-09-26）
-
-- 用户报告DSH打不开时，3080进程已停止，3081正常；直接start-dsh启动成功，停止原因未定位。
-- open-dsh现在可在服务停止时启动；start-dsh重复运行复用同端口且身份匹配的进程。新增可双击open-dsh.cmd。
-- 当前PowerShell与Windows PowerShell 5认证HTTP200；浏览器实际加载官方DSH界面，GLM-5.3-Flash显示正常。未修改模型凭据或占用其他服务端口。
-
-## 已确定
-
-- 目标为光学专家与 Agent 协作工作台；对话、空间交互和监控分离。
-- 官方 DSH Web + Standard + 可替换非顶尖模型起步；不绑定 GLM，Creator 辅助开发。
-- 独立光学服务持有模型访问，DSH 只做适配；先只读后写入。
-- 个人模型试验与公司部署分开；公司允许开源框架，其模型与数据出口受控。
-
-## 本轮交付
-
-- M0 项目骨架、Codex AGENTS.md、项目铁律手册、两个项目级 skills、架构与接口草案。
-- 合成场景及专家提交样例、无凭据配置样例、上游候选版本快照。
-- 本地结构检查脚本；Git 已初始化为 main，尚无提交和远端。
-
-## 初始化验证
-
-- `python scripts/check_project.py`：通过，文档/skill 相对链接、JSON 与合成样例对象引用一致。
-- 两个 skills 均通过 skill-creator 的 `quick_validate.py` 格式检查。
-- 模型约束已由 GLM 唯一通道修正为非顶尖模型原则，示例 model 留空，待选择。
-- Codex `/init` 对应的 AGENTS.md 入口已手工按背景建立；未执行交互式命令，未改全局 Codex 配置。
-- 新 skill 在新任务的自动发现尚未实测，不把文件校验视为运行宿主已加载。
-
-## 未实现/未验证
-
-- DSH Web、三家文件工具调用及GLM的M2真实对象查询已实测；多模态与复杂任务仍未验证。
-- Zemax只读连接/90对象快照/版本校验已实现；精确几何、跨版本永久身份、写入/恢复尚未实现。
-- 独立Three.js近似几何/四视图查看器已实现；M3内嵌交互和AgentCanvas适配未实现。
-- 已测 GLM-5.3-Flash、MiniMax-M2.7-highspeed、deepseek-flash；不等于已完成选型，图片能力未验证。
-- 无远端仓库，无发布或推送。
-
-## M1 第一步已完成：运行环境
-
-- 项目本地安装 @deepseek-ai/dsh@0.1.5-rc.3，package-lock.json 固定依赖；Node 24.13.1。
-- 独立 DSH_HOME 为 .runtime/dsh，只监听 127.0.0.1:3080；官方令牌认证保留。
-- start/open/status/stop 脚本齐备；启动、认证 HTTP 200、停止/重启和实际浏览器页面通过验证。
-- 通过官方 browse 目录选择器添加本项目，标准模式可见；模型引导选择稍后配置，无推理请求。
-- OTel DISABLED、DeepSeek session log contribution关闭；完整网络出口审计尚未做。
-- 运行说明：docs/guides/local-runtime.md；截图和检查证据：artifacts/dsh-host/（本地，Git忽略）。
-
-## M1 三家接入冒烟测试（2026-09-26）
-
-- 用户完成三家凭据录入后，Agent 经官方Web分别运行同一合成只读任务；实际请求头确认路由，三次均 completed。
-- MiniMax/DeepSeek坐标与间距正确；GLM把Z平移误读为X。三家均识别合成数据与版本冲突。
-- MiniMax实际加载 optdsh-optics-contract：当前DSH已发现该项目skill；不能再将项目skills一概视作只供Codex读取。
-- 仅一次/模型，不能作质量排名；图像/仿真/写操作及长期稳定性未验证。
-- 报告与证据：artifacts/model-smoke-20260926/report.md 和 results.json（本地，Git忽略）。用户原有hello会话保留，默认模型恢复MiniMax。
-
-## M2 前置设计记录（下方 MVP 已执行）
-
-- 用户指定相邻opt-assist为优先复用来源；先只读检查实际目录E:/Proj-2026-N02_opt-assist、连接封装/对象导出/注册表/手册。见docs/research/opt-assist-reuse.md。当时只补文档与方案，后续MVP实现见下方。
-- M2先复用确定性读取，补world transform、revision与对象身份；M3采用场景组件＋DSH薄插件，先最小槽位与点选提交，再接真实快照。
-
-1. 将合成场景的坐标解析与版本检查实现为确定性只读工具，避免依赖模型读取矩阵后自行推算。
-2. 用本轮同一案例比较工具化后的效果，再确定首个光学助手基线。
-3. 公司接入与完整网络出口另验；小样本成功不代表所有部署策略已经验证。
-4. 图片输入独立验证；失败时保持结构化文本路径。
-
-以上为M2实施前的安排；当前交付与剩余边界以下方MVP记录为准。
-
-## M2 MVP 已实现（2026-09-26）
-
-- 复用opt-assist连接封装，extension1只读连接本项目0926-optdsh-test模型；90对象GetMatrix成功，保留dirty=true。
-- src/optdsh_optics提供两次一致读取、快照内容revision、保守对象引用和确定性相对位置；30秒worker超时、busy/断连错误处理，不自动fallback。
-- 3081独立查看页面：搜索/过滤/点选、原点坐标轴与参考关系、主体/全景/聚焦、相对计算、复制提问草稿。不是实体曲面或光线渲染。
-- DSH新增optics MCP四工具；首次新增启动组合未热加载，空闲重启后真实GLM验收成功：OBJ59→60世界ΔZ=-20 mm、局部ΔZ=+20 mm、原点距离20 mm。
-- 12项离线测试通过；认证/跨源/无写路由/过期引用、刷新一致性、14个Ref0对象平移、磁盘ZMX不变及dirty状态保持已核验。源项目未修改。
-- 证据：artifacts/m2-validation；使用说明：docs/architecture/m2-optics-bridge.md。
-- 下一步由用户检查查看器与真实模型的物理意义，再推进M3内嵌场景及显式发送；复杂实体几何和长期稳定性仍待验收。
-
-## M2.1 首版已实现（2026-09-26）
-
-- Three.js 0.186.1项目依赖锁定、本地提供资源；单场景四相机，支持空间/XY/XZ/YZ、最大化、联动聚焦和正交缩放同步。
-- 只读提取typed尺寸字段；90对象中63个参数化近似形状，15个参考对象，12个非比例标记。6个布尔结果不做CSG，复合镜片为名义代理。
-- 分类配色、手动显示分类、分类显隐/隔离、半透明/实体/线框；不改变模型材料和可见性。
-- 支持自定义鼠标组合键和聚焦键，冲突检查、localStorage保存、输入框排除。默认Shift+左键平移，正交相机锁定旋转。
-- 19项Python+7项JS测试通过；Tabbit交互验证通过，旧20mm查询仍正常。证据 artifacts/m2-1-validation，使用说明 docs/guides/viewer-controls.md。
-- 源模型ZMX哈希与升级前一致；没有保存或写入模型。用户可继续评估近似外观，M3嵌入与复杂几何后续实施。
-
-## M2.2 布尔裁切（2026-09-26）
-
-- 实现A&B镜片/矩形体封闭近似裁切，首操作数坐标系到结果对象姿态，补Clear外机械平边；不支持表达式/倾角明确保留标记。
-- Manifold 3.5.4本地WASM Worker，32项几何缓存，旧revision结果丢弃，20秒超时；颜色/相机不重算，刷新保留视角。
-- 既有真实快照6组全部生成裁切网格，浏览器Worker约81ms冷批次；缓存0.1ms，单镜片变化约7.1ms。加速60轮测试非一小时实机验收。
-- 当前重新连接Zemax返回LicenseStatus=NotAuthorized，未修改授权配置；同模型旧快照可恢复显示，查询仍拒绝STALE_SNAPSHOT。实时编辑回读和专家逐对象对照待验证。
-- 使用与证据：[布尔裁切](../docs/architecture/boolean-cuts.md)、[开源调研](../docs/research/frontend-reuse-research.md)、artifacts/m2-2-validation。
-- 用户决定暂不增加自动采集；1次参数修改/min是持续性能基线，已写入AGENTS及铁律。
-
-## M3 只读工作台 MVP（2026-09-26）
-
-- 用户确认Zemax仍打开后重新连接，采集90对象成功，revision与M2.2一致，dirty保持；此前NotAuthorized原因未定位，不声称永久修复许可问题。
-- 紧凑深浅主题、左右/底部可调整面板；回答与运行记录分开，同屏查看。
-- 显式点选发送经DSH headless项目适配返回回答，独立单次会话；不是官方Web内嵌，也不是连续多轮聊天。
-- 模型仅看到无参数selection_context工具，后端绑定modelId/revision/objectId/比较目标，代码计算关系；真实工具目录验收只有这一项。
-- 旧版本拒绝、请求幂等、单任务、跨源/认证、取消已验；30项Python、13项JS通过。证据artifacts/m3-validation。
-- 用户新增近期策略：只测试glm-5.3-flash，不再测试MiniMax表现；config/optics-model.json和项目DSH默认同步，GLM实测结果单列。
-- 初期MiniMax接线样例曾误缩写ID并猜测过期；已用绑定工具消除此类参数输入。仍需评价GLM答案质量，不能把completed当所有解释正确。
-- 下一步：用户体验当前布局和只读问答；官方Web内嵌、真实写提案、完整非球面和长期性能后续推进。
-
-- GLM实测补充：两次zai/glm-5.3-flash完成，裁切核心关系正确（仍有解释边界问题）、20mm相对位置正确；用时25.6/20.7秒，不推广为质量全面通过。
+PPT 0.2独立GLM四页制作及一轮集中修订已实测，采用语义版式/图片等比嵌入/check/局部render，三图成品比例正确。独立WPS渲染发现一处长段轻微超底框，浏览器估算检查未覆盖，不声称成品自动验收可靠。当前模块11项离线回归通过，模板槽位与diff另有确定性测试；未验证公司机和微软PowerPoint。

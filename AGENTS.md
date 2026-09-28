@@ -1,64 +1,64 @@
-# optDSH Agent 规则
+# optDSH Agent规则
 
-## 入口与范围
+## 1. 本文件管什么
 
-- 先读 README.md、planning/STATUS.md；按任务再读对应 docs。更新实现时同步状态与必要设计说明。
-- 当前起点：官方 DSH Web + Standard + 可替换的非顶尖模型；不绑定 GLM，不依赖最强模型隐式兜底。Creator 辅助开发。详见 docs/decisions/0001-start-with-official-web-standard.md。
-- 项目模型原则与部署策略分开：个人合成数据试验可选择模型；公司资料仍遵守公司模型/数据出口限制。
-- 图片、工具调用等能力按实际端点验证，不得将模型名或配置声明当作证明。
-- 近期测试策略（2026-09-26用户指定）：产品运行验证集中于 `glm-5.3-flash`，暂停MiniMax表现测试；失败不自动切备用模型。配置入口为config/optics-model.json，长期原则仍是不依赖顶尖模型。
+本文件是optDSH仓库的公共协作入口，规定平台开发、模块归属、交付和规则路由。它不把光学工作台的业务限制施加给整个DSH，也不替代具体研究配置。
 
-## 光学事实与交互
+先读[README](README.md)和[当前状态](planning/STATUS.md)，再按本轮任务读取下方入口。历史文档ZIP只供追溯，不作为当前规则。
 
-- Zemax 为光学模型与求解权威。网页近似几何、草图、抽样光线必须与真实状态区分。
-- 单一服务持有并调度同一模型的写入口；所有对象引用携带模型身份与 revision；编号不能当永久身份。
-- 坐标、单位、参考对象、旋转语义必须明确；不能从截图推断后直接写模型。
-- 先只读闭环，再做修改。写操作必须有前置版本检查、专家确认、执行后回读及恢复策略。
-- 专家选择/标注是意图，只有提交后才进入 Agent；草稿和鼠标移动不自动成为提示词。
-- Agent 停止不等于仿真停止；仿真作业单独报告状态、取消能力和结果版本。
+| 层级 | 适用范围 | 不应混淆的边界 |
+|---|---|---|
+| optDSH平台 | 官方DSH集成、公共启动/认证、会话、插件装配、目录与交付 | 平台可以承载光学、画板、设计或其他业务 |
+| 光学工作台插件 | 光学场景显示、对象选择、光学服务代理和会话衔接 | 插件不是Zemax求解器，也不另设整个Agent的工具权限 |
+| 光学公共包/执行器 | ZOS-API连接、采集、保存、确定性分析与报告 | 模型身份、版本、串行化和恢复在工具边界落实 |
+| 画板插件 | 按会话保存画板、提交和Agent修改建议 | 画板像素不是光学坐标；画板权限不等于Zemax写权限 |
+| 领域契约/Study/Skill | 术语、模型映射、具体研究配置及任务流程 | 不把具体研究指标或对象号提升为平台通用规则 |
 
-## 工程与交付
+开发Agent（例如正在修改本仓库的Codex）、产品Agent（官方DSH会话）和仿真执行器是不同角色。按实际任务和被操作资源判断约束，不能仅因聊天关联了光学工作台就把所有工作都视为光学分析。
 
-- 配置型Skill优先采用YAML，包内必须在`config/`目录附带可复制的YAML样例（`xxx.example.yaml`），并由SKILL.md链接说明；执行器须实际支持并校验，原始配置随run保存。共性要求见[铁律OPT-14](docs/governance/project-rules.md#opt-14-skill配置范式)。
+## 2. 全仓库通用的开发与协作规则
 
-- 所有正式Skill/分析运行统一使用公共run包：`runs/<workflow>/YYMMDD-NN/`，开始排他分配一次，整条链路沿用，不覆盖、不重复嵌套。默认人读报告`report.html`；执行前保存实际配置快照，执行消费run内配置；结果、输入证据、状态和SHA-256随包。通用规范见[运行包规范](docs/governance/run-bundles.md)，不在各Skill重复维护。服务日志/临时诊断仍用artifacts，凭据不入run。
+- 尊重用户已确认的需求与授权，同一事项不反复确认；带预设答案的提问用a./b./c.编号，多题允许1a、2c式回复，结构化工具遵循其协议。
+- **涉及界面设计时，开始设计或实施前必须询问用户是否需要调用视觉设计专家**，按其选择执行；同一任务已明确选择则沿用。适用于平台、插件、原型和界面改版，不局限于光学视图。本项目不涉及窄屏场景, 没有用户明确要求时无需兼顾窄屏.
+- 正式代码、资源和测试归所属plugins或packages；公共依赖明确声明，不通过修改node_modules解决适配。一次性开发脚本进temp/<任务>，不平铺根目录。
+- 持久数据在data，服务日志logs，PID/令牌/锁在.runtime；artifacts已退役，不重新创建。日常cmd入口放根目录，实现放scripts/runtime。
+- 本项目独立维护可发布代码和依赖。光学不得依赖N02源码或虚拟环境；N02只作只读参考。画板编辑器对N05的依赖是用户明确暂留项，不擅自迁移，也不宣称整个应用已完全自包含。
+- 不修改相邻项目或全局工具来修复本项目。保留用户数据、既有改动和历史输入；清理可恢复。凭据、商业模型/CAD、原始会话和大体积原始数据不进Git。
+- 浏览器遵循用户当前选择和系统默认关联（当前用户选择Tabbit），不擅自更改系统设置。
+- 更新实现时同步当前状态和必要说明；区分设计、模拟、已接入和已实测，维护消息不能替代用户要的结果。
+- 按变更范围验证；不为纯文案增加形式测试。默认检查不启动真实模型调用、Zemax追迹或tests/live；这些按具体任务授权执行。未获授权不提交发布动作、推送或安装全局工具。
 
-- 浏览器偏好（2026-09-26最新指示）：用户已改回Tabbit，撤销此前“不使用Tabbit”的约束；打开与操作遵循当前用户选择。启动入口仍使用系统默认关联；本轮注册表HTTP/HTTPS仍读到MSEdgeHTM，关联生效待核实，不自动修改系统设置。
+## 3. optDSH产品与插件集成原则
 
-- 性能是持续约束：以每分钟一次镜片参数修改作为当前基线。布尔计算移出UI线程，按几何依赖缓存，限制缓存容量并释放GPU/WASM资源；四视图共享几何，颜色/相机操作不触发布尔重算。性能结论必须区分采集、网格重建、显示和长时间运行证据。
+- 起点是官方DSH Web、Standard和可替换模型，保留官方Agent循环。光学工作台、画板和专家以插件扩展，不fork另一套会话事实源，不恢复旧headless聊天写路径。
+- “不依赖顶尖模型兜底”是产品设计和能力验收原则，**不限制开发本项目的Codex使用什么模型**。近期产品验证集中于glm-5.3-flash，不自动切备用掩盖失败；不据此锁定用户所有普通会话。
+- 模型名、配置声明或工具可发现不等于能力验证；文本、图片、工具调用按实际端点分别确认。公司数据遵守公司模型/出口限制，个人合成试验与公司部署分开。
+- 工作台与完整Web共用同一官方会话，继承Standard工具、文件权限和审批。**光学MCP查询只读不等于Agent不能编辑文件、运行Shell或执行其他已授权任务**；具体光学写入由对应执行器约束。
+- 根规则不代替产品提示词的作用域。需要注入领域行为时，绑定相应Agent/任务，不能影响无关会话；插件机制与加载状态见[Agent开发](docs/agents.md)。
 
-- 光学逻辑独立于 DSH；DSH 插件只做工具、事件、前端适配。先使用现成循环，按证据决定更深定制。
-- 不直接修改其他项目、全局工具或当前 Zemax 会话来完成本项目初始化。
-- docs 保存长期设计；planning 保存当前状态；正式运行数据在runs，服务日志与诊断在artifacts。凭据、商业模型、CAD、光线大数组和原始会话不进 Git。
-- 新依赖固定版本、隔离安装；变更范围内验证。新增行为测试真实边界，不为文案修改添加形式测试。
-- 对外结果标注“设计/模拟/已接入/已实测”；最终回复必须交付用户原问题，维护信息不能替代正文。
-- 本项目初始化并不授权发布、推送远端、安装全局工具或连接生产模型。
+## 4. 跨模块通用的Skill与运行包规范
 
-## 按需入口
+- 配置型Skill优先YAML，包内config/xxx.example.yaml，执行器真实解析校验；业务Skill负责意图/流程，确定性实现放公共模块。开发规范通过文档路由，不伪装成产品业务Skill。
+- 正式分析、评测或保存审计一次分配YYMMDD-NN，配置、代码快照、输入证据、结果、相关日志和报告完整随包。研究run就近归Study；原始配置冻结后由执行器消费。
+- 简单报告可MD，复杂报告HTML；先背景/Setup再结果，原始配置折叠，表格左对齐。这里规定交付格式，不指定任何研究的指标、对象或采样值。
+- 历史run内容不改写；用户明确迁移时整包移动、记录路径映射并校验哈希。普通问答、文档修改和交互式预检不强制生成run。
 
-文档总入口：[docs/README.md](docs/README.md)。开始相关工作前按下表读取对应约束，不要求每轮通读全部docs。
+## 5. 按实际任务读取专项约束
 
-| 工作内容 | 必读入口 |
+下表是任务路由。目录内AGENTS用于该模块开发；即使从其他目录启动，只要实际操作Zemax，仍须遵守光学契约和写入门禁。反过来，纯平台/普通文件任务不套用Zemax门禁。
+
+| 工作 | 必读入口 |
 |---|---|
-| 新建/改造Skill、配置设计 | [项目铁律OPT-14](docs/governance/project-rules.md#opt-14-skill配置范式)：包内`config/xxx.example.yaml`、真实解析校验 |
-| 分析/评测/仿真及报告 | [运行包规范](docs/governance/run-bundles.md)：短ID、配置冻结、HTML、证据校验 |
-| Zemax连接、对象读写、数据契约 | [数据契约](docs/architecture/contracts.md)、[N02复用与副作用](docs/research/opt-assist-reuse.md)，再读optics-contract Skill |
-| 几何/布尔/多视图性能 | [布尔裁切与性能](docs/architecture/boolean-cuts.md)，遵守每分钟一次参数修改基线 |
-| 面板布局/分隔线 | [面板调整规则](docs/guides/panel-resizing.md)：窗口缩放保持比例；手动拖动优先相邻面板；内部视口改变须同步WebGL重绘 |
-| 版本、提交与Git同步 | [版本规范](docs/governance/versioning.md)：根package.json为项目版本源，锁文件/CHANGELOG/标签一致；推送前检查私有数据排除 |
-| 会话、画板、专家提交 | [持续会话](docs/architecture/conversations-canvas.md)、[官方画板](docs/architecture/canvas-session-boards.md)，按产品入口区分适配 |
-| 本地启动/认证/部署 | [运行指南](docs/guides/local-runtime.md)、[同会话工作台](docs/guides/shared-workbench.md)、[开发与数据出口](docs/governance/development.md) |
-| 官方Web与光学工作台整合 | [同会话工作台](docs/guides/shared-workbench.md)为现行入口；[架构复盘](docs/architecture/workbench-convergence.md)保留演进与后续设计。不得恢复旧headless聊天写路径 |
+| 平台结构/安装/认证 | [架构](docs/architecture.md)、[运行](docs/runtime.md) |
+| 公共规则详解 | [按作用域分类的规则](docs/rules.md) |
+| 光学工作台前端/交互/性能 | [模块规则](plugins/optdsh-workbench/AGENTS.md)、[工作台](docs/workbench.md) |
+| 光学连接/保存/分析执行器 | [光学包规则](packages/optics/AGENTS.md)、[光学契约](docs/contracts.md) |
+| 会话画板接入 | [画板规则](plugins/optdsh-agent-canvas/AGENTS.md) |
+| Harness/专家/模型验收 | [Agent开发](docs/agents.md) |
+| 正式运行与报告 | [运行包规范](docs/runs-and-reports.md) |
+| 2T2R术语/H-V映射 | [领域契约](docs/2t2rLidar/README.md)；其他领域不自动套用 |
+| 具体研究/光学任务 | 所选Study的README、当次配置和对应.agents/skills/*/SKILL.md |
 
-`docs/archive/`只用于历史追溯；关键约束迁移或新增后必须同步本表及docs导航。正式结果在runs，当前状态在planning，不混入docs。
+项目Skill可被DSH产品Agent发现，不假设只供Codex；当前能力清单看实际目录与说明，不把它当禁止新增业务的永久白名单。视觉专家源在.agents/experts，分发维护用.agents/development-skills/expert-distribute。通用经验见.experience/README.md，本机环境事实按shared-memory维护。
 
-- Tx/Rx公差独立：Tx用`.agents/skills/optdsh-tx-tolerance/SKILL.md`，Rx用`.agents/skills/optdsh-rx-tolerance/SKILL.md`。对象序号和扰动幅度来自独立配置，不硬编码进Skill；Tx功能执行器仅操作CopySystem，工作台产品仍只读。
-
-- 官方DSH会话画板绘制/修改：`.agents/skills/optdsh-canvas/SKILL.md`。这是项目专项Skill，使用原生canvas工具；不修改或混用本机主目录的通用agent-canvas Skill。
-
-- Zemax连接/读取/分析能力开发前，优先参考相邻 `E:/Proj-2026-N02_opt-assist`；已核对的复用入口与副作用见 [复用备忘](docs/research/opt-assist-reuse.md)。只读参考不授权修改旧项目或活动模型，不复制未经检查的连接样板。
-- 规则理由与验收见 [项目铁律手册](docs/governance/project-rules.md)，不用每轮全读所有文档。
-- 模型基线/切换/对照评估：`.agents/skills/optdsh-model-baseline/SKILL.md`。
-- 场景快照/对象选择/坐标/版本契约：`.agents/skills/optdsh-optics-contract/SKILL.md`。
-- 领域工作流优先做项目Skill，确定性计算和连接在工具/脚本中；不要只在聊天提示词里临时编排。连续专家协作：`.agents/skills/optdsh-expert-collaboration/SKILL.md`；Tx/Rx镜筒装调公差：`.agents/skills/optdsh-assembly-tolerance/SKILL.md`（当前预检/设计阶段）。
-- 检查命令：`python scripts/check_project.py`。项目 skills 是指令资源；2026-09-26 DSH Standard 已实际发现并调用 optics-contract，注意开发与产品 Agent 的作用范围，不能假设它们只被 Codex 读取。
+检查入口：npm test；.venv/Scripts/python.exe scripts/maintenance/check_project.py。

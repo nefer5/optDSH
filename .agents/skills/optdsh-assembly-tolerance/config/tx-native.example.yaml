@@ -1,0 +1,27 @@
+# 正式v1配置；objectId绑定当前快照revision。复制后填写，默认只预检。
+schemaVersion: 1
+modelId: null
+expectedRevision: null
+geometryConfirmed: false # 核对机械组、局部轴/枢轴、H轴和全局Z=0测距后置true
+distanceMode: global-z
+statistics: {truncationSigma: 2}
+blindParts:
+  - objectId: null
+    axes:
+      x: {min: null, max: null} # mm；其他轴按需添加。Tx/Ty/Tz单位deg
+coupledParts:
+  - objectId: null # 现有机械控制基准
+    memberIds: [] # 需要随动的直接子对象；控制对象本身可省略
+    axes:
+      z: {min: null, max: null} # 相对名义装配零位的行程mm
+# 两目标分别追迹，Z值由后端读取全局Z，不能在配置中覆盖。
+targets:
+  - {name: die1, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+  - {name: die2, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+analysis:
+  mode: monte-carlo # 或sensitivity；后者自动MC=0
+  method: OD # OD / DLS / none
+  runs: 3
+  cycles: 1
+  raysPerSource: 10000
+  seed: 42 # 制造抽样种子；不等同光线采样收敛证明

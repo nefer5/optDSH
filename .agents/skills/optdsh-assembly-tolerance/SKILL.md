@@ -1,44 +1,53 @@
 ---
 name: optdsh-assembly-tolerance
-description: 规划和检查Tx/Rx镜筒装配后耦合的公差分析；用于镜筒内镜片误差、Tx光源6D补偿、Rx SPAD 6D补偿及补偿前后性能对比。提供任务预检、对象映射候选和离线名义指标计算，不执行Zemax公差仿真。
+description: optDSH装调公差分析统一入口。先识别Tx发射、Rx接收或两者的用户意图，再按独立流程处理镜片装配误差与光源/SPAD耦合；Tx支持原生NSC公差及脚本MC/末样本补偿/局部灵敏度的副本运行，Rx按独立流程处理；完整多自由度装调质量仍需专项验证。
 ---
 
-# Tx/Rx 镜筒装调公差
+# 装调公差分析
 
-## 当前能力
+新增[Tx自定义脚本流程](references/tx-custom.md)及[YAML样例](config/tx-custom.example.yaml)：用户明确选择不走内置公差模块时采用。先确认模型已处理非预期参考链，再脚本MC、只补偿最后样本并采集局部灵敏度，保存最终副本和HTML。工作台与CLI仍共用同一串行入口；不得自动改参考链或修改活动原模型。
 
-Tx与Rx独立进行：Tx功能测试使用 [Tx Skill](../optdsh-tx-tolerance/SKILL.md)，Rx使用 [Rx Skill](../optdsh-rx-tolerance/SKILL.md)。本公共Skill的预检接受scope=tx/rx/both（旧配置默认both）；以下未实现描述指完整装调优化工作流。
+Tx已加入原生NSC公差执行入口：见[Tx流程](references/tx.md)、[正式YAML样例](config/tx-native.example.yaml)。工作台“Tx 公差”与CLI共用同一串行服务；只在CopySystem写TDE/MFE、运行原生Tolerancing，支持独立灵敏度与小批MC。先读取当前快照填objectId/revision，不沿用设计稿示例对象。历史[设计说明](references/tx-native-design.md)保留设计取舍，当前执行限制以下方Tx流程为准。
 
-已实现：任务预检、快照对象映射候选、带权角分布/光斑样本的离线指标计算。尚未实现：扰动模型、追迹、6D优化、灵敏度或Monte Carlo执行。不得将计划、预检或对话完成称为公差结果。
-在DSH受限工作台中用 `mcp__optics__workflow_guide(name="assembly-tolerance")` 读取本指引和任务预检；工具不存在则按本文件定位脚本，不绕过写入口。
+## 先识别意图，再选择流程
 
-## 已确认业务口径
+从用户本轮要求、已确认上下文和显式对象选择判断分析侧及阶段；不要仅因模型里同时存在Tx/Rx就自动分析两侧。
 
-- 装配顺序：镜片组先装入镜筒，再整体耦合。
-- Tx指标：H向D86全角发散角；补偿对象是光源，六自由度XYZ及三转角均可调；用户已确认四颗die整体刚体运动，不能独立优化四颗或简单给各自叠加相同欧拉角。
-- Rx指标：SPAD接收面上光斑的矩形H、V尺寸；补偿对象是SPAD，六自由度均可调。
-- 6D“可调”不等于无限行程。需要明确坐标基准、旋转枢轴、实际范围与分辨率。
-- 尚未确认：D86投影/包络计算口径、Rx尺寸包络/阈值、目标上限、误差分布与相关性、样本数。
+| 用户意图 | 后续流程 |
+|---|---|
+| Tx、发射镜组、发散角、H-D86、四die光源耦合 | 读取[Tx流程](references/tx.md)，使用Tx独立配置 |
+| Rx、接收镜组、SPAD耦合、接收面H/V光斑 | 读取[Rx流程](references/rx.md)，使用Rx独立配置 |
+| 明确要求Tx和Rx都分析 | 分别读取两流程，独立配置、预检、结果；一侧缺项不阻塞另一侧 |
+| 只说“公差分析”，上下文无法确定侧别或有冲突 | 先问Tx、Rx还是两者；可说明能力，不猜对象和配置、不启动仿真 |
 
-先读取 [任务说明](references/workflow.md)；示例规格位于 [当前任务模板](../../../examples/txrx-assembly-tolerance.json)。模板为待确认任务，不是仿真结果。
+识别阶段：规划/预检、离线指标、Tx未补偿功能试跑、完整6D补偿/Monte Carlo。用户要求完整分析时不能静默降级为功能试跑；先说明尚未实现部分。仅要求Tx试跑，不用完整6D规格或Rx缺项阻塞它。
 
-## 工作方式
+在官方DSH中通过原生`skill`工具读取本技能，识别侧别后用`mcp__optics__workflow_guide(name="assembly-tolerance", scope="tx"或"rx"或"both")`按需获取分支指引、独立配置和预检；该工具只能读取包内固定资源，不执行仿真。工作台和官方Web是同一会话的等价入口，使用该会话的Standard工具、文件权限和审批；关联工作台不收窄工具能力。可通过可用文件工具直接读取包内引用，或使用Shell调用本Skill的CLI。Tx执行须满足用户授权、模型/revision校验、独占连接、CopySystem及回读恢复流程，不能因可用Shell而跳过这些检查。指引工具不可用时可按包内文件继续；旧`tx-tolerance/rx-tolerance`只保留为兼容工具别名。旧headless聊天路径仍停用，不另起Agent接管同一会话。
 
-1. 建立模型/revision与对象分组：镜筒、内部镜片、光源、SPAD、参考对象和布尔构造关系。不要将Boolean构造体与结果重复计作独立装配误差。
-2. 用脚本 `python .agents/skills/optdsh-assembly-tolerance/scripts/preflight.py examples/txrx-assembly-tolerance.json` 列出已确认项、错误和缺项；向专家只询问影响当前阶段的缺项。
-3. 先冻结名义状态和指标，再单因素探索灵敏度，再讨论抽样。每次抽样先施加内部制造/装配误差；这些误差在后续耦合阶段保持不变。
-4. 同一误差样本上分别记录未补偿与补偿后结果。Tx只优化允许的光源自由度，Rx只优化允许的SPAD自由度；不能暗中优化镜片参数来消除装配误差。
-5. 保留失败/未收敛/越界样本，明确分母；输出补偿量、可调范围用量、Tx H-D86、Rx H/V、能量有效性检查及版本/种子。
+## 共用约束
 
-涉及真实扰动/优化时另需已实现的版本化写工具、明确授权的测试副本、恢复策略与执行后回读。当前工具未提供这些能力，停在可审查计划，不调用通用Shell对活动模型变更。
+- 术语与物理H/V采用[2t2rLidar领域契约](../../../docs/2t2rLidar/README.md)；探测器局部坐标或角度采样不自动等于物理H/V，具体映射仍按模型核验并记录。
 
-## 交付
+- 镜片先装入镜筒，再耦合光源或SPAD；内部误差与镜筒整体误差分开，Boolean构造体不重复算作独立镜片。
+- 旧Tx试跑为H-D86；本轮原生Tx改为两die的RMS H等效角宽，距离采用用户核对的探测器全局Z；机械组由配置指定，不按评价die数拆分封装。Rx为矩形H/V光斑，SPAD整体6D。坐标、旋转枢轴、行程、指标口径与能量有效性须显式配置。
+- 对象映射绑定modelId/revision，换模型或版本须重核；对象编号不当永久身份。对象、扰动幅度不从旧对话猜测。
+- 规划、合成/离线数据、真实追迹、补偿优化分开报告。Tx原生入口可配置六维并调用连续补偿；本轮实测覆盖小样本和少量自由度，不宣称完整6D装调或良率验收。Rx能力按独立分支。
+- 真实执行遵循Tx流程的独占连接、副本、回读与恢复条件；不得写入活动主模型。Agent停止不等于仿真已停止。
 
-正式报告与计划遵循[公共运行包规范](../../../docs/governance/run-bundles.md)，默认HTML、短ID与配置快照；简单交互式预检可只输出JSON。领域步骤保留在本skill，确定性算法在脚本/工具中。后续执行结果必须能追溯配置、模型、采样种子与未补偿/补偿后同一组样本。
+完整装调规划再读[两阶段工作流](references/workflow.md)；对象候选或离线计算再读[名义基线](references/baseline.md)。不必为单侧任务加载另一侧细节。
 
-## 名义基线准备
+## 配置与命令
 
-使用 [数据契约与命令](references/baseline.md) 指导映射和离线计算。
-`baseline.py inventory`仅按API类型/布尔引用产生候选，不把Comment或坐标链自动提升为机械装配确认。
-`baseline.py metrics`要求显式方法、坐标系、输入来源；输出baselineApproved=false，不能把合成数值或无trace来源的缓存称为名义实测。
-本机已确认的任务规格优先从config/assembly-tolerance.local.json读取；文件不存在再用examples模板。换模型/revision必须重新确认对象映射。
+包内模板复制到项目`config/`后核对；优先YAML，旧JSON兼容，同一流程只维护一份有效配置。位置mm、转角deg；模板中的null代表待确认，不能当正式规格。
+
+| 阶段 | 包内模板 → 本机配置 | 项目根目录命令 |
+|---|---|---|
+| Tx自定义脚本 | [tx-custom.example.yaml](config/tx-custom.example.yaml) → Study配置 | `python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_native.py <配置.yaml> --execute --wait` |
+| Tx原生公差 | [tx-native.example.yaml](config/tx-native.example.yaml) → Study配置 | `python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_native.py <配置.yaml> --execute --wait` |
+| Tx未补偿试跑 | [tx-pilot.example.yaml](config/tx-pilot.example.yaml) → `STUDYS/2t2rLidar/configs/tx-pilot.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_pilot.py STUDYS/2t2rLidar/configs/tx-pilot.local.yaml` |
+| Tx完整装调预检 | [tx-tolerance.example.yaml](config/tx-tolerance.example.yaml) → `STUDYS/2t2rLidar/configs/tx-tolerance.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/preflight.py STUDYS/2t2rLidar/configs/tx-tolerance.local.yaml --scope tx` |
+| Rx装调预检 | [rx-tolerance.example.yaml](config/rx-tolerance.example.yaml) → `STUDYS/2t2rLidar/configs/rx-tolerance.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/preflight.py STUDYS/2t2rLidar/configs/rx-tolerance.local.yaml --scope rx` |
+
+Tx命令默认只生成plan，追加`--execute`才进入已授权的副本追迹；使用`config/optics.local.json`指定的Python环境。预检只读、不会追迹；旧组合配置可用`--scope tx/rx`只检查所选侧。完整装调预检即使规格完整也不返回可执行，因为优化执行器尚未实现。
+
+正式产物遵循[公共运行包规范](../../../docs/runs-and-reports.md)，执行消费包内冻结配置，简单任务可MD、复杂任务HTML，背景与关键Setup先行、配置原文折叠，输入证据与SHA-256随包；简短预检可只输出JSON。历史run不随本次整合改写。
