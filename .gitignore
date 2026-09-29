@@ -59,6 +59,9 @@ STUDYS/**/configs/*.local.*
 STUDYS/**/models/
 STUDYS/**/runs/
 
+# Archive of the local-only spectral LiDAR research deliverables
+/STUDYS/spectral-lidar.rar
+
 # Private expert preferences and local-only reference screenshots
 /.agents/experts/visual-designer/preferences.md
 /.agents/experts/visual-designer/private/
