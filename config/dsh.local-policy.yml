@@ -30,12 +30,9 @@
       name: ../plugins/optdsh-forms/lib/index.js
 
 # Native project expert preset; Standard remains the default.
-- id: agent-presets
+- id: agent-preset-registry
   config:
     default: standard
-    roots:
-      - path: !!js process.cwd() + '/.agents/dsh-presets'
-        trust: user
 - insert:
     - id: optdsh-expert-spawn
       name: '@deepseek-ai/dsh-subagent-spawn-in-process'

@@ -125,6 +125,10 @@ class ExpertDistributionTests(unittest.TestCase):
         self.assertEqual(self.run_export(apply=True), 0)
         folder = self.product / ".agents/dsh-presets/visual-designer"
         rows = yaml.load((folder / "agent.cordis.yml").read_text(encoding="utf-8"), Loader=CordisLoader)
+        declaration = rows[0]["insert"][0]
+        self.assertEqual(declaration["name"], "@deepseek-ai/dsh-agent-preset")
+        self.assertEqual(declaration["config"]["id"], "visual-designer")
+        rows = declaration["config"]["plugins"]
         persona = next(r["config"]["prefix"] for r in rows if r.get("id") == "persona")
         packet = json.loads((folder / "expert.json").read_text(encoding="utf-8"))
         self.assertEqual(persona, packet["persona"])

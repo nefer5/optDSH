@@ -23,7 +23,7 @@
       "directory": ".agents/dsh-presets",
       "extension": ".yml",
       "format": "dsh-preset",
-      "verified_cli_version": "0.1.5-rc.3"
+      "verified_cli_version": "0.2.0-rc.2"
     }
   }
 }

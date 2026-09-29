@@ -16,7 +16,7 @@ description: 在本项目维护自定义专家的单一源定义，预览、分�
 | Codex / `codex` | `.codex/agents/<name>.toml` | name、description、developer_instructions | 0.157.0 | 不固定模型；权限和工具由宿主及任务约束 |
 | OpenCode / `opencode` | `.opencode/agents/<name>.md` | v1 frontmatter，mode=subagent | 1.17.14 | 不写 v2 字段；不固定模型 |
 | Claude Code / `claude` | `.claude/agents/<name>.md` | name、description、model=inherit + 正文 | 2.1.205 | 仅基础字段；不依赖新版 omitClaudeMd 等能力 |
-| DSH / `dsh` | `.agents/dsh-presets/<name>/` | Standard副本 agent.cordis.yml、preset.yml、expert.json | 0.1.5-rc.3 | 原生专家会话＋具名子Agent；不固定模型 |
+| DSH / `dsh` | `.agents/dsh-presets/<name>/` | Standard声明patch agent.cordis.yml、说明preset.yml、expert.json | 0.2.0-rc.2 | 原生专家会话＋具名子Agent；不固定模型 |
 | 公共参考包 / 随选定宿主共用 | `.agents/resources/<name>/library/` | 同级resources.json文件白名单 | 与角色源版本一起校验 | 不分发个人偏好、实验资料或整个源目录 |
 
 默认是表内全部四家，`--only` 或 `--exclude` 临时筛选，不改注册表缩减范围。Gemini、Claude 的其他 profile 和个人级目录不在本轮分发对象中；未来显式新增目标时另行核对。版本字段仅表示核对基线，不代表已验证模型调用。
@@ -63,7 +63,9 @@ python .agents/development-skills/expert-distribute/scripts/distribute.py --excl
 
 `--only dsh` 生成原生专家Preset及同正文的委派数据。DSH版本取项目安装包，不调用全局CLI。Standard模板签名不符会拒绝生成；不修改node_modules。启动器在新进程启动前同步DSH目标，已有服务不会因分发自动重启。
 
-本项目 `plugins/optdsh-experts` 接入专用spawn提供方和 `expert_visual_designer` 原生工具；它与Preset使用同一份生成正文。项目patch注册额外Preset根目录，默认仍为Standard。DSH导出到其他项目只生成文件，不自动修改对方启动策略或安装插件，须按[专家指南](../../../docs/agents.md)接线。子Agent沿用原生工具、审批与模型，不增加工作台白名单；目前为一次性前台返回，后续问题可再次委派。
+0.2基线从`@deepseek-ai/dsh-web-app/presets/standard.patch.yml`复制声明，保留原生工具组合与Cordis标签，只替换预设身份和persona。生成的`agent.cordis.yml`需由启动器以`--patch`加载；不再使用旧`agent-presets.roots`目录扫描。
+
+本项目 `plugins/optdsh-experts` 接入专用spawn提供方和 `expert_visual_designer` 原生工具；它与Preset使用同一份生成正文。启动器加载生成的预设声明patch，默认仍为Standard。DSH导出到其他项目只生成文件，不自动修改对方启动策略或安装插件，须按[专家指南](../../../docs/agents.md)接线。子Agent沿用原生工具、审批与模型，不增加工作台白名单；目前为一次性前台返回，后续问题可再次委派。
 
 ## 唯一权威与多项目分发
 

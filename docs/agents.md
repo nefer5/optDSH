@@ -1,6 +1,6 @@
 # DSH Harness定制入口
 
-本项目固定`@deepseek-ai/dsh@0.1.5-rc.3`；2026-09-27核对安装包实现、类型声明和同标签官方文档。以下入口属于该版本，不假定master接口稳定。
+本项目固定`@deepseek-ai/dsh@0.2.0-rc.2`；2026-09-30已适配并验证原生专家预设、委派与项目插件。下文事件循环说明和旧版来源链接保留2026-09-27的0.1.5-rc.3审计依据，未逐项重新审计所有扩展点；精确签名以当前安装包为准，不假定master接口稳定。
 
 ## 规则作用域：开发指引与产品注入分开
 
@@ -118,12 +118,12 @@ Codex 格式按[官方自定义 Agent 文档](https://learn.chatgpt.com/docs/age
 
 ## DSH 实现与更新
 
-- 生成目录 `.agents/dsh-presets/visual-designer`：`agent.cordis.yml`保留官方Standard工具组合，仅替换persona；`preset.yml`提供显示信息；`expert.json`供子Agent加载相同正文。
-- 项目 `config/dsh.local-policy.yml` 注册Preset根目录与原生spawn实例；`plugins/optdsh-experts` 在属于本项目的主Agent作用域注册委派工具。其他项目不会得到本项目角色委派。
+- 生成目录 `.agents/dsh-presets/visual-designer`：`agent.cordis.yml`现在是完整Cordis patch，复制官方`dsh-web-app/presets/standard.patch.yml`的插件组合，只替换预设身份、显示信息与persona；`expert.json`供子Agent加载相同正文。`preset.yml`保留为说明产物，不再由旧目录扫描机制加载。
+- 项目 `config/dsh.local-policy.yml` 配置`agent-preset-registry`和原生spawn实例；启动器通过第二个`--patch`加载专家声明。`plugins/optdsh-experts` 在属于本项目的主Agent作用域注册委派工具。其他项目不会得到本项目角色委派。
 - 修改专家源后运行 `distribute.py --only dsh --apply`，再检查 `--check`。`start-dsh.ps1`在实际新进程启动前同步；同进程复用不会重载旧角色。空闲后重载Host以使插件正文更新，并使用新会话验证；正在进行的会话不自动迁移Preset。
-- 新增依赖为零，保持DSH 0.1.5-rc.3；生成文件/本机收据Git忽略，源定义/插件/适配器跟随仓库。
+- DSH固定0.2.0-rc.2；工作台dsh-llm同版、Cordis为4.0.4，避免旧核心混装。生成文件/本机收据Git忽略，源定义/插件/适配器跟随仓库。
 
-依据：[官方Preset](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.1.5-rc.3/packages/preset/agent-presets/README.md) · [官方委派工具配置](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.1.5-rc.3/packages/subagent/tool-subagent/README.md)。
+当前预设依据：[官方0.2 Standard声明](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.0-rc.2/packages/bundle/web-app/presets/standard.patch.yml) · [预设注册插件](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.0-rc.2/packages/preset/agent-preset/src/index.ts)。历史委派依据：[0.1.5工具配置](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.1.5-rc.3/packages/subagent/tool-subagent/README.md)。
 
 接线实测中GLM曾对官方委派工具的description/prompt双字段生成重复description，导致调用未闭合。项目工具因此只暴露一个task参数，内部使用官方ctx.subagents.start、spawn提供方及原生结果/取消生命周期；显示标签由适配器固定。此为参数适配，不是自建Agent循环。
 

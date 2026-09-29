@@ -1,6 +1,6 @@
 # 架构与目录
 
-optDSH 使用官方 DSH 0.1.5-rc.3，官方代码由 npm 安装在 node_modules/@deepseek-ai 下；不修改安装包。插件通过 config/dsh.local-policy.yml 加载。
+optDSH 使用官方 DSH 0.2.0-rc.2（候选发布版），官方代码由 npm 安装在 node_modules/@deepseek-ai 下；不修改安装包。插件通过 config/dsh.local-policy.yml 加载，专家预设由启动器另挂生成的 Cordis patch。
 
 ## 产品模块
 

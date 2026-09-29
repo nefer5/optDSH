@@ -35,7 +35,7 @@ export function installDelegation(agent,persona){
 }
 export function apply(ctx){
  const packet=JSON.parse(readFileSync(resolve(ROOT,'.agents/dsh-presets/visual-designer/expert.json'),'utf8'));
- if(packet.upstreamVersion!=='0.1.5-rc.3'||packet.name!=='visual-designer')throw new Error('Unsupported expert distribution; redistribute first');
+ if(packet.upstreamVersion!=='0.2.0-rc.2'||packet.name!=='visual-designer')throw new Error('Unsupported expert distribution; redistribute first');
  ctx.tools.register(defineTool({name:RESOURCE_TOOL,description:'Read optDSH visual expert reference materials. resource=START.md for index, preferences.md for confirmed preferences, or a relative library path listed by the index. Also supports AGENTS.md, README.md, planning/STATUS.md and documented optical visual guides. PNG metadata by default; mode=image returns actual image content, requiring verified image input support.',parameters:{resource:{type:'string',required:true},mode:{type:'string',enum:['text','image']}},
  output:{schema:{type:'object',additionalProperties:true},render:(_args,value)=>value.attachment?[{type:'text',text:value.resource},{type:'image',attachment:value.attachment}]:[{type:'text',text:JSON.stringify(value)}]},
  async execute(args,exec){

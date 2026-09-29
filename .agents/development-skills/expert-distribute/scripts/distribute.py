@@ -126,13 +126,17 @@ def load_resources(source, expert):
 
 def dsh_outputs(meta, body, target):
     # Preserve upstream Cordis tags and plugin scopes verbatim; change only persona.
-    template = SOURCE.parent / "node_modules/@deepseek-ai/dsh-agent-presets/presets/standard/agent.cordis.yml"
+    template = SOURCE.parent / "node_modules/@deepseek-ai/dsh-web-app/presets/standard.patch.yml"
     standard = template.read_text(encoding="utf-8")
-    expected = "    prefix: >-\n      You are a coding agent powered by the {{model}} model."
+    expected = "              prefix: You are a coding agent powered by the {{model}} model."
     if standard.count(expected) != 1:
         raise ValueError("Pinned DSH Standard persona signature changed")
     persona = body + "\n\nDSH入口：参考资料优先用 expert_resource 工具读取，resource=START.md 获取索引，resource=preferences.md 获取本项目偏好。图片需用 image 模式实际读取；无法处理图片时明确视觉未验证。"
-    composition = standard.replace(expected, "    prefix: " + json.dumps(persona, ensure_ascii=False))
+    if standard.count("    - id: preset-standard\n") != 1 or standard.count("        id: standard\n") != 1:
+        raise ValueError("Pinned DSH Standard preset declaration changed")
+    composition = standard.replace(expected, "              prefix: " + json.dumps(persona, ensure_ascii=False))
+    composition = composition.replace("    - id: preset-standard\n", f"    - id: preset-{meta['name']}\n")
+    composition = composition.replace("        id: standard\n", f"        id: {meta['name']}\n        name: 视觉设计专家\n        description: " + json.dumps(meta["description"], ensure_ascii=False) + "\n")
     base = f"{target['directory']}/{meta['name']}"
     packet = {**meta, "persona": persona, "upstreamVersion": target["verified_cli_version"], "standardSha256": digest(template.read_bytes())}
     return [(f"{base}/agent.cordis.yml", composition.encode()),

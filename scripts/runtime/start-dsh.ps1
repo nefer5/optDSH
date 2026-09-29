@@ -42,7 +42,8 @@ try {
         [Environment]::SetEnvironmentVariable($name, $overrides[$name], 'Process')
     }
     $policy = Join-Path $projectRoot 'config/dsh.local-policy.yml'
-    $arguments = @(('"' + $entry + '"'), '--profile', 'web', '--patch', ('"' + $policy + '"'), '--host', '127.0.0.1', '--port', "$Port", '--no-open')
+    $expertPatch = Join-Path $projectRoot '.agents/dsh-presets/visual-designer/agent.cordis.yml'
+    $arguments = @(('"' + $entry + '"'), '--profile', 'web', '--patch', ('"' + $policy + '"'), '--patch', ('"' + $expertPatch + '"'), '--host', '127.0.0.1', '--port', "$Port", '--no-open')
     $child = Start-Process -FilePath $node -ArgumentList $arguments -WorkingDirectory $projectRoot -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
 } finally {
     foreach ($name in $saved.Keys) { [Environment]::SetEnvironmentVariable($name, $saved[$name], 'Process') }

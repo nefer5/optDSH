@@ -14,7 +14,7 @@
     "check": ".venv/Scripts/python.exe scripts/maintenance/check_project.py"
   },
   "dependencies": {
-    "@deepseek-ai/dsh": "0.1.5-rc.3",
+    "@deepseek-ai/dsh": "0.2.0-rc.2",
     "manifold-3d": "3.5.4",
     "three": "0.186.1"
   },
