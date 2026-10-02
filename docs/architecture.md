@@ -9,6 +9,7 @@ optDSH 使用官方 DSH 0.2.0-rc.2（候选发布版），官方代码由 npm �
 | plugins/optdsh-workbench | lib适配器、web前端、config指令、tests | 官方会话控制器、3081光学HTTP、画板transport接口 |
 | plugins/optdsh-agent-canvas | lib画板状态/工具、web/transport.js、tests | 官方会话；N05的4173嵌入式编辑器 |
 | plugins/optdsh-experts | lib原生专家适配、tests | .agents/experts中性定义和生成预设 |
+| plugins/optdsh-current-info-policy | 最新资讯查询的静态系统提示 | 官方systemPrompt；时间读数由官方time-context提供，本插件不联网或定时执行 |
 | plugins/optdsh-forms | 独立研究背景/临时请求表单、存储、CLI、tests | 官方connection认证；Study声明式文件与data/forms请求；不依赖光学工作台 |
 | packages/optics | src公共光学实现、scripts HTTP/MCP/worker、tests、依赖清单 | 本机ZOS-API；不依赖N02源码或虚拟环境 |
 

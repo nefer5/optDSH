@@ -1,6 +1,16 @@
 # 当前状态
 
-更新：2026-09-30。此文件只维护当前能力和待办，不继续追加阶段流水。重整前完整状态在docs/archive/20260927-before-restructure.zip。
+2026-10-02 架构专家v0.2.0轻量化：会话开始/恢复仅注入规范；Codex/Claude/DSH架构Stop handler已移除，遗留stop命令无payload/Git/扫描/状态操作。Git pre-commit按真实暂存区检查一次，只报告不阻断；用户审查/整改入口arch-review，不再要求--record。optDSH四宿主、AgentTyvate三宿主托管配置已分发且--check通过；OpenCode没有原命令hook，更新角色/技能并共用Git hook。npm test通过138项插件、11项PPT、105项光学、37项分发和56项架构kit测试；真实隔离Git提交、部分暂存与--only临时索引通过，实际DSH桥接的控制服务回归25次Stop零脚本/零续轮、SessionStart一次注入通过。用户授权后DSH Web已从PID35952重启至46292，认证HTTP200，专家/桥接/预设active，73会话可读；Bonsai PID69432/1235及模型配置保留。没有真实模型调用/Zemax/新会话首请求遵循验收；Codex/Claude新开场上下文待下一SessionStart加载。[方案与证据](../.agents/plans/261002-architecture-trigger-simplification.md) · [用法](../.agents/experts/software-architect/README.md)。
+
+2026-10-02启动器恢复：实际监听进程诊断、过期/损坏PID记录恢复、当前认证检查和显式`-Restart`已实现；真实3080正常复用、旧PID/损坏记录恢复、失效认证保留进程与无关端口占用（含Restart）拒绝均通过。后续架构触发优化中获用户授权，显式重启完整分支已实测：PID35952停止、新PID46292认证Ready/HTTP200，既有会话可读，模型服务未停止。用法见[运行指南](../docs/runtime.md)。
+
+2026-10-02时间与资讯规则：官方time-context在Web profile热加载，Asia/Singapore/600000毫秒；optdsh-current-info-policy注册静态研究规则。现有Standard记录确认系统段落与时间快照；两轮日期/时区正确，约30秒内仅注入一次。没有DSH/模型重启、联网复测或后台提醒任务。[配置](../docs/runtime.md) · [证据](../runs/model/261002-02/report.html)。
+
+2026-10-02后续命名：本地Bonsai正式ID改为Qwen3.8-27B-Bonsai2-PQ2_0-MTP-Q8_0，显示底座/参数量/主量化/MTP头；本地会话后续选择同步，历史回答保留。服务支持旧短名兼容，200K参数不变。DSH新ID来源与身份/算术回复通过，原云端默认保留。[说明](../docs/runtime.md)。
+
+2026-10-02：本地 ProCreations Bonsai2 MTP 已接入现行DSH Web，`local-bonsai / bonsai2-pro-mtp`、200K/32K输出/Medium；官方配置接口持久化并热加载。Standard真实会话文字计算、流式思考、原生read工具与结果回传通过，模型来源记录明确为本地。原云端默认保留；仅此验收会话选择本地。用户明确本轮不接光学工作台，既有400问题未处理；DSH图片、真实光学和复杂Agent未验。[使用](../docs/runtime.md) · [证据](../runs/model/261002-01/report.html)。
+
+更新：2026-10-02。此文件只维护当前能力和待办，不继续追加阶段流水。重整前完整状态在docs/archive/20260927-before-restructure.zip。
 
 2026-09-29 分发说明：根目录新增[推荐插件](../推荐插件.md)，记录市场插件当前版本、安装命令与目标机器适配检查。市场插件仍按需安装，未接入setup自动安装；本次仅文档交付，未在新机器重放安装。
 
@@ -8,7 +18,7 @@
 
 2026-09-30用户后续调整：新增Better Sidebar0.24.1、Quote Followup0.2.10、Firefly0.1.3；与市场1.66.5共同live。Side Chat1.0.1和旧划词0.1.0保留安装但暂时disabled，未重新启用；[推荐列表](../推荐插件.md)已按当前选择更新。新插件仅核验实际加载与市场空诊断，未声称完整交互验收。
 
-后续运行待排查：用户调整插件后的当前3080 PID与`.runtime/web-launch.json`记录不同；旧认证URL返回401。经Tabbit现有登录态确认市场API正常、表单页200，但工作台view返回400、工作台过滤会话列表为空。原因尚未定位，不归因于某个新插件，也不据此判断会话文件丢失。本轮只读记录，未重启或恢复/覆盖用户profile；前述升级验收是此前进程的结果。
+后续运行待排查：2026-09-30用户调整插件后曾出现3080 PID与`.runtime/web-launch.json`记录不同、旧认证URL返回401；2026-10-02启动器恢复与授权重启后当前认证Ready/HTTP200。此前Tabbit登录态下市场API正常、表单页200，但工作台view返回400、过滤会话列表为空；工作台这两项尚未复测，原因未定位，不归因于某个新插件，也不据此判断会话文件丢失。前述升级验收是此前进程的结果。
 
 提交前离线检查（2026-09-28）：`npm test`通过134项插件、11项PPT、105项光学和19项专家分发测试，以及工作台DOM冒烟与项目文档检查；PPT生产构建通过。本次没有新增真实模型、Zemax或浏览器交互验收，既有待验证项仍保留。
 
@@ -118,3 +128,10 @@ PPT内容策划增量：已展开六步流程、首轮1–2题/每题三选项�
 PPT 0.2：语义版式、本地素材等比嵌入、用户修改diff、样页槽位模板、结构/字面事实预检、过程记录及渲染/导出缓存已实现；10项针对性单测与构建通过。真实浏览器逐页预览及PPTX缓存复用已验证；新会话GLM以项目测试证据为准，不将CLI能力等同模型遵循。
 
 PPT 0.2独立GLM四页制作及一轮集中修订已实测，采用语义版式/图片等比嵌入/check/局部render，三图成品比例正确。独立WPS渲染发现一处长段轻微超底框，浏览器估算检查未覆盖，不声称成品自动验收可靠。当前模块11项离线回归通过，模板槽位与diff另有确定性测试；未验证公司机和微软PowerPoint。
+
+## 多专家分发与宿主集成（2026-10-02）
+
+- 分发器支持多专家（`--expert` 默认 all）、agent.json 必填 title、resources.json schema 2（library/kit、skills、hooks）、全部分发 .md 的占位符替换、技能双布局及 Codex/Claude hook 结构化托管合并与 DSH hook 文件；visual-designer 迁移到 schema 2。
+- optdsh-experts 按 `.agents/dsh-presets/*/expert.json` 为每个专家注册 `expert_<name>`，`expert_resource` 增加 expert 参数；spawn 提供方统一为 optdsh-experts；policy 新增软件架构专家的 dsh-hooks-claude-code 桥接，启动器按全部预设加 `--patch`。
+- 30 项分发测试、9 项专家 Node 测试、52 项 kit 测试、npm test 与项目检查通过。2026-10-02 已 `--fleet --expert all --apply` 分发到 optDSH 四宿主与 AgentTyvate 三宿主，`--check` 通过；扫描器跳过分发收据列出的生成文件。
+- 初版实测：临时仓库中 Codex（`codex exec -m gpt-6-luna --dangerously-bypass-hook-trust`）与 Claude Code（claude-ds 配置，glm-5.2）的 SessionStart/Stop hook 均触发，模型按提示运行扫描并 `--record`。这套Stop流程现已退役，现行v0.2流程与验收见本页顶部；DSH授权重启后专家工具/预设与仅SessionStart的桥接已active。Codex项目hook信任仍按宿主要求处理，不以旧流程的模型验收代替新开场规范遵循验收。
