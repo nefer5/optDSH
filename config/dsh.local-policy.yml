@@ -29,7 +29,8 @@
     - id: optdsh-forms
       name: ../plugins/optdsh-forms/lib/index.js
 
-# Native project expert preset; Standard remains the default.
+# Native project expert presets; Standard remains the default. One spawn provider
+# serves every expert because persona is supplied per delegation request.
 - id: agent-preset-registry
   config:
     default: standard
@@ -37,6 +38,15 @@
     - id: optdsh-expert-spawn
       name: '@deepseek-ai/dsh-subagent-spawn-in-process'
       config:
-        providerName: optdsh-visual-designer
+        providerName: optdsh-experts
     - id: optdsh-experts
       name: ../plugins/optdsh-experts/lib/index.js
+    # SessionStart architecture context only; no Stop scanning or continuation.
+    # Git pre-commit performs the advisory staged scan. The hook config is
+    # process-wide and read once at load; a missing file only logs a warning. No
+    # projectDir: each hook runs in, and receives CLAUDE_PROJECT_DIR for, the session cwd.
+    - id: optdsh-hooks-software-architect
+      name: '@deepseek-ai/dsh-hooks-claude-code'
+      config:
+        configPath: !!js process.cwd() + "/.agents/dsh-hooks/software-architect.json"
+        defaultTimeoutMs: 10000

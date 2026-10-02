@@ -47,6 +47,17 @@ test/zmx/
 .codex/agents/visual-designer.toml
 .opencode/agents/visual-designer.md
 .claude/agents/visual-designer.md
+.codex/agents/software-architect.toml
+.opencode/agents/software-architect.md
+.claude/agents/software-architect.md
+# Generated expert skills only; other .agents/skills folders are tracked product skills.
+/.agents/skills/arch-plan/
+/.agents/skills/arch-review/
+/.claude/skills/arch-*/
+# Generated hook wiring (structured merges and DSH bridge configs); untracked here.
+/.agents/dsh-hooks/
+/.codex/hooks.json
+/.claude/settings.local.json
 
 .agents/dsh-presets/
 
@@ -66,6 +77,8 @@ STUDYS/**/runs/
 /.agents/experts/visual-designer/preferences.md
 /.agents/experts/visual-designer/private/
 /.agents/experts/visual-designer/library/**/*.png
+/.agents/experts/software-architect/preferences.md
+/.agents/experts/software-architect/private/
 /.agents/distribution-targets.local.yaml
 
 # Personal scratch notes stay local

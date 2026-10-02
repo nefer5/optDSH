@@ -1,0 +1,141 @@
+# 项目架构约束样例（复制到 <项目>/.agents/architecture.toml 后按需删改）
+#
+# - 本文件是项目自有约束，由 arch_scan.py 与 arch_hook.py 读取；未写的段/键使用下方注释中的默认值。
+# - 未知段或键会被拒绝（扫描器以退出码 2 报错，hook 静默跳过），避免拼写错误悄悄关掉规则。
+# - 调整阈值属于约束变更，需要用户确认；不要为了让提醒消失而放宽。
+#
+# 路径匹配规则（所有 globs / paths / allow_* 通用，路径为相对项目根的 / 分隔路径）：
+#   "tests/"      以 / 结尾：任意深度的同名目录及其下所有文件（tests/a.py、pkg/tests/a.py）
+#   "*.md"        不含 /：按文件名匹配，任意深度
+#   "src/**/x.py" 含 /：从项目根锚定；** 跨目录，* 与 ? 不跨目录
+
+[project]
+# 规模档位，影响审查时的期望强度（不改变检查本身）：
+#   "one-off" 一次性脚本 | "small-tool" 小工具 | "long-term" 长期项目 | "multi-agent" 多人/多 Agent 系统
+tier = "long-term"
+# 可选：项目名，仅用于报告
+name = ""
+
+[layout]
+# 允许的顶层目录（目录名或 glob）。为空则不做 ARCH-LAYOUT 检查。
+# 以 "." 开头的目录（.github、.agents 等）和 scratch_dirs 始终允许。
+allowed_top_level = []
+# 示例：allowed_top_level = ["src", "tests", "docs", "scripts", "config"]
+
+# 一次性脚本/临时目录：不做 ARCH-SIZE、ARCH-LAYER、ARCH-CYCLE；ARCH-HARDCODE 最高降为 warn；ARCH-SECRET 照常。
+scratch_dirs = ["temp", "tmp", "scratch"]
+
+# 根目录脚本豁免（ARCH-ROOT-SCRIPT 只对根目录“新增”的 .py/.js/.ts/.ps1/.sh/.cpp 等报 warn）。
+root_script_allow = [
+  "setup.py", "conftest.py", "noxfile.py", "manage.py", "fabfile.py",
+  "*.config.js", "*.config.cjs", "*.config.mjs", "*.config.ts", "*.config.mts",
+  ".*rc.js", ".*rc.cjs", "Gruntfile.js", "gulpfile.js", "build.rs",
+]
+
+[limits]
+# ARCH-SIZE：超过 warn_lines 为 warn，超过 max_lines 为 error。只看代码文件；
+# .md/.json/锁文件/压缩产物/生成目录/vendor 目录跳过。
+warn_lines = 400
+max_lines = 800
+# 计数方式："nonblank" 非空行（默认）| "total" 总行数
+count = "nonblank"
+# 额外排除的 globs，例如生成的协议代码
+exclude = []
+
+[hardcode]
+# ARCH-HARDCODE 豁免路径（本机绝对路径为 error；URL / IPv4 为 warn；注释与 docstring 中的 URL/IP 降为 info）。
+allow_paths = [
+  "tests/", "test/", "docs/", "config/", "examples/", "fixtures/",
+  "*.md", "*.toml", "*.json", "*.yaml", "*.yml", "*.example.*",
+]
+# 不视为硬编码的主机（URL 主机名或 IP 字面量）
+allow_hosts = [
+  "localhost", "127.0.0.1", "0.0.0.0", "::1", "[::1]",
+  "example.com", "example.org", "example.net", "www.w3.org", "json-schema.org",
+]
+
+[ignore]
+# 完全不扫描的路径（在内置跳过目录 .git node_modules .venv venv dist build __pycache__ 等之外）
+globs = []
+# 示例：globs = ["*.min.js", "src/generated/**", "assets/"]
+
+[imports]
+# Python 绝对 import 的额外解析根（另外总会尝试导入文件所在目录及其各级上级目录）
+python_roots = [".", "src"]
+# C/C++ #include "..." 的额外查找目录（先相对当前文件，再这些目录，最后项目根）
+cpp_include_dirs = ["include"]
+# TS/JS：相对路径与 .ts/.tsx/.js/.jsx/.mjs/.cjs/index.* 自动解析；
+# 最近的 tsconfig.json / jsconfig.json 中 compilerOptions.baseUrl 与 paths 尽力而为，无需配置。
+
+[review]
+# 历史Stop配置：为兼容旧项目保留解析，新版不使用mode/阈值触发对话。
+# Stop入口永久静默；Git提交检查独立于这些字段，默认仅报告、不阻断。
+mode = "continue"
+min_changed_files = 4
+min_changed_lines = 300
+
+[session]
+# SessionStart hook 是否注入一段简短的分级流程与约束文件提示
+inject = true
+
+[plan]
+# L2 计划文件存放目录
+dir = ".agents/plans"
+
+# ---------------------------------------------------------------------------
+# [[layers]]：分层与允许的依赖方向。未声明时不做 ARCH-LAYER 检查，但仍做目录级 ARCH-CYCLE。
+# 文件按 paths 归入第一个匹配的层；同层依赖总是允许；跨层 import 不在 may_import 中为 error。
+# 不属于任何层的文件不参与 ARCH-LAYER。
+#
+# Python 项目示例（src 布局）：
+# [[layers]]
+# name = "cli"
+# paths = ["src/myapp/cli/**", "src/myapp/__main__.py"]
+# may_import = ["services", "domain", "infra"]
+#
+# [[layers]]
+# name = "services"
+# paths = ["src/myapp/services/**"]
+# may_import = ["domain", "infra"]
+#
+# [[layers]]
+# name = "infra"
+# paths = ["src/myapp/infra/**"]
+# may_import = ["domain"]
+#
+# [[layers]]
+# name = "domain"
+# paths = ["src/myapp/domain/**"]
+# may_import = []
+#
+# TypeScript / 前端项目示例：
+# [[layers]]
+# name = "app"
+# paths = ["src/app/**", "src/pages/**"]
+# may_import = ["features", "shared"]
+#
+# [[layers]]
+# name = "features"
+# paths = ["src/features/**"]
+# may_import = ["shared"]
+#
+# [[layers]]
+# name = "shared"
+# paths = ["src/shared/**", "src/lib/**"]
+# may_import = []
+#
+# C++ 项目示例：
+# [[layers]]
+# name = "apps"
+# paths = ["apps/**"]
+# may_import = ["core", "platform"]
+#
+# [[layers]]
+# name = "platform"
+# paths = ["src/platform/**", "include/platform/**"]
+# may_import = ["core"]
+#
+# [[layers]]
+# name = "core"
+# paths = ["src/core/**", "include/core/**"]
+# may_import = []

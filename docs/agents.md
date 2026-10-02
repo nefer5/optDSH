@@ -48,7 +48,9 @@ step是一次模型请求及其工具处理周期；一个用户turn可能包含
 | 结果审计/UI通知 | 只读观察`tools/result`或持久`session/event`，不把显示流当最终事实 |
 | 判断是否允许自然结束 | `agent/turn-stopping`；只做与当前任务相关的有限检查，避免无限steer/阻塞交付 |
 
-DSH也安装了`dsh-hooks-codex`和`dsh-hooks-claude-code`命令Hook兼容桥，底层仍映射这些原生事件；不是照搬另一宿主所有语义。例如当前Codex桥`configPath`为进程级、加载时读取，工具前只支持阻断，不支持批准或重写。检查项目patch未显式配置这两个桥；安装包存在不等于本项目启用。已有命令Hook迁移可考虑兼容桥，新optDSH能力优先原生插件。
+DSH安装了`dsh-hooks-codex`和`dsh-hooks-claude-code`兼容桥。软件架构专家只保留一个`dsh-hooks-claude-code`实例，读取分发的`.agents/dsh-hooks/software-architect.json`，当前仅注册SessionStart注入简短规范；不注册Stop，不在每轮结束扫描或自动续轮。旧缓存命令调用新版脚本的stop入口也完全静默。桥接configPath是进程级、插件apply时读取；文件分发不等于正在运行的插件已重新加载。SessionStart接收JSON additionalContext，现有桥接异步注入可能晚于首个请求；未重新验收时不宣称首请求可见。
+
+提交检查改为仓库Git pre-commit，Codex/Claude Code/OpenCode/DSH及普通终端共用；扫描真实暂存内容一次，只报告不阻断，不调用模型。用户明文请求通过arch-review审查/整改。OpenCode不渲染上述宿主命令hook，沿用项目AGENTS和专家/技能；它同样受到仓库Git hook检查。用法及兼容边界见[架构专家说明](../.agents/experts/software-architect/README.md)。
 
 ## 本项目下一步建议
 
@@ -71,7 +73,7 @@ DSH也安装了`dsh-hooks-codex`和`dsh-hooks-claude-code`命令Hook兼容桥，
 
 # 开发自定义专家
 
-optDSH 复用 AgentTyvate 的专家源定义与四宿主分发机制。当前只启用视觉设计专家，用于工作台、报告、页面的设计或实际画面评估；同时支持开发宿主与DSH原生专家会话/子Agent；没有新增模型供应商或光学写工具。
+optDSH 是专家源定义与四宿主分发的唯一中心。当前启用两位专家：视觉设计专家（`visual-designer`，工作台、报告、页面的设计或实际画面评估）与软件架构专家（`software-architect`，Python、TS/JS、C++ 的模块划分、依赖方向、落点设计与架构审查，附 arch-plan/arch-review 技能和审查 hook）。同时支持开发宿主与DSH原生专家会话/子Agent；没有新增模型供应商或光学写工具。
 
 ## 使用
 
@@ -83,21 +85,26 @@ optDSH 复用 AgentTyvate 的专家源定义与四宿主分发机制。当前只
 
 > 请 visual-designer 帮我改进报告视觉，先简短确认需求，需要比较时先给 A/B 小样，选定后再完整实现。
 
+架构任务可说：
+
+> 请 software-architect 审查这次改动的模块边界和依赖方向，只读，不改代码。
+
 宿主必须支持并发现自定义角色。已有聊天未加载时，在本项目新建会话后核对。若当前宿主没有按角色名调用的工具，主 Agent 明确读取源定义、偏好与参考，按同一规范执行并说明是主 Agent 执行，不能谎称调用了原生专家。
 
 ## 文件与同步
 
-[专家中心](../.agents/README.md)是入口；[源规范](../.agents/experts/visual-designer/instructions.md)是唯一正文。角色不固定模型、不提高权限；产品 GLM 测试约束仍有效。保留开工简短沟通、低成本小样、选定后完整实施和实际画面验证。既有用户指示与本任务已确认需求优先，不重复询问。
+[专家中心](../.agents/README.md)是入口；各专家 `instructions.md`（[视觉](../.agents/experts/visual-designer/instructions.md)、[架构](../.agents/experts/software-architect/instructions.md)）是唯一正文。角色不固定模型、不提高权限；产品 GLM 测试约束仍有效。既有用户指示与本任务已确认需求优先，不重复询问。
 
 ```powershell
 python .agents/development-skills/expert-distribute/scripts/distribute.py
 python .agents/development-skills/expert-distribute/scripts/distribute.py --apply
 python .agents/development-skills/expert-distribute/scripts/distribute.py --check
+python .agents/development-skills/expert-distribute/scripts/distribute.py --expert software-architect --only claude
 ```
 
-YAML 选择入口及样例见[分发 Skill](../.agents/development-skills/expert-distribute/SKILL.md)。默认四宿主，支持 only/exclude。脚本拒绝未核对的 CLI 版本、手工漂移、非托管同名文件和越界资源。更新前备份及 SHA-256 收据在 `.agents/.distribution`。这是开发配置维护；正式专家分析与报告仍使用公共 run 包。
+`--expert` 默认 all，也可写单个或逗号列表；resources.json schema 2、技能与 hook 规则及 YAML 入口见[分发 Skill](../.agents/development-skills/expert-distribute/SKILL.md)。默认四宿主，支持 only/exclude。脚本拒绝未核对的 CLI 版本、手工漂移、非托管同名文件、被手改的托管 hook 和越界资源。更新前备份及 SHA-256 收据在 `.agents/.distribution`。这是开发配置维护；正式专家分析与报告仍使用公共 run 包。
 
-开发维护 Skill 独立于 `.agents/skills`，通过 AGENTS.md 显式入口读取，不新增 DSH 业务 Skill。四个宿主的生成角色文件及公共参考副本本地生成且 Git 忽略，克隆后需重新分发。不修改全局角色。源定义通过显式本机链接共享，生成宿主配置仍须执行中心分发。
+开发维护 Skill 独立于 `.agents/skills`，通过 AGENTS.md 显式入口读取。专家技能（arch-plan、arch-review）由分发生成到 `.agents/skills/` 与 `.claude/skills/`，与仓库跟踪的产品 Skill 并列但 Git 忽略。生成角色、公共包、技能与 hook 文件本地生成，克隆后需重新分发。不修改全局角色。源定义通过显式本机链接共享，生成宿主配置仍须执行中心分发。
 
 ## 来源与验证边界
 
@@ -108,19 +115,19 @@ Codex 格式按[官方自定义 Agent 文档](https://learn.chatgpt.com/docs/age
 
 ## DSH 网页使用
 
-**直接找专家**：官方Web新建会话，在模式选择器选择“视觉设计专家”（`visual-designer`），再提出设计或评估任务。它以固定版本Standard为基础，保留原生文件、Shell、Skills等能力和宿主权限审批。默认模式仍是Standard；已有产生消息的会话不能切换Preset。
+**直接找专家**：官方Web新建会话，在模式选择器选择“视觉设计专家”（`visual-designer`）或“软件架构专家”（`software-architect`），再提出任务。它以固定版本Standard为基础，保留原生文件、Shell、Skills等能力和宿主权限审批。默认模式仍是Standard；已有产生消息的会话不能切换Preset。
 
-**让主Agent找专家**：在Standard或光学工作台聊天中说“调用视觉设计专家，帮我……”。项目插件向本项目普通会话注入原生 `expert_visual_designer` 委派工具；固定视觉角色，继承父模型，不自动fallback。当前采用 `spawn` 的一次性前台调用，主Agent等结果后转述；子Agent没有父历史，主Agent须提供任务与已确认偏好。需要后续迭代时再次委派，并传递前轮结论。它不是持久化团队聊天入口。
+**让主Agent找专家**：在Standard或光学工作台聊天中说“调用视觉设计专家，帮我……”。项目插件为每个已分发专家向本项目普通会话注入原生委派工具（`expert_visual_designer`、`expert_software_architect`，标签和路由说明取自 title/description；缺失某个专家不影响其他）；固定角色，继承父模型，不自动fallback。当前采用 `spawn` 的一次性前台调用，主Agent等结果后转述；子Agent没有父历史，主Agent须提供任务与已确认偏好。需要后续迭代时再次委派，并传递前轮结论。它不是持久化团队聊天入口。
 
 工具和审批沿用DSH；用户已明确撤销光学工作台额外白名单，本接入也不对专家子Agent施加额外工具白名单。原生spawn子会话的审批生命周期遵从上游，无法现场请求批准的动作可能被原生策略拒绝，不提升权限绕过。Zemax版本检查、专家确认、回读与恢复仍是执行器事实约束。
 
-`expert_resource` 的公共素材统一读取`.agents/resources/visual-designer/library/`，与生成指令一致；白名单读取分发包中的resources.json。私有preferences仍读本项目源文件，有限项目规范仍读项目入口。它可按这些边界读取图库、偏好及有限项目规范，不需要把图库全部注入上下文。PNG默认返回元数据，`mode=image` 才经官方attachment服务返回真实图片；必须另验模型图像能力，文字验收不能证明像素理解。完整专家会话也可用原生文件工具处理任务材料。子Agent拥有独立会话和画板，修改主画板时应返回方案给父Agent在主会话应用，不能假定两个画板相同。
+`expert_resource` 必填 `expert`（已加载专家名枚举），读取 `.agents/resources/<expert>/`，与生成指令一致；白名单读取分发包中的resources.json：library 文件用库内相对路径，kit 文本用 `kit/<路径>`。私有preferences读 `.agents/experts/<expert>/preferences.md`，有限项目规范仍读项目入口。它可按这些边界读取图库、偏好及有限项目规范，不需要把图库全部注入上下文。PNG默认返回元数据，`mode=image` 才经官方attachment服务返回真实图片；必须另验模型图像能力，文字验收不能证明像素理解。完整专家会话也可用原生文件工具处理任务材料。子Agent拥有独立会话和画板，修改主画板时应返回方案给父Agent在主会话应用，不能假定两个画板相同。
 
 ## DSH 实现与更新
 
-- 生成目录 `.agents/dsh-presets/visual-designer`：`agent.cordis.yml`现在是完整Cordis patch，复制官方`dsh-web-app/presets/standard.patch.yml`的插件组合，只替换预设身份、显示信息与persona；`expert.json`供子Agent加载相同正文。`preset.yml`保留为说明产物，不再由旧目录扫描机制加载。
-- 项目 `config/dsh.local-policy.yml` 配置`agent-preset-registry`和原生spawn实例；启动器通过第二个`--patch`加载专家声明。`plugins/optdsh-experts` 在属于本项目的主Agent作用域注册委派工具。其他项目不会得到本项目角色委派。
-- 修改专家源后运行 `distribute.py --only dsh --apply`，再检查 `--check`。`start-dsh.ps1`在实际新进程启动前同步；同进程复用不会重载旧角色。空闲后重载Host以使插件正文更新，并使用新会话验证；正在进行的会话不自动迁移Preset。
+- 生成目录 `.agents/dsh-presets/<name>`：`agent.cordis.yml`是完整Cordis patch，复制官方`dsh-web-app/presets/standard.patch.yml`的插件组合，只替换预设身份、显示名（title）与persona；`expert.json`供子Agent加载相同正文。`preset.yml`保留为说明产物，不再由旧目录扫描机制加载。
+- 项目 `config/dsh.local-policy.yml` 配置`agent-preset-registry`、一个供全部专家共用的原生spawn实例（`providerName: optdsh-experts`；spawn提供方按请求接收persona）以及架构专家的hook桥接；启动器为每个专家声明追加一个`--patch`。`plugins/optdsh-experts` 在属于本项目的主Agent作用域注册委派工具。其他项目不会得到本项目角色委派。
+- 修改专家源后运行 `distribute.py --only dsh --apply`（默认全部专家），再检查 `--check`。`start-dsh.ps1`在实际新进程启动前同步；同进程复用不会重载旧角色。空闲后重载Host以使插件正文更新，并使用新会话验证；正在进行的会话不自动迁移Preset。
 - DSH固定0.2.0-rc.2；工作台dsh-llm同版、Cordis为4.0.4，避免旧核心混装。生成文件/本机收据Git忽略，源定义/插件/适配器跟随仓库。
 
 当前预设依据：[官方0.2 Standard声明](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.0-rc.2/packages/bundle/web-app/presets/standard.patch.yml) · [预设注册插件](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.0-rc.2/packages/preset/agent-preset/src/index.ts)。历史委派依据：[0.1.5工具配置](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.1.5-rc.3/packages/subagent/tool-subagent/README.md)。

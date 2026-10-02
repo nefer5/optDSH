@@ -1,3 +1,4 @@
-expert: visual-designer
+# One expert, a comma list (visual-designer,software-architect) or all.
+expert: all
 # Comma-separated host names; omit both only/exclude for all four.
 only: codex,opencode,claude,dsh

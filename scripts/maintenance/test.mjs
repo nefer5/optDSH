@@ -10,5 +10,6 @@ run(process.execPath,['--test',...files]);
 run(process.execPath,['--test',...readdirSync(resolve(root,'packages/ppt-slidewise/tests')).filter(f=>f.endsWith('.test.mjs')).map(f=>`packages/ppt-slidewise/tests/${f}`)]);
 run(python,['-m','unittest','discover','-s','packages/optics/tests','-p','test_*.py']);
 run(python,['-m','unittest','discover','-s','.agents/development-skills/expert-distribute/tests','-p','test_*.py']);
+run(python,['-m','unittest','discover','-s','.agents/experts/software-architect/kit/tests','-p','test_*.py']);
 run(process.execPath,['--experimental-vm-modules','plugins/optdsh-workbench/tests/workbench-dom-smoke.mjs']);
 run(python,['scripts/maintenance/check_project.py']);

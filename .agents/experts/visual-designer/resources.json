@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "files": [
     "library/START.md",
     "library/catalog.json",

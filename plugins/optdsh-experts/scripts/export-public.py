@@ -34,7 +34,7 @@ def export_public(output, source=SOURCE):
     content["library/catalog.json"] = (json.dumps({"schema_version":1,"imagesIncluded":False,"items":items},ensure_ascii=False,indent=2)+"\n").encode()
     content["library/index.md"] = "# 文字参考索引\n\n公共包不含第三方截图。入口：[使用方式](START.md) · [分类](taxonomy.md) · [来源](sources.md) · [产品界面](collections/product-ui/README.md)。\n".encode()
     files = sorted(n for n in content if n.startswith("library/"))
-    content["resources.json"] = (json.dumps({"schema_version":1,"files":files},indent=2)+"\n").encode()
+    content["resources.json"] = (json.dumps({"schema_version":2,"files":files},indent=2)+"\n").encode()
     content["PACKAGE.md"] = "# 公共专家源码包\n\n包含通用角色规范、文字参考/原站链接及空偏好模板，不含个人偏好、截图、宿主运行时、凭据和本机链接。instructions.md中的参考根已设为本目录library。将这些资源交给支持自定义专家的宿主，按其格式封装；DSH完整适配随optDSH仓库提供。此包只生成本地文件，不执行安装或发布。\n".encode()
     # Validate every local Markdown link before creating the output tree.
     for name,data in content.items():
