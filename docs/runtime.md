@@ -22,6 +22,10 @@ pwsh scripts/setup.ps1
 
 scripts/runtime 下保留 start/open/status/stop-dsh.ps1 与 optics 对应脚本。-NoBrowser可只检查入口。停止前检查会话/仿真作业；停止Agent不停止Zemax作业。保存/采集忙时不能停止光学服务。
 
+启动器会显示实际监听端口的PID和可执行文件。PID记录缺失、损坏或过期时，只有进程命令匹配本项目Web入口、policy和端口，且当前认证入口返回HTTP 200，才恢复记录并复用服务。其他程序占用时保留进程并报诊断，不自动杀进程；诊断不输出完整命令行或认证令牌。
+
+认证记录失效时，先等正在执行的任务结束，再在项目目录运行 `./启动DSH.cmd -Restart`，显式重启已验证身份的项目Web进程并重新生成认证入口。普通双击不自动重启。查看状态：`pwsh -File scripts/runtime/status-dsh.ps1`；只检查不打开浏览器：`./启动DSH.cmd -NoBrowser`。状态检查读取当前 `.runtime/web-launch.json`，不再依赖旧日志中的令牌。
+
 ## 认证
 
 复用官方每进程启动令牌和签名cookie。Host用公开的ctx.connection.authenticatedUrl生成启动信息，写入私有.runtime/web-launch.json；脚本校验其PID后读取。DSH_HOME=data/dsh，官方凭据/会话持久保存。重新打开不再解析stdout日志；日志轮转不会破坏启动入口。
