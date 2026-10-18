@@ -28,6 +28,9 @@ export function validateSelection(input,releaseRoot){
   if(!within(file,releaseRoot)||!existsSync(file)||createHash('sha256').update(readFileSync(file)).digest('hex')!==entry.sha256)throw Error('发布包校验失败：'+entry.id+'。请重新解压完整发布包。');
  }
  const result={...paths,components,pluginPreset};
+ const canvasPort=input.canvasPort??4173;
+ if(!Number.isSafeInteger(canvasPort)||canvasPort<1024||canvasPort>65535)throw Error('画布端口需为1024到65535之间的整数。');
+ result.canvasPort=canvasPort;
  if(input.canvasRoot){if(!isAbsolute(input.canvasRoot)||!existsSync(input.canvasRoot))throw Error('已有画布安装目录不存在');result.canvasRoot=resolve(input.canvasRoot);}
  if(input.installCanvas){
   if(!manifest.canvasEditor||!input.canvasInstallRoot||!isAbsolute(input.canvasInstallRoot)||existsSync(input.canvasInstallRoot))throw Error('请选择全新的画布安装位置，并使用携带画布包的发行版。');
@@ -55,6 +58,7 @@ export async function createInstaller({releaseRoot,port=0,openBrowser=false,runC
  function command(plan,dry){
   const args=['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',join(releaseRoot,'packaging/windows/install.ps1'),'-ReleaseRoot',releaseRoot,'-InstallRoot',plan.installRoot,'-Home',plan.home,'-Workspace',plan.workspace,'-Components',plan.components.join(','),'-PluginPreset',plan.pluginPreset];
   if(plan.canvasRoot)args.push('-CanvasRoot',plan.canvasRoot);
+  if(plan.canvasRoot||plan.installCanvas)args.push('-CanvasPort',String(plan.canvasPort));
   if(plan.installCanvas)args.push('-InstallCanvas','-CanvasInstallRoot',plan.canvasInstallRoot);
   if(dry)args.push('-DryRun');return args;
  }
