@@ -43,6 +43,18 @@ if ($Operation -eq 'Upgrade' -and -not $installed) { throw 'Canvas bridge is not
 $result=@{schemaVersion=1;name=$name;profile=$OptDshProfile;operation=$Operation;installedBefore=$installed;requestedVersion=$(if($requested){$requested.version}else{$null});status='planned';loadedVerified=$false;enablementOwner='official-profile'}
 if (-not $Apply) { $result|ConvertTo-Json -Depth 6;return }
 $savedHome=$env:DSH_HOME;$savedPath=$env:PATH
+function Invoke-OfficialProfileCommand([string[]]$CommandArgs) {
+ # PS5 treats stderr redirected by a parent script as NativeCommandError.
+ # DSH writes ordinary initialization notices there: use its exit code and
+ # keep diagnostic text, rather than classifying every notice as a failure.
+ $nativePreference=$ErrorActionPreference
+ try {
+  $ErrorActionPreference='Continue'
+  & node $entry @CommandArgs 2>&1 | ForEach-Object { $_.ToString() }
+  $nativeExit=$LASTEXITCODE
+ } finally { $ErrorActionPreference=$nativePreference }
+ if($nativeExit){throw 'Official Profile package operation failed; inspect the retained Profile and logs before retrying'}
+}
 try {
  $leaseFile=Join-Path $OptDshHome ".runtime/profiles/$OptDshProfile/host.json"
  if (Test-Path -LiteralPath $leaseFile) {
@@ -59,12 +71,10 @@ try {
  else {
   if ($Operation -ne 'Remove') {
    if (-not ($existing -and $existing.dependencies -and $existing.dependencies.PSObject.Properties['@deepseek-ai/cordis'])) {
-    & node $entry plugin --profile $OptDshProfile add '@deepseek-ai/cordis@4.0.5' --config.auto-install-peers=false
-    if ($LASTEXITCODE) { throw 'Official Profile dependency preparation failed' }
+    Invoke-OfficialProfileCommand -CommandArgs @('plugin','--profile',$OptDshProfile,'add','@deepseek-ai/cordis@4.0.5','--config.auto-install-peers=false')
    }
-   & node $entry plugin --profile $OptDshProfile add $Package --config.auto-install-peers=false
-  } else { & node $entry plugin --profile $OptDshProfile remove $name }
-  if ($LASTEXITCODE) { throw 'Official Profile package operation failed; inspect the retained Profile before retrying' }
+   Invoke-OfficialProfileCommand -CommandArgs @('plugin','--profile',$OptDshProfile,'add',$Package,'--config.auto-install-peers=false')
+  } else { Invoke-OfficialProfileCommand -CommandArgs @('plugin','--profile',$OptDshProfile,'remove',$name) }
   $result.status=switch($Operation){Install{'installed'}Upgrade{'upgraded'}Remove{'removed'}}
  }
 } catch { $result.status='incomplete';throw }
