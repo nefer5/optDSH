@@ -87,3 +87,7 @@ Git推送提交和分支，不上传整个开发文件夹。node_modules/.venv/�
 ### 经验库的源码、安装和分享位置
 
 源码权威为仓库`.experience/`，由Git同步。dev.27起，发行包携带`.experience/`原文及`experience-manifest.json`；安装时将可分享Markdown校验后复制到`<DSH_HOME>/.experience/`，记录在`Home/config/experience-installation.json`。安装副本保留用户修改与新增，卸载程序时保留。相关产品任务由官方systemPrompt服务提示读取索引，源码指向仓库，安装版指向Home。它不是Skills发现根，也不是AGENTS或专家Preset；原始run、模型、凭据及会话不随库分享。
+
+### 含用户中心链接的旧分支切换
+
+当前.agents/experts及架构kit是忽略的用户中心链接。旧分支曾跟踪同名实体，直接切回旧分支再合并，会沿链接目标写入或删除文件。不要在这份工作树检出这种历史树；只读用git show/归档。main未在别处检出时，先验证main是当前提交祖先，再原子推进该引用并正常推送；若有分叉或其他工作树占用，先停止并重新选择合并方式。工作树隔离不能代替链接边界检查。
