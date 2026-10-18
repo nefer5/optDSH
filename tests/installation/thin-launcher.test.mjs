@@ -22,6 +22,8 @@ test('thin entry uses built-in Windows shell and config-relative application wit
 test('status and stop select the shared lifecycle scripts; legacy flags remain accepted',()=>{
  assert.match(launchPlan(['status','--config',config]).args.join(' '),/status-dsh.ps1/);
  assert.match(launchPlan(['stop','--config',config]).args.join(' '),/stop-dsh.ps1/);
+ assert.match(launchPlan(['--config',config,'status']).args.join(' '),/status-dsh.ps1/);
+ assert.match(launchPlan(['--config',config,'stop']).args.join(' '),/stop-dsh.ps1/);
  assert.ok(launchPlan(['-Config',config,'-NoBrowser']).args.includes('-NoBrowser'));
 });
 test('unknown options, missing values and broken or missing config fail before spawning',()=>{

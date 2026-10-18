@@ -4,13 +4,13 @@ import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 
 export function launchPlan(args,{cwd=process.cwd(),env=process.env}={}){
- const options={};let action='start';
+ const options={};let action='start',actionSeen=false;
  const switches=new Set(['--no-browser','--restart','--no-pause']);
  const values=new Set(['--config','--workspace','--home','--profile','--state-root','--components','--port']);
  for(let i=0;i<args.length;i++){
   const aliases={'-Workspace':'--workspace','-Home':'--home','-Port':'--port','-NoBrowser':'--no-browser','-Config':'--config'};
   const key=aliases[args[i]]||args[i];
-  if(['start','status','stop'].includes(key)&&i===0){action=key;continue;}
+  if(['start','status','stop'].includes(key)){if(actionSeen)throw new Error('Duplicate launcher action');action=key;actionSeen=true;continue;}
   if(switches.has(key)){options[key]=true;continue;}
   if(!values.has(key)||!args[i+1]||args[i+1].startsWith('--'))throw new Error('Unknown or incomplete launcher option: '+key);
   options[key]=args[++i];

@@ -27,7 +27,11 @@ if ($manifest.launcher) {
 $plan=@{installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;userPathRegistration=[bool]$AddToUserPath}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 5;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
-$nodeMajor=[int]((& node --version).TrimStart('v').Split('.')[0]);if ($nodeMajor -ne 24) { throw 'Install Node.js 24 first' }
+$nodeExecutable=(Get-Command node.exe -ErrorAction Stop).Source
+$nodeMajor=[int]((& $nodeExecutable --version).TrimStart('v').Split('.')[0]);if ($nodeMajor -ne 24) { throw 'Install Node.js 24 first' }
+$npmCommand=(Get-Command npm.cmd -ErrorAction Stop).Source
+$npmCli=Join-Path (Split-Path $npmCommand -Parent) 'node_modules/npm/bin/npm-cli.js'
+if (-not (Test-Path -LiteralPath $npmCli -PathType Leaf)) { throw 'The Node.js installation must include npm; its npm-cli.js could not be located.' }
 New-Item -ItemType Directory -Path $InstallRoot | Out-Null
 $dependencies=@{'@deepseek-ai/dsh'=$manifest.dshVersion}
 foreach ($a in $artifacts) { $dependencies[$a.item.name]='file:'+($a.path -replace '\\','/') }
@@ -35,11 +39,11 @@ $package=@{name='optdsh-user-installation';private=$true;type='module';dependenc
 $package | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'package.json') -Encoding utf8
 $plan | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
 Push-Location $InstallRoot
-try { npm install --no-audit --no-fund;if ($LASTEXITCODE) { throw 'Dependency installation failed; receipt retained for diagnosis' } } finally { Pop-Location }
+try { & $nodeExecutable $npmCli install --no-audit --no-fund;if ($LASTEXITCODE) { throw 'Dependency installation failed; receipt retained for diagnosis' } } finally { Pop-Location }
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'scripts') -Destination $InstallRoot -Recurse
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'docs') -Destination $InstallRoot -Recurse
 if ($launcherArtifact) { Copy-Item -LiteralPath $launcherArtifact -Destination (Join-Path $InstallRoot 'optdsh.exe') }
-@{schemaVersion=1;installRoot='.';nodeExecutable=(Get-Command node.exe).Source;home=$OptDshHome;workspace=$Workspace;profile='web';port=3080;components=$selected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh-launcher.json') -Encoding utf8
+@{schemaVersion=1;installRoot='.';nodeExecutable=$nodeExecutable;home=$OptDshHome;workspace=$Workspace;profile='web';port=3080;components=$selected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh-launcher.json') -Encoding utf8
 $launcher=Join-Path $InstallRoot 'optdsh.ps1'
 @'
 [CmdletBinding()]
@@ -59,4 +63,4 @@ if ($AddToUserPath) {
  if ($InstallRoot -notin $entries) { [Environment]::SetEnvironmentVariable('Path',(($entries+$InstallRoot)-join ';'),'User') }
  Write-Output 'User PATH updated; open a new terminal, then use optdsh from any research directory.'
 }
-Write-Output "Installed to $InstallRoot. Run pwsh -File `"$launcher`" -Workspace <research>. Python/Zemax/Canvas are separately installed when selected."
+Write-Output "Installed to $InstallRoot. Double-click optdsh.exe, or use optdsh.cmd --workspace <research>. Python/Zemax/Canvas are separately installed when selected."
