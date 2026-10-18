@@ -105,6 +105,28 @@ class RunBundle:
             if source.suffix.lower() not in ('.json','.yaml','.yml'):raise ValueError('Unsupported input configuration format')
             if source_bytes is None and not source.is_file():raise ValueError('Input configuration file does not exist')
         if runtime is not None:json.dumps(runtime,allow_nan=False)
+        # Forms已把用户确认的配置放在本次Run。领取同一目录，不再次分配。
+        prepared=source.parent.parent if source is not None and source.parent.name=='config' and source.name in ('input.yaml','input.yml') else None
+        if prepared is not None and (prepared/'manifest.json').is_file():
+            manifest=json.loads((prepared/'manifest.json').read_text(encoding='utf-8'))
+            if manifest.get('forms'):
+                if manifest.get('status')!='prepared':raise ValueError('Forms Run is not prepared or was already claimed; explicitly create a new run')
+                if manifest.get('workflow')!=workflow or canonical(manifest.get('workspaceRoot',''))!=repo:raise ValueError('Prepared Run identity differs from this task')
+                if canonical(prepared.parent)!=canonical(root):raise ValueError('Prepared Run root differs from selected runs root')
+                expected=manifest['forms'].get('inputSha256')
+                actual=hashlib.sha256(source_bytes if source_bytes is not None else source.read_bytes()).hexdigest()
+                if not expected or actual!=expected or sha(source)!=expected:raise ValueError('Prepared Run input changed after submission')
+                checked(prepared,repo);checked(prepared/'config/resolved.json',repo)
+                # Exclusive durable claim prevents concurrent/double execution.
+                with (prepared/'.forms-claimed').open('x',encoding='utf-8') as claim:claim.write(stamp())
+                manifest.update(mode=mode,status='created',config='config/resolved.json',report='report.'+report_format,complexity=complexity,configSource=str(source))
+                manifest['forms']['claimedAt']=stamp()
+                manifest['reportRenderer']={name:sha(Path(__file__).with_name(name)) for name in ('reporting.py','report.css','object_labels.py','rx_scan_report.py')}
+                bundle=cls(prepared,repo,manifest)
+                bundle.write('config/resolved.json',config)
+                if runtime is not None:bundle.write('config/runtime.json',runtime)
+                bundle.write('manifest.json',manifest)
+                return bundle
         day=(now or datetime.now().astimezone()).strftime('%y%m%d')
         for n in range(1,10000):
             path=checked(root/f'{day}-{n:02d}',repo)

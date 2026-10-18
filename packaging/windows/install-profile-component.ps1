@@ -3,7 +3,7 @@ param(
  [Parameter(Mandatory)][string]$InstallRoot,
  [Alias('Home')][Parameter(Mandatory)][string]$OptDshHome,
  [Alias('Profile')][string]$OptDshProfile='web',
- [ValidateSet('canvas','workbench')][string]$Component='canvas',
+ [ValidateSet('canvas','workbench','forms')][string]$Component='canvas',
  [string]$Package,
  [ValidateSet('Install','Upgrade','Remove')][string]$Operation='Install',
  [string]$ReceiptPath,
@@ -11,7 +11,7 @@ param(
 )
 $ErrorActionPreference='Stop'
 if ($OptDshProfile -notmatch '^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$' -or $OptDshProfile -eq 'desktop') { throw 'Invalid profile' }
-$componentPackages=@{canvas='optdsh-agent-canvas';workbench='optdsh-workbench'}
+$componentPackages=@{canvas='optdsh-agent-canvas';workbench='optdsh-workbench';forms='optdsh-forms'}
 $name=$componentPackages[$Component]
 $InstallRoot=[IO.Path]::GetFullPath($InstallRoot)
 $OptDshHome=[IO.Path]::GetFullPath($OptDshHome)

@@ -1,8 +1,9 @@
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {FormStore,check} from './store.js';
+import {registerYamlEditor} from './editor-runtime.js';
 export const name = 'optdsh-forms';
-export const inject = ['connection'];
+export const inject = ['connection','tools','agents','sessionController','systemPrompt','skills'];
 export const PREFIX = '/api/optdsh-forms';
 const assets = {'view':['index.html','text/html'], 'app.js':['app.js','text/javascript'], 'style.css':['style.css','text/css'], 'schema.js':['../shared/schema.js','text/javascript'], 'renderer.js':['renderer.js','text/javascript']};
 export function handlers(root) {
@@ -39,4 +40,5 @@ export function apply(ctx,config={}) {
   const h = handlers(resolve(config.workspaceRoot || config.projectRoot || process.cwd()));
   for(const key of Object.keys(assets)) ctx.effect(() => ctx.connection.fetch.register({path:PREFIX+'/'+key,methods:['GET'],requestBody:'buffered',fetch:() => h.asset(key)}),'forms '+key);
   ctx.effect(() => ctx.connection.fetch.register({path:PREFIX,methods:['GET','POST'],requestBody:'buffered',fetch:request=>h.api(request)}),'forms api');
+  if(ctx.tools&&ctx.agents&&ctx.sessionController&&ctx.systemPrompt)registerYamlEditor(ctx,config);
 }

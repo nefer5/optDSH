@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>参数配置</title><link rel="stylesheet" href="/api/optdsh-forms/yaml-assets/editor.css"></head>
+<body><main id="editor" class="editor">
+<header class="editor-header"><strong id="document-title">正在读取参数…</strong><span id="dirty-state" role="status"></span></header>
+<div class="document-toolbar"><span id="mode-label" class="mode-label"></span><button id="show-yaml" class="ghost" type="button" aria-expanded="false">查看 YAML</button><span id="target-label" class="target-label"></span></div>
+<div id="focus-bar" class="focus-bar"><span class="focus-dot"></span><span id="focus-summary">全部参数</span><button id="jump-focus" class="ghost" type="button">定位重点</button><span class="muted whole-note">全部参数始终显示</span></div>
+<div id="error" class="error-banner" role="alert" hidden></div>
+<div id="conflict" class="conflict-banner" role="status" hidden></div>
+<div class="editor-layout"><nav id="section-nav" aria-label="参数组定位"></nav><div id="document-scroll" class="document-scroll"><div id="document-notice" class="document-notice"></div><div id="form-tree"></div></div><section id="yaml-preview" hidden><div class="yaml-toolbar"><span>YAML 原文</span><span id="raw-state" class="muted"></span><button id="discard-yaml" class="ghost" type="button">撤销原文修改</button><button id="apply-yaml" class="secondary" type="button">应用原文修改</button></div><textarea id="raw-yaml" aria-label="完整 YAML 原文" spellcheck="false"></textarea></section></div>
+<footer class="editor-footer"><div><span id="field-count"></span><span id="operation-status" role="status" aria-live="polite">正在读取配置</span></div><div class="footer-actions"><button id="fork" class="secondary" type="button" hidden>继续修改</button><button id="save" class="secondary" type="button">保存配置</button><button id="submit" class="primary" type="button">提交并继续</button></div></footer>
+</main>
+<dialog id="structure-dialog" class="structure-dialog"><form method="dialog" id="structure-form"><h2 id="structure-title">新增参数</h2><label id="key-label">参数键<input id="new-key" autocomplete="off"></label><label id="value-label">值 <span class="muted">可填写 JSON 值或普通文本</span><textarea id="new-value" rows="3">null</textarea></label><div class="structure-actions"><button value="cancel" class="ghost">取消</button><button value="confirm" class="primary">确定</button></div></form></dialog>
+<script src="/api/optdsh-forms/yaml-assets/editor.js" defer></script></body></html>

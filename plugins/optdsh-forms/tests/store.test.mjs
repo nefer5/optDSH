@@ -73,7 +73,7 @@ test('second unrelated form uses the same engine without study assumptions',()=>
   const x=store.create({form:alternate});const y=store.save('request',x.id,x.revision,{name:'合成用户',question:'研究动机'},true);assert.match(y.summary,/合成用户/);assert.equal(y.status,'submitted');
 });
 test('plugin mounts using only official connection, without any workbench service',async()=>{
-  const {root}=fixture(),routes=new Map();assert.deepEqual(inject,['connection']);
+  const {root}=fixture(),routes=new Map();assert.deepEqual(inject,['connection','tools','agents','sessionController','systemPrompt','skills']);
   apply({effect:fn=>fn(),connection:{fetch:{register:r=>{routes.set(r.path,r);return ()=>{};}}}},{projectRoot:root});
   assert.equal(routes.size,6);for(const route of routes.values())assert.equal(route.requestBody,'buffered');const page=await routes.get('/api/optdsh-forms/view').fetch();assert.equal(page.status,200);assert.doesNotMatch(await page.text(),/optdsh-workbench/);
   const list=await routes.get('/api/optdsh-forms').fetch(new Request('http://local/api/optdsh-forms'));assert.equal((await list.json()).studies.length,1);

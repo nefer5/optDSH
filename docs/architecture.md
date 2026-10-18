@@ -1,6 +1,6 @@
 # 当前架构与目录
 
-当前产品开发版 **0.2.0-dev.17**；官方DSH固定 **0.2.1-rc.2**。运行源码基线为5d6920e，本轮只整理文档、交付入口和版本。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
+当前产品开发版 **0.2.0-dev.18**；官方DSH固定 **0.2.1-rc.2**。本轮新增Forms原生YAML编辑器；既有三视图保留dev.17取证范围，新链路见下表及Forms说明。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
 ## 图怎么看
 
@@ -20,7 +20,8 @@
 | 独立AgentCanvas | 独立安装的编辑器与宿主无关入口 | 已有安装/全新本地包接入，不依赖N05源码 |
 | plugins/optdsh-workbench | 模型视图、同会话聊天、光学代理和服务管理 | 官方Profile生命周期；缺服务不影响基础平台 |
 | packages/optics | 可安装CLI/HTTP/MCP、版本连接、身份/实例锁与确定性分析 | legacy/modern复用组件；19和2025只读已验，其他版本及业务另验 |
-| Forms/Experts/信息策略/PPT | 可选表单、专家资源与公共工具 | 包已拆分，其他自有插件的Profile全生命周期尚需收敛 |
+| plugins/optdsh-forms | 原生工具/随包Skill、通用YAML侧栏、会话回投及prepared Run | 官方Profile生命周期；维护/Run分离和幂等，编辑不运行Zemax |
+| Experts/信息策略/PPT | 专家资源与公共工具 | 包已拆分，其余插件Profile生命周期仍需收敛 |
 
 ## 开发源码组织
 

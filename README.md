@@ -1,6 +1,6 @@
 # optDSH
 
-当前版本 **v0.2.0-dev.17 · 重构开发版，未正式发布**。基于官方DSH的光学协作平台，保留官方Web、Agent循环与会话，通过可选插件接入画板、光学工作台和专家能力。
+当前版本 **v0.2.0-dev.18 · 重构开发版，未正式发布**。基于官方DSH的光学协作平台，保留官方Web、Agent循环与会话，通过可选插件接入画板、光学工作台和专家能力。
 
 先看[当前架构三视图](docs/architecture/index.html)、[当前状态](planning/STATUS.md)和[剩余工作优先级](planning/ROADMAP.md)。
 

@@ -1,36 +1,19 @@
 ---
 name: dsh-forms
-description: 本项目参数配置插件的发现与使用入口。用户提到“参数配置插件”“参数可视化”“配置渲染”“dsh-forms”“调整研究课题的公共参数”，或要把Skill的YAML变成填写界面、完整检查Skill配置表时使用。区分Study长期公共参数、Skill临时输入和完整配置审查；负责表单定位、渲染与读取，不负责业务计算或自动执行分析。
+description: 在optDSH当前会话右侧打开完整YAML参数编辑器，维护原配置或准备本次Run；支持字段高亮、注释和提交回当前会话。参数填写不连接Zemax、不自动授权分析。
 ---
 
-# 参数配置与可视化入口
+# YAML参数配置
 
-先识别用户要解释插件、调整课题公共参数、填写某次Skill参数，还是完整检查配置表。只解释时直接说明；需要操作时沿对应流程完成，目标课题/Skill/文件已明确就不重复询问。无法从当前任务确定目标时才询问，不默认选择目录里的第一个课题。
+optDSH产品Agent优先调用原生工具，平台通过官方Profile加载本能力及随包Skill，不依赖旧会话记忆或用户全局.agents。
 
-## 插件在哪里、各层负责什么
+1. 用户仅讨论插件时直接解释；需要填表、审阅或修改时确定实际配置来源。已有配置优先复用；演示可用`example:rx-scan.example.yaml`。
+2. `forms_open_yaml({file, mode, workflow, focusPaths})`打开当前会话右侧完整配置。`mode=maintenance`维护明确指定的原文件；`mode=run`准备一次运行，Rx的workflow为`rx-fov`。高亮使用JSON Pointer，例如`/controls/scanner_h/range/num`。
+3. 返回后说明右侧已准备，结束本轮等用户提交，不轮询、不现场生成HTML、不替用户提交。用户提交后官方队列自动回投当前会话。
+4. `forms_focus({documentId,paths})`只更新讨论重点。`forms_read({documentId})`读取状态、修订、哈希及实际配置路径；业务执行仍由原Skill和执行器负责。
+5. 同会话、来源和用途默认复用一个草稿及Run。反复编辑/保存/重开不另建YAML/JSON/Run；只有用户明确新任务才`newDocument=true`。已提交只读；继续修改派生一个子草稿，重复派生请求复用该草稿。
+6. Run提交后输入冻结；执行器领取回执中的`configurationPath`，复用同一个prepared Run，不能重新导出配置或另分配Run。维护模式按哈希检查外部修改，并保留一份基线备份。
 
-- 本Skill叫`dsh-forms`，实现插件叫`optdsh-forms`，位于`plugins/optdsh-forms/`，与光学工作台平级；装配在`config/dsh.local-policy.yml`。
-- 网页入口`/api/optdsh-forms/view`，工作台“课题背景”只是普通链接。CLI为`plugins/optdsh-forms/lib/cli.js`；HTTP入口`/api/optdsh-forms`。
-- Study/Skill携带参数值和可选声明式表单；通用引擎负责渲染、基础校验、保存与提交；Agent读取结果，业务执行器负责领域校验和运算。表单不连接Zemax、不生成分析run、不决定业务授权。
-- 当前网页依赖官方DSH认证与页面宿主，CLI存储操作不需要模型调用；独立于光学工作台不等于独立于DSH的桌面程序。
+一份YAML显示全部参数，注释灰色显示；特殊YAML结构保留在原文区，不能默默丢弃。配置编辑/提交不代表物理校验通过或新增追迹授权。不修改历史Run。
 
-## 按意图路由
-
-| 用户意图 | 做法 | 必读 |
-|---|---|---|
-| 调整研究课题的公共参数、维护长期背景 | 找Study入口，打开对应持久表单，读取保存后的值 | [Study契约](references/study.md) |
-| 某次Skill需要填写配置、旧YAML可视化 | 使用当前配置创建独立临时请求，提交后按ID读取 | [Skill参数交互](references/skill-input.md) |
-| 完整检查Skill配置表、所有参数/高级项/隐藏项 | 对照配置定义核对字段覆盖，再提供完整审阅入口 | [完整配置检查](references/full-review.md) |
-
-“完整检查”优先走第三条，不能缩成补几个缺项。仅需改已知参数时，不自动展开全部源码审查；已经有配置就优先保留用户当前值，不退回样例重填。
-
-## 共同交互约定
-
-- 从项目根使用CLI；换项目显式`--root <目标项目>`，输入文件用解析后的正确路径。返回URL为准，不硬编码本机盘符/端口，不把认证令牌写进链接或回复。相对URL需基于实际DSH地址解析；入口失败才查项目`docs/runtime.md`，不擅自改全局配置或重启服务。
-- 给出可点击填写链接和简短操作说明。未实际打开页面就说“入口已准备好”；用户要求打开时用可用浏览器入口。创建请求后记住ID，不反复创建或轮询，不替用户提交。
-- Study是保存后持久复用；临时请求必须`submitted`才是正式答案。没有自动提交回调、聊天唤醒或自动背景注入；提醒用户保存/提交后回当前聊天告知，再读取。
-- 清空值保留键和null，不删除字段、不补默认值；显式删除列表行才移除行。导入的样例/默认文件不覆盖，导出只写新文件；Study的专用值文件则按保存契约更新。
-- 普通业务消费用`activeValues`（CLI简报中的`config`）；完整检查还要看`values`与表单定义。条件隐藏值可能仍被保存，不能当作同时生效。导入原始配置被包装为`configuration`时，简报可能仍带此包装，需读取完整记录的`origin.wrapped`确认，或用export取得原结构，不能把包装交给业务执行器。
-- UI基础校验、领域校验、执行授权分别处理。保存成功不代表业务参数完整，提交成功不代表模型身份或物理值正确。具体执行交回原业务Skill，沿用已有授权，不在这里新增一套业务门禁。
-
-解释架构或实现能力时按需读[插件说明](../../../plugins/optdsh-forms/README.md)、[字段协议](../../../plugins/optdsh-forms/protocol-v2.md)、[随Skill分发](../../../plugins/optdsh-forms/skill-packaging.md)。声明式`ui/form.yaml`显式加载已实现；随包任意JS/CSS自动加载、全局意图监听、提交自动续聊尚未实现。Skill描述帮助宿主发现与模型选择，并非确定性的触发钩子；当前会话未列出时需重新发现或在项目新会话核对。
+实现说明见[Forms插件](../../../plugins/optdsh-forms/README.md)。非DSH宿主没有原生工具时，可按该说明使用保留的旧CLI/Study接口；该兼容入口不具备原生右侧栏与自动回投，不冒充新链路。

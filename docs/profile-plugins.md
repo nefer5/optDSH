@@ -1,6 +1,6 @@
 # 官方Profile插件管理
 
-画板桥optdsh-agent-canvas和光学工作台optdsh-workbench已统一官方Profile安装、启停、升级和卸载。源码保留plugins，运行副本安装在Home/profiles/web；Bundle仅提供推荐/默认，启动器不恢复关闭/卸载的功能。Forms/Experts等其他组件仍需收敛，见[优先级](../planning/ROADMAP.md)。
+画板桥optdsh-agent-canvas、光学工作台optdsh-workbench和Forms参数编辑器optdsh-forms已统一官方Profile安装、启停、升级和卸载。源码保留plugins，运行副本安装在Home/profiles/web；Bundle仅提供推荐/默认，启动器不恢复关闭/卸载的功能。Experts/信息策略等其他组件仍需收敛，见[优先级](../planning/ROADMAP.md)。
 
 ## 用户日常操作
 
@@ -16,7 +16,7 @@ npm pack ./plugins/optdsh-workbench --pack-destination ./temp/<本次任务>
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File packaging/windows/install-profile-component.ps1 -InstallRoot <程序根> -Home <资料根> -Component workbench -Operation Upgrade -Package <本地tgz> -Apply
 ```
 
-画板桥使用-Component canvas；Install/Upgrade需要Package，Remove不需要Package。Install保留已有包和开关，Upgrade保留用户disabled patch，Remove不删除资料。开发源码改变后单纯重启不会升级Profile安装副本。不同源码/应用副本遮蔽Profile时应修复安装，不修改node_modules。
+画板桥使用-Component canvas；参数编辑器使用-Component forms；Install/Upgrade需要Package，Remove不需要Package。Install保留已有包和开关，Upgrade保留用户disabled patch，Remove不删除资料。开发源码改变后单纯重启不会升级Profile安装副本。不同源码/应用副本遮蔽Profile时应修复安装，不修改node_modules。
 
 ## 配置与隔离
 

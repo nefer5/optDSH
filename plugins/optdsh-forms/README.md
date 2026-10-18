@@ -1,13 +1,25 @@
-# 研究参数表单（MVP 0.3）
+# optDSH YAML参数编辑器（0.4）
 
-独立的 DSH 插件，与 optdsh-workbench 平级。只依赖官方 connection 服务和 YAML 库；不依赖光学后端、Zemax、工作台实现或某个 Study。工作台仅提供一个普通链接。插件独立地址为 `/api/optdsh-forms/view`，沿用官方 DSH 的认证。
+Forms随optDSH交付，作为官方Profile管理的可选内部模块。Agent通过`forms_open_yaml`发起，完整配置在官方Web右侧栏显示，左侧保留对话；不需要常驻顶栏按钮或额外MCP服务。固定引擎渲染，模型不临时编写HTML。
 
-目的：用户方便地填写、固化结构化参数与背景信息，减少对 Agent 重复解释的成本。支持课题参数和 Skill 临时请求；不运行分析、不生成 run、不自动发送对话或唤醒 Agent。
+支持完整YAML、键值/数组结构编辑、注释展示、原文编辑和JSON Pointer字段高亮。特殊标签、别名等保留原文，不猜测物理含义。单文件512KB、最多12000节点、深度100；超过范围明确报错。YAML语法校验与业务校验分开。
 
-Agent使用入口：[dsh-forms Skill](../../.agents/skills/dsh-forms/SKILL.md)。可说“参数配置插件”“参数可视化”“配置渲染”“dsh-forms”或“调整研究课题的公共参数”；分别路由到Study公共参数、Skill临时输入和完整配置表检查。该入口依赖宿主Skill发现与模型选择，不是全局自动弹窗钩子。
+| 用途 | 保存位置 | 提交后 |
+|---|---|---|
+| maintenance，维护明确指定原文件 | 原路径，哈希冲突保护及一份基线备份 | 回投当前会话；不自动执行分析 |
+| run，准备本次运行 | 当前workspace/runs/工作流/YYMMDD-NN/config/input.yaml | 冻结输入；执行器领取同一个Run |
 
-清空字段统一保留键并写入null，不删除字段、不自动变成0；显式“移除行”才删除列表项。必填项仍按定义校验，清空不会绕过校验。用户提交后的主要产物是供Agent读取的结构化请求结果，导出新YAML只是可选步骤；源样例、默认配置不得覆盖。
+同会话/来源/用途复用文档和Run草稿；普通改值、高亮、保存、重开不增加文件数量。草稿JSON原位更新，维护基线备份每文档一份，提交保留一次不可变审计快照。重复提交不增加快照或再次投递；交付不确定时显示诊断，避免自动重发。冻结后“继续修改”派生一个子草稿，重复请求复用该子草稿；明确新任务才新建。历史Run不覆盖。
 
+原生工具为`forms_open_yaml`、`forms_focus`、`forms_read`，随包Skill在Profile启用时注册。工具绑定真实Agent及官方session.cwd，HTTP只能操作本会话已有文档，不能指定任意来源路径。关闭/卸载撤销工具、引导与界面；启动器不恢复用户关闭的Forms。
+
+提交沿官方sessionController队列送回同一会话。提交确认参数，既有任务的执行授权仍由原业务Skill判断。Rx执行器校验prepared Run的工作流、workspace、输入哈希及单次领取，不连接Zemax即可验证离线计划。
+
+当前新接口为`/api/optdsh-forms/yaml`与`/api/optdsh-forms/yaml/view`，供原生侧栏使用。字段高亮和UI元数据不写入业务YAML。详见[前端说明](web/YAML-EDITOR.md)。
+
+## 旧Study/CLI兼容接口
+
+以下0.3接口保留原行为，用于已有Study/非DSH宿主。它们不具有新原生工具/侧栏/自动回投能力，不作为新DSH会话的推荐入口。
 ## 课题模式
 
 将任意外部课题目录作为 `workspaceRoot`，其根 `study.yaml` 可声明版本、表单路径和数值路径：
