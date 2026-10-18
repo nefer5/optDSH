@@ -19,7 +19,7 @@ for(const [id,path]of Object.entries(components)){
  const result=spawnSync(process.execPath,[npmCli,'pack','--json','--pack-destination',resolve(output,'packages')],{cwd:folder,encoding:'utf8'});
  if(result.status!==0)throw new Error(result.stderr);
  const pack=JSON.parse(result.stdout)[0];
- for(const item of pack.files){if(/(^|\/)(?:\.agents|\.runtime|data|node_modules|STUDYS|STUDIES|studies|\.env|preferences\.md|private)(\/|$)/.test(item.path))throw new Error('Private file in package: '+item.path);}
+ for(const item of pack.files){if(/\.py[co]$/.test(item.path)||/(^|\/)(?:\.agents|\.runtime|data|node_modules|STUDYS|STUDIES|studies|\.env|preferences\.md|private|__pycache__)(\/|$)/.test(item.path))throw new Error('Private file in package: '+item.path);}
  const file='packages/'+pack.filename;
  artifacts.push({id,name:meta.name,version:meta.version,file,sha256:createHash('sha256').update(readFileSync(resolve(output,file))).digest('hex'),publication:'local-only-license-pending'});
 }
