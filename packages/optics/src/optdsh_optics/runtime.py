@@ -70,10 +70,8 @@ def worker_environment(config):
     return env
 
 def validate_target(target):
-    if not isinstance(target,dict) or target.get('family') not in ('zemax18','ansys2023plus'):
-        raise OpticsError('TARGET_REQUIRED','Select target.family: zemax18 or ansys2023plus, and its installDir')
-    if target['family']=='zemax18':
-        raise OpticsError('LEGACY_BRIDGE_UNAVAILABLE','Zemax 18 requires a dedicated .NET Framework process bridge; not yet implemented or validated')
+    if not isinstance(target,dict) or target.get('family') not in ('zemax18','zemax19','zemaxLegacy','ansysModern','ansys2023plus'):
+        raise OpticsError('TARGET_REQUIRED','请选择旧版或新版适配器及其明确安装目录')
     install=Path(target.get('installDir',''))
     if not install.is_absolute() or not all((install/f).is_file() for f in ('ZOSAPI.dll','ZOSAPI_Interfaces.dll')):
         raise OpticsError('TARGET_INSTALL_INVALID','target.installDir must name the selected installation containing ZOSAPI DLLs')
@@ -81,11 +79,25 @@ def validate_target(target):
 
 def validate_host_version(version,target):
     import re
-    match=re.search(r'(?<![0-9])(20[0-9]{2}|[0-9]{1,2})(?=[.\s]|$)',str(version))
-    year=int(match[1]) if match else 0
-    if year<100:year+=2000
-    if target['family']!='ansys2023plus' or year<2023:
-        raise OpticsError('TARGET_VERSION_MISMATCH','Connected host does not belong to the configured 2023+ family')
+    text=str(version).strip()
+    if target.get('productMajor') is not None and not target.get('apiBuild'):
+        raise OpticsError('TARGET_VERSION_MISMATCH','所选安装缺少完整API构建标识，请重新保存Web配置')
+    if target.get('apiBuild') and text!=str(target['apiBuild']):
+        raise OpticsError('TARGET_VERSION_MISMATCH',f"实际API构建号 {text} 与所选安装 {target['apiBuild']} 不一致；请核对多个窗口的Extension实例号")
+    # Older API returns a six-digit YYMMDD build identifier, e.g. 190513.
+    if re.fullmatch(r'\d{6}',text):
+        year=2000+int(text[:2])
+    else:
+        match=re.search(r'(?<![0-9])(20[0-9]{2}|[0-9]{1,2})(?=[.\s]|$)',text)
+        year=int(match[1]) if match else 0
+        if year<100:year+=2000
+    if target.get('apiBuildYear') is not None and year!=int(target['apiBuildYear']):
+        raise OpticsError('TARGET_VERSION_MISMATCH','实际API构建年份与所选安装文件元数据不一致')
+    # 产品年与API构建年可能不同：例如25.1的构建号241210。
+    product=target.get('productMajor') if target.get('apiBuildYear') is not None else None
+    group_year=(2000+int(product) if int(product)<100 else int(product)) if product is not None else year
+    if not ((target['family']=='zemax18' and year==2018) or (target['family']=='zemax19' and year==2019) or (target['family']=='zemaxLegacy' and 2000<=group_year<=2021) or (target['family'] in ('ansysModern','ansys2023plus') and group_year>=2022)):
+        raise OpticsError('TARGET_VERSION_MISMATCH','Connected host does not belong to the configured Zemax version family')
     expected=target.get('year')
     if expected is not None and year!=int(expected):
         raise OpticsError('TARGET_VERSION_MISMATCH','Connected host differs from target.year')

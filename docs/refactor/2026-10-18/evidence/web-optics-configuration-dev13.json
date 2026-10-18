@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-18",
+  "productVersion": "0.2.0-dev.13",
+  "workbench": "0.12.2",
+  "canvasBridge": "0.6.1",
+  "opticsWheel": "0.4.0",
+  "versionGroups": {"legacy": "2021及以前", "modern": "2022起", "default": "modern"},
+  "configuration": "Web选择版本组，Python与安装自动检测；只允许版本标识；Home原子保存并备份；运行中禁止修改",
+  "legacy19": {"webProbeAndBind": true, "apiBuild": "190513", "objects": 92, "dirtyChanged": false, "sourceHashChanged": false, "readOnly": true},
+  "modern2025": {"webProbeAndBind": true, "productVersion": "25.1.00.0", "apiBuild": "241210", "objects": 92, "sourceHashChanged": false, "finalExactBuildConfigVerified": true},
+  "sameInstanceCollision": "旧DLL发现新版宿主时，完整API构建门禁拒绝，没有绕过",
+  "unverifiedYears": "18、20、21、22等其他具体版本尚未真实验证；两类相同API风格与bug减少均为待验证假设",
+  "packaging": "legacy.py/legacy.ps1在正式wheel内，PS5.1 BOM已核对，无临时脚本运行依赖",
+  "tests": {"fullRegression": "passed before final localized changes", "finalWorkbenchAndCanvas": 111, "finalOptics": 139},
+  "architectureReview": "三项发现修复并复核：陈旧锁、旧版组协议、完整构建号；限定范围无新增阻断项",
+  "visual": "真实Claude皮肤深浅主题头部同款官方Button；Web配置只选版本，Python自动检测；最终分类文案复查另见项目temp截图",
+  "expertRule": "中心源增强宿主组件复用与实际主题验收；生成副本分发预检有资源/版本冲突，未强行覆盖",
+  "modelSavedOrModified": false,
+  "rayTracing": false,
+  "publicRelease": false,
+  "pushed": false,
+  "sandbox": "用户暂缓"
+}

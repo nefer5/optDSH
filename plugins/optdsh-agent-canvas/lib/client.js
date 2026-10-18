@@ -1,5 +1,6 @@
 window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
   const React=require('react'),h=React.createElement;
+  const {Button}=require('@deepseek-ai/dsh-client-ui-primitives');
   const ID='optdsh-agent-canvas/canvas', KIND='agentCanvas';
   const inject=['slots','locale','sidebarRightTabs','sidebarRight'];
   const labels={accepting:'正在交付',queued:'已排队',running:'处理中',answered:'已回答，待确认',processed:'已确认处理',uncertain:'交付状态待核对（不会自动重发）','needs-attention':'需要处理'};
@@ -93,7 +94,7 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
     registerCanvasMessages(ctx);
     ctx.effect(()=>ctx.sidebarRightTabs.register({id:ID,kind:KIND,title:()=> '画板',guide:[{order:40,title:()=> '本会话画板',description:()=> '打开并恢复当前聊天的独立画板'}]}),'canvas tab');
     ctx.effect(()=>ctx.slots.inject('sidebar.right.pane.tab',()=>ctx.slots.register({name:'sidebar.right.pane.tab',key:ID},CanvasBody)),'canvas body');
-    function OpenCanvas({sessionId}) {return h('button',{type:'button','data-open-bound-canvas':sessionId,title:'打开本会话绑定画板',onClick:()=>ctx.sidebarRight.openTab(KIND)},'画板');}
+    function OpenCanvas({sessionId}) {return h(Button,{variant:'ghost',size:'sm','data-open-bound-canvas':sessionId,title:'打开本会话绑定画板',onClick:()=>ctx.sidebarRight.openTab(KIND)},'画板');}
     ctx.effect(()=>ctx.slots.inject('conversation.session.header.actions',()=>ctx.slots.register({name:'conversation.session.header.actions',id:'optdsh-open-canvas',order:35},OpenCanvas)),'canvas conversation entry');
   }
   return {inject,apply,parseCanvasMessage};

@@ -66,6 +66,11 @@ def snapshot_in_connection(zos, connection, instance):
 
 
 def _capture_unlocked(expected_file, instance, probe=False):
+    import os
+    target=json.loads(os.environ.get('OPTDSH_ZEMAX_TARGET','null'))
+    if isinstance(target,dict) and target.get('family') in ('zemax18','zemax19','zemaxLegacy'):
+        from .legacy import capture_legacy
+        return capture_legacy(expected_file, instance, probe, target)
     connection = Path(__file__).with_name("connection.py")
     if not connection.is_file():
         raise OpticsError("DEPENDENCY_MISSING", "local connection module is absent")

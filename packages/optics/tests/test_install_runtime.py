@@ -48,13 +48,13 @@ class InstalledRuntimeTests(unittest.TestCase):
             self.assertEqual(child.returncode,0)
             with instance_lock(2):pass
 
-    def test_missing_target_and_unimplemented_18_fail_before_loading_clr(self):
+    def test_missing_target_and_invalid_legacy_install_fail_before_loading_clr(self):
         from optdsh_optics.connection import OpticStudio
         with patch.dict(os.environ,{'OPTDSH_ZEMAX_TARGET':'null'}):
             with self.assertRaises(OpticsError) as caught:OpticStudio()
             self.assertEqual(caught.exception.code,'TARGET_REQUIRED')
         with self.assertRaises(OpticsError) as caught:validate_target({'family':'zemax18','installDir':'not consulted'})
-        self.assertEqual(caught.exception.code,'LEGACY_BRIDGE_UNAVAILABLE')
+        self.assertEqual(caught.exception.code,'TARGET_INSTALL_INVALID')
 
     def test_uncertain_native_cleanup_stays_blocked_after_process_lease_release(self):
         with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ,{'LOCALAPPDATA':tmp}):

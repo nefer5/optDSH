@@ -12,6 +12,13 @@ test('status never starts a process; missing config reports setup requirement',a
  assert.equal((await manager.status()).state,'unconfigured');assert.equal((await manager.start()).state,'unconfigured');
  assert.equal(existsSync(join(config.stateRoot,'.runtime/optics-web-service.json')),false);
 });
+test('first Web configuration recovers a dead process lock without requiring manual file editing',async()=>{
+ const {config}=fixture();mkdirSync(join(config.stateRoot,'.runtime'),{recursive:true});
+ writeFileSync(join(config.stateRoot,'.runtime/optics-web-start.lock'),JSON.stringify({pid:1000000000}));
+ const manager=createServiceManager(config,{settings:{save:async(input,busy)=>{assert.equal(busy,false);return {configured:true,version:input.version};}}});
+ assert.equal((await manager.saveConfiguration({version:'modern'})).configured,true);
+ assert.equal(existsSync(join(config.stateRoot,'.runtime/optics-web-start.lock')),false);
+});
 test('bad Python reports failure and logs redact credentials',async()=>{
  const {config}=fixture();mkdirSync(join(config.home,'config'),{recursive:true});
  writeFileSync(join(config.home,'config/optics.json'),JSON.stringify({python:'missing-python.exe',backend:'synthetic'}));
@@ -42,4 +49,5 @@ test('real synthetic child: concurrent starts share one process, health is not m
  assert.equal((await manager.status()).state,'ready');
  const reload=createServiceManager(config);assert.equal((await reload.start()).state,'ready');
  assert.equal(JSON.parse(readFileSync(join(config.stateRoot,'.runtime/optics-access.json'))).pid,a.pid);
+ assert.equal((await reload.stop()).state,'stopped');assert.equal((await manager.status()).state,'stopped');
 });

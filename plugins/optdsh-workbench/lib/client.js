@@ -1,5 +1,6 @@
 window.__ModuleLoader__.load({id:'optdsh-workbench',factory:require=>{
  const React=require('react'),h=React.createElement;
+ const {Button,IconRightUpOutlineRegular}=require('@deepseek-ai/dsh-client-ui-primitives');
  const inject=['slots','sessions','uiWorkspace'];
  function apply(ctx){
   let navigation=0;
@@ -23,7 +24,7 @@ window.__ModuleLoader__.load({id:'optdsh-workbench',factory:require=>{
    catch(e){console.error('无法打开工作台关联会话',e);}
   }
   ctx.effect(()=>{window.addEventListener('hashchange',navigate);void navigate();return()=>window.removeEventListener('hashchange',navigate);},'workbench session navigation');
-  function Open({sessionId}){return h('a',{href:'/api/optdsh-workbench/view?session='+encodeURIComponent(sessionId),target:'_blank',rel:'noopener','data-open-optics':sessionId},'光学工作台 ↗');}
+  function Open({sessionId}){return h(Button,{variant:'ghost',size:'sm','data-open-optics':sessionId,title:'在新标签页打开本会话的光学工作台','aria-label':'光学工作台（在新标签页打开）',onClick:()=>window.open('/api/optdsh-workbench/view?session='+encodeURIComponent(sessionId),'_blank','noopener,noreferrer')},'光学工作台',h(IconRightUpOutlineRegular,{size:14,'aria-hidden':true}));}
   ctx.effect(()=>ctx.slots.inject('conversation.session.header.actions',()=>ctx.slots.register({name:'conversation.session.header.actions',id:'optdsh-workbench-open',order:36},Open)),'workbench entry');
 
  }

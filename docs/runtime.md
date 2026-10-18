@@ -1,5 +1,7 @@
 # 安装与运行
 
+dev.13起在Web工作台“配置服务”里选择旧版/新版，Python自动检测，无需编辑配置文件。按“保存配置→开启光学服务→探测并绑定模型”使用；换版本先在Web停止空闲的自有后台。见[配置与分组](profile-plugins.md#web配置与版本分组dev13)。
+
 dev.12工作台新增Web“开启光学服务”入口，先检查状态，再显式启动，服务与模型连接分离。首次配置Python与安装optdsh-optics>=0.3.0后，在工作台完成日常启动，不必到安装目录找CMD。配置路径、诊断和进程保留边界见[Web启动服务](profile-plugins.md#web启动光学服务dev12)。下述StartOptics仍是开发排障入口，其历史启动默认可能执行初始采集，不代表Web延迟连接方式。
 
 工作台入口现使用内置PowerShell5.1，默认只复用/启动基础DSH并打开已启用的Profile工作台，不重装/启用、不启动光学服务。确需启动执行器须显式StartOptics；本轮未连接真实Zemax。参见[Profile插件](profile-plugins.md)。

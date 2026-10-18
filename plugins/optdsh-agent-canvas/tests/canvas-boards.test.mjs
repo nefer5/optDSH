@@ -39,11 +39,11 @@ test('cancelled turn cannot be marked processed',()=>{const st=fixture(),b=st.bo
 test('corrupt persisted binding fails closed',()=>{const st=fixture(),b=st.board('a');writeFileSync(join(st.root,b.boardId+'.json'),'{bad');assert.throws(()=>new BoardStore(st.root).board('a'));});
 test('untrusted identifiers and unsupported pixels bounded',()=>{const st=fixture();assert.throws(()=>st.board('../escape'));const c=sceneContext({elements:[{type:'freedraw'},{type:'image'},...Array(160).fill({type:'text',text:'a'.repeat(1000)})]},'');assert.equal(c.elements.length,150);assert.equal(c.unsupportedVisualElements,2);assert.equal(c.truncated,true);});
 test('conversation header has a real open action and body gets session scope',()=>{
-  const regs=[];let plugin,opened;
-  vm.runInNewContext(readFileSync(new URL('../lib/client.js',import.meta.url),'utf8'),{window:{__ModuleLoader__:{load:m=>plugin=m.factory(()=>({createElement:(type,props,...children)=>({type,props,children})}))}}});
+  const regs=[];let plugin,opened;const Button=()=>{};
+  vm.runInNewContext(readFileSync(new URL('../lib/client.js',import.meta.url),'utf8'),{window:{__ModuleLoader__:{load:m=>plugin=m.factory(name=>name==='@deepseek-ai/dsh-client-ui-primitives'?{Button}:{createElement:(type,props,...children)=>({type,props,children})})}}});
   plugin.apply({effect:fn=>fn(),sidebarRightTabs:{register:()=>{}},sidebarRight:{openTab:k=>opened=k},slots:{entriesOfSlot:()=>[],inject:(_n,fn)=>fn(),register:(opts,component)=>regs.push({opts,component})}});
   const entry=regs.find(x=>x.opts.name==='conversation.session.header.actions');assert.ok(entry);
-  const button=entry.component({sessionId:'session-A'});assert.equal(button.props['data-open-bound-canvas'],'session-A');button.props.onClick();assert.equal(opened,'agentCanvas');
+  const button=entry.component({sessionId:'session-A'});assert.equal(button.props['data-open-bound-canvas'],'session-A');assert.equal(button.type,Button);assert.equal(button.props.variant,'ghost');assert.equal(button.props.size,'sm');assert.equal(button.props.style,undefined);button.props.onClick();assert.equal(opened,'agentCanvas');
 });
 test('embedded messages require exact frame and origin; payload cannot redirect session',async()=>{
   const regs=[],listeners=[],requests=[],replies=[];let plugin;

@@ -25,8 +25,7 @@ python -m optdsh_optics serve --config E:/用户配置/optics.json --workspace E
   "expectedFile": "E:/研究课题/模型.ZMX",
   "instance": 1,
   "target": {
-    "family": "ansys2023plus",
-    "year": 2025,
+    "family": "ansysModern",
     "installDir": "C:/用户安装的OpticStudio目录"
   }
 }
@@ -36,15 +35,25 @@ python -m optdsh_optics serve --config E:/用户配置/optics.json --workspace E
 
 MCP 使用 `OPTDSH_WORKSPACE`、`OPTDSH_STATE_ROOT` 定位当前研究及访问记录。工作流说明资源需显式提供 `OPTDSH_SKILLS_ROOT`，不读取开发者私人中心、不搜索仓库根、不自动读取 Study 私有配置，也不执行资源目录中的 preflight 脚本。确定性校验仍由各工作流本来的显式 CLI 执行。
 
-## 版本能力与验证等级
+## 正式连接组件与版本约定
 
-| 目标 | 当前实现 | 实际验证 |
+连接实现属于本wheel，供工作台HTTP、MCP及其他本地调用者复用，不依赖开发临时脚本。
+
+| 层 | 正式入口 | 归属 |
 |---|---|---|
-| Zemax 18 | 识别 `family=zemax18`；返回 `LEGACY_BRIDGE_UNAVAILABLE`，不尝试套用新版 Python 桥 | **未适配、未连接、未验证**；后续需专用 .NET Framework 进程桥 |
-| Zemax 2023/2024/2025 | `family=ansys2023plus`，显式安装 DLL；核验宿主年份，指定 year 时必须相等；服务操作在独立 Python worker 中执行 | 仅版本/模型门禁离线测试；本轮未连接真实宿主、未做业务数值验收 |
-| 历史 19/2025 证据 | 不转换为18或新 wheel 的验收证据 | 本轮没有重放 |
+| 服务/业务公共入口 | Bridge.probe、Bridge.switch/refresh、capture.capture | 统一身份、模型、只读和锁契约 |
+| 新版适配器 | connection.OpticStudio | Python/.NET Framework，在短生命worker加载显式安装DLL |
+| 旧版适配器 | legacy.capture_legacy 与包资源 legacy.ps1 | 独立Windows PowerShell5.1/.NET Framework只读桥；不是临时脚本 |
+| 版本与串行化 | runtime.validate_target、validate_host_version、instance_lock | 验证配置、API构建、分组及共享实例锁 |
 
-不同版本不能在同一长期进程中加载不同 ZOSAPI 程序集；服务通过短生命 worker 分隔。旧版桥尚未实现，不能报告“两组版本均支持完成”。
+用户确认暂按2021及以前/2022起分两组，默认推荐新版；这是兼容策略假设，不是对所有API实现相同或bug数量的保证。Web保存target.family=zemaxLegacy或ansysModern，并记录安装产品主版本及完整API构建号。既有zemax18/zemax19/ansys2023plus标识仍能读取；新版策略不要求研究代码硬编码本机目录。
+
+| 分组 | 实现 | 本轮验证 |
+|---|---|---|
+| 旧版（2021及以前） | 18/19等共享旧桥，按明确安装和实际构建核验；当前只读，不开放保存/追迹 | 19/API190513 Web探测、确认绑定与92对象采集通过，模型哈希不变；18及其他旧版尚未实测 |
+| 新版（2022起） | 正式Python连接器，产品年和API构建年分开比较；保留显式保存门禁 | 2025产品25.1/API241210 Web探测/绑定与92对象采集通过；本轮未做写入/追迹或其他年份实测 |
+
+不同DLL与运行时分隔在独立worker；同实例号可能跨版本命中其他窗口，所以连接后必须检查完整API构建号和模型身份，不能仅凭DLL路径认定正确。正式wheel包含legacy.ps1（PS5.1中文所需UTF-8 BOM保留）；研究模型、原始快照和测试临时脚本不入发行包。
 
 ## 共享锁与恢复
 

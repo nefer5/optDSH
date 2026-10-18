@@ -7,11 +7,62 @@ from pathlib import Path
 import secrets
 import os
 import sys
+import threading
+from contextlib import contextmanager
 from urllib.parse import parse_qs, urlsplit
 
 
 from optdsh_optics.domain import OpticsError
 from optdsh_optics.service import Bridge
+
+
+class ServiceLifecycle:
+    """串行服务退出与请求变更；只停止服务，不操作 Zemax 宿主。"""
+
+    def __init__(self, bridge, tx_jobs):
+        self.bridge, self.tx_jobs = bridge, tx_jobs
+        self.lock = threading.Lock()
+        self.stopping = False
+
+    def busy(self):
+        if self.bridge.capture_lock.locked():
+            return True
+        with self.tx_jobs.lock:
+            if self.tx_jobs.active:
+                return True
+            for job in self.tx_jobs.jobs:
+                if job.get('status') in ('queued', 'running', 'cancelling', 'interrupted', 'verification-failed'):
+                    return True
+                # 失败进程未留下结果时，不能把进程结束当作原生任务已清理。
+                result_file = Path(job['run']) / 'result.json'
+                if job.get('status') == 'failed' and not result_file.exists():
+                    return True
+                if result_file.exists():
+                    try:
+                        result = json.loads(result_file.read_text(encoding='utf-8'))
+                        if (result.get('toolStillRunning') or result.get('cleanupErrors')
+                                or result.get('copyClosed') is False):
+                            return True
+                    except (OSError, ValueError, AttributeError):
+                        return True
+        return False
+
+    @contextmanager
+    def mutation(self):
+        if not self.lock.acquire(blocking=False):
+            raise OpticsError('HOST_BUSY', '其他服务请求正在执行')
+        try:
+            if self.stopping:
+                raise OpticsError('SERVICE_STOPPING', '光学服务正在停止，请等待退出')
+            yield
+        finally:
+            self.lock.release()
+
+    def begin_stop(self):
+        with self.mutation():
+            if self.busy():
+                raise OpticsError('HOST_BUSY', '采集或未确认完成的仿真任务仍在占用宿主')
+            self.stopping = True
 
 
 def main():
@@ -30,6 +81,7 @@ def main():
     bridge = Bridge(config, args.workspace.resolve(), args.config)
     from optdsh_optics.tx_jobs import TxJobs
     tx_jobs = TxJobs(bridge)
+    lifecycle = ServiceLifecycle(bridge, tx_jobs)
     token = secrets.token_urlsafe(32)
     authority = f"127.0.0.1:{args.port}"
     cookie_name = f"optdsh-optics-{args.port}"
@@ -94,7 +146,8 @@ def main():
                         connected = bridge.snapshot is not None and not bridge.last_error
                     self.send(200, {"service": "optdsh-optics", "protocolVersion": 1,
                                     "pid": os.getpid(), "workspace": str(args.workspace.resolve()),
-                                    "stateRoot": str(args.state_root.resolve()), "connected": connected})
+                                    "stateRoot": str(args.state_root.resolve()), "connected": connected,
+                                    "busy": lifecycle.busy(), "stopping": lifecycle.stopping})
                 elif url.path == "/api/agent/jobs":
                     self.send(410, {'error':{'code':'LEGACY_CHAT_RETIRED','message':'Open the official-host workbench; legacy transcripts are preserved.'}})
                 elif url.path == "/api/snapshot":
@@ -114,6 +167,18 @@ def main():
             if not self.authorized():
                 self.send(403, {"error": {"code": "AUTH_REQUIRED", "message": "Access denied"}})
                 return
+            if self.path == '/api/service/stop':
+                try:
+                    lifecycle.begin_stop()
+                except OpticsError as exc:
+                    self.send(409, {"error": exc.payload()})
+                    return
+                try:
+                    self.send(200, {"stopping": True})
+                finally:
+                    # shutdown 必须在 serve_forever 所在线程之外执行。
+                    threading.Thread(target=server.shutdown, daemon=True).start()
+                return
             if self.path in ("/api/agent/jobs", "/api/agent/cancel", "/api/conversations", "/api/canvas/connect", "/api/canvas/disconnect", "/api/canvas/complete"):
                 self.send(410, {'error':{'code':'LEGACY_CHAT_RETIRED','message':'Use the official DSH workbench conversation.'}})
                 return
@@ -121,14 +186,15 @@ def main():
                 self.send(404, {"error": {"code": "NOT_FOUND", "message": "No mutation endpoint exists"}})
                 return
             try:
-                if self.path == '/api/refresh':
-                    result = bridge.refresh()
-                else:
-                    length = int(self.headers.get('Content-Length', 0))
-                    if not 0 < length <= (35000 if self.path.startswith('/api/tx-tolerance/') else 4096):
-                        raise ValueError('Invalid body size')
-                    body = json.loads(self.rfile.read(length))
-                    result = tx_jobs.start(body) if self.path == '/api/tx-tolerance/start' else tx_jobs.cancel(body) if self.path == '/api/tx-tolerance/cancel' else bridge.save_model(body) if self.path == '/api/model/save' else bridge.probe(body.get('instance')) if self.path.endswith('/probe') else bridge.switch(body.get('candidateId'))
+                with lifecycle.mutation():
+                    if self.path == '/api/refresh':
+                        result = bridge.refresh()
+                    else:
+                        length = int(self.headers.get('Content-Length', 0))
+                        if not 0 < length <= (35000 if self.path.startswith('/api/tx-tolerance/') else 4096):
+                            raise ValueError('Invalid body size')
+                        body = json.loads(self.rfile.read(length))
+                        result = tx_jobs.start(body) if self.path == '/api/tx-tolerance/start' else tx_jobs.cancel(body) if self.path == '/api/tx-tolerance/cancel' else bridge.save_model(body) if self.path == '/api/model/save' else bridge.probe(body.get('instance')) if self.path.endswith('/probe') else bridge.switch(body.get('candidateId'))
                 self.send(200, result)
             except OpticsError as exc:
                 self.send(409, {"error": exc.payload()})
@@ -145,7 +211,10 @@ def main():
             bridge.refresh()
         except OpticsError as exc:
             print(f"Initial capture: {exc.code}; UI remains available for retry", flush=True)
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    finally:
+        server.server_close()
 
 
 if __name__ == "__main__":

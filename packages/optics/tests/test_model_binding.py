@@ -50,6 +50,22 @@ class BindingTests(unittest.TestCase):
             self.bridge.current()
         self.assertEqual(e.exception.code, 'STALE_SNAPSHOT')
 
+    def test_first_web_configuration_can_probe_without_an_expected_model(self):
+        self.bridge.config['expectedFile'] = None
+        self.assertTrue(self.probe())
+        self.assertIsNone(self.bridge.config['expectedFile'])
+        with self.assertRaises(OpticsError) as error:
+            self.bridge.refresh()
+        self.assertEqual(error.exception.code, 'MODEL_NOT_BOUND')
+
+    def test_legacy19_view_and_save_are_explicitly_read_only(self):
+        self.bridge.config['target'] = {'family': 'zemax19'}
+        self.assertTrue(self.bridge.view()['readOnly'])
+        self.assertFalse(self.bridge.view()['capabilities']['explicitSave'])
+        with self.assertRaises(OpticsError) as error:
+            self.bridge.save_model({'authorizeSave': True})
+        self.assertEqual(error.exception.code, 'LEGACY_READ_ONLY')
+
     def test_confirmation_captures_expected_candidate_and_persists(self):
         token = self.probe()
         with patch.object(self.bridge, '_worker', return_value=self.new) as worker:

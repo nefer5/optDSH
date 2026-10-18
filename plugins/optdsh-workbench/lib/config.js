@@ -15,6 +15,7 @@ export function workbenchRuntimeOptions(options={},env=process.env,profileContex
  }
  return {...options,
   home,
+  installRoot:options.installRoot||env.OPTDSH_INSTALL_ROOT,
   stateRoot:resolve(options.stateRoot||options.projectRoot||env.OPTDSH_STATE_ROOT||(home&&resolve(home,'state',profileContext?.name||'web'))||cwd),
   workspaceRoot:resolve(options.workspaceRoot||options.projectRoot||env.OPTDSH_WORKSPACE||cwd),
   editorUrl:options.editorUrl||connection.editorUrl||'http://127.0.0.1:4173'

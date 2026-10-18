@@ -53,6 +53,11 @@ export function apply(ctx,config={}){
   try{
    const raw=await request.text();requireValue(raw.length<=40000,'Request too large');const input=JSON.parse(raw);let value;
    if(input.action==='service-status')value=await service.status();
+   else if(input.action==='service-config')value=await service.configuration();
+   else if(input.action==='service-config-save'||input.action==='service-stop'){
+    requireValue(request.headers.get('Sec-Fetch-Site')!=='cross-site'&&(!request.headers.get('Origin')||request.headers.get('Origin')===new URL(request.url).origin),'拒绝跨站配置或停止光学服务');
+    value=input.action==='service-stop'?await service.stop():await service.saveConfiguration(Object.fromEntries(Object.entries(input).filter(([key])=>key!=='action')));
+   }
    else if(input.action==='service-logs')value=service.logs();
    else if(input.action==='service-start'){
     requireValue(request.headers.get('Sec-Fetch-Site')!=='cross-site'&&(!request.headers.get('Origin')||request.headers.get('Origin')===new URL(request.url).origin),'拒绝跨站启动光学服务');

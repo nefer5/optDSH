@@ -9,7 +9,7 @@
 
 安装与宿主必须由显式 target.installDir、target.family 和可选 target.year 选择。
 不从注册表、当前工作目录或其他安装版本猜测。2023+先核验实际宿主版本；
-Zemax18保留目标名称，但专用旧版桥尚未实现，连接前明确拒绝。
+Zemax18/19共用独立只读旧版桥，本类仅负责新版常规连接。
 
 与示例不同的两点：
 - 封装成 **context manager**：``standalone`` 退出时自动 ``CloseApplication``，
@@ -92,6 +92,9 @@ class OpticStudio:
             raise ZOSAPIError("Interactive Extension instance 必须是非负整数。")
 
         target = validate_target(target or json.loads(os.environ.get("OPTDSH_ZEMAX_TARGET", "null")))
+        if target['family'] in ('zemax18','zemax19','zemaxLegacy'):
+            from .domain import OpticsError
+            raise OpticsError('LEGACY_READ_ONLY', 'Zemax 19 only supports the isolated read-only probe/capture bridge; save and analysis are unavailable')
         self._lease = instance_lock(instance)
         self._lease.__enter__()
         self.mode = mode

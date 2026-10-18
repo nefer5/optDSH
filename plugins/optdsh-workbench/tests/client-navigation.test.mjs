@@ -15,3 +15,15 @@ test('deep link waits for catalog publication after an early refresh and opens o
  ids=['synthetic'];listener();await new Promise(r=>setTimeout(r,0));
  assert.deepEqual(opened,['synthetic']);assert.equal(removed,true);assert.deepEqual(errors,[]);
 });
+
+
+test('header entry uses the official themed button and external icon while retaining session new-tab navigation',()=>{
+ let plugin,entry,opened;const Button=()=>{},IconRightUpOutlineRegular=()=>{};
+ const sandbox={URLSearchParams,location:{hash:''},window:{open:(...args)=>opened=args,addEventListener(){},removeEventListener(){},__ModuleLoader__:{load:({factory})=>{plugin=factory(name=>name==='@deepseek-ai/dsh-client-ui-primitives'?{Button,IconRightUpOutlineRegular}:{createElement:(type,props,...children)=>({type,props,children})});}}}};
+ vm.runInNewContext(readFileSync(new URL('../lib/client.js',import.meta.url),'utf8'),sandbox);
+ plugin.apply({effect:fn=>fn(),slots:{inject:(_slot,fn)=>fn(),register:(options,component)=>{entry={options,component};}}});
+ const button=entry.component({sessionId:'session A'});
+ assert.equal(button.type,Button);assert.equal(button.props.variant,'ghost');assert.equal(button.props.size,'sm');assert.equal(button.props.style,undefined);assert.equal(button.props.href,undefined);
+ assert.equal(button.children[1].type,IconRightUpOutlineRegular);assert.equal(button.children[1].props['aria-hidden'],true);
+ button.props.onClick();assert.deepEqual(opened,['/api/optdsh-workbench/view?session=session%20A','_blank','noopener,noreferrer']);
+});

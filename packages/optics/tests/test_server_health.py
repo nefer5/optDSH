@@ -83,7 +83,8 @@ class ServiceHealthTests(unittest.TestCase):
                 health = request_json(access, "/api/health")
                 self.assertEqual(health, {"service": "optdsh-optics", "protocolVersion": 1,
                                          "pid": access["pid"], "workspace": str(workspace.resolve()),
-                                         "stateRoot": str(state.resolve()), "connected": False})
+                                         "stateRoot": str(state.resolve()), "connected": False,
+                                         "busy": False, "stopping": False})
             self.assertIsNone(request_json(access, "/api/snapshot")["snapshot"])
             self.assertFalse(list((state / "data/optics/captures").glob("*.json")))
             with self.assertRaises(HTTPError) as caught:

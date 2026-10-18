@@ -93,7 +93,7 @@ class Bridge:
                 self.candidates.pop(next(iter(self.candidates)))
             token = secrets.token_urlsafe(24)
             self.candidates[token] = {'model': raw, 'expires': now+300, 'config': deepcopy(self.config)}
-            if Path(raw['sourceFile']).resolve() != Path(self.config['expectedFile']).resolve():
+            if self.config.get('expectedFile') and Path(raw['sourceFile']).resolve() != Path(self.config['expectedFile']).resolve():
                 with self.state_lock:
                     self.last_error = {'code':'MODEL_CHANGED', 'message':'API当前模型与已绑定模型不同，请确认切换；保留旧快照'}
             return {'candidateId': token, 'candidate': raw, 'binding': self.binding(), 'expiresInSeconds': 300}
@@ -126,6 +126,8 @@ class Bridge:
         return value
 
     def save_model(self, request):
+        if self.config.get('target',{}).get('family') in ('zemax18','zemax19','zemaxLegacy'):
+            raise OpticsError('LEGACY_READ_ONLY', 'Zemax 18/19 当前只提供只读连接与采集，不支持保存')
         if not isinstance(request, dict) or request.get('authorizeSave') is not True:
             raise OpticsError('SAVE_NOT_AUTHORIZED', '点击保存按钮才授权写盘')
         request_id = request.get('requestId', '')
@@ -230,6 +232,8 @@ class Bridge:
                 raw = json.loads(Path(__file__).with_name("synthetic.json").read_text(encoding="utf-8"))
                 raw["capturedAt"] = datetime.now(timezone.utc).isoformat()
             elif self.config["backend"] == "zos-api":
+                if not config.get('expectedFile'):
+                    raise OpticsError('MODEL_NOT_BOUND', '请先探测并确认绑定模型，再刷新快照')
                 raw = self._worker(config)
             else:
                 raise OpticsError("INVALID_CONFIG", "Unknown backend; no silent demo fallback")
@@ -271,10 +275,11 @@ class Bridge:
             self.capture_lock.release()
 
     def view(self):
+        legacy = self.config.get('target',{}).get('family') in ('zemax18','zemax19','zemaxLegacy')
         with self.state_lock:
             return {"backend": self.config["backend"], "busy": self.capture_lock.locked(),
                     "snapshot": deepcopy(self.snapshot), "error": deepcopy(self.last_error),
-                    "events": deepcopy(self.events), "readOnly": False, "capabilities":{"queriesReadOnly":True,"explicitSave":True}, "binding": self.binding()}
+                    "events": deepcopy(self.events), "readOnly": legacy, "capabilities":{"queriesReadOnly":True,"explicitSave":not legacy}, "binding": self.binding()}
 
     def current(self):
         with self.state_lock:
