@@ -1,0 +1,165 @@
+{
+  "status": "stage-complete",
+  "productVersion": "0.2.0-dev.6",
+  "canvasVersion": "0.2.3",
+  "canvasPackage": "@nefer5/agent-canvas",
+  "canvasCommit": "8c328dae0a1c503b18af19bc1a4e6b74de5825f0",
+  "sourceCommit": "b31c70aa196044b1c60857f5afdc37334eda6855",
+  "localPublicationOnly": true,
+  "npmPublished": false,
+  "pushed": false,
+  "existingAndNewCases": [
+    {
+      "name": "new",
+      "home": "E:/Proj-2026-N06_optDSH-validation/canvas-dev4/new-home",
+      "installationRoot": "E:\\Proj-2026-N06_optDSH-validation\\canvas-dev4\\new-editor\\node_modules\\@nefer5\\agent-canvas",
+      "first": {
+        "status": "started",
+        "editorUrl": "http://127.0.0.1:65283",
+        "pid": 55356,
+        "version": "0.2.3",
+        "installationId": "56888fede592c7cb809d79ab"
+      },
+      "second": {
+        "status": "reused",
+        "editorUrl": "http://127.0.0.1:65283",
+        "version": "0.2.3"
+      },
+      "indexHttp": 200
+    },
+    {
+      "name": "existing",
+      "home": "E:/Proj-2026-N06_optDSH-validation/canvas-dev4/existing-home",
+      "installationRoot": "E:/Proj-2026-N05_AgentCanvas/release/AgentCanvas-0.2.3-win-x64/app",
+      "first": {
+        "status": "started",
+        "editorUrl": "http://127.0.0.1:65288",
+        "pid": 62368,
+        "version": "0.2.3",
+        "installationId": "cb35d6018141d22c0810f22b"
+      },
+      "second": {
+        "status": "reused",
+        "editorUrl": "http://127.0.0.1:65288",
+        "version": "0.2.3"
+      },
+      "indexHttp": 200
+    }
+  ],
+  "newInstallReceiptStatus": "configured-not-runtime-verified",
+  "installedRuntime": {
+    "status": "passed",
+    "platform": {
+      "core": "ready",
+      "components": [
+        {
+          "id": "canvas",
+          "status": "ready",
+          "scopeState": 2
+        }
+      ]
+    },
+    "version": {
+      "schemaVersion": 1,
+      "product": "optDSH",
+      "version": "0.2.0-dev.6",
+      "dshVersion": "0.2.1-rc.2",
+      "channel": "dev",
+      "buildMode": "package",
+      "buildId": "0.2.0-dev.6-2026-10-18T09-15-29-210Z-b31c70aa1960",
+      "builtAt": "2026-10-18T09:15:29.210Z",
+      "builtWithNode": "v26.12.0",
+      "sourceRevision": "b31c70aa196044b1c60857f5afdc37334eda6855",
+      "sourceDirty": false,
+      "runningNode": "v26.12.0"
+    },
+    "indexHttp": 200,
+    "canvasClientGraph": true,
+    "modelRequests": false,
+    "cache": "explicit reuse, not sandbox"
+  },
+  "degradedRuntime": {
+    "core": "ready",
+    "components": [
+      {
+        "id": "canvas",
+        "status": "unavailable",
+        "reason": "Editor readiness failed; reconnect Canvas or inspect its Home logs."
+      }
+    ]
+  },
+  "browser": {
+    "browser": "Tabbit",
+    "realIframeHandshake": true,
+    "workspace": "E:/Proj-2026-N06_2T2R-LiDAR",
+    "boardId": "board-70626c34cfd9a12ce5c4f0dfa367ddf1",
+    "savedRevision": 2,
+    "rectangle": {
+      "id": "rjzyJHKkpl4liYsvpw_ao",
+      "width": 220,
+      "height": 130
+    },
+    "sameAfterDshRestart": true,
+    "explicitSubmissions": 0
+  },
+  "study": {
+    "copiedFileAndSnapshotHashChecks": 206,
+    "allDestinationHashesMatch": true,
+    "opticsVersion": "0.2.1",
+    "publicSkillVersions": {
+      "optdsh-assembly-tolerance": "0.3.0",
+      "optdsh-rx-collection-efficiency": "0.3.0"
+    },
+    "studySkillVersion": "0.2.0",
+    "offlineTests": {
+      "suite": "packages/optics/tests",
+      "passed": 123
+    },
+    "portability": [
+      "preflight.py missing config reported",
+      "baseline.py synthetic inventory completed",
+      "run_tx_pilot.py plan completed",
+      "scan.py plan completed"
+    ],
+    "runtimeDependencyOnOldPlatformRoot": false,
+    "historicalAbsoluteReferencesPreserved": true,
+    "liveZemaxOrModelCalls": false,
+    "sourcesDeleted": false
+  },
+  "publicSkills": {
+    "portabilityChecks": 4,
+    "oldPlatformRootRuntimeDependency": false
+  },
+  "tests": {
+    "fullRegression": {
+      "plugins": 147,
+      "installation": 66,
+      "ppt": 11,
+      "optics": 123,
+      "distribution": 37,
+      "architectureKit": 56
+    },
+    "finalTargeted": 19,
+    "canvasUi": 182,
+    "canvasServer": 181
+  },
+  "preview": {
+    "home": "manual-preview/source-home under validation root",
+    "editor": "independent local package at manual-preview/canvas-editor/0.2.3",
+    "components": [
+      "core",
+      "canvas"
+    ],
+    "old4173Untouched": true,
+    "workspace": "E:/Proj-2026-N06_2T2R-LiDAR",
+    "noGlobalPathOrAgentsChanges": true
+  },
+  "limitations": [
+    "No real model calls or live Zemax",
+    "No sandbox/company or full plugin UI regression",
+    "Unified independent Canvas document protocol remains pending",
+    "Historical reports keep original bytes/paths; source data retained",
+    "Explicit caches reused; not a cold network test"
+  ],
+  "cleanup": "temporary owned DSH/editor processes stopped; daily preview retained"
+}

@@ -41,3 +41,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/runtime/setup-ca
 本机2T2R课题入口E:/Proj-2026-N06_2T2R-LiDAR/README.md；206份原件/历史设计快照按哈希复制，原资料不删除。商业模型和联合审计原始聊天未迁；历史报告旧路径仅作来源证据，不是新运行依赖。研究参数尚需用户确认，旧modelId/revision不可直接用于新环境执行。
 
 平台公共Skill不内置2T2R假设，不依赖旧平台目录；课题自己的Skill承接领域背景与特定采用约定。公共执行器真实算法限制如实声明。历史run保持原字节，不能批量替换路径。更广范围的公共领域资源拆包、协议统一和真实业务仍待验收。
+
+## 本机验证结果
+
+最终交付测试版本dev.6，AgentCanvas0.2.3。已有/全新安装、Windows5.1首次后台启动和复用、真实iframe握手、外部2T2R绘图保存/DSH重启回读、异常时core降级均通过；独立发行包运行身份匹配。新装安装器路径在dev.5实测，后台拉起修复后的dev.6复用安装及运行通过。原临时case已停止；日常预览保留core+canvas，root启动/重启CMD沿用，网页选择已登记2T2R工作区再打开画板。证据见[evidence/canvas-installation-dev6.json](evidence/canvas-installation-dev6.json)。
+
+完整回归通过后又完成19项最终定向；一次Windows临时文件EPERM重跑通过，保留原日志；不等于真实模型/光学分析/公司环境验收。

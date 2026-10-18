@@ -59,3 +59,5 @@ manual-preview中的installed-home/state是此前独立安装版验证，source-
 0.2.0-dev.2追加修复：dshmarket自行调用pnpm，未使用官方plugin-manager的pnpmCommand，仍命中全局失效Corepack入口。Host启动时仅给子进程优先注入产品node_modules/.bin及所选Node目录；市场status.pnpm已从false变true，用户/系统PATH不变，PowerShell7和内置5.1回归均通过。旧0.2.0-dev.1测试包保持不覆盖。
 
 0.2.0-dev.3追加：安装器支持-PluginPreset none（默认）/market/recommended；公共推荐清单固定版本与SHA256随包，8项经独立新Home联网安装、active与客户端200验证，市场pnpm=true。代码0a69ac4；测试包releases/0.2.0-dev.3，验证根validation/0.2.0-dev.3-recommended（测试Host已停）。保留用户已有版本/开关，不复制账号/会话；图形向导仍待做。完整回归通过，缓存复用/无真实模型/无沙箱公司实测；不得覆盖已有同版本测试包。证据evidence/recommended-plugins-dev3.json。
+
+Canvas续轮最终dev.6：本地代码b31c70a，AgentCanvas独立仓库8c328da改名@nefer5/agent-canvas0.2.3，不公开npm/不推送。新增已有/本地包新装与协议身份探测，Home连接配置，按需隐藏启动；修复PS5传参和控制台继承。独立包安装/运行身份、iframe/绘图/重启回读和core降级通过。2T2R位于外部课题目录，206份原件快照校验，公共装调/Rx Skill0.3.0去课题绑定，光学0.2.1。日常预览rootCMD仍可用，Home/模型/插件保留，canvas来自manual-preview/canvas-editor独立包，已登记外部课题。市场重启导致PID记录滞后已按实际命令/launch记录校准，旧平台/4173/全局.agents未动。历史报告不改写；真实Agent提交/建议/光学及通用文档协议统一仍待验。完整证据见canvas-installation-dev6.json。
