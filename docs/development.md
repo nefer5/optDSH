@@ -40,4 +40,57 @@ pwsh scripts/setup.ps1
 
 完整回归包括独立PPT模块，该模块有自己的依赖锁；需另行在packages/ppt-slidewise执行npm ci。根npm ci只安装平台工作区，不应误认为已安装所有可选包。纯平台安装不要求PPT。
 
-源码根不再跟踪或创建STUDYS；真实课题外置，示例只归包examples/tests，详见[课题与源码边界](workspaces.md)。[Agent资源共享提案](agent-resource-layout.md)仍处讨论阶段，没有迁移全局.agents或强制安装共享资源。
+源码根不再跟踪或创建STUDYS；真实课题外置，示例只归包examples/tests，详见[课题与源码边界](workspaces.md)。[Agent资源共享设计](agent-resource-layout.md)已获用户确认；公共基线和可选共享的完整实现仍待做，当前不改写本机全局.agents。
+
+## 沙箱未启用时，如何亲自验证新版
+
+分目录验证能发现漏打包、缺依赖、工作目录写错和启动故障；仍共享本机操作系统、注册表、网络与已装软件，因此不能证明公司新机必定可用。
+
+| 验证层 | 入口 | 主要确认 |
+|---|---|---|
+| 源码验证 | 新开发目录的启动器 | 最新源码能否启动、改动是否正确 |
+| 安装包验证 | 002 case的app启动器 | 脱离源码后是否漏文件/依赖；自动验收会停止自己的服务 |
+| 人工业务验收 | 独立手动预览home和合成workspace | 浏览器操作、模型配置、会话和插件实际交互 |
+| 沙箱/公司环境 | 后续单独安排 | 干净Windows、权限/网络/许可及真实宿主差异 |
+
+### 首先启动源码版（当前推荐）
+
+打开PowerShell，执行以下命令。本机默认Node26不在当前要求范围，下面只为该终端选择已存在的Node24，不改用户PATH；.runtime/development.json是本机忽略的开发记录。
+
+```powershell
+Set-Location E:/Proj-2026-N06_optDSH-dev
+$nodeExe = (Get-Content .runtime/development.json -Raw | ConvertFrom-Json).nodeExecutable
+$env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
+./启动DSH.cmd -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/source-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/source-state -Port 3380 -Components core
+```
+
+预览目录已由本轮检查准备，workspace只有合成/测试内容，未复制真实课题。启动器会按系统默认浏览器打开认证入口；不要仅手打localhost地址代替首次认证。主入口为http://127.0.0.1:3380，认证链接和令牌不粘贴到报告或聊天。
+
+该命令启动纯平台。新home内没有复制旧模型配置、密钥、市场插件和历史会话，需要在新版界面配置自己的模型后再手动测试对话；本轮未代发真实模型请求。重新运行同一命令可打开已启动且身份匹配的服务。关闭浏览器不等于停止后台服务。
+
+停止本次源码预览：
+
+```powershell
+./scripts/runtime/stop-dsh.ps1 -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/source-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/source-state -Port 3380
+```
+
+切换研究目录前先结束预览任务并停服务，再修改-Workspace重启；不要复用同一个运行实例的旧workspace状态。当前Forms HTTP还不能按所有会话cwd自动切换。
+
+### 再对比安装包版
+
+保留上面终端的Node24选择，在源码根调用已验证的002安装目录：
+
+```powershell
+& E:/Proj-2026-N06_optDSH-validation/20261018-workspace-full-002/app/scripts/runtime/open-dsh.ps1 -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/installed-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/installed-state -Port 3382 -Components core
+```
+
+安装版固定于提交1e273cb，不会随源码改动自动更新；新的改动须重新打包、在新的case安装。这里只借用已安装app，人工数据写入manual-preview，不改写自动验收case的home/workspace证据。停止时调用同一app下的stop-dsh.ps1并传相同Home/Workspace/StateRoot/Port。
+
+### 建议依次检查什么
+
+1. 纯平台：页面加载、创建会话、刷新后仍能读回；手动配置模型后测试一次简单对话和合成文件读取。
+2. 课题归属：在合成workspace写一个测试文件，确认它落在所选目录；之后换另一个测试目录重复检查。
+3. 插件：停止纯平台后在源码启动命令中把-Components改为core,workbench,canvas,forms；分别检查入口和故障提示。组件ready只证明加载，不等于完整业务通过。
+4. 画板仍需N05编辑器服务，光学工作台需独立光学服务；当前没有自动启动它们，也不因页面打开就宣称Zemax/画板编辑通过。缺少服务时先检查明确的连接提示，真实Zemax另行授权验收。
+
+本轮机器检查只启动并停止两种纯平台预览，核对认证HTTP200；没有打开浏览器、配置模型、调用Zemax或改写用户全局.agents。离线完整回归和四组件安装证据见[迁移记录](refactor/2026-10-18/worktree-transition.md)。

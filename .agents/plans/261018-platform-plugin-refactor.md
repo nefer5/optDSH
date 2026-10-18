@@ -289,4 +289,13 @@ W4附加真实缺口：boards.js原子替换新增replaceBoardFile，仅重试�
 - T1/T6 run_bundle以显式workspace输出，默认workspace/runs；可选marker就近，旧布局仅兼容。历史导入必需--workspace、默认dry-run，输出/链接越界拒绝。
 - 后续补查三条业务Skill脚本的workspace/state注入，不迁移.agents目录；DSH_HOME与.agents职责的新增讨论不视为目录迁移授权。
 
-用户新增Agent资源共享目标及推荐双层方案记录于docs/agent-resource-layout.md；此项先讨论，不将安装导出或个人Agent配置合并当作已经实现。当前继续已授权的workspace外置收尾。
+用户已确认Q8：包内完整公共能力＋可选.agents共享＋宿主适配，决定见docs/refactor/2026-10-18/decisions.md。新开发目录可继续实现，禁止改写本机全局.agents；不将设计确认当作安装导出已完成。
+
+### Q8后续工作（授权范围已明确，尚待实现）
+
+- [ ] plugins/optdsh-experts：公共基线与包内资源白名单；排除私人偏好/截图/凭据，测试不依赖真实中心。
+- [ ] plugins/optdsh-experts：复用已有宿主适配逻辑，公共定义与DSH/Codex/Claude/OpenCode角色格式分离；单宿主失败不阻断平台。
+- [ ] packages/optdsh-bundle与packaging/windows：默认包内使用，可选共享的计划/应用/回执；所有测试用户根注入临时目录，绝不写本机全局.agents。
+- [ ] 冲突及升级：已存在、用户改动、更新、卸载、未知宿主、共享根不可用均有拒绝/保留路径；最终真实宿主验收单列。
+
+本轮先复用已有启动器完成手动预览路径验证，使用外部合成workspace和独立home/state；不新增产品入口，不执行真实模型或Zemax。详见docs/development.md。
