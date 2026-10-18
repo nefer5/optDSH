@@ -44,7 +44,19 @@
     "sha256": "d2c5ee45e0031974216c4c5583536c147efcfb944b5f1fbcc3a279d4d3d6ecba"
   },
   "credentialsPatternScan": "no high-entropy token/bearer/sk patterns found in tracked text and archived text; not a guarantee about all historical commits",
-  "packageVerification": "pending clean source commit and immutable build; final result is recorded after build",
+  "packageVerification": {
+    "version": "0.2.0-dev.17",
+    "buildId": "0.2.0-dev.17-2026-10-18T13-40-41-628Z-33a7fe40cf10",
+    "sourceRevision": "33a7fe40cf1016a56a097cdf477a9d5bc0d3b415",
+    "sourceDirty": false,
+    "components": 6,
+    "workbenchVersion": "0.13.4",
+    "artifactHashes": "passed: 6 npm packages, optics wheel, independent editor, thin EXE and build identity",
+    "architectureDocumentation": "current entry hash and all 3 diagram/source pairs passed",
+    "historyIncluded": false,
+    "publication": "local-only test package; no official Release/npm publication",
+    "scope": "Build and document integrity; not a new OS-isolated or company deployment test"
+  },
   "pushAuthorization": "user authorized normal push of codex/platform-dev only; no force/main merge/public npm/official Release",
   "sourceChecks": {
     "fullNpmTest": "passed",
@@ -64,5 +76,14 @@
     "directoriesAndPrioritiesChecked": true,
     "horizontalOverflow": false,
     "visualReview": "actual screenshots and rendered layout checked"
+  },
+  "packageBrowserCheck": {
+    "entryOpened": true,
+    "diagramsLoaded": [
+      "runtime",
+      "source",
+      "layout"
+    ],
+    "sourcePageRetained": true
   }
 }
