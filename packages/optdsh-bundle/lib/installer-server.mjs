@@ -52,7 +52,7 @@ export async function createInstaller({releaseRoot,port=0,openBrowser=false,runC
  const ps=join(process.env.SystemRoot||'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe');
  const native=runCommand||((args,onData)=>new Promise((fulfill,reject)=>{
   const child=spawn(ps,args,{windowsHide:true,stdio:['ignore','pipe','pipe']});
-  for(const stream of [child.stdout,child.stderr])stream.setEncoding('utf8').on('data',text=>onData(text.trim()));
+  for(const stream of [child.stdout,child.stderr])stream.setEncoding('utf8').on('data',text=>onData(text));
   child.on('error',reject);child.on('exit',code=>code===0?fulfill():reject(Error('安装器退出码 '+code+'，请展开诊断日志查看失败阶段。')));
  }));
  function command(plan,dry){
@@ -84,7 +84,9 @@ export async function createInstaller({releaseRoot,port=0,openBrowser=false,runC
      const diagnostics=[];
      try{await native(command(plan,true),line=>diagnostics.push(line));}
      catch(error){throw Error('安装预检未通过：'+diagnostics.join('\n').slice(-4000)+'\n'+error.message);}
-     approved=JSON.stringify(plan);return json({ok:true,plan,node:{available:true,version:process.version},checks:[{label:'Node.js',status:'passed',detail:process.version},{label:'目录与组件',status:'passed',detail:'路径分离，发布包哈希通过'},{label:'安装方式',status:'passed',detail:'复用官方Profile安装；不修改全局.agents'}]});
+     let ports;try{ports=JSON.parse(diagnostics.join('')).ports;}catch{}
+     if(manifest.portPlanner&&!ports)throw Error('无法解析端口检查结果，请重新检查完整安装包。');
+     approved=JSON.stringify(plan);return json({ok:true,plan,ports,node:{available:true,version:process.version},checks:[{label:'Node.js',status:'passed',detail:process.version},{label:'目录与组件',status:'passed',detail:'路径分离，发布包哈希通过'},{label:'安装方式',status:'passed',detail:'复用官方Profile安装；不修改全局.agents'}]});
     }
     if(path==='/api/install'&&req.method==='POST'){
      if(status.state==='installing')return json({error:'安装已在进行中，不会重复启动。'},409);

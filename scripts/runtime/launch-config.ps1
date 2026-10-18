@@ -32,7 +32,10 @@ function Resolve-OptDshLaunch {
     $selected = if ($Components) { $Components } elseif ($env:OPTDSH_COMPONENTS) { $env:OPTDSH_COMPONENTS } elseif ($settings.components) { $settings.components } else { @('core') }
     $selected = @($selected | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)
     if (-not $selected.Count -or @($selected | Where-Object { $_ -notmatch '^[a-z][a-z0-9-]*$' }).Count) { throw 'Invalid component selection.' }
-    $resolvedPort = if ($Port) { $Port } elseif ($env:OPTDSH_PORT) { [int]$env:OPTDSH_PORT } elseif ($settings.port) { [int]$settings.port } else { 3080 }
+    $portFile=Join-Path $resolvedHome 'config/ports.json'
+    $portMap=$null
+    if(Test-Path -LiteralPath $portFile){$portMap=Get-Content -LiteralPath $portFile -Raw -Encoding UTF8|ConvertFrom-Json}
+    $resolvedPort = if ($Port) { $Port } elseif ($env:OPTDSH_PORT) { [int]$env:OPTDSH_PORT } elseif ($settings.port) { [int]$settings.port } elseif ($portMap.web.port) { [int]$portMap.web.port } else { 3080 }
     if ($resolvedPort -lt 1024 -or $resolvedPort -gt 65535) { throw 'Port must be between 1024 and 65535.' }
     if ($resolvedState -eq $InstallRoot -or $resolvedHome -eq $InstallRoot) { throw 'Home/state cannot equal the installation root.' }
     foreach ($root in @($resolvedHome,$resolvedState)) { if ($root.TrimEnd([IO.Path]::DirectorySeparatorChar) -eq [IO.Path]::GetPathRoot($root).TrimEnd([IO.Path]::DirectorySeparatorChar)) { throw 'Home/state must be dedicated directories, not a filesystem root.' } }

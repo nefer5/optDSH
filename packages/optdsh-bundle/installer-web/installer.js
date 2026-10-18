@@ -14,7 +14,7 @@
     const response = await fetch(path, {method: body === undefined ? 'GET' : 'POST', headers: {'Content-Type':'application/json', 'X-Installer-Token':token}, ...(body === undefined ? {} : {body:JSON.stringify(body)})});
     let data;
     try { data = await response.json(); } catch { throw new Error(`安装服务返回了无效响应（${response.status}）。`); }
-    if (!response.ok || data.error) throw new Error(typeof data.error === 'string' ? data.error : data.error?.message || `请求失败（${response.status}）。`);
+    if (!response.ok || (data.error && !data.state)) throw new Error(typeof data.error === 'string' ? data.error : data.error?.message || `请求失败（${response.status}）。`);
     return data;
   }
   function notice(message) { $('notice').textContent = message || ''; $('notice').hidden = !message; if(message)requestAnimationFrame(()=>$('notice').scrollIntoView({block:'center'})); }
@@ -26,6 +26,13 @@
   function entries(node, pairs) { node.replaceChildren(); for (const [label, value] of pairs) { const dt=document.createElement('dt'), dd=document.createElement('dd');dt.textContent=label;dd.textContent=value || '未设置';node.append(dt,dd); } }
   function pairs() { const d=data();return [['程序',d.installRoot],['资料 Home',d.home],['首次课题',d.workspace],['组件', d.components.map(id=>info?.components?.find(c=>c.id===id)?.label||id).join('、') || '平台核心']]; }
   function summary(){ entries($('summary'),pairs()); }
+  function ports(node,values) {
+    node.replaceChildren();if(!values)return;
+    const title=document.createElement('h2');title.textContent='服务地址与端口';node.append(title);
+    const names={web:'optDSH Web',canvas:'独立 AgentCanvas',optics:'光学后台',ppt:'PPT 服务'};
+    for(const [key,value] of Object.entries(values)){if(!value)continue;const row=document.createElement('div');row.className='port-row';const name=document.createElement('strong'),address=document.createElement('code'),state=document.createElement('span');name.textContent=names[key]||key;address.textContent=value.url||`端口 ${value.port}`;state.textContent=value.status==='verified-compatible-running'?'已核验复用运行服务':value.status==='configured-not-started'?'已配置未启动':value.status||'计划配置，尚未验证运行';row.append(name,address,state);if(value.conflictAvoided){const conflict=document.createElement('small');conflict.textContent=`原端口${value.requestedPort?' '+value.requestedPort:''}占用，已改选 ${value.port}`;row.append(conflict);}node.append(row);}
+    const note=document.createElement('p');note.className='field-note';note.textContent='参数编辑器、专家、画板桥和工作台界面共享 Web 端口；配置地址不等于服务已启动。';node.append(note);
+  }
   function restoreSelection(selection) {
     if(!selection)return;
     for(const [id,key] of [['install-root','installRoot'],['home','home'],['workspace','workspace'],['canvas-root','canvasRoot'],['canvas-install-root','canvasInstallRoot'],['canvas-port','canvasPort'],['plugin-preset','pluginPreset']]) if(selection[key]!==undefined)$(id).value=selection[key];
@@ -44,10 +51,10 @@
     summary();
   }
   function checkRow(label,detail,ok){const row=document.createElement('div');row.className='check-row'+(ok?'':' failed');const state=document.createElement('span');state.className='check-status';state.textContent=ok?'✓ 通过':'待处理';const detailBox=document.createElement('div'),title=document.createElement('strong'),text=document.createElement('p');title.textContent=label;text.textContent=detail;detailBox.append(title,text);row.append(state,detailBox);$('checks').append(row);}
-  function checks(result){$('checks').replaceChildren();const node=result.node||info.node||{};checkRow('Node.js 运行环境',node.available===false?'未找到可用 Node.js。请安装 Node.js 24 或以上版本，再重新检查。':`${node.version||'已检测'}${node.path?' · '+node.path:''}`,node.available!==false);checkRow('安装计划','程序、资料、课题路径与所选组件已通过安装器预检。',true);}
+  function checks(result){$('checks').replaceChildren();const node=result.node||info.node||{};checkRow('Node.js 运行环境',node.available===false?'未找到可用 Node.js。请安装 Node.js 24 或以上版本，再重新检查。':`${node.version||'已检测'}${node.path?' · '+node.path:''}`,node.available!==false);checkRow('安装计划','程序、资料、课题路径与所选组件已通过安装器预检。',true);ports($('check-ports'),result.ports||result.plan?.ports);}
   function logStatus(status){lastStatus=status;$('phase').textContent=status.phase||'正在执行安装';$('logs').textContent=(status.log||[]).join('\n');$('log-count').textContent=status.log?.length?`（${status.log.length} 条）`:'';if($('log-details').open)$('logs').scrollTop=$('logs').scrollHeight;}
   function stopPoll(){if(timer)clearTimeout(timer);timer=undefined;}
-  async function poll(){stopPoll();try{const status=await api('/api/status');restoreSelection(status.selection);logStatus(status);if(status.state==='succeeded'){step=4;busy=false;entries($('completion'),pairs());render();notice('');return;}if(status.state==='failed'){busy=false;step=3;render();$('phase').textContent='安装未完成';$('phase-description').textContent='已保留诊断信息。请查看原因，返回修改后重新检查。';$('spinner').hidden=true;$('progress-bar').hidden=true;$('log-details').open=true;notice(status.error||'安装失败，请查看详细日志。');$('primary').textContent='返回修改并重试';$('primary').disabled=false;return;}if(status.state==='installing'){step=3;render();timer=setTimeout(poll,1000);}}catch(error){notice(`暂时无法读取安装进度：${error.message}\n安装可能仍在进行，请保持此页打开，正在重试连接。`);timer=setTimeout(poll,2000);}}
+  async function poll(){stopPoll();try{const status=await api('/api/status');restoreSelection(status.selection);logStatus(status);if(status.state==='succeeded'){step=4;busy=false;entries($('completion'),pairs());ports($('completed-ports'),status.receipt?.ports);$('ports-record').hidden=!status.receipt?.ports;render();notice('');return;}if(status.state==='failed'){busy=false;step=3;render();$('phase').textContent='安装未完成';$('phase-description').textContent='已保留诊断信息。请查看原因，返回修改后重新检查。';$('spinner').hidden=true;$('progress-bar').hidden=true;$('log-details').open=true;notice(status.error||'安装失败，请查看详细日志。');$('primary').textContent='返回修改并重试';$('primary').disabled=false;return;}if(status.state==='installing'){step=3;render();timer=setTimeout(poll,1000);}}catch(error){notice(`暂时无法读取安装进度：${error.message}\n安装可能仍在进行，请保持此页打开，正在重试连接。`);timer=setTimeout(poll,2000);}}
   $('setup-form').addEventListener('submit',event=>event.preventDefault());
   $('setup-form').addEventListener('input',()=>{plan=undefined;summary();});
   $('install-canvas').addEventListener('change',()=>{$('canvas-location').hidden=!$('install-canvas').checked;});
@@ -55,7 +62,7 @@
   $('primary').addEventListener('click',async()=>{
     notice('');if(busy)return;
     if(step===0){if(!$('setup-form').reportValidity())return;busy=true;render();try{plan=await api('/api/plan',data());checks(plan);step=1;}catch(error){notice(error.message);}finally{busy=false;render();}return;}
-    if(step===1){step=2;entries($('review'),pairs());render();return;}
+    if(step===1){step=2;entries($('review'),pairs());ports($('review-ports'),plan?.ports||plan?.plan?.ports);render();return;}
     if(step===2){if(!plan){step=0;render();notice('安装选项已变化，请重新检查环境。');return;}busy=true;render();try{await api('/api/install',data());step=3;$('spinner').hidden=false;$('progress-bar').hidden=false;render();poll();}catch(error){busy=false;notice(error.message);render();}return;}
     if(step===3&&lastStatus?.state==='failed'){step=0;plan=undefined;render();return;}
     if(step===4){busy=true;render();try{await api('/api/open',{action:'launch'});$('action-note').textContent='已发送启动请求，请查看新打开的 optDSH。';}catch(error){notice(error.message);}finally{busy=false;$('primary').disabled=false;$('primary').textContent='启动 optDSH';}}

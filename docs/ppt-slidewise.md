@@ -14,7 +14,7 @@
 
 Skill内`references/content-planning.md`给出具体流程和正反例，`assets/planning-template.md`为Agent内部工作稿。复杂任务保存planning.md，简单任务可留在聊天中。当前为模型行为指引，CLI未实现机器强制的策划状态门禁；不能仅因输出了模板字段就声称论证正确。
 
-文稿事实源是`data/ppt-slidewise/<id>/document.json`，不是浏览器localStorage。保存校验revision并保留history；过期保存返回冲突。首版保留历史，不自动清理用户稿件。全局3303演示与本项目3314编辑器各自独立。
+文稿事实源是`data/ppt-slidewise/<id>/document.json`，不是浏览器localStorage。保存校验revision并保留history；过期保存返回冲突。首版保留历史，不自动清理用户稿件。全局3303演示与产品编辑器各自独立；3314是首选，安装版实际端口见PORTS.md和Home/config/ports.json。稿件按当前工作课题归属。
 
 首次准备：在`packages/ppt-slidewise`运行`npm ci`与`npm run build`。CLI的create/open/export会启动本地服务；无开机自启。headless导出目前使用Microsoft Edge（Playwright），迁移目标需准备同等浏览器。依赖以package-lock.json锁定，不打包node_modules。
 

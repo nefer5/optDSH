@@ -2,9 +2,11 @@
 
 本轮开发分支：`codex/platform-dev`。安装包不携带 Node、Python 或 Zemax。Node 24+ 是纯平台前置；光学能力另需 Python 3.12+、依赖和独立安装的 Zemax/许可证。未提供离线完整依赖包。
 
-## 图形安装入口（dev.21）
+## 普通用户安装入口（dev.24）
 
-解压完整本地发行包后，双击`安装optDSH.exe`（或备用`安装optDSH.cmd`）。向导在系统默认浏览器打开，分为位置/组件、环境检查、确认、进度和完成五步；复用下方CLI安装器，不另建安装事实源。缺少Node24+时明确提示先安装，不自动安装系统依赖。
+解压用户安装包后，双击`安装optDSH.exe`即可，无需输入命令。顶层只有安装EXE、`使用说明.txt`和配套`_support/`资源目录；保持三者在一起，不必进入资源目录操作。向导在系统默认浏览器打开，分为位置/组件、环境检查、确认、进度和完成五步；复用下方CLI安装器，不另建安装事实源。缺少Node24+时明确提示先安装，不自动安装系统依赖。
+
+EXE是使用Windows内置.NET与PowerShell5.1的薄启动器；本地向导随后用Node运行安装后端。安装器会联网下载声明依赖，当前并非自带完整运行环境的单文件离线安装包。开发用原始release目录含组件、脚本和验证材料，与上述用户包分开保存。
 
 图形向导建议程序目录`%LOCALAPPDATA%/Programs/optDSH/<版本>`，资料默认`~/.optdsh`，首次课题可改为已有工作目录。程序必须放全新位置；升级先并排安装并保留原Home。为独立人工验收，建议使用新的测试Home，不复用正在写入的现役Home。
 
@@ -15,6 +17,8 @@
 ## 本地产物与安装
 
 在开发仓库运行 `npm run release:local -- <新的输出目录>`，生成本地tarball、SHA256清单、运行脚本与离线架构材料。许可证未确定，产物不代表公开发布。
+
+构建者再运行`node scripts/maintenance/package-user-release.mjs <原始release目录> <新的用户包目录>`整理用户入口；此命令只供开发打包，普通用户不执行。下方命令用于开发/排障，用户正常安装使用图形向导。
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging/windows/install.ps1 -ReleaseRoot <发布目录> -InstallRoot <新的程序目录> -Home <独立资料目录> -Workspace <课题目录> -Components core -DryRun
@@ -32,7 +36,21 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 
 开发源码与安装版分别管理依赖和Profile；源码修改不会自动升级已安装的插件。隔离验收与日常实例分别记录。
 
-卸载脚本默认预览，只接受带安装回执的程序根并保留home/workspace。实际回收使用safe-delete；目标机若未安装该技能，脚本拒绝并保留程序，不作永久删除。
+## 卸载与永久保留的数据（dev.24）
+
+安装目录中的`卸载optDSH.exe`打开路径选择向导（备用CMD）。主程序、已安装的自有Profile插件、运行日志分别可选；默认仅选主程序。界面先展示实际路径与共用Profile影响，再最终确认。若Node已被移除，提供原生确认的仅主程序卸载后备入口。
+
+**课题目录永远不在卸载范围，也没有删除选项。** Home配置/账号/会话、课题模型/画板/运行结果、全局.agents、独立AgentCanvas均保留。未勾选插件继续保留在Home/Profile；勾选插件只通过官方管理器移除，可能影响共用该Profile的其他安装。日志选项只回收明确的服务日志目录。
+
+执行器独立核验安装回执与全部已登记课题路径；目录重叠或程序根存在未登记用户文件时拒绝整目录回收。确认后只停止能够核验属于本安装的Host，不停止其他实例。回收调用随包safe-delete脚本，目标机无需另装全局Skill；回收映射留在同盘`.safe-delete-trash`，卸载回执在Home/.runtime/uninstall，用户数据不永久删除。
+
+CLI默认预览：`powershell.exe -File packaging/windows/uninstall.ps1 -InstallRoot <程序目录>`；明确`-Apply -Items program,logs -StopRunning`才处理所选项。插件项为`plugin:canvas/workbench/forms/experts`中的具体一个或多个，不能传入任意删除路径。
+
+## 端口检查与安装记录
+
+首选端口为Web3080、独立Canvas4173、光学HTTP3081、PPT3314。安装前探测，安装过程中再次检查并自动避开冲突；不停止占用者。同一已核验Canvas安装的服务可以复用，其他安装或未知服务不能接管。正在使用的Home拒绝并行安装，验证时应选独立Home。
+
+最终分配保存于程序`PORTS.md`、Home/config/ports.json和installation-receipt.json；Forms、Experts、画板桥及工作台界面共享Web端口。向导/卸载页面自身使用操作系统分配的临时端口，不是常驻模块。端口表区分已配置待启动与已核验复用；启动时仍做实际身份/占用检查，不把预检当作长期占用保证。
 
 ## 验收状态
 

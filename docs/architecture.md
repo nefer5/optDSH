@@ -1,6 +1,6 @@
 # 当前架构与目录
 
-当前产品开发版 **0.2.0-dev.23**；官方DSH固定 **0.2.1-rc.2**。已新增Forms原生YAML编辑器、画板共享右栏与统一安装。四视图已按dev.21产品资源、官方专家与图形安装实现更新，各图源码版本见图源JSON。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
+当前产品开发版 **0.2.0-dev.24**；官方DSH固定 **0.2.1-rc.2**。已新增Forms原生YAML编辑器、画板共享右栏与统一安装。四视图已按dev.21产品资源、官方专家与图形安装实现更新，各图源码版本见图源JSON。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
 ## 图怎么看
 
@@ -122,6 +122,21 @@ optDSH源码/
 已实现产品Skills随包、官方专家装配及本地安装向导；本轮运行验收详情见[资源与安装验证](verification/product-resources-dev21.md)。可选跨宿主共享导出、用户修改冲突/升级回执、完整升级恢复矩阵、Sandbox/公司新机和正式公开发布仍是后续项。专家Preset包含固定官方Standard组合快照，升级DSH时需重新生成并验证，不能假定自动继承未来Standard变更。
 
 当前源码仅用于开发，不再要求用户复制源码根的`.agents`来获得产品能力。详细资源边界见[资源布局](agent-resource-layout.md)。源码证据：`packages/optdsh-bundle/lib/product-skills.mjs`、`plugins/optdsh-experts/cordis.patch.yml`、`plugins/optdsh-experts/lib/{index,core}.js`、`packaging/windows/{install,install-gui}.ps1`。
+
+## 安装端口与卸载边界
+
+| 模块 | 首选端口 | 实际配置与共享关系 |
+|---|---|---|
+| 官方DSH Web | 3080 | 安装探测后自动避让；Launcher与运行入口读最终配置 |
+| 独立AgentCanvas | 4173 | 未选组件不分配；仅同一兼容安装可复用，其他服务占用则另选 |
+| 光学HTTP服务 | 3081 | 选工作台时预分配；配置端口不连接Zemax，实际启动仍需Python及配置 |
+| PPT服务 | 3314 | 按安装配置运行，健康信息校验数据归属，不误复用其他课题 |
+| Forms、Experts、桥和工作台界面 | 共用Web | 无独立TCP端口；MCP stdio也不分配TCP端口 |
+| 安装/卸载向导 | 临时随机端口 | 仅本机浏览器会话，区别于产品常驻服务 |
+
+安装器记录实际选择到PORTS.md、Home/config/ports.json与安装回执；预检/配置/运行证据分开。程序、Profile和状态目录各自分离，可并排测试，但不是沙盒隔离。默认不写全局PATH或.agents，不允许安装时复用正在写入的Home。
+
+卸载向导列出主程序、自有Profile插件与日志的实际路径，用户选择后核验执行。课题没有删除选项，且所有登记课题路径与回收范围重叠时拒绝操作。Home会话/配置、模型/画板/结果、全局.agents及独立Canvas保留；随包safe-delete提供可恢复回收，执行器移到临时目录后卸载自身，避免文件锁。详情见[安装卸载说明](installation/README.md)。
 
 ## 生命周期与验证
 

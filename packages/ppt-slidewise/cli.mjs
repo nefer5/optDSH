@@ -1,13 +1,15 @@
+import {PPT_PORT,PPT_ORIGIN} from './ports.mjs';
 import fs from 'node:fs';import path from 'node:path';import {spawn} from 'node:child_process';import YAML from 'yaml';
-import {fromPlan,validate} from './model.mjs';import {read,save,root,revision,cachedExport,setStage} from './store.mjs';
+import {fromPlan,validate} from './model.mjs';import {read,save,root,data,revision,cachedExport,setStage} from './store.mjs';
 import {brief,diff,check} from './inspection.mjs';import {capture,applyTemplate} from './templates.mjs';import {LAYOUTS} from './layouts.mjs';
-const [command,...args]=process.argv.slice(2);const opt=k=>{const i=args.indexOf('--'+k);return i<0?undefined:args[i+1];};const id=opt('id');const url=`http://127.0.0.1:3314/?id=${id}`;
+const [command,...args]=process.argv.slice(2);const opt=k=>{const i=args.indexOf('--'+k);return i<0?undefined:args[i+1];};const id=opt('id');const url=`${PPT_ORIGIN}/?id=${id}`;
 const emit=v=>console.log(JSON.stringify(v,null,2));
 const input=()=>JSON.parse(fs.readFileSync(opt('input'),'utf8'));
 function output(value){if(opt('output')){fs.writeFileSync(path.resolve(opt('output')),JSON.stringify(value,null,2));emit({path:path.resolve(opt('output'))});}else emit(value);}
-async function ensure(){try{if((await (await fetch('http://127.0.0.1:3314/health')).json()).app==='ppt-slidewise')return;}catch{}
+async function ensure(){let existing;try{existing=await(await fetch(PPT_ORIGIN+'/health',{signal:AbortSignal.timeout(1000)})).json();}catch{}
+ if(existing){if(existing.app==='ppt-slidewise'&&existing.dataRoot&&path.resolve(existing.dataRoot)===path.resolve(data))return;throw Error('PPT端口被其他服务或其他课题占用，请按PORTS.md核对；不会复用其数据。');}
  const logdir=path.join(root,'logs/ppt-slidewise');fs.mkdirSync(logdir,{recursive:true});const out=fs.openSync(path.join(logdir,'server.log'),'a');const child=spawn(process.execPath,[path.join(import.meta.dirname,'server.mjs')],{detached:true,windowsHide:true,stdio:['ignore',out,out],cwd:process.cwd()});child.unref();fs.closeSync(out);
- for(let i=0;i<40;i++){await new Promise(r=>setTimeout(r,250));try{if((await (await fetch('http://127.0.0.1:3314/health')).json()).app==='ppt-slidewise')return;}catch{}}throw Error('Server failed to start');}
+ for(let i=0;i<40;i++){await new Promise(r=>setTimeout(r,250));try{if((await (await fetch(PPT_ORIGIN+'/health')).json()).app==='ppt-slidewise')return;}catch{}}throw Error('Server failed to start');}
 try{
  if(command==='create'){const file=path.resolve(opt('input'));const plan=YAML.parse(fs.readFileSync(file,'utf8'));const r=save(id,fromPlan(plan,path.dirname(file)),0);await ensure();emit({id,revision:r.revision,url,slides:r.deck.slides.length});}
  else if(command==='read'){const r=read(id);output(args.includes('--full')?r:brief(r,opt('slide')));}

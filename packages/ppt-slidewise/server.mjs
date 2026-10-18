@@ -1,11 +1,12 @@
-import http from 'node:http';import fs from 'node:fs';import path from 'node:path';import {read,save,exported} from './store.mjs';
-const port=3314,dist=path.join(import.meta.dirname,'dist');
+import {PPT_PORT,PPT_ORIGIN} from './ports.mjs';
+import http from 'node:http';import fs from 'node:fs';import path from 'node:path';import {read,save,exported,root,data} from './store.mjs';
+const port=PPT_PORT,dist=path.join(import.meta.dirname,'dist');
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.woff2':'font/woff2','.png':'image/png'};
 http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://127.0.0.1:'+port);
  if(req.headers.host!==`127.0.0.1:${port}`)throw Error('Invalid host');
  if(req.headers.origin&&req.headers.origin!==url.origin)throw Error('Invalid origin');
- if(url.pathname==='/health'){res.setHeader('Content-Type','application/json');return res.end(JSON.stringify({app:'ppt-slidewise',version:'0.2.0',pid:process.pid}));}
+ if(url.pathname==='/health'){res.setHeader('Content-Type','application/json');return res.end(JSON.stringify({app:'ppt-slidewise',version:'0.2.1',pid:process.pid,workspace:root,dataRoot:data}));}
  if(url.pathname.startsWith('/api/')){
  res.setHeader('Content-Type','application/json');const [, ,id,action]=url.pathname.split('/');
  if(req.method==='GET'&&!action)return res.end(JSON.stringify(read(id)));

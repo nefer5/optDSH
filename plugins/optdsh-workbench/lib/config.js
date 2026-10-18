@@ -4,6 +4,7 @@ import {resolve} from 'node:path';
 // Profile settings override process defaults; an installed plugin never needs a source root.
 export function workbenchRuntimeOptions(options={},env=process.env,profileContext={},cwd=process.cwd()){
  const home=profileContext?.home||env.DSH_HOME;
+ let ports={};try{if(home)ports=JSON.parse(readFileSync(resolve(home,'config/ports.json'),'utf8'));}catch{}
  const file=home&&resolve(home,'config/canvas.json');
  let connection={};
  if(!options.editorUrl&&file&&existsSync(file)){
@@ -15,6 +16,7 @@ export function workbenchRuntimeOptions(options={},env=process.env,profileContex
  }
  return {...options,
   home,
+  opticsPort:options.opticsPort??ports.optics?.port,
   installRoot:options.installRoot||env.OPTDSH_INSTALL_ROOT,
   stateRoot:resolve(options.stateRoot||options.projectRoot||env.OPTDSH_STATE_ROOT||(home&&resolve(home,'state',profileContext?.name||'web'))||cwd),
   workspaceRoot:resolve(options.workspaceRoot||options.projectRoot||env.OPTDSH_WORKSPACE||cwd),

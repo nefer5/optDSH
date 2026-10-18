@@ -29,3 +29,7 @@ scripts/runtime下的status-dsh.ps1、stop-dsh.ps1使用与启动相同的配置
 ## 日志与恢复
 
 Home、StateRoot、workspace不在程序目录中清空；卸载插件不删除真实资料。升级用新安装位置和原Home，先做备份与停止写入。具体回退/卸载见[安装说明](installation/README.md)，模型身份/保存门禁见[光学契约](contracts.md)。旧3080/data/dsh现场和历史配置已归档说明，不作为新默认。
+
+## 安装后的模块端口
+
+端口以安装目录PORTS.md及Home/config/ports.json为准。默认数字仅是首选，安装器会探测并避让；Launcher、工作台与PPT读取最终配置。配置记录不表示服务已经启动；Web/Canvas身份检查及光学显式启动保持独立。

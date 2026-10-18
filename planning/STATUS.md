@@ -1,6 +1,8 @@
 # 当前状态
 
-2026-10-19；产品 **0.2.0-dev.23**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+2026-10-19；产品 **0.2.0-dev.24**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+
+追加完成：路径选择卸载（课题永久排除）与安装端口自动避让/记录；真实测试程序已回收，6项数据哈希不变。最终固定dev.24包正在收尾复验。
 
 本轮已实现：产品Skills归所属包并接入官方Provider；Experts0.2使用官方Preset与spawn派工，保留公共资源适配，官方Profile管理整组生命周期；新增中文图形安装向导与独立安装入口。源码外study、空共享根下真实GLM会话已读取Rx Skill、派工架构专家、读取公共资源并收到官方完成通知；停用Experts并重启后Preset消失且core ready。原型真实安装及视觉专家审查通过，完整离线回归通过。最终固定版本发行包与安装验收正在收尾，不将原型等同最终包。见[本轮验证](../docs/verification/product-resources-dev21.md)。
 
@@ -29,6 +31,6 @@
 
 本轮dev.17打包、图形与归档检查结果见[交付回执](../docs/verification/dev17-docs-release.json)。[静默服务回执](../docs/verification/refactor-20261018/workbench-silent-service.json)和[双版本组件说明](../docs/verification/zemax-connection.md)保留原验证范围。
 
-下一步推荐：人工核验dev.23安装与产品资源，再完善升级恢复和可选共享导出；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。本轮用户已授权完成后推送开发分支；不自动合主分支、强推、正式Release或公开npm。
+下一步推荐：人工核验dev.24安装与产品资源，再完善升级恢复和可选共享导出；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。本轮本地提交；远程推送、合主分支、正式Release或公开npm按后续决定。
 
 开发预览已显式安装Forms0.4.0，core/画板/工作台/Forms实际ready；保持原模型、插件与用户课题资料。手工验证可从原启动DSH.cmd进入当前会话，对Agent说‘打开Rx默认YAML，仅编辑参数，不连接Zemax’。

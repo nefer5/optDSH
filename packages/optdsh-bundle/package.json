@@ -1,6 +1,6 @@
 {
   "name": "optdsh-bundle",
-  "version": "0.2.0-dev.23",
+  "version": "0.2.0-dev.24",
   "type": "module",
   "description": "Optional optDSH product assembly for the official DSH runtime",
   "main": "lib/index.js",
@@ -15,6 +15,7 @@
   "files": [
     "lib",
     "installer-web",
+    "uninstaller-web",
     "cordis.patch.yml",
     "README.md",
     "NOTICE.md"

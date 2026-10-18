@@ -1,5 +1,5 @@
-[CmdletBinding()]
-param([string]$ReleaseRoot=(Split-Path (Split-Path $PSScriptRoot -Parent) -Parent), [Parameter(Mandatory)][string]$InstallRoot, [Alias('Home')][string]$OptDshHome=(Join-Path $env:USERPROFILE '.optdsh'), [string]$Workspace=(Get-Location).Path, [string[]]$Components=@('core'), [ValidateSet('none','market','recommended')][string]$PluginPreset='none', [string]$CanvasRoot, [switch]$InstallCanvas, [string]$CanvasInstallRoot, [int]$CanvasPort=4173, [switch]$AddToUserPath, [switch]$DryRun)
+﻿[CmdletBinding()]
+param([string]$ReleaseRoot=(Split-Path (Split-Path $PSScriptRoot -Parent) -Parent), [Parameter(Mandatory)][string]$InstallRoot, [Alias('Home')][string]$OptDshHome=(Join-Path $env:USERPROFILE '.optdsh'), [string]$Workspace=(Get-Location).Path, [string[]]$Components=@('core'), [ValidateSet('none','market','recommended')][string]$PluginPreset='none', [string]$CanvasRoot, [switch]$InstallCanvas, [string]$CanvasInstallRoot, [int]$CanvasPort=4173,[int]$WebPort=3080,[int]$OpticsPort=3081,[int]$PptPort=3314, [switch]$AddToUserPath, [switch]$DryRun)
 $ErrorActionPreference='Stop'
 function Get-ReleaseHash([string]$Path) {
  $stream=[IO.File]::OpenRead($Path)
@@ -12,10 +12,27 @@ $InstallRoot=[IO.Path]::GetFullPath($InstallRoot)
 $OptDshHome=[IO.Path]::GetFullPath($OptDshHome)
 if ($InstallRoot.TrimEnd('\','/') -eq [IO.Path]::GetPathRoot($InstallRoot).TrimEnd('\','/')) { throw 'InstallRoot must not be a drive root' }
 if ($OptDshHome -eq $InstallRoot -or $OptDshHome.StartsWith($InstallRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Home must be outside InstallRoot' }
+$leaseFile=Join-Path $OptDshHome '.runtime/profiles/web/host.json'
+if(Test-Path -LiteralPath $leaseFile){
+ $lease=Get-Content -LiteralPath $leaseFile -Raw|ConvertFrom-Json
+ $live=Get-Process -Id $lease.pid -ErrorAction SilentlyContinue
+ if($live -and $live.StartTime.ToUniversalTime()-eq([DateTimeOffset]$lease.startedUtc).UtcDateTime){throw 'Selected Home has a running DSH host. Use a new test Home or stop its owning host before installation.'}
+}
 $manifest=Get-Content -LiteralPath (Join-Path $ReleaseRoot 'release-manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($manifest.schemaVersion -ne 1) { throw 'Unsupported release manifest' }
 $selected=@('core')+@($Components | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -ne 'core' } | Select-Object -Unique)
 $packageSelection=@($selected)+@($manifest.components | Where-Object { $_.id -in @('optics-skills','ppt') } | ForEach-Object { $_.id })
+function Get-InstallationPorts {
+ if($manifest.portPlanner){
+  $tool=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.portPlanner.file))
+  if(-not $tool.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)-or(Get-ReleaseHash $tool)-ne$manifest.portPlanner.sha256){throw 'Port planner hash or path mismatch'}
+  $arguments=@($tool,'--components',($selected-join ','),'--web',"$WebPort",'--canvas',"$CanvasPort",'--optics',"$OpticsPort",'--ppt',"$PptPort")
+  if($CanvasRoot){$arguments+=@('--canvas-root',$CanvasRoot)}
+  $text=& node @arguments;if($LASTEXITCODE){throw 'Port availability check failed; existing services were not changed'}
+  return ($text|ConvertFrom-Json)
+ }
+ return @{schemaVersion=0;web=@{port=$WebPort;status='legacy-not-checked'};canvas=@{port=$CanvasPort;status='legacy-not-checked'};optics=@{port=$OpticsPort;status='legacy-not-checked'};ppt=@{port=$PptPort;status='legacy-not-checked'}}
+}
 $canvasArtifact=$null
 if($CanvasRoot -and $InstallCanvas){throw 'Select existing CanvasRoot or InstallCanvas, not both'}
 if($CanvasRoot -or $InstallCanvas){
@@ -44,6 +61,12 @@ if ($manifest.launcher) {
  if ((Get-ReleaseHash $launcherArtifact) -ne $manifest.launcher.sha256) { throw 'Launcher artifact hash mismatch' }
 }
 $buildInfoArtifact=$null
+$uninstallerArtifact=$null
+if($manifest.uninstaller){
+ $uninstallerArtifact=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.uninstaller.file))
+ if(-not $uninstallerArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Uninstaller artifact escapes release root'}
+ if((Get-ReleaseHash $uninstallerArtifact)-ne$manifest.uninstaller.sha256){throw 'Uninstaller artifact hash mismatch'}
+}
 if ($manifest.buildInfo) {
  $buildInfoArtifact=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.buildInfo.file))
  if (-not $buildInfoArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Build identity escapes release root' }
@@ -66,6 +89,7 @@ $plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevisio
 $plan.profileComponents=@{}
 foreach($id in @('canvas','workbench','forms','experts')){if($id -in $selected){$plan.profileComponents[$id]=@{status='pending';receipt="profile-$id-receipt.json"}}}
 $plan.canvasEditorStatus=if($CanvasRoot -or $InstallCanvas){'pending'}else{'not-configured'}
+$plan.ports=Get-InstallationPorts
 if ($DryRun) { $plan | ConvertTo-Json -Depth 8;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
 $nodeExecutable=(Get-Command node.exe -ErrorAction Stop).Source
@@ -83,16 +107,26 @@ Push-Location $InstallRoot
 try { & $nodeExecutable $npmCli install --no-audit --no-fund;if ($LASTEXITCODE) { throw 'Dependency installation failed; receipt retained for diagnosis' } } finally { Pop-Location }
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'scripts') -Destination $InstallRoot -Recurse
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'docs') -Destination $InstallRoot -Recurse
+if($uninstallerArtifact){
+ New-Item -ItemType Directory -Path (Join-Path $InstallRoot 'packaging') -Force|Out-Null
+ Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'packaging/windows') -Destination (Join-Path $InstallRoot 'packaging/windows') -Recurse
+ Copy-Item -LiteralPath $uninstallerArtifact -Destination (Join-Path $InstallRoot '卸载optDSH.exe')
+ [IO.File]::WriteAllText((Join-Path $InstallRoot '卸载optDSH.cmd'),('@echo off' + "`r`n" + 'set "OPTDSH_UNINSTALL_ROOT=%~dp0"' + "`r`n" + 'powershell.exe -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath (Join-Path $env:OPTDSH_UNINSTALL_ROOT (([char]0x5378).ToString()+[char]0x8f7d+''optDSH.exe''))"' + "`r`n"),[Text.Encoding]::ASCII)
+}
 if ($buildInfoArtifact) { Copy-Item -LiteralPath $buildInfoArtifact -Destination (Join-Path $InstallRoot 'build-info.json') }
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'release-manifest.json') -Destination (Join-Path $InstallRoot 'release-manifest.json')
 if ($launcherArtifact) { Copy-Item -LiteralPath $launcherArtifact -Destination (Join-Path $InstallRoot 'optdsh.exe') }
-@{schemaVersion=1;installRoot='.';nodeExecutable=$nodeExecutable;home=$OptDshHome;workspace=$Workspace;profile='web';port=3080;components=$selected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh-launcher.json') -Encoding utf8
+$plan.ports=Get-InstallationPorts
+$WebPort=$plan.ports.web.port
+if($plan.ports.canvas){$CanvasPort=$plan.ports.canvas.port}
+@{schemaVersion=1;installRoot='.';nodeExecutable=$nodeExecutable;home=$OptDshHome;workspace=$Workspace;profile='web';port=$WebPort;components=$selected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh-launcher.json') -Encoding utf8
 $launcher=Join-Path $InstallRoot 'optdsh.ps1'
 @'
 [CmdletBinding()]
-param([string]$Workspace=(Get-Location).Path, [Alias('Home')][string]$OptDshHome, [int]$Port=3080, [switch]$NoBrowser)
+param([string]$Workspace=(Get-Location).Path, [Alias('Home')][string]$OptDshHome, [int]$Port=0, [switch]$NoBrowser)
 $settings=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'installation-receipt.json') -Raw | ConvertFrom-Json
 if (-not $OptDshHome) { $OptDshHome=$settings.home }
+if (-not $Port) { $Port=if($settings.ports.web.port){$settings.ports.web.port}else{3080} }
 & (Join-Path $PSScriptRoot 'scripts/runtime/start-dsh.ps1') -Home $OptDshHome -Workspace $Workspace -Components $settings.components -Port $Port -OpenBrowser:(-not $NoBrowser)
 '@ | Set-Content -LiteralPath $launcher -Encoding utf8
 @'
@@ -150,4 +184,13 @@ if ($AddToUserPath) {
  if ($InstallRoot -notin $entries) { [Environment]::SetEnvironmentVariable('Path',(($entries+$InstallRoot)-join ';'),'User') }
  Write-Output 'User PATH updated; open a new terminal, then use optdsh from any research directory.'
 }
-Write-Output "Installed to $InstallRoot. Double-click optdsh.exe, or use optdsh.cmd --workspace <research>. Python/Zemax/Canvas are separately installed when selected."
+$configDir=Join-Path $OptDshHome 'config';New-Item -ItemType Directory -Path $configDir -Force|Out-Null
+$portsFile=Join-Path $configDir 'ports.json'
+if(Test-Path -LiteralPath $portsFile){Copy-Item -LiteralPath $portsFile -Destination ($portsFile+'.backup-'+(Get-Date -Format 'yyyyMMdd-HHmmss'))}
+[IO.File]::WriteAllText($portsFile,($plan.ports|ConvertTo-Json -Depth 8),[Text.UTF8Encoding]::new($false))
+$portLines=@('# optDSH模块端口清单','','除明确标为已核验运行的服务外，下列状态仅表示已配置，尚未启动。','', '| 模块 | 地址 | 状态 |','|---|---|---|')
+foreach($module in @('web','canvas','optics','ppt')){ $binding=$plan.ports.$module;if($binding){$portLines+="| $module | http://127.0.0.1:$($binding.port) | $($binding.status) |"} }
+$portLines+='';$portLines+='Forms、Experts、画板桥和工作台界面共用DSH Web端口；MCP stdio不使用TCP端口。'
+[IO.File]::WriteAllText((Join-Path $InstallRoot 'PORTS.md'),($portLines-join "`n"),[Text.UTF8Encoding]::new($false))
+$plan|ConvertTo-Json -Depth 10|Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
+Write-Output "Installed to $InstallRoot. Port allocation: PORTS.md and Home/config/ports.json. Python/Zemax/Canvas runtime verification remains separate."

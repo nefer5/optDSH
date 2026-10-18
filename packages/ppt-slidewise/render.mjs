@@ -1,3 +1,4 @@
+import {PPT_PORT,PPT_ORIGIN} from './ports.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {chromium} from 'playwright';
@@ -14,7 +15,7 @@ export async function render(id,selected){
     for(const s of slides){
       const contentHash=hash({slide:s,renderer:key,viewport:[2300,1450]});const file=path.join(folder,`${s.id.replace(/[^a-zA-Z0-9_-]/g,'_')}-${hash(s.id).slice(0,8)}.png`);
       if(cache[s.id]?.contentHash===contentHash && fs.existsSync(file) && hash(fs.readFileSync(file))===cache[s.id].sha256){results.push({slide:s.id,path:file,cached:true});continue;}
-      if(!browser){browser=await chromium.launch({channel:'msedge',headless:true});page=await browser.newPage({viewport:{width:2300,height:1450},deviceScaleFactor:1});await page.goto(`http://127.0.0.1:3314/?id=${id}`);await page.waitForFunction(()=>window.__pptTools?.ready());}
+      if(!browser){browser=await chromium.launch({channel:'msedge',headless:true});page=await browser.newPage({viewport:{width:2300,height:1450},deviceScaleFactor:1});await page.goto(`${PPT_ORIGIN}/?id=${id}`);await page.waitForFunction(()=>window.__pptTools?.ready());}
       await page.evaluate(slide=>window.__pptTools.goToSlide(slide),s.id);
       await page.evaluate(()=>document.fonts.ready);
       const canvas=page.locator('div[style*="width: 1920px"][style*="height: 1080px"]').last();
