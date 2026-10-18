@@ -1,0 +1,105 @@
+{
+  "defaultModel": {
+    "provider": "zai",
+    "model": "glm-5.3-flash"
+  },
+  "plugins": [
+    {
+      "name": "@changfenhuang/dsh-genui",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:genui",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "@weibaohui/dsh-tasks",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:dsh-tasks",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "dsh-better-sidebar",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:better-sidebar",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "dsh-claude-style",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:ui-skin-claude-style",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "dsh-context",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:dsh-context",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "dsh-quote-followup",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:quote-followup",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "dsh-theme-firefly",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:ui-theme-firefly",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "dshmarket",
+      "entries": [
+        {
+          "phase": "active",
+          "id": "include:dsh-market",
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "catalogFailureCount": 0,
+  "groups": [
+    "id",
+    "name",
+    "models"
+  ],
+  "credentialConfigured": true,
+  "status": "loaded-verified",
+  "targetHome": "E:/Proj-2026-N06_optDSH-validation/manual-preview/source-home",
+  "realModelRequest": false,
+  "fullBrowserInteraction": false,
+  "oldHomeUnchanged": true,
+  "browserAuthenticationPreserved": true,
+  "versionExemptions": 0,
+  "allClientAssetsHTTP200": true,
+  "marketRegistryLookup": "accepted",
+  "betterSidebarVersion": "0.28.0"
+}

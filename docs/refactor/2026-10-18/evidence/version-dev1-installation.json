@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "plan": {
+    "schemaVersion": 1,
+    "releaseRoot": "E:\\Proj-2026-N06_optDSH-releases\\0.2.0-dev.1",
+    "validationRoot": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.1",
+    "installRoot": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.1\\app",
+    "home": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.1\\home",
+    "workspace": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.1\\workspace",
+    "stateRoot": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.1\\state",
+    "components": [
+      "core",
+      "workbench",
+      "canvas",
+      "forms"
+    ],
+    "port": 54076,
+    "installTimeoutSeconds": 600,
+    "requiredNode": ">=24",
+    "modelRequests": false,
+    "zemax": false,
+    "globalChanges": false,
+    "npmCacheRoot": "E:\\Proj-2026-N06_optDSH-validation\\20261018-worktree-full-001\\npm-cache",
+    "cacheMode": "explicit-cache-reuse-not-a-cold-network-test"
+  },
+  "status": "passed",
+  "phase": "complete",
+  "checks": [
+    "release-installer-completed",
+    "identity-and-authenticated-cookie",
+    "running-product-version-and-build-identity",
+    "selected-components-ready",
+    "official-client-graph-and-revisioned-scripts"
+  ],
+  "clients": [
+    {
+      "revisioned": true,
+      "registration": true,
+      "http": 200,
+      "discoverable": true,
+      "id": "optdsh-workbench"
+    },
+    {
+      "revisioned": true,
+      "registration": true,
+      "http": 200,
+      "discoverable": true,
+      "id": "optdsh-agent-canvas"
+    }
+  ],
+  "cleanup": "owned-host-stopped-or-already-exited",
+  "limitations": [
+    "No model calls, Zemax, browser interaction, sandbox or company validation."
+  ],
+  "updatedAt": "2026-10-18T15:34:07.1750318+08:00",
+  "nodeVersion": "26.12.0",
+  "buildInfo": {
+    "schemaVersion": 1,
+    "product": "optDSH",
+    "version": "0.2.0-dev.1",
+    "dshVersion": "0.2.1-rc.2",
+    "channel": "dev",
+    "buildMode": "package",
+    "buildId": "0.2.0-dev.1-2026-10-18T07-32-44-127Z-a3c90405d595",
+    "builtAt": "2026-10-18T07:32:44.127Z",
+    "builtWithNode": "v26.12.0",
+    "sourceRevision": "a3c90405d59560eeb05366b8f823740b045a12b2",
+    "sourceDirty": false,
+    "runningNode": "v26.12.0"
+  },
+  "components": [
+    {
+      "id": "core",
+      "status": "ready"
+    },
+    {
+      "id": "workbench",
+      "status": "ready"
+    },
+    {
+      "id": "canvas",
+      "status": "ready"
+    },
+    {
+      "id": "forms",
+      "status": "ready"
+    }
+  ],
+  "credentialScan": {
+    "credentialValueAbsent": true,
+    "checkedFilesAndArchiveMembers": 313
+  }
+}
