@@ -1,6 +1,6 @@
 {
   "name": "optdsh",
-  "version": "0.2.0-dev.24",
+  "version": "0.2.0-dev.25",
   "private": true,
   "type": "module",
   "description": "Independent optDSH platform and optional optical plugins",

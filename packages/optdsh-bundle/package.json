@@ -1,6 +1,6 @@
 {
   "name": "optdsh-bundle",
-  "version": "0.2.0-dev.24",
+  "version": "0.2.0-dev.25",
   "type": "module",
   "description": "Optional optDSH product assembly for the official DSH runtime",
   "main": "lib/index.js",
