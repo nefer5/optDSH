@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/nefer5/optDSH.git",
-      "revision": "09e7c00811c3049781203b003558e108c1a7ead2",
+      "revision": "e61b504176c7156dc2f818ec60afb7a0950cc5bd",
       "link_mode": "local-only"
     }
   },
@@ -252,11 +252,11 @@
     },
     {
       "dot": "amber",
-      "title": "后续计划 · 尚未全部落地",
+      "title": "交付边界与后续计划",
       "items": [
-        "Skills与公共专家基线已随包，图形安装向导已实现并做原型实装。",
-        "可选共享导出、用户冲突升级及新机/公司环境验收仍待完成。",
-        "AGENTS是规则；专家通过Profile声明Preset，不扫描用户专家目录。"
+        "用户包：安装EXE、使用说明与_support；向导自动检查并避让模块端口。",
+        "卸载按路径选择程序/插件/日志；课题永久排除，Home及独立Canvas保留。",
+        "跨宿主共享导出、用户冲突升级、新机与公司环境验收仍是后续计划。"
       ]
     }
   ]

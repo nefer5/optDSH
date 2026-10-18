@@ -6,11 +6,11 @@
   "status": "pass",
   "visualReview": "not-requested",
   "provenance": "current",
-  "deliveryReceiptId": "a2273388-3974-445a-b074-70e3bbfd9687",
+  "deliveryReceiptId": "b738f42f-b1da-497c-a616-eebe072cf2d3",
   "artifact": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
-    "sha256": "40e6d79cd75de65c52aa5e400752cddcecbc77d14601f3900bb8c41086745562",
-    "bytes": 759593
+    "sha256": "df6fdaae96e676c188380b9fa28460965f703257bca2fba1c7068fb901c380ad",
+    "bytes": 759613
   },
   "state": {
     "detail": "read",
@@ -715,7 +715,7 @@
     "contactSheet": null
   },
   "sidecars": {
-    "directory": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout",
+    "directory": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout-dev24",
     "receipt": "diagram.browser-check.json",
     "files": []
   }
