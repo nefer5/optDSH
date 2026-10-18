@@ -1,5 +1,7 @@
 # 架构与目录
 
+当前Canvas桥已经统一官方Profile生命周期：源码仍在plugins，发行tgz安装到Home/Profile；不再从app或源码回流。Bundle只给推荐/默认，停用与卸载遵循官方有效配置。目录与操作见[Profile插件](profile-plugins.md)；其他自有插件尚在逐项收敛。
+
 2026-10-18分支实施：新增optdsh-bundle负责官方Loader装配、认证记录与可选插件隔离；DSH目标升级到0.2.1-rc.2，现役旧版依赖/3080暂保留。程序根、独立home、workspace分离，插件状态在home/state/profile；新画板在课题.agent-canvas/optdsh/boards。编辑器已支持独立安装及连接，独立Canvas文档协议尚未统一，18适配桥尚未实现，真实迁移/沙箱/切换未做。具体决定见[决定入口](refactor/2026-10-18/decisions.md)，发布使用见[安装说明](installation/README.md)。
 
 下文描述重构前现役部署，作为过渡对照；不代表新代码仍要求固定仓库根。

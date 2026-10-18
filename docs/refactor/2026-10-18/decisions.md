@@ -47,3 +47,7 @@
 ## 画板与课题资料后续确认
 
 用户授权先打通已有兼容画板接入/全新本地包安装，AgentCanvas改名@nefer5/agent-canvas，不公开npm、不推送。公共平台/Skill不依赖旧源码根或具体课题；2T2R专有约定和Skill随外部课题，原资料保留。新运行读取所选workspace配置，历史run不改写；薄桥文档协议统一另验。
+
+## 官方Profile统一管理（Canvas先行）
+
+用户确认源码plugins与用户安装目录分开，先从Canvas桥统一官方Profile安装/启停/升级/卸载。Bundle仅负责推荐与默认；components不再强启用Canvas、app不保留同名副本或源码fallback。停用和卸载重启后保持，升级保留用户选择及课题画板。其他自有插件逐项跟进，不公开npm、不推送。

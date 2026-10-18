@@ -55,3 +55,7 @@ community-plugins-receipt.json区分installed、existing-preserved、failed与no
 ## 可选独立画板编辑器
 
 CanvasRoot复用已有兼容安装；InstallCanvas＋CanvasInstallRoot安装发行清单携带的本地tgz。连接配置在Home，选择canvas时按需启动；现役旧服务或端口冲突不接管。完整命令、数据归属和旧版本限制见[画板安装接入](../refactor/2026-10-18/canvas-installation.md)。
+
+## 画板桥的官方Profile生命周期
+
+从dev.7起，选择canvas时桥包只安装到官方Profile，app不再带同名运行依赖。已有/新装独立编辑器的接入不变；二者是不同包。启停/卸载在官方插件管理操作，升级用停服后的本地tgz；开发源码不自动覆盖安装副本。完整目录与命令见[Profile插件说明](../profile-plugins.md)。

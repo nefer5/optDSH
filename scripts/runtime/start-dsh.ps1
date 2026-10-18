@@ -56,7 +56,10 @@ try {
     $canvasComposeArguments = @()
     try {
         [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
-        if ('canvas' -in $context.Components -and (Test-Path -LiteralPath (Join-Path $context.Home 'config/canvas.json'))) {
+        $canvasProfileState = & $node $bundleCli canvas-profile-state --install-root $context.InstallRoot --home $context.Home --profile $context.Profile | ConvertFrom-Json
+        $canvasHomeConnection = Join-Path $context.Home 'config/canvas.json'
+        $canvasUsesHomeConnection = -not [bool]$canvasProfileState.config.editorUrl
+        if ($canvasProfileState.enabled -and $canvasUsesHomeConnection -and (Test-Path -LiteralPath $canvasHomeConnection)) {
             $canvasCli = Join-Path (Split-Path $bundleCli -Parent) 'canvas-cli.mjs'
             $savedNativePreference = $ErrorActionPreference
             try {

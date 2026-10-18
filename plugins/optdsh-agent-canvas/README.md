@@ -18,6 +18,10 @@
 
 共享 transport 从注入地址生成 iframe URL，并对消息校验精确 origin、frame source、channel；不接受模型自行指定 session。包不依赖相邻 checkout，但外部编辑器仍需独立部署且具备兼容协议。Node.js 24+，DSH 0.2.1-rc.2 系列；没有真实编辑器/模型端到端验收时，不能只凭工具注册宣称已接入。
 
+## 官方Profile装配
+
+0.6.0起开发源码保留本目录，但不再作为平台app workspace依赖自动加载。包安装/开关/升级/卸载由官方Profile管理，Bundle不恢复用户停用或卸载。stateRoot默认读取所选运行环境，editorUrl由Profile显式配置优先、其次Home/config/canvas.json；课题画板不归安装包。详见[生命周期说明](../../docs/profile-plugins.md)。
+
 ## 独立装配
 
 包内 `dsh.bundle.patch` 指向 cordis.patch.yml。可先 `npm pack` 生成本地 tgz，再通过 DSH 官方插件/Bundle 安装入口选择该文件；启用前在 Profile overlay 注入上述 workspaceRoot/stateRoot（画板还可注入 editorUrl）。不把 checkout 路径写进包，外部运行依赖由用户准备。独立安装后的官方宿主加载仍需验收，不能把 tarball 校验当作端到端成功。

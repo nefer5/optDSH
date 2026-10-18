@@ -5,7 +5,7 @@ import {spawnSync} from 'node:child_process';
 import semver from 'semver';
 import {readBuildInfo} from './version.mjs';
 import {mkdirSync,writeFileSync,existsSync,readFileSync} from 'node:fs';
-import {readCanvasConfig} from './canvas-installation.mjs';
+import {canvasProfileState} from './profile-components.mjs';
 export const componentPackages=Object.freeze({workbench:'optdsh-workbench',canvas:'optdsh-agent-canvas',forms:'optdsh-forms',experts:'optdsh-experts','current-info':'optdsh-current-info-policy'});
 export function compose(options){
  const installRoot=resolve(options.installRoot),home=resolve(options.home),workspaceRoot=resolve(options.workspace),profile=options.profile||'web';
@@ -20,8 +20,8 @@ export function compose(options){
  const profileMeta=existsSync(profileManifest)?JSON.parse(readFileSync(profileManifest)):{};
  const activeBundles=new Set(profileMeta.dsh?.profile?.bundles||[]);
  const profileReq=createRequire(profileManifest);
- const optional=selected.filter(c=>c!=='core').map(id=>{try{
-  if(id==='canvas'&&options.canvasUnavailable)throw new Error(options.canvasUnavailable);
+ const canvas=canvasProfileState({installRoot,home,profile});
+ const optional=selected.filter(c=>c!=='core'&&c!=='canvas').map(id=>{try{
   const packageName=componentPackages[id];let resolver=req;
   if(Object.hasOwn(profileMeta.dependencies||{},packageName)){profileReq.resolve(packageName);resolver=profileReq;}
   const module=resolver.resolve(packageName);const meta=JSON.parse(readFileSync(resolver.resolve(packageName+'/package.json')));
@@ -35,17 +35,19 @@ export function compose(options){
    const checked=spawnSync(process.execPath,['--check',client],{encoding:'utf8',timeout:15000,stdio:['ignore','ignore','pipe']});
    if(checked.status!==0)throw new Error('Plugin client syntax preflight failed');
   }
-  const canvas=id==='canvas'?readCanvasConfig(home):null;
-  return {id,module,loaderId:packageName,profileManaged:activeBundles.has(packageName)&&!!meta.dsh?.bundle?.patch,config:{workspaceRoot,stateRoot,...(canvas?{editorUrl:canvas.editorUrl}:{})}};
+  return {id,module,loaderId:packageName,profileManaged:activeBundles.has(packageName)&&!!meta.dsh?.bundle?.patch,config:{workspaceRoot,stateRoot}};
  }catch(e){return {id,loaderId:componentPackages[id],profileManaged:activeBundles.has(componentPackages[id]),unavailable:e.code==='MODULE_NOT_FOUND'?'Package is not installed':e.message};}});
- const config={workspaceRoot,stateRoot,home,profile,optional,buildInfo:readBuildInfo(installRoot)};
+ if(canvas.installed||selected.includes('canvas'))optional.push({...canvas,...(canvas.enabled&&options.canvasUnavailable?{runtimeUnavailable:options.canvasUnavailable}:{})});
+ const config={installRoot,workspaceRoot,stateRoot,home,profile,optional,buildInfo:readBuildInfo(installRoot)};
  const name=fileURLToPath(new URL('./index.js',import.meta.url));
- const rows=optional.filter(item=>!item.unavailable&&!item.profileManaged).map(item=>({id:item.loaderId,name:item.module,config:item.config}));
+ const rows=optional.filter(item=>!item.profileOwned&&!item.unavailable&&!item.profileManaged).map(item=>({id:item.loaderId,name:item.module,config:item.config}));
  // Real Loader entries are necessary for official client module discovery.
  const patch=[{insert:[{id:'optdsh-platform',name,config},...rows]}];
  const packageManager=resolve(installRoot,'node_modules/.bin/pnpm.cmd');
  if(existsSync(packageManager))patch.push({id:'plugin-manager',config:{pnpmCommand:packageManager}});
  for(const item of optional.filter(item=>item.profileManaged))patch.push(item.unavailable?{id:item.loaderId,disabled:true}:{id:item.loaderId,config:item.config});
+ // Failure isolation only; never insert, enable or configure a Profile bridge.
+ if(canvas.isolate||(canvas.enabled&&options.canvasUnavailable))patch.push({id:canvas.loaderId,disabled:true});
  const patchPath=resolve(options.output||resolve(stateRoot,'bundle.patch.yml'));
  mkdirSync(dirname(patchPath),{recursive:true});writeFileSync(patchPath,JSON.stringify(patch,null,2)+'\n');
  return {patchPath};

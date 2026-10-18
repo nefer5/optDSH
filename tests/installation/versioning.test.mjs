@@ -54,3 +54,9 @@ test('DSH dependency must be exact and match its lock entry',()=>{
  pkg.dependencies['@deepseek-ai/dsh']='^0.2.1-rc.2';save(join(root,'package.json'),pkg);assert.throws(()=>checkVersions(root),/exact version/);
  pkg.dependencies['@deepseek-ai/dsh']='0.2.1-rc.2';save(join(root,'package.json'),pkg);lock.packages['node_modules/@deepseek-ai/dsh']={version:'0.2.0-rc.2'};save(join(root,'package-lock.json'),lock);assert.throws(()=>checkVersions(root),/lock differ/);
 });
+
+test('independently installed source plugin version can advance without a workspace link',()=>{
+ const root=fixture();mkdirSync(join(root,'plugins/canvas'),{recursive:true});save(join(root,'plugins/canvas/package.json'),{name:'standalone-canvas',version:'0.5.0'});
+ const plan=prepareComponentVersion(root,'standalone-canvas','0.6.0');applyVersion(root,plan);
+ assert.equal(JSON.parse(readFileSync(join(root,'plugins/canvas/package.json'))).version,'0.6.0');assert.equal(checkVersions(root).version,'0.1.1');
+});

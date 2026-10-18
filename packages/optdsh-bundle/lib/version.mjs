@@ -1,4 +1,4 @@
-import {readFileSync,existsSync,writeFileSync,mkdirSync,openSync,closeSync} from 'node:fs';
+import {readFileSync,existsSync,writeFileSync,mkdirSync,openSync,closeSync,readdirSync} from 'node:fs';
 import {resolve,dirname,join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import semver from 'semver';
@@ -61,11 +61,12 @@ export function applyVersion(root,plan){
 }
 export function prepareComponentVersion(root,name,next){
  const lock=json(resolve(root,'package-lock.json'));
- const path=Object.keys(lock.packages||{}).find(path=>/^(plugins|packages)\/[^/]+$/.test(path)&&existsSync(resolve(root,path,'package.json'))&&json(resolve(root,path,'package.json')).name===name);
+ const candidates=[...Object.keys(lock.packages||{}),...['plugins','packages'].flatMap(dir=>existsSync(resolve(root,dir))?readdirSync(resolve(root,dir)).map(file=>dir+'/'+file):[])];
+ const path=candidates.find(path=>/^(plugins|packages)\/[^/]+$/.test(path)&&existsSync(resolve(root,path,'package.json'))&&json(resolve(root,path,'package.json')).name===name);
  if(!path)throw new Error('Unknown workspace component');
  const pkg=json(resolve(root,path,'package.json')),previous=pkg.version;
  if(!semver.valid(next)||!semver.gt(next,previous))throw new Error('New component version must be a greater valid SemVer');
- pkg.version=next;lock.packages[path].version=next;
+ pkg.version=next;if(lock.packages[path])lock.packages[path].version=next;
  const notes=readFileSync(resolve(root,'CHANGELOG.md'),'utf8').replace('## 未发布',`## 未发布\n\n- ${name}: ${previous} → ${next}，组件变更待补充。`);
  return {previous,next,files:{[path+'/package.json']:JSON.stringify(pkg,null,2)+'\n','package-lock.json':JSON.stringify(lock,null,2)+'\n','CHANGELOG.md':notes}};
 }

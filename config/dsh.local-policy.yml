@@ -10,8 +10,6 @@
       name: '@deepseek-ai/dsh-host-directory-picker-browse'
     - id: optdsh-directory-picker-ui
       name: '@deepseek-ai/dsh-client-ui-directory-picker-browse'
-    - id: optdsh-agent-canvas
-      name: ../plugins/optdsh-agent-canvas/lib/index.js
     - id: optdsh-optics-mcp
       name: '@deepseek-ai/dsh-mcp-client'
       config:

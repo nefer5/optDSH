@@ -5,12 +5,14 @@ import {requireValue, sceneContext} from './boards.js';
 import {WorkspaceBoardStore} from './workspace-store.js';
 import {registerCanvasTools} from './tools.js';
 import {canvasMessage} from './messages.js';
+import {canvasRuntimeOptions} from './config.js';
 
 export const name = 'optdsh-agent-canvas';
 export const inject = ['connection', 'sessionController', 'tools', 'agents', 'systemPrompt'];
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 export function apply(ctx, options={}) {
+  options=canvasRuntimeOptions(options,process.env,ctx.get?.('profileContext'));
   const ROOT=resolve(options.stateRoot||options.projectRoot||process.cwd());
   if(options.enabled===false)return;
   const editor=new URL(options.editorUrl||'http://127.0.0.1:4173');

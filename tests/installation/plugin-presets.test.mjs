@@ -50,6 +50,9 @@ check('a failed recommendation reports incomplete while retaining the installed 
 check('Canvas installer binds named existing/new parameters in Windows PowerShell 5.1',()=>{
  for(const mode of ['existing','new']){
   const f=fixture(),manifest=JSON.parse(readFileSync(join(f.release,'release-manifest.json')));
+  writeFileSync(join(f.release,'packaging/windows/install-profile-component.ps1'),`param([string]$InstallRoot,[Alias('Home')][string]$DshHome,[string]$Profile,[string]$Package,[string]$Operation,[string]$ReceiptPath,[switch]$Apply)
+'Profile operation fixture'
+`);
   manifest.components.push({id:'canvas',name:'optdsh-agent-canvas',file:'packages/core.tgz',sha256:hash('fixture')});
   manifest.canvasEditor={file:'packages/core.tgz',sha256:hash('fixture')};save(join(f.release,'release-manifest.json'),manifest);
   writeFileSync(join(f.release,'scripts/runtime/setup-canvas.ps1'),`param([Alias('Home')][Parameter(Mandatory)][string]$DshHome,[string]$CanvasRoot,[string]$Package,[string]$InstallRoot,[int]$Port)
