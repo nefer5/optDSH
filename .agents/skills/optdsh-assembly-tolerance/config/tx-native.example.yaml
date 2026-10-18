@@ -14,10 +14,10 @@ coupledParts:
     memberIds: [] # 需要随动的直接子对象；控制对象本身可省略
     axes:
       z: {min: null, max: null} # 相对名义装配零位的行程mm
-# 两目标分别追迹，Z值由后端读取全局Z，不能在配置中覆盖。
+# 当前执行器支持两个配置目标，分别追迹，Z值由后端读取全局Z，不能在配置中覆盖。
 targets:
-  - {name: die1, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
-  - {name: die2, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+  - {name: target-a, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+  - {name: target-b, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
 analysis:
   mode: monte-carlo # 或sensitivity；后者自动MC=0
   method: OD # OD / DLS / none

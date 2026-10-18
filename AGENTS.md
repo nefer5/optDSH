@@ -58,7 +58,7 @@
 | 会话画板接入 | [画板规则](plugins/optdsh-agent-canvas/AGENTS.md) |
 | Harness/专家/模型验收 | [Agent开发](docs/agents.md) |
 | 正式运行与报告 | [运行包规范](docs/runs-and-reports.md) |
-| 2T2R术语/H-V映射 | [领域契约](docs/2t2rLidar/README.md)；其他领域不自动套用 |
+| 课题术语/H-V映射 | 所选Workspace的README、AGENTS、docs/domain及配置；缺失时明确报告，不回退读取旧课题 |
 | 具体研究/光学任务 | 所选Study的README、当次配置和对应.agents/skills/*/SKILL.md |
 
 项目Skill可被DSH产品Agent发现，不假设只供Codex；当前能力清单看实际目录与说明，不把它当禁止新增业务的永久白名单。视觉专家源在.agents/experts，分发维护用.agents/development-skills/expert-distribute。通用经验见.experience/README.md，本机环境事实按shared-memory维护。

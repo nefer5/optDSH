@@ -3,11 +3,11 @@
 ## 对象映射
 
 ```powershell
-python .agents/skills/optdsh-assembly-tolerance/scripts/baseline.py inventory <scene-snapshot.json> 
+python <安装Skill根>/scripts/baseline.py inventory <scene-snapshot.json> 
 ```
 
 输入为当前版本场景快照。输出保留modelId/revision/capturedAt/provenance，列出源、探测器、镜片、布尔操作数和参考关系；状态始终candidate-unconfirmed。
-Rx1/Rx2及镜筒归属需专家确认，不按名称自动选择仿真对象。四颗Tx die整体6D已由用户确认；枢轴、坐标与行程仍需配置。
+接收通道、镜筒和源组归属来自当前Workspace配置；成员数量、枢轴、坐标与行程均须明确，不按其他研究的封装结构推断。
 
 ## 离线数据计算
 
@@ -15,8 +15,8 @@ Tx CSV列为angle_h_deg,weight：角度已在明确的H向角域坐标系中，�
 Rx CSV列为h_mm,v_mm,weight：坐标应是明确约定的探测面H/V系。网格导出需先核对数组轴顺序、像素中心/边界和功率/辐照度单位；不得未经核查交换H/V。
 
 ```powershell
-python .agents/skills/optdsh-assembly-tolerance/scripts/baseline.py metrics <tx.csv> --kind tx --method equal-tail --frame <H-frame> --provenance exported-unverified 
-python .agents/skills/optdsh-assembly-tolerance/scripts/baseline.py metrics <rx.csv> --kind rx --method full-span --fraction 1 --frame <detector-frame> --provenance exported-unverified 
+python <安装Skill根>/scripts/baseline.py metrics <tx.csv> --kind tx --method equal-tail --frame <H-frame> --provenance exported-unverified 
+python <安装Skill根>/scripts/baseline.py metrics <rx.csv> --kind rx --method full-span --fraction 1 --frame <detector-frame> --provenance exported-unverified 
 ```
 
 方法必须显式选择，示例命令不等于用户已确认口径：
@@ -35,6 +35,6 @@ python .agents/skills/optdsh-assembly-tolerance/scripts/baseline.py metrics <rx.
 当前模型版本、对象/通道、名义位置、光源谱/功率、有效光线数、追迹设置/种子、数据生成时间与H/V坐标约定。
 GetAllDetectorDataSafe能读缓存并不证明缓存来自当前模型或最近一次追迹。当前适配未执行新的追迹，也未导出认证的名义角分布/光斑，因此输出baselineApproved=false。
 
-实现参考：相邻opt-assist的lidar-lambertian-echo-tiled-psf/scripts/visualize_tiled_psf.example.py（二维网格与边缘分布）及common.example.py（矩形探测器轴中心/数据读取）。旧脚本使用90%指标且存在负值裁零等选择，本实现没有照搬其口径，也没有运行会改变宿主的旧脚本。
+此计算器只导入安装的optdsh-optics，不依赖相邻工程源码或Python环境。运行前明确当前输入字段的物理定义；不把该计算器支持的D86/Rx矩形指标强制用于其他任务。
 
-正式输出自动分配到runs/baseline/YYMMDD-NN；可用--runs-root指定项目内父目录。CLI解析参数保存为config/resolved.json，输入快照/CSV复制到inputs后再计算，默认入口report.html。
+正式输出自动分配到runs/baseline/YYMMDD-NN；默认以cwd为Workspace，可用--workspace选择课题、--runs-root指定输出父目录。CLI解析参数保存为config/resolved.json，输入快照/CSV复制到inputs后再计算，默认入口report.html。

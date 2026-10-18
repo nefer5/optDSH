@@ -12,10 +12,10 @@ controls:
     expectedType: Rectangular Pipe
     expectedComment: REPLACE_H_CONTROL
     field: TiltAboutY
-    initial: 45
+    initial: 0
     range: {start: -5, stop: 5, num: 3}
-    # angle_H = actual * scale + offset_deg；仅复现旧模型约定，须重新确认。
-    fov: {scale: -2, offset_deg: 90}
+    # angle_H = actual * scale + offset_deg；合成单位比例，仅演示字段；物理映射须由当前课题确认。
+    fov: {scale: 1, offset_deg: 0}
   echo_v:
     object_id: 2
     expectedType: Rectangular Pipe
@@ -23,7 +23,7 @@ controls:
     field: TiltAboutX
     initial: 0
     deltas: [-2, 0, 2]
-    fov: {scale: -1, offset_deg: 0}
+    fov: {scale: 1, offset_deg: 0}
 pickups:
   - object_id: 3
     expectedType: Rectangular Pipe
@@ -31,7 +31,7 @@ pickups:
     field: TiltAboutY
     from_control: scanner_h
     scale: 1
-    offset: -90
+    offset: 0
 source:
   object_id: 4
   expectedType: Source Rectangle
@@ -41,7 +41,7 @@ source:
   x_half_width_col: 16
   y_half_width_col: 17
 efficiency:
-  # 合成值，真实运行由专家指定；不能从旧模型1020 mm²直接沿用。
+  # 合成值，真实运行由专家指定；不能从其他课题直接沿用。
   max_receive_area_mm2: 100
 detectors:
   mirror:

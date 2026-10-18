@@ -3,7 +3,7 @@ requires = ["setuptools==82.0.1"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "optdsh-optics"
-version = "0.2.0"
+version = "0.2.1"
 description = "Workspace-independent optDSH optical service and deterministic executors"
 readme = "README.md"
 requires-python = ">=3.12"

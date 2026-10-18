@@ -26,6 +26,26 @@ class TxPilotTests(unittest.TestCase):
             c=copy.deepcopy(self.config);c[path[0]][path[1]]=value
             with self.assertRaises(ValueError):validate(c)
 
+    def test_pilot_source_group_is_configuration_driven(self):
+        for sources in ([2],[2,3],[2,3,4],[2,3,4,5]):
+            c=copy.deepcopy(self.config);c['sources']['indices']=list(sources)
+            self.assertEqual(validate(c),validate(self.config))
+        for sources in ([],[2,2],[0],[True],['2'],None,'2',[[2]]):
+            c=copy.deepcopy(self.config);c['sources']['indices']=sources
+            with self.assertRaises(ValueError):validate(c)
+
+    def test_specification_preflight_does_not_infer_project_group_or_metric(self):
+        spec=importlib.util.spec_from_file_location('preflight',ROOT/'.agents/skills/optdsh-assembly-tolerance/scripts/preflight.py')
+        m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+        case=json.loads((ROOT/'examples/txrx-assembly-tolerance.json').read_text(encoding='utf-8'))
+        case.update(modelId='model-a',revision='revision-a')
+        case['tx']['compensator']['objectIds']=['model-a/revision-a/obj-2','model-a/revision-a/obj-3']
+        case['tx']['metric'].update(kind='workspace-defined-width',axis='projection-a',energyFraction=.9)
+        result=m.check(case,scope='tx')
+        self.assertFalse(result['errors']);self.assertFalse(result['readyToRun'])
+        case['tx']['metric'].pop('axis')
+        self.assertIn('tx.metric.axis',m.check(case,scope='tx')['missing'])
+
     def test_tx_and_rx_preflight_are_independent(self):
         spec=importlib.util.spec_from_file_location('preflight',ROOT/'.agents/skills/optdsh-assembly-tolerance/scripts/preflight.py')
         m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)

@@ -16,7 +16,7 @@
 
 ## 官方能力与当前自有接入的区别
 
-同一Host与同一DSH_HOME可以管理多个不同目录的Workspace/Session；当前官方SessionController的create接口接收workspaceId/cwd，Web工作区插件提供选择目录流程（需要组合可用的directory-picker后端）。启动参数Workspace是默认值，不应成为所有会话必须相同的目录限制。未在本轮浏览器中实际点击选择器，不将接口/源码证据冒充UI端到端证明。
+同一Host与同一DSH_HOME可以管理多个不同目录的Workspace/Session；当前官方SessionController的create接口接收workspaceId/cwd，Web工作区插件提供选择目录流程（需要组合可用的directory-picker后端）。启动参数Workspace是默认值，不应成为所有会话必须相同的目录限制。本轮已用隔离Host注册外部课题并在Web切换，画板按会话cwd保存；系统选择器会弹原生窗口，后续自动验证用显式路径注册，避免打扰用户。
 
 画板已从session.meta.cwd确定归属并有双目录夹具；工作台可绑定不同目录的已有会话，但其create和部分报告仍取配置Workspace；Forms HTTP仍绑定一个配置目录。这些是自有插件剩余适配，不是官方会话不支持任意目录。全局optdsh命令是否登记与Web内多项目能力也是不同问题。
 
@@ -31,9 +31,9 @@
 
 ## 既有研究与本次处理
 
-旧现场E:/Proj-2026-N06_optDSH/STUDYS及其模型、配置、历史run保持原位。新工作树随Git带来的10份元数据副本已通过safe-delete可恢复移出，当前副本恢复清单在E:/.safe-delete-trash/20261018-140651/manifest.json；Git checkpoint也保留原版本。没有把真实研究迁移至发布或验证区。
+2T2R已建立源码外独立课题，背景/业务规范/配置/历史报告按映射复制，原资料保留；本机入口见[本轮安装与课题说明](refactor/2026-10-18/canvas-installation.md)。旧报告中的绝对路径是历史记录，不能作为新运行入口。商业模型和原始聊天未迁，真实运行需另行显式配置。
 
-真实课题今后迁到何处需单独选择、复制校验并安排停写窗口，本次不执行。历史文档中STUDYS路径是原现场快照，不是新平台目录要求。
+公共Skill不依赖具体课题或旧平台根；课题Skill跟随Workspace。研究run按当前workspace归档；不得通过扫描相邻旧源码补齐配置。通用算法限制与课题采用约定分别声明。
 
 ## DSH_HOME与.agents（讨论边界）
 

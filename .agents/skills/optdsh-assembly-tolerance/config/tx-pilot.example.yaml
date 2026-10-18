@@ -10,8 +10,6 @@ sources:
   indices:
   - 2
   - 3
-  - 4
-  - 5
   motion: rigid-group
 lenses:
 - index: 7
@@ -38,12 +36,12 @@ detector:
   - 12
 metric:
   method: equal-tail
-  frame: Detector Rectangle local X radial-projection angle (pilot H convention)
+  frame: Detector Rectangle local X radial-projection angle (synthetic projection convention)
   integrationTolerance: 0.005
   definitionStatus: pilot convention, not manufacturing acceptance
 trace:
   raysPerSource: 25000
-  seed: 260926
+  seed: 42
   split: true
   scatter: false
   polarization: true

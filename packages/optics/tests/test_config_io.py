@@ -9,10 +9,11 @@ from optdsh_optics.run_bundle import RunBundle
 from optdsh_optics.tx_pilot import validate
 
 class ConfigIOTests(unittest.TestCase):
-    def test_yaml_example_matches_legacy_plan(self):
+    def test_yaml_and_legacy_examples_preserve_offline_plan_compatibility(self):
         yaml_config=load_config(ROOT/'.agents/skills/optdsh-assembly-tolerance/config/tx-pilot.example.yaml')
         legacy=load_config(ROOT/'examples/tx-pilot.example.json')
-        self.assertEqual(yaml_config,legacy)
+        self.assertEqual(yaml_config['sources']['indices'],[2,3])
+        self.assertEqual(legacy['sources']['indices'],[2,3,4,5])
         self.assertEqual(validate(yaml_config),validate(legacy))
 
     def test_invalid_yaml_is_rejected(self):

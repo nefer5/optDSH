@@ -6,10 +6,10 @@ modelId: null
 revision: null
 tx:
   metric:
-    kind: D86
-    axis: H
-    angleType: full
-    energyFraction: 0.86
+    kind: null # 当前课题定义
+    axis: null
+    angleType: null
+    energyFraction: null
     definition: null
     limitDeg: null
     referenceFrame: null
@@ -28,7 +28,7 @@ tx:
     bounds: null
     groupMode: rigid-group
     objectIds: null
-    groupModeConfirmed: true
+    groupModeConfirmed: false
 internalErrors: null
 barrelPlacementErrors: null
 sampling:

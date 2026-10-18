@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([string]$ReleaseRoot=(Split-Path (Split-Path $PSScriptRoot -Parent) -Parent), [Parameter(Mandatory)][string]$InstallRoot, [Alias('Home')][string]$OptDshHome=(Join-Path $env:USERPROFILE '.optdsh'), [string]$Workspace=(Get-Location).Path, [string[]]$Components=@('core'), [ValidateSet('none','market','recommended')][string]$PluginPreset='none', [switch]$AddToUserPath, [switch]$DryRun)
+param([string]$ReleaseRoot=(Split-Path (Split-Path $PSScriptRoot -Parent) -Parent), [Parameter(Mandatory)][string]$InstallRoot, [Alias('Home')][string]$OptDshHome=(Join-Path $env:USERPROFILE '.optdsh'), [string]$Workspace=(Get-Location).Path, [string[]]$Components=@('core'), [ValidateSet('none','market','recommended')][string]$PluginPreset='none', [string]$CanvasRoot, [switch]$InstallCanvas, [string]$CanvasInstallRoot, [int]$CanvasPort=4173, [switch]$AddToUserPath, [switch]$DryRun)
 $ErrorActionPreference='Stop'
 function Get-ReleaseHash([string]$Path) {
  $stream=[IO.File]::OpenRead($Path)
@@ -15,6 +15,18 @@ if ($OptDshHome -eq $InstallRoot -or $OptDshHome.StartsWith($InstallRoot.TrimEnd
 $manifest=Get-Content -LiteralPath (Join-Path $ReleaseRoot 'release-manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($manifest.schemaVersion -ne 1) { throw 'Unsupported release manifest' }
 $selected=@('core')+@($Components | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -ne 'core' } | Select-Object -Unique)
+$canvasArtifact=$null
+if($CanvasRoot -and $InstallCanvas){throw 'Select existing CanvasRoot or InstallCanvas, not both'}
+if($CanvasRoot -or $InstallCanvas){
+ if('canvas' -notin $selected){throw 'Select the canvas component when configuring the editor'}
+ if($CanvasPort -lt 1024 -or $CanvasPort -gt 65535){throw 'CanvasPort must be 1024..65535'}
+ if($InstallCanvas){
+  if(-not $CanvasInstallRoot -or -not $manifest.canvasEditor){throw 'Select a new CanvasInstallRoot and a release containing the local Canvas editor package'}
+  $canvasArtifact=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.canvasEditor.file))
+  if(-not $canvasArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Canvas artifact escapes release root'}
+  if((Get-ReleaseHash $canvasArtifact) -ne $manifest.canvasEditor.sha256){throw 'Canvas editor artifact hash mismatch'}
+ }
+}
 $artifacts=@()
 foreach ($id in $selected) {
  $rows=@($manifest.components | Where-Object id -eq $id)
@@ -50,6 +62,7 @@ if ($PluginPreset -ne 'none') {
  $community=@($community)
 }
 $plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;pluginPreset=$PluginPreset;communityPlugins=$community;communityPluginStatus='not-selected';userPathRegistration=[bool]$AddToUserPath}
+$plan.canvasEditorStatus=if($CanvasRoot -or $InstallCanvas){'pending'}else{'not-configured'}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 8;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
 $nodeExecutable=(Get-Command node.exe -ErrorAction Stop).Source
@@ -84,6 +97,19 @@ if (-not $OptDshHome) { $OptDshHome=$settings.home }
 node "%~dp0node_modules\optdsh-bundle\lib\launcher.mjs" --config "%~dp0optdsh-launcher.json" %*
 exit /b %errorlevel%
 '@ | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh.cmd') -Encoding ascii
+if($CanvasRoot -or $InstallCanvas){
+ try{
+  $canvasArguments=@('-Home',$OptDshHome,'-Port',"$CanvasPort")
+  if($InstallCanvas){$canvasArguments+=@('-Package',$canvasArtifact,'-InstallRoot',$CanvasInstallRoot)}else{$canvasArguments+=@('-CanvasRoot',$CanvasRoot)}
+  & (Join-Path $InstallRoot 'scripts/runtime/setup-canvas.ps1') @canvasArguments
+  $plan.canvasEditorStatus='configured-not-runtime-verified'
+ }catch{
+  $plan.canvasEditorStatus='incomplete';$plan.coreInstalled=$true
+  $plan|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
+  throw 'Platform retained; Canvas configuration failed. Inspect the selected installation and reconnect with setup-canvas.ps1.'
+ }
+ $plan|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
+}
 if ($PluginPreset -ne 'none') {
  $runtimeLog=Join-Path $InstallRoot '.runtime'
  New-Item -ItemType Directory -Path $runtimeLog -Force|Out-Null

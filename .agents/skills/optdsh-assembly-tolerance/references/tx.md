@@ -19,10 +19,10 @@
 
 ## 运行
 
-`python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_native.py <配置.yaml>`只校验服务缓存和配置；加`--execute`提交副本作业，`--wait`等待结果。CLI不另起绕开宿主锁的连接。浏览器点击“在副本运行”即授权此配置；关闭面板/停止Agent不取消仿真，使用运行页取消按钮。
+使用所选Python运行本Skill的`scripts/run_tx_native.py <配置.yaml> --workspace <课题根>`默认只生成离线计划；加`--dry-run`才只读检查服务缓存和配置；加`--execute`提交副本作业，`--wait`等待结果。CLI不另起绕开宿主锁的连接。浏览器点击“在副本运行”即授权此配置；关闭面板/停止Agent不取消仿真，使用运行页取消按钮。
 
 1. 服务锁定当前宿主，冻结YAML和resolved/runtime配置。执行器再次读模型/SystemID/revision，任何不一致拒绝。
-2. CopySystem后只改副本参考、光源采样、TDE/MFE；原模型不Save。两die分段清空→NSTR→NSDD，名义有效后才运行。
+2. CopySystem后只改副本参考、光源采样、TDE/MFE；原模型不Save。两个配置目标分段清空→NSTR→NSDD，名义有效后才运行。
 3. 灵敏度：Sensitivity、MC=0，SAVE保存Min/Max模型，再回读每die值和补偿位置；原生汇总MF和mrad分开。
 4. MC：SkipSensitivity、NumberOfRuns=N、保存N个原生模型。回读每个补偿后模型，再恢复该样本耦合件的名义零位求同一盲装误差的补偿前值。功率/行程失效样本保留，不能算成有效。
 5. 取消请求到达worker后调用原生Cancel，等待结束再关闭副本；恢复校验包括原系统ID、采集字段、MFE/TDE摘要、dirty和磁盘SHA256。API成功标记必须有TXT/ZTD及相应样本文件佐证。

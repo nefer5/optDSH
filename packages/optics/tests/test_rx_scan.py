@@ -65,7 +65,13 @@ class System:
 
 
 class RxTests(unittest.TestCase):
-    def setUp(self): self.c=load_config(CONFIG)
+    def setUp(self):
+        self.c=load_config(CONFIG)
+        # Explicit fixture geometry: public examples no longer carry a real
+        # research project's mirror gain, zero point or pickup offset.
+        self.c['controls']['scanner_h'].update(initial=45,fov={'scale':-2,'offset_deg':90})
+        self.c['controls']['echo_v']['fov']={'scale':-1,'offset_deg':0}
+        self.c['pickups'][0]['offset']=-90
     def live(self):
         self.c['modelId']='m'; self.c['expectedRevision']='r'; self.c['expertConfirmation']='Reviewed synthetic mapping'
         for group in [self.c['controls'].values(),self.c['pickups'],[self.c['source']],self.c['detectors'].values()]:

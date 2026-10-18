@@ -4,7 +4,11 @@ import csv
 import json
 from pathlib import Path
 import sys
-ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file());sys.path.insert(0,str(ROOT/'packages/optics/src'))
+bootstrap=argparse.ArgumentParser(add_help=False)
+bootstrap.add_argument('--package-source',type=Path)
+bootstrap_args,_=bootstrap.parse_known_args()
+if bootstrap_args.package_source:sys.path.insert(0,str(bootstrap_args.package_source.expanduser().resolve()))
+from optdsh_optics import tolerance_baseline
 from optdsh_optics.tolerance_baseline import candidate_inventory,tx_h_d86,rx_rectangular
 from optdsh_optics.run_bundle import RunBundle,sha
 
@@ -12,16 +16,26 @@ def main():
     parser=argparse.ArgumentParser();commands=parser.add_subparsers(dest='command',required=True)
     inventory=commands.add_parser('inventory');inventory.add_argument('snapshot',type=Path)
     metrics=commands.add_parser('metrics');metrics.add_argument('csv',type=Path);metrics.add_argument('--kind',choices=['tx','rx'],required=True);metrics.add_argument('--method',choices=['equal-tail','shortest','full-span'],required=True);metrics.add_argument('--frame',required=True);metrics.add_argument('--fraction',type=float);metrics.add_argument('--provenance',choices=['synthetic','exported-unverified'],required=True)
-    for sub in (inventory,metrics):sub.add_argument('--runs-root',type=Path,default=ROOT/'runs/baseline')
+    for sub in (inventory,metrics):
+        sub.add_argument('--workspace',type=Path,default=Path.cwd())
+        sub.add_argument('--runs-root',type=Path)
+        sub.add_argument('--package-source',type=Path,help='Explicit development source; normally use installed optdsh-optics')
     args=parser.parse_args()
+    workspace=args.workspace.expanduser().resolve()
+    if not workspace.is_dir():parser.error('--workspace must be an existing directory')
     config={k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items() if k!='runs_root'}
     input_key='snapshot' if args.command=='inventory' else 'csv'
-    source=Path(config[input_key]);relative='inputs/scene.json' if args.command=='inventory' else 'inputs/samples.csv'
+    source=Path(config[input_key]);source=(source if source.is_absolute() else workspace/source).resolve()
+    relative='inputs/scene.json' if args.command=='inventory' else 'inputs/samples.csv'
     config[input_key]=relative
     config['report']={'title':'名义基线 · '+('对象映射候选' if args.command=='inventory' else args.kind.upper()+'离线指标'),'background':'建立装调分析前的对象与指标基线，避免把未经确认的映射或旧数据当作当前模型性能。','objective':'生成待确认的对象候选清单。' if args.command=='inventory' else '在指定输入样本、坐标系和能量口径下计算离线指标；不替代当前宿主追迹。'}
-    bundle=RunBundle.create(ROOT,'baseline',config,root=args.runs_root,mode='offline')
+    bundle=RunBundle.create(workspace,'baseline',config,root=args.runs_root,mode='offline')
     bundle.manifest['inputSource']=str(source.resolve())
-    bundle.manifest['code']={str(p.relative_to(ROOT)).replace('\\','/'):sha(p) for p in [Path(__file__),ROOT/'packages/optics/src/optdsh_optics/tolerance_baseline.py']}
+    bundle.manifest['code']={}
+    for p in [Path(__file__),Path(tolerance_baseline.__file__)]:
+        relative_code='code/'+p.name
+        bundle.copy(p,relative_code)
+        bundle.manifest['code'][relative_code]=sha(p)
     saved=json.loads((bundle.path/'config/resolved.json').read_text(encoding='utf-8'))
     try:
         bundle.copy(source,relative);input_path=bundle.path/relative

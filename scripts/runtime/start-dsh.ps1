@@ -53,9 +53,23 @@ try {
     if (-not (Test-Path -LiteralPath $bundleCli)) { $bundleCli = Join-Path $context.InstallRoot 'node_modules/optdsh-bundle/lib/cli.mjs' }
     if (-not (Test-Path -LiteralPath $bundleCli)) { throw 'Product bundle composer is missing from the installation.' }
     $nativeEncoding = [Console]::OutputEncoding
+    $canvasComposeArguments = @()
     try {
         [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
-        $compose = & $node $bundleCli compose --install-root $context.InstallRoot --home $context.Home --profile $context.Profile --workspace $context.Workspace --state-root $context.StateRoot --components ($context.Components -join ',') --output $context.PatchPath
+        if ('canvas' -in $context.Components -and (Test-Path -LiteralPath (Join-Path $context.Home 'config/canvas.json'))) {
+            $canvasCli = Join-Path (Split-Path $bundleCli -Parent) 'canvas-cli.mjs'
+            $savedNativePreference = $ErrorActionPreference
+            try {
+                $ErrorActionPreference = 'Continue'
+                $canvasStatus = & $node $canvasCli ensure --home $context.Home 2>&1
+                $canvasExit = $LASTEXITCODE
+            } finally { $ErrorActionPreference = $savedNativePreference }
+            if ($canvasExit -ne 0) {
+                Write-Warning ('Canvas unavailable; the platform will continue. ' + ($canvasStatus -join ' '))
+                $canvasComposeArguments = @('--canvas-unavailable','Editor readiness failed; reconnect Canvas or inspect its Home logs.')
+            }
+        }
+        $compose = & $node $bundleCli compose --install-root $context.InstallRoot --home $context.Home --profile $context.Profile --workspace $context.Workspace --state-root $context.StateRoot --components ($context.Components -join ',') --output $context.PatchPath @canvasComposeArguments
         $composeExit = $LASTEXITCODE
     } finally { [Console]::OutputEncoding = $nativeEncoding }
     if ($composeExit -ne 0) { throw 'Product bundle composition failed; no host was started.' }

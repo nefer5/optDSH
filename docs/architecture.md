@@ -1,6 +1,6 @@
 # 架构与目录
 
-2026-10-18分支实施：新增optdsh-bundle负责官方Loader装配、认证记录与可选插件隔离；DSH目标升级到0.2.1-rc.2，现役旧版依赖/3080暂保留。程序根、独立home、workspace分离，插件状态在home/state/profile；新画板在课题.agent-canvas/optdsh/boards。独立Canvas文档协议尚未统一，18适配桥尚未实现，真实迁移/沙箱/切换未做。具体决定见[决定入口](refactor/2026-10-18/decisions.md)，发布使用见[安装说明](installation/README.md)。
+2026-10-18分支实施：新增optdsh-bundle负责官方Loader装配、认证记录与可选插件隔离；DSH目标升级到0.2.1-rc.2，现役旧版依赖/3080暂保留。程序根、独立home、workspace分离，插件状态在home/state/profile；新画板在课题.agent-canvas/optdsh/boards。编辑器已支持独立安装及连接，独立Canvas文档协议尚未统一，18适配桥尚未实现，真实迁移/沙箱/切换未做。具体决定见[决定入口](refactor/2026-10-18/decisions.md)，发布使用见[安装说明](installation/README.md)。
 
 下文描述重构前现役部署，作为过渡对照；不代表新代码仍要求固定仓库根。
 

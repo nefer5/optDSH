@@ -15,8 +15,8 @@ coupledParts:
     axes:
       z: {min: null, max: null}
 targets:
-  - {name: die1, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
-  - {name: die2, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+  - {name: target-a, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
+  - {name: target-b, sourceId: null, detectorId: null, axis: X, scaleMrad: 1, limitMrad: null, minPowerRatio: 0.95}
 analysis:
   mode: custom
   method: coordinate # coordinate / OD / DLS / none

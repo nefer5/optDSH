@@ -25,7 +25,7 @@ def build_cases(config):
 def validate(config):
     if config.get('scope')!='tx' or config.get('kind')!='functional-pilot':raise ValueError('Tx functional-pilot configuration required')
     indices=config['sources']['indices']
-    if len(indices)!=4 or len(set(indices))!=4 or any(type(i)!=int or i<=0 for i in indices):raise ValueError('Four distinct source indices required')
+    if not isinstance(indices,list) or not indices or any(type(i)!=int or i<=0 for i in indices) or len(set(indices))!=len(indices):raise ValueError('Nonempty distinct positive source indices required')
     if config['sources']['motion']!='rigid-group':raise ValueError('Sources must remain one rigid body')
     lens_ids=[l['index'] for l in config['lenses']]
     if not lens_ids or any(type(i)!=int or i<=0 for i in lens_ids) or len(lens_ids)!=len(set(lens_ids)):raise ValueError('Unique positive lens indices required')

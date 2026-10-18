@@ -12,6 +12,6 @@
 
 发布EXE和CMD使用lib/launcher.mjs，外部optdsh-launcher.json声明schemaVersion、installRoot、home、workspace、profile、stateRoot、port、components及可选nodeExecutable。相对路径按配置文件目录解析；命令行可覆盖。Node>=24由用户提供。
 
-入口支持start/status/stop、--config、--workspace、--home、--profile、--state-root、--port、--components、--no-browser；--restart必须显式指定。Windows生命周期复用内置PowerShell5.1运行的同一套scripts/runtime，不搜索或要求pwsh。只有核心平台启动，不自动启动Zemax、光学服务或画板编辑器。
+入口支持start/status/stop、--config、--workspace、--home、--profile、--state-root、--port、--components、--no-browser；--restart必须显式指定。Windows生命周期复用内置PowerShell5.1运行的同一套scripts/runtime，不搜索或要求pwsh。默认只有核心平台启动，不自动启动Zemax或光学服务；选择canvas且Home/config/canvas.json已配置时，校验并按需启动/复用独立画板编辑器。
 
 EXE源码在windows/Launcher.cs，维护构建脚本输出二进制到发布目录，不跟踪编译产物。它使用Windows现有.NET Framework，不要求用户安装.NET SDK或现代.NET运行时；仍需目标Windows验证。

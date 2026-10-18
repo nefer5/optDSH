@@ -13,6 +13,7 @@ const components={core:'packages/optdsh-bundle',workbench:'plugins/optdsh-workbe
 const npmCli=process.env.npm_execpath||(process.platform==='win32'?resolve(dirname(spawnSync('where.exe',['npm.cmd'],{encoding:'utf8'}).stdout.trim().split(/\r?\n/)[0]),'node_modules/npm/bin/npm-cli.js'):realpathSync(spawnSync('which',['npm'],{encoding:'utf8'}).stdout.trim()));
 const artifacts=[];
 const wheelArgument=process.argv[3];
+const canvasArgument=process.argv[4];
 for(const [id,path]of Object.entries(components)){
  const folder=resolve(root,path),meta=JSON.parse(readFileSync(resolve(folder,'package.json')));
  const result=spawnSync(process.execPath,[npmCli,'pack','--json','--pack-destination',resolve(output,'packages')],{cwd:folder,encoding:'utf8'});
@@ -24,7 +25,7 @@ for(const [id,path]of Object.entries(components)){
 }
 for(const folder of ['scripts/runtime','packaging/windows'])cpSync(resolve(root,folder),resolve(output,folder),{recursive:true,filter:source=>!existsSync(source)||realpathSync(source)===resolve(source)});
 cpSync(resolve(root,'docs/refactor/2026-10-18'),resolve(output,'docs/refactor/2026-10-18'),{recursive:true});
-for(const file of ['README.md','docs/architecture.md','docs/runtime.md','docs/contracts.md','docs/installation/README.md','docs/development.md','docs/versioning.md','docs/workspaces.md','docs/agent-resource-layout.md','config/runtime.example.json','推荐插件.md','.agents/plans/261018-platform-plugin-refactor.md','.agents/plans/261018-windows-thin-launcher.md','.agents/plans/261018-version-and-profile-migration.md','.agents/plans/261018-recommended-plugin-install.md'])if(existsSync(resolve(root,file))){mkdirSync(resolve(output,relative(root,resolve(root,file)),'..'),{recursive:true});copyFileSync(resolve(root,file),resolve(output,file));}
+for(const file of ['README.md','docs/architecture.md','docs/runtime.md','docs/contracts.md','docs/installation/README.md','docs/development.md','docs/versioning.md','docs/workspaces.md','docs/agent-resource-layout.md','config/runtime.example.json','推荐插件.md','.agents/plans/261018-platform-plugin-refactor.md','.agents/plans/261018-windows-thin-launcher.md','.agents/plans/261018-version-and-profile-migration.md','.agents/plans/261018-recommended-plugin-install.md','.agents/plans/261018-canvas-installation-and-study.md'])if(existsSync(resolve(root,file))){mkdirSync(resolve(output,relative(root,resolve(root,file)),'..'),{recursive:true});copyFileSync(resolve(root,file),resolve(output,file));}
 mkdirSync(resolve(output,'launcher'),{recursive:true});
 const systemRoot=process.env.SystemRoot||process.env.WINDIR;
 if(!systemRoot)throw new Error('Windows system directory is unavailable for launcher build');
@@ -38,7 +39,9 @@ const buildText=JSON.stringify(build,null,2)+'\n';
 writeFileSync(resolve(output,'build-info.json'),buildText);
 const buildInfo={file:'build-info.json',sha256:createHash('sha256').update(buildText).digest('hex')};
 const profilePlugins={file:'packaging/windows/plugins.snapshot.json',sha256:createHash('sha256').update(readFileSync(resolve(output,'packaging/windows/plugins.snapshot.json'))).digest('hex'),presets:['none','market','recommended'],default:'none'};
-const manifest={schemaVersion:1,profilePlugins,buildId:build.buildId,buildInfo,product:'optDSH',version:JSON.parse(readFileSync(resolve(root,'package.json'))).version,sourceRevision,sourceDirty,dshVersion:'0.2.1-rc.2',runtime:{node:'>=24',python:'>=3.12 (optics only)',zemax:'user-installed; 18 adapter pending, 2023+ requires real verification'},defaultComponents:['core'],components:artifacts,optics,launcher,dependencyLock:'build-dependency-lock.json (build provenance; installed profile produces its own lock)',sandbox:'deferred by user',publication:'not published; license pending'};
+let canvasEditor;
+if(canvasArgument){const source=resolve(canvasArgument),file='packages/'+source.split(/[\\/]/).at(-1);if(!file.endsWith('.tgz'))throw new Error('Expected Canvas editor .tgz');copyFileSync(source,resolve(output,file));canvasEditor={file,sha256:createHash('sha256').update(readFileSync(source)).digest('hex'),name:'@nefer5/agent-canvas',required:'>=0.2.3',embedDsh:4,publication:'local-only-not-published'};}
+const manifest={schemaVersion:1,profilePlugins,canvasEditor,buildId:build.buildId,buildInfo,product:'optDSH',version:JSON.parse(readFileSync(resolve(root,'package.json'))).version,sourceRevision,sourceDirty,dshVersion:'0.2.1-rc.2',runtime:{node:'>=24',python:'>=3.12 (optics only)',zemax:'user-installed; 18 adapter pending, 2023+ requires real verification'},defaultComponents:['core'],components:artifacts,optics,launcher,dependencyLock:'build-dependency-lock.json (build provenance; installed profile produces its own lock)',sandbox:'deferred by user',publication:'not published; license pending'};
 writeFileSync(resolve(output,'release-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 writeFileSync(resolve(output,'index.html'),'<!doctype html><meta charset="utf-8"><title>optDSH 本地部署产物</title><h1>optDSH 本地部署产物</h1><p>本产物未公开发布。Node/Python/Zemax不随包；沙箱和真实业务待验证。</p><ul><li><a href="docs/refactor/2026-10-18/index.html#design/target">架构、目录、决定与实施计划</a></li><li><a href="docs/installation/README.md">安装、选装、升级与回退</a></li><li><a href="release-manifest.json">组件与SHA256清单</a></li><li><a href="packaging/windows/plugins.snapshot.json">市场插件选择快照</a></li></ul>');
 finishBuild(reservation,output);
