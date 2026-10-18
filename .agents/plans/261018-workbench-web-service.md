@@ -17,6 +17,8 @@ flowchart LR
 - [x] W1 工作台lib/service-manager.js、config.js、index.js：service-status/start/logs，固定命令、互斥、健康身份校验、失败诊断。所属tests验证重复启动、缺配置、失败、无隐式启动。
 - [x] W2 packages/optics server.py：--defer-connect及认证/api/health；子进程synthetic测试，禁止真实Zemax。
 - [x] W3 工作台web局部状态条、显式按钮、等待状态与文本日志；视觉专家实施、浏览器模拟验收。
-- [ ] W4 统一升版、文档与本地Profile包升级、针对性回归；不推送、不公开发布，不连接真实Zemax。实际配置若未就绪，明确待验证。
+- [x] W4 统一升版、文档与本地Profile包升级、针对性回归；不推送、不公开发布，不连接真实Zemax。实际配置若未就绪，明确待验证。
 
 运行记录在state/.runtime，日志在state/logs/optics；无服务停止入口，本轮不扩展自动重试/后台计算能力。
+
+验收收尾：完整157插件/98安装/11PPT/125光学/37分发/56架构kit及DOM/文档检查通过；补充live PID保护后7项服务专项通过。真实子进程仅synthetic，无初始快照、重复启动和重新创建管理器复用同PID。日常Profile0.10.0与Web资源200，实际Tabbit明暗/日志检查通过且pageerror为空。当前Home缺optics.json，真实服务配置与Zemax未验证。代码提交e20198c，本地测试包E:/Proj-2026-N06_optDSH-releases/0.2.0-dev.12，含optics0.3.0 wheel；未推送或公开发布。

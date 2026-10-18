@@ -17,5 +17,7 @@
   "modelInference": false,
   "sandbox": "deferred by user",
   "pushed": false,
-  "publicNpmPublished": false
+  "publicNpmPublished": false,
+  "codeCommit": "e20198c",
+  "localTestPackage": "E:/Proj-2026-N06_optDSH-releases/0.2.0-dev.12"
 }
