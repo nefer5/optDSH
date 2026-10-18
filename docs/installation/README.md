@@ -30,7 +30,7 @@ pwsh <程序目录>/optdsh.ps1 -Workspace <任意课题目录>
 
 安装时显式添加 `-AddToUserPath` 可登记用户PATH，随后新终端在任意课题目录执行 `optdsh`；本轮未在开发机登记PATH，此选项未实改全局验证。无需复制平台到课题。卸载时先预览并保留用户资料。
 
-光学wheel可作为export-release第二个参数纳入清单：`node scripts/maintenance/export-release.mjs <新输出目录> <wheel路径>`。选装Python环境使用包内 `packaging/windows/install-optics.ps1 -Wheel <wheel> -EnvironmentRoot <新的venv目录>`，按锁联网安装依赖；本轮完整下载测试未完成，已取消，不宣称新机光学环境安装通过。
+光学wheel可作为export-release第二个参数纳入清单：`node scripts/maintenance/export-release.mjs <新输出目录> <wheel路径>`。选装Python环境使用包内 `packaging/windows/install-optics.ps1 -Wheel <wheel> -EnvironmentRoot <新的venv目录>`，按锁联网安装依赖；早期下载尝试曾取消；2026-10-18新工作树续轮已在仓库外新建Python环境完整安装锁定依赖和wheel，pip check、隔离导入与synthetic服务通过。沙箱、公司新机和真实Zemax仍未验证，详见重构工作树迁移记录。
 
 安装推荐市场组件前执行 `install-profile-plugins.ps1` 预览；`-Names` 指定选择，`-Apply`才调用官方profile包管理器。disabled项保留不启用，旧版豁免不继承；新版本兼容拒绝必须先处理。11项快照不等于已全部验证。
 

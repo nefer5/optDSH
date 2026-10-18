@@ -50,3 +50,11 @@ Agent资源采用包内完整基线、可选共享导出与宿主适配的讨论
 - 更新后的外部workspace产物使用新的002子目录，不改写001证据。复用下载缓存时显式标注非冷网络安装。
 
 这些证据不代表Sandbox、公司实机、真实模型或Zemax验收。
+
+## 续轮最终验证（2026-10-18）
+
+外部workspace修订提交1e273cb，checkpoint/optdsh-external-workspaces-20261018。完整npm test通过：147项Node插件、35项安装、11项PPT、121项光学、37项分发、56项架构kit，DOM冒烟使用WebGL stub，文档检查通过。提交钩子按暂存区扫描一次，错误/警告均0。
+
+002发布物来自干净提交，六个npm包及光学wheel重新构建。仓库外四组件安装、认证、官方client图与JS检查全部通过；本次显式复用001下载缓存，不能称作第二次冷网络安装。独立002 Python环境完整依赖/wheel、隔离导入、synthetic启动/回读/停止也通过。两个验证进程均已停止，无真实模型或Zemax调用。可移植脱敏回执见[evidence/worktree-workspaces-verification.json](evidence/worktree-workspaces-verification.json)。001冷缓存验证记录保留，未覆盖。
+
+旧现场Git仍干净，10项旧Study元数据哈希一致。此检查不等于对所有历史大文件逐项复算；本轮没有移动或修改它们。公共Agent分享仍为讨论提案。新工作树后续可直接继续，发布与验证分目录证据不代替沙箱/公司环境验收。

@@ -1,0 +1,117 @@
+{
+  "codeRevision": "1e273cbc6959259f94bb5a08e0e9b0880036a07a",
+  "verifiedAt": "2026-10-18T14:19:33.2836444+08:00",
+  "sourceRoot": "E:/Proj-2026-N06_optDSH-dev",
+  "releaseRoot": "E:/Proj-2026-N06_optDSH-releases/20261018-workspace-002",
+  "fullRegression": {
+    "docs": "passed",
+    "nodePluginTests": 147,
+    "status": "passed",
+    "architectureKitTests": 56,
+    "dom": "stubbed-WebGL",
+    "opticsTests": 121,
+    "installationTests": 35,
+    "distributorTests": 37,
+    "pptTests": 11
+  },
+  "nodeInstallation": {
+    "schemaVersion": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "releaseRoot": "E:\\Proj-2026-N06_optDSH-releases\\20261018-workspace-002",
+      "validationRoot": "E:\\Proj-2026-N06_optDSH-validation\\20261018-workspace-full-002",
+      "installRoot": "E:\\Proj-2026-N06_optDSH-validation\\20261018-workspace-full-002\\app",
+      "home": "E:\\Proj-2026-N06_optDSH-validation\\20261018-workspace-full-002\\home",
+      "workspace": "E:\\Proj-2026-N06_optDSH-validation\\20261018-workspace-full-002\\workspace",
+      "stateRoot": "E:\\Proj-2026-N06_optDSH-validation\\20261018-workspace-full-002\\state",
+      "components": [
+        "core",
+        "workbench",
+        "canvas",
+        "forms"
+      ],
+      "port": 53398,
+      "installTimeoutSeconds": 600,
+      "requiredNode": "24.x",
+      "modelRequests": false,
+      "zemax": false,
+      "globalChanges": false,
+      "npmCacheRoot": "E:\\Proj-2026-N06_optDSH-validation\\20261018-worktree-full-001\\npm-cache",
+      "cacheMode": "explicit-cache-reuse-not-a-cold-network-test"
+    },
+    "status": "passed",
+    "phase": "complete",
+    "checks": [
+      "release-installer-completed",
+      "identity-and-authenticated-cookie",
+      "selected-components-ready",
+      "official-client-graph-and-revisioned-scripts"
+    ],
+    "clients": [
+      {
+        "discoverable": true,
+        "revisioned": true,
+        "id": "optdsh-workbench",
+        "registration": true,
+        "http": 200
+      },
+      {
+        "discoverable": true,
+        "revisioned": true,
+        "id": "optdsh-agent-canvas",
+        "registration": true,
+        "http": 200
+      }
+    ],
+    "cleanup": "owned-host-stopped-or-already-exited",
+    "limitations": [
+      "No model calls, Zemax, browser interaction, sandbox or company validation."
+    ],
+    "updatedAt": "2026-10-18T14:19:21.9067849+08:00",
+    "nodeVersion": "24.19.0",
+    "components": [
+      {
+        "status": "ready",
+        "id": "core"
+      },
+      {
+        "status": "ready",
+        "id": "workbench"
+      },
+      {
+        "status": "ready",
+        "id": "canvas"
+      },
+      {
+        "status": "ready",
+        "id": "forms"
+      }
+    ]
+  },
+  "opticsInstallation": {
+    "cleanup": "stopped",
+    "python": {
+      "prefix": "E:\\Proj-2026-N06_optDSH-validation\\20261018-optics-full-002\\python-env",
+      "module": "E:\\Proj-2026-N06_optDSH-validation\\20261018-optics-full-002\\python-env\\Lib\\site-packages\\optdsh_optics\\__init__.py",
+      "imports": "passed"
+    },
+    "verifiedAt": "2026-10-18T14:18:42.7298314+08:00",
+    "modelCalls": false,
+    "port": 50945,
+    "status": "passed",
+    "backend": "synthetic",
+    "realZemax": false,
+    "pid": 52044
+  },
+  "oldMetadataHashes": "10 matched",
+  "oldGit": "clean",
+  "realResearchMoved": false,
+  "globalAgentSharing": "discussion-only",
+  "limitations": [
+    "Sandbox and company environment deferred",
+    "No model calls or real Zemax",
+    "Forms HTTP session-cwd routing pending",
+    "Zemax18 bridge pending",
+    "Public expert distribution pending"
+  ]
+}
