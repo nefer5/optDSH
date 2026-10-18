@@ -1,16 +1,18 @@
 # 独立安装、升级与验证
 
-本轮开发分支：`codex/platform-plugin-refactor`。安装包不携带 Node、Python 或 Zemax。Node 24 是纯平台前置；光学能力另需 Python 3.12+、依赖和独立安装的 Zemax/许可证。未提供离线完整依赖包。
+本轮开发分支：`codex/platform-dev`。安装包不携带 Node、Python 或 Zemax。Node 24 是纯平台前置；光学能力另需 Python 3.12+、依赖和独立安装的 Zemax/许可证。未提供离线完整依赖包。
 
 ## 本地产物与安装
 
 在开发仓库运行 `npm run release:local -- <新的输出目录>`，生成本地tarball、SHA256清单、运行脚本与离线架构材料。许可证未确定，产物不代表公开发布。
 
 ```powershell
-pwsh <发布目录>/packaging/windows/install.ps1 -ReleaseRoot <发布目录> -InstallRoot <新的程序目录> -Home <独立资料目录> -Workspace <课题目录> -Components core -DryRun
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging/windows/install.ps1 -ReleaseRoot <发布目录> -InstallRoot <新的程序目录> -Home <独立资料目录> -Workspace <课题目录> -Components core -DryRun
 # 核对计划后去掉 -DryRun 执行；联网下载官方DSH及所选插件的声明依赖。
-pwsh <程序目录>/optdsh.ps1 -Workspace <任意课题目录>
+<程序目录>/optdsh.exe --workspace <任意课题目录>
 ```
+
+安装后可直接双击程序目录的optdsh.exe，编辑外置optdsh-launcher.json选择课题/资料/端口/插件；配置不含密钥。EXE与CMD共用Node入口，Windows辅助使用内置5.1，无需另装PowerShell7；Node24仍由用户准备。当前EXE为本地测试产物，未签名/公开发布，沙箱及公司实机待验。
 
 显式选装可传 `-Components core,workbench,canvas,forms`。core无Python/Canvas/私人中心依赖；工作台和画板服务仍须单独准备。专家插件未包含私人资源，默认不选；公共资源独立发行尚需核验。推荐市场插件见发布包内的推荐清单，不自动启用历史disabled项，也不继承旧版兼容豁免。
 

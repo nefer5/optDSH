@@ -13,7 +13,7 @@ const quote = value => `'${value.replaceAll("'", "''")}'`;
 function pwsh(source, options={}) {
   const env = {...process.env};
   for(const key of Object.keys(env)) if(key.startsWith('OPTDSH_')) delete env[key];
-  return spawnSync('pwsh', ['-NoProfile','-NonInteractive','-Command', `$ErrorActionPreference='Stop'; . ${quote(join(repo,'scripts/runtime/launch-config.ps1'))}; ${source}`], {encoding:'utf8', env:{...env,...options.env}, cwd:root});
+  return spawnSync(process.env.OPTDSH_TEST_POWERSHELL||'pwsh', ['-NoProfile','-NonInteractive','-Command', `$ErrorActionPreference='Stop'; . ${quote(join(repo,'scripts/runtime/launch-config.ps1'))}; ${source}`], {encoding:'utf8', env:{...env,...options.env}, cwd:root});
 }
 function context(source='', options={}) {
   const result=pwsh(`Resolve-OptDshLaunch ${source} | ConvertTo-Json -Depth 5`,options);

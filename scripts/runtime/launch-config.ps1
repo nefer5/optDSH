@@ -4,7 +4,8 @@ function Resolve-OptDshLaunch {
     function FullPath([string]$Value, [string]$Base) {
         if ($Value -eq '~') { $Value = [Environment]::GetFolderPath('UserProfile') }
         elseif ($Value.StartsWith('~/') -or $Value.StartsWith('~\')) { $Value = Join-Path ([Environment]::GetFolderPath('UserProfile')) $Value.Substring(2) }
-        return [IO.Path]::GetFullPath($Value, $Base)
+        if (-not [IO.Path]::IsPathRooted($Value)) { $Value = Join-Path $Base $Value }
+        return [IO.Path]::GetFullPath($Value)
     }
     $base = (Get-Location).ProviderPath
     $InstallRoot = FullPath $InstallRoot $base
@@ -13,7 +14,11 @@ function Resolve-OptDshLaunch {
     $configPath = if ($Config) { FullPath $Config $base } else { Join-Path $initialHome 'config/runtime.json' }
     $settings = @{}
     if (Test-Path -LiteralPath $configPath) {
-        $settings = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json -AsHashtable
+        $settings = Get-Content -LiteralPath $configPath -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($settings -isnot [pscustomobject]) { throw 'Launch configuration must be a JSON object.' }
+        $dictionary = @{}
+        foreach ($property in $settings.PSObject.Properties) { $dictionary[$property.Name] = $property.Value }
+        $settings = $dictionary
         if ($settings -isnot [System.Collections.IDictionary]) { throw 'Launch configuration must be a JSON object.' }
     }
     elseif ($Config) { throw "Launch configuration not found: $configPath" }
@@ -50,7 +55,7 @@ function Test-OptDshOwner($Context, $State) {
 
 function Get-OptDshAuthUrl($Context, $State) {
     if (-not (Test-OptDshOwner $Context $State)) { throw 'Host identity does not match the selected home/profile/workspace.' }
-    $launch = Get-Content -LiteralPath $Context.LaunchPath -Raw | ConvertFrom-Json
+    $launch = Get-Content -LiteralPath $Context.LaunchPath -Raw -Encoding UTF8 | ConvertFrom-Json
     $uri = [uri]$launch.authenticatedUrl
     if ($launch.pid -ne $State.pid -or $uri.Scheme -ne 'http' -or $uri.Host -ne '127.0.0.1' -or $uri.Port -ne $Context.Port -or $uri.UserInfo -or $uri.AbsolutePath -ne '/') { throw 'Invalid authenticated launch record.' }
     $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $Context.Port -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique)

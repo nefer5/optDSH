@@ -9,13 +9,15 @@ $developmentPath = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Par
 $previousPath = $env:PATH
 try {
     if (Test-Path -LiteralPath $developmentPath -PathType Leaf) {
-        $development = Get-Content -LiteralPath $developmentPath -Raw | ConvertFrom-Json
+        $development = Get-Content -LiteralPath $developmentPath -Raw -Encoding UTF8 | ConvertFrom-Json
         if ($development.nodeExecutable) {
-            if (-not [IO.Path]::IsPathFullyQualified($development.nodeExecutable) -or -not (Test-Path -LiteralPath $development.nodeExecutable -PathType Leaf)) { throw 'Configured development Node executable is missing or not absolute.' }
+            if (-not [IO.Path]::IsPathRooted($development.nodeExecutable) -or -not (Test-Path -LiteralPath $development.nodeExecutable -PathType Leaf)) { throw 'Configured development Node executable is missing or not absolute.' }
             $env:PATH = (Split-Path $development.nodeExecutable -Parent) + ';' + $previousPath
         }
         if ($development.launchConfig -and -not $parameters.ContainsKey('Config') -and -not $parameters.ContainsKey('DshHome') -and -not $env:OPTDSH_HOME) {
-            $parameters.Config = [IO.Path]::GetFullPath($development.launchConfig, (Split-Path $developmentPath -Parent))
+            $localConfig = $development.launchConfig
+            if (-not [IO.Path]::IsPathRooted($localConfig)) { $localConfig = Join-Path (Split-Path $developmentPath -Parent) $localConfig }
+            $parameters.Config = [IO.Path]::GetFullPath($localConfig)
         }
     }
     & (Join-Path $PSScriptRoot 'start-dsh.ps1') @parameters

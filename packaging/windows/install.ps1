@@ -6,7 +6,7 @@ $InstallRoot=[IO.Path]::GetFullPath($InstallRoot)
 $OptDshHome=[IO.Path]::GetFullPath($OptDshHome)
 if ($InstallRoot.TrimEnd('\','/') -eq [IO.Path]::GetPathRoot($InstallRoot).TrimEnd('\','/')) { throw 'InstallRoot must not be a drive root' }
 if ($OptDshHome -eq $InstallRoot -or $OptDshHome.StartsWith($InstallRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Home must be outside InstallRoot' }
-$manifest=Get-Content -LiteralPath (Join-Path $ReleaseRoot 'release-manifest.json') -Raw | ConvertFrom-Json
+$manifest=Get-Content -LiteralPath (Join-Path $ReleaseRoot 'release-manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($manifest.schemaVersion -ne 1) { throw 'Unsupported release manifest' }
 $selected=@('core')+@($Components | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -ne 'core' } | Select-Object -Unique)
 $artifacts=@()
@@ -17,6 +17,12 @@ foreach ($id in $selected) {
  if (-not $path.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Artifact escapes release root' }
  if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $item.sha256) { throw "Artifact hash mismatch: $id" }
  $artifacts+=@{item=$item; path=$path}
+}
+$launcherArtifact=$null
+if ($manifest.launcher) {
+ $launcherArtifact=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.launcher.file))
+ if (-not $launcherArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Launcher artifact escapes release root' }
+ if ((Get-FileHash -LiteralPath $launcherArtifact -Algorithm SHA256).Hash -ne $manifest.launcher.sha256) { throw 'Launcher artifact hash mismatch' }
 }
 $plan=@{installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;userPathRegistration=[bool]$AddToUserPath}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 5;return }
@@ -32,6 +38,8 @@ Push-Location $InstallRoot
 try { npm install --no-audit --no-fund;if ($LASTEXITCODE) { throw 'Dependency installation failed; receipt retained for diagnosis' } } finally { Pop-Location }
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'scripts') -Destination $InstallRoot -Recurse
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'docs') -Destination $InstallRoot -Recurse
+if ($launcherArtifact) { Copy-Item -LiteralPath $launcherArtifact -Destination (Join-Path $InstallRoot 'optdsh.exe') }
+@{schemaVersion=1;installRoot='.';nodeExecutable=(Get-Command node.exe).Source;home=$OptDshHome;workspace=$Workspace;profile='web';port=3080;components=$selected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh-launcher.json') -Encoding utf8
 $launcher=Join-Path $InstallRoot 'optdsh.ps1'
 @'
 [CmdletBinding()]
@@ -42,7 +50,7 @@ if (-not $OptDshHome) { $OptDshHome=$settings.home }
 '@ | Set-Content -LiteralPath $launcher -Encoding utf8
 @'
 @echo off
-pwsh -NoProfile -ExecutionPolicy Bypass -File "%~dp0optdsh.ps1" %*
+node "%~dp0node_modules\optdsh-bundle\lib\launcher.mjs" --config "%~dp0optdsh-launcher.json" %*
 exit /b %errorlevel%
 '@ | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh.cmd') -Encoding ascii
 if ($AddToUserPath) {

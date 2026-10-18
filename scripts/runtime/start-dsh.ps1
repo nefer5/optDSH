@@ -17,13 +17,13 @@ $lock = $null
 try {
     $lock = [IO.File]::Open((Join-Path $context.RuntimeDir 'launch.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
     if (Test-Path -LiteralPath $leasePath) {
-        $lease = Get-Content -LiteralPath $leasePath -Raw | ConvertFrom-Json
+        $lease = Get-Content -LiteralPath $leasePath -Raw -Encoding UTF8 | ConvertFrom-Json
         $leaseProcess = Get-Process -Id $lease.pid -ErrorAction SilentlyContinue
         if ($leaseProcess -and $leaseProcess.StartTime.ToUniversalTime() -eq ([DateTimeOffset]$lease.startedUtc).UtcDateTime -and $lease.stateRoot -ne $context.StateRoot) { throw 'This home/profile already has a live host in a different state root. No process changed.' }
     }
     $state = $null
     if (Test-Path -LiteralPath $context.StatePath) {
-        try { $state = Get-Content -LiteralPath $context.StatePath -Raw | ConvertFrom-Json }
+        try { $state = Get-Content -LiteralPath $context.StatePath -Raw -Encoding UTF8 | ConvertFrom-Json }
         catch { throw 'Host record is unreadable; preserve it and inspect status before starting.' }
     }
     $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $context.Port -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique)
@@ -52,8 +52,13 @@ try {
     $bundleCli = Join-Path $context.InstallRoot 'packages/optdsh-bundle/lib/cli.mjs'
     if (-not (Test-Path -LiteralPath $bundleCli)) { $bundleCli = Join-Path $context.InstallRoot 'node_modules/optdsh-bundle/lib/cli.mjs' }
     if (-not (Test-Path -LiteralPath $bundleCli)) { throw 'Product bundle composer is missing from the installation.' }
-    $compose = & $node $bundleCli compose --install-root $context.InstallRoot --home $context.Home --profile $context.Profile --workspace $context.Workspace --state-root $context.StateRoot --components ($context.Components -join ',') --output $context.PatchPath
-    if ($LASTEXITCODE -ne 0) { throw 'Product bundle composition failed; no host was started.' }
+    $nativeEncoding = [Console]::OutputEncoding
+    try {
+        [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
+        $compose = & $node $bundleCli compose --install-root $context.InstallRoot --home $context.Home --profile $context.Profile --workspace $context.Workspace --state-root $context.StateRoot --components ($context.Components -join ',') --output $context.PatchPath
+        $composeExit = $LASTEXITCODE
+    } finally { [Console]::OutputEncoding = $nativeEncoding }
+    if ($composeExit -ne 0) { throw 'Product bundle composition failed; no host was started.' }
     $receipt = $compose | ConvertFrom-Json
     if (-not $receipt.patchPath -or [IO.Path]::GetFullPath($receipt.patchPath) -ne $context.PatchPath -or -not (Test-Path -LiteralPath $context.PatchPath -PathType Leaf)) { throw 'Bundle composer returned an invalid patch path.' }
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'

@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'launch-config.ps1')
 $context = Resolve-OptDshLaunch @PSBoundParameters
 $state = $null
-try { $state = Get-Content -LiteralPath $context.StatePath -Raw | ConvertFrom-Json } catch { }
+try { $state = Get-Content -LiteralPath $context.StatePath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { }
 $owned = Test-OptDshOwner $context $state
 $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $context.Port -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique)
 $authentication = 'Unavailable'; $http = $null

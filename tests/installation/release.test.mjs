@@ -11,3 +11,15 @@ const invoke=root=>spawnSync('pwsh',['-NoProfile','-File',install,'-ReleaseRoot'
 test('installer preview verifies artifacts and creates no installation',()=>{const {root}=fixture();const run=invoke(root);assert.equal(run.status,0,run.stderr);assert.equal(existsSync(join(root,'app')),false);});
 test('artifact tampering fails before filesystem mutation',()=>{const {root}=fixture();writeFileSync(join(root,'packages/core.tgz'),'tampered');const run=invoke(root);assert.notEqual(run.status,0);assert.match(run.stderr,/hash mismatch/);assert.equal(existsSync(join(root,'app')),false);});
 test('release artifact path traversal is rejected',()=>{const {root,manifest}=fixture();manifest.components[0].file='../outside.tgz';writeFileSync(join(root,'release-manifest.json'),JSON.stringify(manifest));const run=invoke(root);assert.notEqual(run.status,0);assert.match(run.stderr,/escapes release root/);});
+
+test('launcher artifact tampering fails before installation',()=>{
+ const {root,manifest}=fixture();writeFileSync(join(root,'optdsh.exe'),'changed');
+ manifest.launcher={file:'optdsh.exe',sha256:createHash('sha256').update('original').digest('hex')};
+ writeFileSync(join(root,'release-manifest.json'),JSON.stringify(manifest));
+ const run=invoke(root);assert.notEqual(run.status,0);assert.match(run.stderr,/Launcher artifact hash mismatch/);assert.equal(existsSync(join(root,'app')),false);
+});
+test('launcher artifact traversal is rejected before reading outside release',()=>{
+ const {root,manifest}=fixture();manifest.launcher={file:'../outside.exe',sha256:'unused'};
+ writeFileSync(join(root,'release-manifest.json'),JSON.stringify(manifest));
+ const run=invoke(root);assert.notEqual(run.status,0);assert.match(run.stderr,/Launcher artifact escapes/);assert.equal(existsSync(join(root,'app')),false);
+});

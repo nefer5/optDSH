@@ -33,7 +33,7 @@ function run(script,args=[],extra=''){
   const out=join(root,`command-${started}.stdout.log`),err=join(root,`command-${started}.stderr.log`);
   const stdout=openSync(out,'w'),stderr=openSync(err,'w');
   let result;
-  try{result=spawnSync('pwsh',['-NoProfile','-NonInteractive','-Command',`$ErrorActionPreference='Stop'; & ${quote(join(install,'scripts/runtime',script))} ${args.map(quote).join(' ')} ${extra}`],{cwd:workspace,env,encoding:'utf8',stdio:['ignore',stdout,stderr],timeout:70000});}finally{closeSync(stdout);closeSync(stderr);}
+  try{result=spawnSync(process.env.OPTDSH_TEST_POWERSHELL||'pwsh',['-NoProfile','-NonInteractive','-Command',`$ErrorActionPreference='Stop'; & ${quote(join(install,'scripts/runtime',script))} ${args.map(quote).join(' ')} ${extra}`],{cwd:workspace,env,encoding:'utf8',stdio:['ignore',stdout,stderr],timeout:70000});}finally{closeSync(stdout);closeSync(stderr);}
   result.stdout=readFileSync(out,'utf8');result.stderr=readFileSync(err,'utf8');
   writeFileSync(join(root,`command-${started}.json`),JSON.stringify({script,elapsedMs:Date.now()-started,status:result.status,error:result.error?.message}));
   return result;

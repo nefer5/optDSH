@@ -101,8 +101,8 @@ $env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
 
 本轮机器检查只启动并停止两种纯平台预览，核对认证HTTP200；没有打开浏览器、配置模型、调用Zemax或改写用户全局.agents。离线完整回归和四组件安装证据见[迁移记录](refactor/2026-10-18/worktree-transition.md)。
 
-## Windows发布入口：待确认建议
+## Windows发布入口：已确认Q9
 
-面向小白，推荐开发期保留.cmd，正式发行提供薄EXE启动器；业务/启动编排复用Node CLI，路径、组件和版本等配置外置，避免把业务逻辑编译进EXE。当前用户仅讨论方案，未创建EXE或新增打包依赖。
+面向小白，推荐开发期保留.cmd，正式发行提供薄EXE启动器；业务/启动编排复用Node CLI，路径、组件和版本等配置外置，避免把业务逻辑编译进EXE。用户已确认采用该方案，实施与验证状态见[薄启动器计划](../.agents/plans/261018-windows-thin-launcher.md)。
 
-当前.cmd实际调用pwsh（PowerShell7），不是Windows自带powershell.exe（5.1）。现有脚本含ConvertFrom-Json -AsHashtable和较新的.NET路径API，不能仅替换命令名就声称5.1兼容。若坚持脚本发行，可选择真正适配并测试5.1，或明确把7列为前置条件；若采用薄EXE/Node入口，则后续逐步解除普通用户启动对PowerShell7的依赖。不能将本机已装7的成功当作干净Windows成功。
+开发根目录CMD仍可使用本机已有pwsh；发布EXE/CMD共用Node入口，运行链已适配Windows内置5.1，包括JSON读取、路径和UTF8处理。无需要求普通用户另装7；不能把同机移除pwsh搜索路径的成功当作沙箱或干净Windows成功。
