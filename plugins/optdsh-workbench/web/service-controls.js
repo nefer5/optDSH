@@ -18,12 +18,13 @@ const messages={stopped:'连接模型时将按需准备光学服务。',starting
 export function initServiceControls({root=document,api=workbenchApi,onReady=()=>{},onConfigurationChanged=()=>{},onBusyChange=()=>{},intervalMs=2500,wait=ms=>new Promise(resolve=>setTimeout(resolve,ms)),readyAttempts=30}={}){
  const $=id=>root.getElementById(id),status=$('service-status'),message=$('service-message'),start=$('service-start'),stop=$('service-stop'),refresh=$('service-refresh'),detect=$('service-config-detect'),logs=$('service-logs'),configMessage=$('service-config-message');
  const versionInputs=['legacy','modern'].map(version=>$('service-version-'+version));
- let current={state:'checking'},config=null,busy=false,checking=false,configBusy=false,externalBusy=false,disposed=false,preparing=null,configurationError='';
+ let current={state:'checking'},config=null,busy=false,checking=false,configBusy=false,externalBusy=false,disposed=false,preparing=null,configurationError='',opening=false,publishedBusy=false;
  const selectedVersion=()=>versionInputs.find(input=>input.checked)?.value;
  const running=()=>['ready','starting'].includes(current.state);
+ function notifyBusy(){const value=busy||configBusy||opening;if(value!==publishedBusy){publishedBusy=value;onBusyChange(value);}}
  function renderConfig(){
-  for(const input of versionInputs)input.disabled=busy||externalBusy||configBusy||!config?.targets?.[input.value]?.available;
-  detect.disabled=busy||externalBusy||configBusy;
+  for(const input of versionInputs)input.disabled=busy||externalBusy||configBusy||opening||!config?.targets?.[input.value]?.available;
+  detect.disabled=busy||externalBusy||configBusy||opening;
   if(configurationError)configMessage.textContent=configurationError;
   else if(configBusy)configMessage.textContent='正在自动检测运行环境与 Zemax 安装…';
   else if(running()&&config?.version!==selectedVersion())configMessage.textContent='请先在“高级与诊断”停止光学服务，再切换版本；不会关闭 Zemax。';
@@ -35,7 +36,7 @@ export function initServiceControls({root=document,api=workbenchApi,onReady=()=>
   $('optics-service').dataset.state=Object.hasOwn(labels,current.state)?current.state:'unknown';
   status.textContent=labels[current.state]||'服务状态不可用';
   setFeedback(message,current.message||messages[current.state]||'打开详情刷新服务状态并查看诊断。',{error:['failed','unknown'].includes(current.state)});
-  start.hidden=current.state==='ready';start.disabled=busy||externalBusy||configBusy||current.state==='starting';start.textContent=busy?'正在准备…':'开启光学服务';
+  start.hidden=current.state==='ready';start.disabled=busy||externalBusy||configBusy||opening||current.state==='starting';start.textContent=busy?'正在准备…':'开启光学服务';
   stop.hidden=!running();stop.disabled=busy||externalBusy;refresh.disabled=busy||checking||externalBusy;logs.disabled=busy;
   $('service-log-path').textContent=current.logPath?'日志位置：'+current.logPath:'';renderConfig();
   if(previous==='starting'&&current.state==='ready')onReady();
@@ -55,12 +56,12 @@ export function initServiceControls({root=document,api=workbenchApi,onReady=()=>
   finally{checking=false;if(!disposed)render();}
  }
  async function loadConfig({preserveSelection=false}={}){
-  if(configBusy)return;configBusy=true;configurationError='';renderConfig();
+  if(configBusy)return;configBusy=true;notifyBusy();configurationError='';setFeedback($('service-python-status'),'正在自动检测运行环境…');renderConfig();
   try{showConfig(await api('service-config'),{preserveSelection});return config;}
   catch(e){config=null;configurationError=feedbackError(e);setFeedback($('service-python-status'),'环境检测未完成，请重新检测。',{error:true});throw e;}
-  finally{configBusy=false;render();}
+  finally{configBusy=false;notifyBusy();render();}
  }
- function setBusy(value){busy=value;onBusyChange(value);render();}
+ function setBusy(value){busy=value;notifyBusy();render();}
  async function prepare(){
   if(!config)await loadConfig({preserveSelection:true});
   if(configBusy)throw new Error('正在检测运行环境，请检测完成后再探测模型。');
@@ -84,7 +85,9 @@ export function initServiceControls({root=document,api=workbenchApi,onReady=()=>
   return preparing;
  }
  async function openConfiguration(){
-  configurationError='';await check().catch(()=>{});return loadConfig().catch(()=>{});
+  if(opening)return;opening=true;notifyBusy();configurationError='';
+  try{await check().catch(()=>{});return await loadConfig().catch(()=>{});}
+  finally{opening=false;notifyBusy();render();}
  }
  for(const input of versionInputs)input.onchange=()=>{configurationError='';onConfigurationChanged();renderConfig();};
  detect.onclick=()=>loadConfig({preserveSelection:true}).catch(()=>{});
@@ -102,5 +105,5 @@ export function initServiceControls({root=document,api=workbenchApi,onReady=()=>
   catch(e){setFeedback(output,'读取日志失败：'+feedbackError(e),{error:true});}
  };
  const timer=setInterval(()=>{if(!root.hidden)void check().catch(()=>{});},intervalMs);render();void check().catch(()=>{});
- return {refresh:check,openConfiguration,prepareConnection,selectedVersion,isBusy:()=>busy||configBusy,setConnectionBusy(value){externalBusy=value;render();},dispose(){disposed=true;clearInterval(timer);}};
+ return {refresh:check,openConfiguration,prepareConnection,selectedVersion,isBusy:()=>busy||configBusy||opening,setConnectionBusy(value){externalBusy=value;render();},dispose(){disposed=true;clearInterval(timer);}};
 }

@@ -88,3 +88,15 @@ test('configuration/log failures are red alerts, persist through polling, and re
   await f.$('service-logs').onclick();assert.equal(f.$('service-log-text').classList.contains('operation-error'),true);failLogs=false;await f.$('service-logs').onclick();assert.equal(f.$('service-log-text').classList.contains('operation-error'),false);assert.equal(f.$('service-log-text').textContent,'日志恢复正常');
  }finally{f.control.dispose();}
 });
+
+
+test('configuration opening stays parent-busy across status and delayed detection; retry also locks until complete',async()=>{
+ const busyStates=[];let releaseStatus,releaseConfig,delayStatus=false,delayConfig=false;
+ const f=fixture(async action=>{if(action==='service-status'&&delayStatus)return new Promise(resolve=>releaseStatus=()=>resolve({state:'ready'}));if(action==='service-config'&&delayConfig)return new Promise(resolve=>releaseConfig=()=>resolve(config));return action==='service-config'?config:{state:'ready'};},{onBusyChange:value=>busyStates.push(value)});
+ try{
+  await settle();delayStatus=true;delayConfig=true;const opening=f.control.openConfiguration();await settle();assert.deepEqual(busyStates,[true]);assert.equal(f.control.isBusy(),true);
+  releaseStatus();await settle();assert.deepEqual(busyStates,[true]);assert.match(f.$('service-python-status').textContent,/正在自动检测/);assert.equal(f.$('service-version-modern').disabled,true);
+  releaseConfig();await opening;assert.deepEqual(busyStates,[true,false]);assert.equal(f.control.isBusy(),false);
+  delayStatus=false;const retry=f.$('service-config-detect').onclick();await settle();assert.deepEqual(busyStates,[true,false,true]);releaseConfig();await retry;assert.deepEqual(busyStates,[true,false,true,false]);
+ }finally{f.control.dispose();}
+});
