@@ -1,10 +1,13 @@
 # 插件源码、安装与官方Profile
 
+当前Canvas桥与光学工作台均按下述官方Profile机制管理；Forms/专家等其他可选组件继续逐项收敛。
+
 ## 目录位置
 
 ```text
 开发源码/
-  plugins/optdsh-agent-canvas/        手写实现、package.json、tests
+  plugins/optdsh-agent-canvas/        画板桥源码
+  plugins/optdsh-workbench/           工作台源码
 发行包/
   packages/optdsh-agent-canvas-0.6.0.tgz
 平台程序/
@@ -15,7 +18,8 @@ Home/
     package.json                    依赖及dsh.profile.bundles
     pnpm-lock.yaml                  官方包管理器锁
     cordis.patch.yml                用户启停及配置覆盖
-    node_modules/optdsh-agent-canvas/ 安装副本（pnpm可能使用链接）
+    node_modules/optdsh-agent-canvas/ 画板安装副本
+    node_modules/optdsh-workbench/    工作台安装副本（pnpm可能使用链接）
   config/canvas.json                独立编辑器连接默认
 任意课题/
   .agent-canvas/optdsh/boards/        画板、提交及建议稿
@@ -29,7 +33,7 @@ Home/
 - 后续在官方Web的“插件”管理中停用/启用或卸载画板桥；Bundle停用保留包，单插件停用保留配置，卸载移除包依赖。
 - 启动器读取官方合成后的配置，不安装插件，不强行加入Bundle，不用components覆盖用户关停。即使旧components仍含canvas，卸载后也不会回来。
 - 画板编辑器是独立程序，和桥插件分开；停用/卸载桥不终止共享编辑器、不删除课题画板。没有运行的编辑器可用原独立入口启动，或启用桥后重启DSH按Home配置拉起；不承诺任意外部服务在HMR启用时自动启动。
-- 当前先收敛Canvas；工作台、Forms等其他自有组件仍处过渡阶段，不能说已经全部统一。
+- Canvas与工作台已收敛；Forms等其他自有组件仍处过渡阶段，不能说已经全部统一。
 
 ## 本地包安装与升级
 
@@ -45,7 +49,7 @@ Install遇到既有依赖保持原版本/开关，不重复默认启用。Upgrad
 
 ## 开发步骤
 
-画板桥源码保留plugins目录，但从根workspaces的隐式安装列表中移出，避免官方优先解析app副本、盖住Profile版本。源码变化需要显式npm pack、停止测试Profile、通过上述Upgrade安装，然后启动验证；单纯重启不会偷偷重装或把用户停用项打开。根npm install/ci按声明维护安装树，无手改node_modules适配。
+画板桥与工作台源码保留plugins目录，但从根workspaces的隐式安装列表中移出，避免官方优先解析app副本、盖住Profile版本。源码变化需要显式npm pack、停止测试Profile、通过上述Upgrade安装，然后启动验证；单纯重启不会偷偷重装或把用户停用项打开。根npm install/ci按声明维护安装树，无手改node_modules适配。
 
 ## 配置与组合
 
@@ -56,3 +60,11 @@ Bundle推荐不等于强制依赖或周期重放。Profile是包、选中Bundle�
 ## 本轮验收
 
 最终dev.8本地测试包与日常预览已验证；Canvas桥0.6.0在官方清单中availability=profile、removable=true，app无同名包。官方entry/Bundle停用、重启保留、停服升级测试夹具后仍off、再启用与卸载重启全部通过；画板哈希不变。PS5首次Profile stderr提示按退出码处理，日志保留。无真实模型或Zemax调用，缓存复用，未推送/npm公开。证据：[生命周期回执](refactor/2026-10-18/evidence/canvas-profile-dev8.json)。
+
+## 光学工作台
+
+工作台使用同一helper，添加 `-Component workbench`，包名optdsh-workbench。主安装器选择workbench时通过官方CLI装入Profile，不作为app依赖。停止同一Profile后显式Upgrade；Web插件管理可启停/卸载。源码改动先pack插件再显式升级，普通启动不覆盖用户开关。
+
+根“启动光学工作台.cmd”使用Windows自带PowerShell5.1，默认只打开已启用的工作台；缺包/停用会给诊断，基础DSH可用，不自动重新安装或启用。光学执行器独立管理，明确传StartOptics才请求启动，当前重构没有执行该选项或真实Zemax连接。没有Python/画板/Forms仍能加载页面及管理会话；访问光学能力时未配置/不通返回503 OPTICS_UNAVAILABLE，真实业务403/409继续拒绝。
+
+停用/卸载工作台撤销其给绑定Agent注入的光学规则，保留历史会话、绑定文件、报告和课题。无光学服务与不兼容/损坏包的隔离均已取证，不能把synthetic视为真实光学验收。

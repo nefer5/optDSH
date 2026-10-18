@@ -1,14 +1,16 @@
 # optDSH
 
-当前版本 **v0.2.0-dev.8 · 重构开发分支，未发布**；当前为本地开发测试版本，尚未正式发布，见[CHANGELOG](CHANGELOG.md)。
+当前版本 **v0.2.0-dev.9 · 重构开发分支，未发布**；当前为本地开发测试版本，尚未正式发布，见[CHANGELOG](CHANGELOG.md)。
 
 面向光学模型的专家—Agent协作工作台：官方DSH会话、三维近似视图、会话画板和独立光学工具。
 
 **过渡说明：新启动器默认使用独立home；旧3080尚未切换，端口占用会保守拒绝接管。独立安装与启动见[说明](docs/installation/README.md)。**
 
+**工作台CMD默认只打开UI，不自动启动光学服务或连接Zemax。**
+
 **日常双击根目录 `启动光学工作台.cmd` 或 `启动DSH.cmd`；修改源码后用 `重启DSH.cmd`。启动DSH复用已有进程，重启DSH核验后关闭再拉起。** 首次安装：`pwsh scripts/setup.ps1`。具体前置条件见[运行指南](docs/runtime.md)。
 
-画板桥源码修改后须先显式打包并升级Profile中的安装副本，普通重启不会覆盖插件版本或启停选择，见[Profile插件开发步骤](docs/profile-plugins.md)。
+画板桥和工作台源码修改后须先显式打包并升级Profile中的安装副本，普通重启不会覆盖插件版本或启停选择，见[Profile插件开发步骤](docs/profile-plugins.md)。
 
 光学模块使用本项目Python环境和连接代码；画板编辑器独立安装，通过Home连接配置接入，支持已有安装或本地预构建包新装。见[画板安装接入](docs/refactor/2026-10-18/canvas-installation.md)。
 

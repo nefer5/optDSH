@@ -1,6 +1,6 @@
 {
   "name": "optdsh",
-  "version": "0.2.0-dev.8",
+  "version": "0.2.0-dev.9",
   "private": true,
   "type": "module",
   "description": "Independent optDSH platform and optional optical plugins",
@@ -31,7 +31,6 @@
     "plugins/optdsh-current-info-policy",
     "plugins/optdsh-experts",
     "plugins/optdsh-forms",
-    "plugins/optdsh-workbench",
     "packages/optdsh-bundle"
   ]
 }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,mkdirSync} from 'node:fs';
+import {mkdtempSync,mkdirSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {apply} from '../lib/index.js';
@@ -19,5 +19,5 @@ test('installed workbench accepts two official workspaces and rejects silent cwd
  sessions.set('session-a',b);
  assert.equal((await call({action:'bind',sessionId:'session-a'})).body.error.code,'SESSION_WORKSPACE_CHANGED');
  assert.equal((await call({action:'create'})).status,200);assert.equal(created.cwd,b);
- const page=await routes.get('/api/optdsh-workbench/view')();assert.equal(page.status,200);assert.match(await page.text(),/v0\.8\.0/);
+ const page=await routes.get('/api/optdsh-workbench/view')();assert.equal(page.status,200);assert.ok((await page.text()).includes('v'+JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8')).version));
 });

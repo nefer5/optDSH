@@ -22,8 +22,6 @@
         failOnStartupError: false
 
 - insert:
-    - id: optdsh-workbench
-      name: ../plugins/optdsh-workbench/lib/index.js
     - id: optdsh-forms
       name: ../plugins/optdsh-forms/lib/index.js
 

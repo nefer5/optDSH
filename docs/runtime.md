@@ -1,5 +1,7 @@
 # 安装与运行
 
+工作台入口现使用内置PowerShell5.1，默认只复用/启动基础DSH并打开已启用的Profile工作台，不重装/启用、不启动光学服务。确需启动执行器须显式StartOptics；本轮未连接真实Zemax。参见[Profile插件](profile-plugins.md)。
+
 2026-10-18重构分支入口已改变：默认独立home为用户目录/.optdsh，workspace默认当前工作目录，状态位于home/state/profile。当前旧3080与data/dsh未切换；旧服务占用端口时新入口拒绝接管，请使用独立测试端口。纯平台setup不安装Python；光学选装使用 `pwsh scripts/setup.ps1 -WithOptics`。独立tarball安装、回退与限制见[安装说明](installation/README.md)。
 
 下面保留此前部署记录，涉及旧data/dsh路径、项目根、19版与旧DSH版本的条目属于历史现场，不作为新默认配置。

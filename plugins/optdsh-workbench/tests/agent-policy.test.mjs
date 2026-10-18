@@ -34,3 +34,10 @@ test('installed DSH assembler isolates and disposes the optical section',async()
   assert.equal(await present(optical),false);
  }finally{await scope.dispose();}
 });
+
+test('unloading the workbench removes its optical policy while the agent scope stays alive',async()=>{
+ const {Context}=await import('@deepseek-ai/cordis');const {SystemPrompt}=await import('@deepseek-ai/dsh-system-prompt');const {createScope}=await import('@deepseek-ai/dsh-scope');
+ const ctx=new Context();new SystemPrompt(ctx,{});const key={},scope=createScope(ctx,key),install=createOpticalPolicy('policy');
+ const present=async()=>(await ctx.systemPrompt.assemble({scope:key})).sections.some(s=>s.name==='optdsh:optical-collaboration');
+ try{install({session:{id:'optical'},ctx:scope.ctx},{optical:{}});assert.equal(await present(),true);install.dispose();assert.equal(await present(),false);install.dispose();}finally{await scope.dispose();}
+});

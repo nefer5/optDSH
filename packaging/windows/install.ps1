@@ -61,7 +61,9 @@ if ($PluginPreset -ne 'none') {
  $community=& $profilePluginScript -InstallRoot $InstallRoot -Home $OptDshHome -Snapshot $pluginSnapshot -Names ($selectedCommunity.name -join ',') | ConvertFrom-Json
  $community=@($community)
 }
-$plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;pluginPreset=$PluginPreset;communityPlugins=$community;communityPluginStatus='not-selected';profileComponentStatus=$(if('canvas' -in $selected){'pending'}else{'not-selected'});userPathRegistration=[bool]$AddToUserPath}
+$plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;pluginPreset=$PluginPreset;communityPlugins=$community;communityPluginStatus='not-selected';profileComponentStatus=$(if(@($selected|Where-Object {$_ -in @('canvas','workbench')}).Count){'pending'}else{'not-selected'});userPathRegistration=[bool]$AddToUserPath}
+$plan.profileComponents=@{}
+foreach($id in @('canvas','workbench')){if($id -in $selected){$plan.profileComponents[$id]=@{status='pending';receipt="profile-$id-receipt.json"}}}
 $plan.canvasEditorStatus=if($CanvasRoot -or $InstallCanvas){'pending'}else{'not-configured'}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 8;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
@@ -72,7 +74,7 @@ $npmCli=Join-Path (Split-Path $npmCommand -Parent) 'node_modules/npm/bin/npm-cli
 if (-not (Test-Path -LiteralPath $npmCli -PathType Leaf)) { throw 'The Node.js installation must include npm; its npm-cli.js could not be located.' }
 New-Item -ItemType Directory -Path $InstallRoot | Out-Null
 $dependencies=@{'@deepseek-ai/dsh'=$manifest.dshVersion}
-foreach ($a in $artifacts) { if ($a.item.id -ne 'canvas') { $dependencies[$a.item.name]='file:'+($a.path -replace '\\','/') } }
+foreach ($a in $artifacts) { if ($a.item.id -notin @('canvas','workbench')) { $dependencies[$a.item.name]='file:'+($a.path -replace '\\','/') } }
 $package=@{name='optdsh-user-installation';private=$true;type='module';dependencies=$dependencies}
 $package | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'package.json') -Encoding utf8
 $plan | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
@@ -97,17 +99,20 @@ if (-not $OptDshHome) { $OptDshHome=$settings.home }
 node "%~dp0node_modules\optdsh-bundle\lib\launcher.mjs" --config "%~dp0optdsh-launcher.json" %*
 exit /b %errorlevel%
 '@ | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh.cmd') -Encoding ascii
-if ('canvas' -in $selected) {
+foreach ($componentId in @('canvas','workbench')) {
+ if ($componentId -notin $selected) { continue }
  $runtimeLog=Join-Path $InstallRoot '.runtime'
  New-Item -ItemType Directory -Path $runtimeLog -Force|Out-Null
  try {
-  $canvasBridge=@($artifacts|Where-Object {$_.item.id -eq 'canvas'})[0]
-  & (Join-Path $ReleaseRoot 'packaging/windows/install-profile-component.ps1') -InstallRoot $InstallRoot -Home $OptDshHome -Profile web -Package $canvasBridge.path -Operation Install -ReceiptPath (Join-Path $InstallRoot 'profile-canvas-receipt.json') -Apply *> (Join-Path $runtimeLog 'profile-canvas-install.log')
+  $componentArtifact=@($artifacts|Where-Object {$_.item.id -eq $componentId})[0]
+  & (Join-Path $ReleaseRoot 'packaging/windows/install-profile-component.ps1') -Component $componentId -InstallRoot $InstallRoot -Home $OptDshHome -Profile web -Package $componentArtifact.path -Operation Install -ReceiptPath (Join-Path $InstallRoot "profile-$componentId-receipt.json") -Apply *> (Join-Path $runtimeLog "profile-$componentId-install.log")
+  $plan.profileComponents[$componentId].status='installed-or-existing-preserved'
   $plan.profileComponentStatus='installed-or-existing-preserved'
  } catch {
+  $plan.profileComponents[$componentId].status='incomplete'
   $plan.profileComponentStatus='incomplete';$plan.coreInstalled=$true
   $plan|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
-  throw 'Platform retained; the Canvas bridge Profile installation is incomplete. Inspect profile-canvas-receipt.json and .runtime/profile-canvas-install.log before retrying.'
+  throw "Platform retained; the $componentId Profile installation is incomplete. Inspect profile-$componentId-receipt.json and .runtime/profile-$componentId-install.log before retrying."
  }
  $plan|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
 }

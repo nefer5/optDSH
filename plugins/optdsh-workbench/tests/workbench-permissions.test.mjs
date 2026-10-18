@@ -8,7 +8,7 @@ import {pathToFileURL} from 'node:url';
 test('actual workbench plugin preserves Standard tools on restore, bind and create',async()=>{
  const root=mkdtempSync(join(tmpdir(),'optdsh-permissions-'));
  const lib=join(root,'plugins/optdsh-workbench/lib');mkdirSync(lib,{recursive:true});
- for(const name of ['index.js','core.js','agent-policy.js','tx-report.js','session-feed.js'])copyFileSync(resolve('plugins/optdsh-workbench/lib',name),join(lib,name));
+ for(const name of ['index.js','config.js','core.js','agent-policy.js','tx-report.js','session-feed.js'])copyFileSync(resolve('plugins/optdsh-workbench/lib',name),join(lib,name));
  mkdirSync(join(root,'config'));mkdirSync(join(root,'.runtime'));mkdirSync(join(root,'data/workbench'),{recursive:true});mkdirSync(join(root,'plugins/optdsh-workbench/config'),{recursive:true});
  writeFileSync(join(root,'package.json'),'{"type":"module"}');
  writeFileSync(join(root,'plugins/optdsh-workbench/config/instructions.md'),'fixture policy');

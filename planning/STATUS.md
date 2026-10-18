@@ -1,5 +1,7 @@
 # 当前状态
 
+2026-10-18 0.2.0-dev.9：工作台0.9.0统一官方Profile生命周期，复用Canvas机制且不再app/source回流；默认CMD不启动光学服务。独立Profile无Canvas/Forms/后端、合成代理、官方启停/升级保留off/卸载重启与数据哈希通过；损坏插件core存活、不兼容升级官方拒绝并恢复原包。清理绑定Agent光学提示词，未连接真实Zemax/模型。日常预览/发行安装正在收尾。见[方案](../.agents/plans/261018-workbench-profile-lifecycle.md)。
+
 2026-10-18 0.2.0-dev.8收尾：修复首次Profile创建stderr提示被PS5父重定向误判失败；fresh安装/运行身份通过。Canvas桥0.6.0已迁入日常Home/Profile，官方显示profile且removable；app不带同名包。官方启停、升级保留用户off、卸载重启无回流与画板保护均通过；开发源码修改须显式pack/Upgrade，普通重启不重装。其他自有组件尚待逐项统一，见[生命周期证据](../docs/refactor/2026-10-18/evidence/canvas-profile-dev8.json)。
 
 2026-10-18 0.2.0-dev.7：Canvas桥0.6.0统一官方Profile生命周期，源码留plugins但不作为app隐式workspace依赖；安装器走官方CLI，启动器不insert/force启用/源码回流。真实Profile停用重启、保留停用升级、启用与卸载重启无回流及画板哈希保护通过；完整回归及专项通过。日常预览与独立发行迁入正在收尾。操作与边界见[Profile插件](../docs/profile-plugins.md)。

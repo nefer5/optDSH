@@ -5,12 +5,14 @@ import {randomUUID} from 'node:crypto';
 import {createOpticalPolicy} from './agent-policy.js';
 import {txReport} from './tx-report.js';
 import {sessionFeed} from './session-feed.js';
+import {workbenchRuntimeOptions} from './config.js';
 import {WorkbenchStore,requireValue,sessionKey,modelContext,promptContent,surfaceMessages} from './core.js';
 export const name='optdsh-workbench';
 export const inject=['connection','sessionController','agents','systemPrompt'];
 const PACKAGE_ROOT=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const PREFIX='/api/optdsh-workbench';
 export function apply(ctx,config={}){
+ config=workbenchRuntimeOptions(config,process.env,ctx.get?.('profileContext')||ctx.profileContext);
  const ROOT=resolve(config.stateRoot||config.projectRoot||process.cwd());
  const WORKSPACE=resolve(config.workspaceRoot||config.projectRoot||process.cwd());
  const editor=new URL(config.editorUrl||'http://127.0.0.1:4173');
@@ -21,12 +23,17 @@ export function apply(ctx,config={}){
  async function ownership(id){requireValue(sessionKey(id),'Invalid session identity');const s=await ctx.sessionController.inspect(id,stop.signal);requireValue(matches(s.meta.cwd),'会话缺少工作目录','SESSION_SCOPE');const cwd=resolve(s.meta.cwd);requireValue(!owned.has(id)||owned.get(id)===cwd,'会话工作目录已改变，请重新打开工作台以核对资料归属','SESSION_WORKSPACE_CHANGED');owned.set(id,cwd);return id;}
  function installPolicy(agent){if(agent)applyPolicy(agent,store.sessions);}
  ctx.on('agent/created',({agent})=>installPolicy(agent));for(const agent of ctx.agents.list())installPolicy(agent);
- ctx.effect(()=>()=>stop.abort(),'workbench shutdown');
+ ctx.effect(()=>()=>{stop.abort();applyPolicy.dispose();},'workbench shutdown');
  async function optical(path,method='GET',data){
   const posts=['/api/refresh','/api/connection/probe','/api/connection/bind','/api/model/save','/api/tx-tolerance/start','/api/tx-tolerance/cancel'];
   const u=new URL(path,'http://local');requireValue(['/api/snapshot','/api/tx-tolerance',...posts,'/api/list','/api/object','/api/selection','/api/relative'].includes(u.pathname),'Unknown optical endpoint');requireValue(method===(posts.includes(u.pathname)?'POST':'GET'),'Invalid method');
-  const a=JSON.parse(readFileSync(resolve(ROOT,'.runtime/optics-access.json'),'utf8')),target=new URL(a.url);requireValue(target.protocol==='http:'&&target.hostname==='127.0.0.1'&&!target.username&&!target.password&&target.pathname==='/','Invalid local optical service');
-  const response=await fetch(a.url+u.pathname+u.search,{method,headers:{Authorization:'Bearer '+a.token,'Content-Type':'application/json'},body:method==='POST'?JSON.stringify(data||{}):undefined,signal:AbortSignal.timeout(35000)});const result=await response.json();if(!response.ok)throw Object.assign(new Error(result.error?.message||'光学服务不可用'),{code:result.error?.code||'OPTICS_UNAVAILABLE'});return result;
+  const unavailable=()=>Object.assign(new Error('光学服务尚未配置或不可达；基础平台与普通会话仍可使用，请显式启动并核对光学服务。'),{code:'OPTICS_UNAVAILABLE',status:503});
+  let a;try{a=JSON.parse(readFileSync(resolve(ROOT,'.runtime/optics-access.json'),'utf8').replace(/^\uFEFF/,''));}catch{throw unavailable();}
+  let target;try{target=new URL(a.url);}catch{throw unavailable();}
+  requireValue(target.protocol==='http:'&&target.hostname==='127.0.0.1'&&!target.username&&!target.password&&target.pathname==='/'&&!target.search&&!target.hash&&typeof a.token==='string'&&a.token.length>0,'Invalid local optical service');
+  let response;try{response=await fetch(new URL(u.pathname+u.search,target).href,{method,headers:{Authorization:'Bearer '+a.token,'Content-Type':'application/json'},body:method==='POST'?JSON.stringify(data||{}):undefined,signal:AbortSignal.timeout(35000)});}catch{throw unavailable();}
+  let result;try{result=await response.json();}catch{throw Object.assign(new Error('光学服务返回了无效响应'),{code:'OPTICS_PROTOCOL',status:502});}
+  if(!response.ok)throw Object.assign(new Error(result.error?.message||'光学服务拒绝请求'),{code:result.error?.code||'OPTICS_ERROR',status:response.status});return result;
  }
  function register(path,methods,fetcher){ctx.effect(()=>ctx.connection.fetch.register({path,methods,requestBody:'buffered',fetch:fetcher}),path);}
  register(PREFIX+'/events',['GET'],async request=>{try{const id=await ownership(new URL(request.url).searchParams.get('sessionId'));store.get(id);return sessionFeed(ctx,id,request.signal,stop.signal);}catch(e){return Response.json({error:{code:e.code||'SESSION_FEED',message:e.message}},{status:400});}});
@@ -59,7 +66,7 @@ export function apply(ctx,config={}){
       }finally{clearTimeout(timeout);abort.abort();}
      }else if(input.action==='submit'){
       const {record,fresh}=store.prepare(id,input);if(!fresh)value={requestId:record.id,status:record.status};else try{
-       let view;try{view=await optical('/api/snapshot');}catch(e){if(input.references?.length)throw e;}
+       let view;try{view=await optical('/api/snapshot');}catch(e){if(input.references?.length||e.code!=='OPTICS_UNAVAILABLE')throw e;}
        const {selected,context}=view?modelContext(row,view,input):{selected:null,context:{activeModel:null,modelNotice:'光学后端不可达，当前模型身份未确认；仅可继续一般讨论，不得沿用历史OBJ引用或声称当前状态。'}};
        if(selected){const data=await optical('/api/selection?'+new URLSearchParams(selected));Object.assign(context,{modelId:selected.modelId,revision:selected.revision,objectIds:JSON.parse(selected.objectIds),selection:data});}
        record.status='accepting';store.persist();await ctx.sessionController.prompt({sessionId:id,requestId:record.id,mode:'queue',content:context?promptContent(input.question,context,record.id):[{type:'text',text:input.question}]},stop.signal);
@@ -70,6 +77,6 @@ export function apply(ctx,config={}){
     }
    }
    return Response.json(value,{headers:{'Cache-Control':'no-store'}});
-  }catch(e){return Response.json({error:{code:e.code||'WORKBENCH_ERROR',message:e.message}},{status:400,headers:{'Cache-Control':'no-store'}});}
+  }catch(e){return Response.json({error:{code:e.code||'WORKBENCH_ERROR',message:e.message}},{status:e.status||400,headers:{'Cache-Control':'no-store'}});}
  });
 }

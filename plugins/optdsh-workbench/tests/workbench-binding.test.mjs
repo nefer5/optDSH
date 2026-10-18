@@ -7,7 +7,7 @@ import {pathToFileURL} from 'node:url';
 
 test('real plugin proxies candidate payload and records changed model in official prompt without stale implicit refs',async()=>{
  const root=mkdtempSync(join(tmpdir(),'optdsh-binding-')),lib=join(root,'plugins/optdsh-workbench/lib');mkdirSync(lib,{recursive:true});
- for(const name of ['index.js','core.js','agent-policy.js','tx-report.js','session-feed.js'])copyFileSync(resolve('plugins/optdsh-workbench/lib',name),join(lib,name));
+ for(const name of ['index.js','config.js','core.js','agent-policy.js','tx-report.js','session-feed.js'])copyFileSync(resolve('plugins/optdsh-workbench/lib',name),join(lib,name));
  mkdirSync(join(root,'config'));mkdirSync(join(root,'.runtime'));mkdirSync(join(root,'data/workbench'),{recursive:true});mkdirSync(join(root,'plugins/optdsh-workbench/config'),{recursive:true});
  writeFileSync(join(root,'package.json'),'{}');writeFileSync(join(lib,'package.json'),'{"type":"module"}');
  writeFileSync(join(root,'plugins/optdsh-workbench/config/instructions.md'),'fixture');

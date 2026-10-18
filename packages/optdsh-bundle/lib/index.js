@@ -2,7 +2,7 @@ import {mkdirSync,writeFileSync,renameSync} from 'node:fs';
 import {dirname,resolve} from 'node:path';
 import {homedir} from 'node:os';
 import {publicBuildInfo} from './version.mjs';
-import {canvasProfileState} from './profile-components.mjs';
+import {profileComponentState,profileComponentPackages} from './profile-components.mjs';
 export const name='optdsh-platform';
 export const inject=['connection'];
 export function apply(ctx,config={}){
@@ -10,9 +10,9 @@ export function apply(ctx,config={}){
  ctx.effect(()=>ctx.connection.fetch.register({path:'/api/optdsh-version',methods:['GET'],requestBody:'buffered',fetch:()=>Response.json({...buildInfo,runningNode:process.version})}),'platform version');
  const stateRoot=resolve(config.stateRoot||resolve(process.env.DSH_HOME||resolve(homedir(),'.optdsh'),'state','web'));
  const capabilities=()=>{
-  const entries=[...(ctx.get?.('loader')?.entries?.()||[])],items=(config.optional||[]).filter(x=>x.id!=='canvas');
-  const canvas=canvasProfileState(config),previous=(config.optional||[]).find(x=>x.id==='canvas');
-  if(canvas.installed||previous)items.push({...canvas,...(previous?.runtimeUnavailable?{runtimeUnavailable:previous.runtimeUnavailable}:{})});
+  const entries=[...(ctx.get?.('loader')?.entries?.()||[])],items=(config.optional||[]).filter(x=>!profileComponentPackages[x.id]);
+  for(const id of Object.keys(profileComponentPackages)){const state=profileComponentState(id,config),previous=(config.optional||[]).find(x=>x.id===id);
+   if(state.installed||previous)items.push({...state,...(previous?.runtimeUnavailable?{runtimeUnavailable:previous.runtimeUnavailable}:{})});}
   return items.map(item=>{
    if(item.profileOwned&&!item.enabled)return {id:item.id,status:item.status,reason:item.reason};
    if(item.runtimeUnavailable)return {id:item.id,status:'unavailable',reason:item.runtimeUnavailable};

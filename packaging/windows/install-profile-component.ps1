@@ -3,6 +3,7 @@ param(
  [Parameter(Mandatory)][string]$InstallRoot,
  [Alias('Home')][Parameter(Mandatory)][string]$OptDshHome,
  [Alias('Profile')][string]$OptDshProfile='web',
+ [ValidateSet('canvas','workbench')][string]$Component='canvas',
  [string]$Package,
  [ValidateSet('Install','Upgrade','Remove')][string]$Operation='Install',
  [string]$ReceiptPath,
@@ -10,7 +11,8 @@ param(
 )
 $ErrorActionPreference='Stop'
 if ($OptDshProfile -notmatch '^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$' -or $OptDshProfile -eq 'desktop') { throw 'Invalid profile' }
-$name='optdsh-agent-canvas'
+$componentPackages=@{canvas='optdsh-agent-canvas';workbench='optdsh-workbench'}
+$name=$componentPackages[$Component]
 $InstallRoot=[IO.Path]::GetFullPath($InstallRoot)
 $OptDshHome=[IO.Path]::GetFullPath($OptDshHome)
 $profileRoot=Join-Path $OptDshHome "profiles/$OptDshProfile"
@@ -20,27 +22,27 @@ if (Test-Path -LiteralPath $profileManifest) { $existing=Get-Content -LiteralPat
 $installed=[bool]($existing -and $existing.dependencies -and $existing.dependencies.PSObject.Properties[$name])
 $requested=$null
 if ($Operation -ne 'Remove') {
- if (-not $Package) { throw 'Install and Upgrade require the local Canvas bridge .tgz package' }
+ if (-not $Package) { throw 'Install and Upgrade require the selected component local .tgz package' }
  $Package=[IO.Path]::GetFullPath($Package)
  if (-not (Test-Path -LiteralPath $Package -PathType Leaf) -or [IO.Path]::GetExtension($Package) -ne '.tgz') { throw 'Package must be an existing local .tgz file' }
  # Read only the npm tarball metadata. No package code is imported or executed.
  $reader=@'
 const fs=require('node:fs'),zlib=require('node:zlib');
-const file=process.argv[1];if(fs.statSync(file).size>64*1024*1024)throw Error('Package too large');
+const file=process.argv[1],expected=process.argv[2];if(fs.statSync(file).size>64*1024*1024)throw Error('Package too large');
 const tar=zlib.gunzipSync(fs.readFileSync(file),{maxOutputLength:64*1024*1024});
 for(let offset=0;offset+512<=tar.length;){
  const h=tar.subarray(offset,offset+512),name=h.subarray(0,100).toString().replace(/\0.*$/s,''),size=parseInt(h.subarray(124,136).toString().replace(/\0.*$/s,'').trim()||'0',8);
  if(!Number.isFinite(size)||size<0||offset+512+size>tar.length)throw Error('Invalid tar header');
- if(name==='package/package.json'){const p=JSON.parse(tar.subarray(offset+512,offset+512+size));if(p.name!=='optdsh-agent-canvas'||typeof p.version!=='string')throw Error('Wrong Canvas bridge package');process.stdout.write(JSON.stringify({name:p.name,version:p.version}));process.exit(0)}
+ if(name==='package/package.json'){const p=JSON.parse(tar.subarray(offset+512,offset+512+size));if(p.name!==expected||typeof p.version!=='string')throw Error('Wrong Profile component package');process.stdout.write(JSON.stringify({name:p.name,version:p.version}));process.exit(0)}
  offset+=512+Math.ceil(size/512)*512;
 }throw Error('Missing npm package metadata');
 '@
- $metadata=& node -e $reader $Package
- if ($LASTEXITCODE) { throw 'Invalid Canvas bridge tarball; expected optdsh-agent-canvas' }
+ $metadata=& node -e $reader $Package $name
+ if ($LASTEXITCODE) { throw "Invalid component tarball; expected $name" }
  $requested=$metadata|ConvertFrom-Json
 }
-if ($Operation -eq 'Upgrade' -and -not $installed) { throw 'Canvas bridge is not installed in this Profile; use Install first' }
-$result=@{schemaVersion=1;name=$name;profile=$OptDshProfile;operation=$Operation;installedBefore=$installed;requestedVersion=$(if($requested){$requested.version}else{$null});status='planned';loadedVerified=$false;enablementOwner='official-profile'}
+if ($Operation -eq 'Upgrade' -and -not $installed) { throw "$name is not installed in this Profile; use Install first" }
+$result=@{schemaVersion=1;component=$Component;name=$name;profile=$OptDshProfile;operation=$Operation;installedBefore=$installed;requestedVersion=$(if($requested){$requested.version}else{$null});status='planned';loadedVerified=$false;enablementOwner='official-profile'}
 if (-not $Apply) { $result|ConvertTo-Json -Depth 6;return }
 $savedHome=$env:DSH_HOME;$savedPath=$env:PATH
 function Invoke-OfficialProfileCommand([string[]]$CommandArgs) {

@@ -59,3 +59,7 @@ CanvasRoot复用已有兼容安装；InstallCanvas＋CanvasInstallRoot安装发�
 ## 画板桥的官方Profile生命周期
 
 从dev.7起，选择canvas时桥包只安装到官方Profile，app不再带同名运行依赖。已有/新装独立编辑器的接入不变；二者是不同包。启停/卸载在官方插件管理操作，升级用停服后的本地tgz；开发源码不自动覆盖安装副本。完整目录与命令见[Profile插件说明](../profile-plugins.md)。
+
+## 工作台Profile安装
+
+选装workbench与canvas使用相同官方机制，两包都不作为app依赖。包装脚本增加Component=workbench，默认canvas保持兼容；主安装器支持两者分别或一起安装，分别回执。工作台不要求Python/画板/Forms，光学执行器后续显式配置。详见[Profile插件](../profile-plugins.md)。

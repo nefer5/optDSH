@@ -51,3 +51,7 @@
 ## 官方Profile统一管理（Canvas先行）
 
 用户确认源码plugins与用户安装目录分开，先从Canvas桥统一官方Profile安装/启停/升级/卸载。Bundle仅负责推荐与默认；components不再强启用Canvas、app不保留同名副本或源码fallback。停用和卸载重启后保持，升级保留用户选择及课题画板。其他自有插件逐项跟进，不公开npm、不推送。
+
+## 工作台Profile生命周期确认
+
+用户授权工作台继Canvas后统一官方Profile管理。源码留plugins，独立tgz安装到Home/Profile，Bundle不强启用或源码补回；工作台与光学执行器分离，默认只开UI。真实Zemax、模型推理、沙箱及公开发布不纳入本轮；基础平台在缺服务/坏插件时仍应可用。

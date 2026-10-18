@@ -1,21 +1,22 @@
 # optdsh-workbench
 
-官方 DSH 会话的光学工作台插件。lib 为适配，web 为前端，config 为产品指令；资源从包自身加载，不读取工作目录中的 package.json。源码随 optDSH 维护，仍可单独装配/禁用；当前 private=true，不表示已经公开发布。
+光学工作台是官方DSH的可选Profile插件，源码保留本目录，安装副本位于所选Home/Profile。0.9.0起不通过app/source fallback加载；用户停用、升级、卸载都走官方机制，普通启动不恢复用户关停。
 
-## 配置与边界
+## 运行边界
 
-- `workspaceRoot`：新建会话的工作目录；已有会话以官方 sessionController.inspect 的 cwd 为准，不局限安装目录。兼容旧 `projectRoot`。
-- `stateRoot`：optDSH 私有状态根，保存 data/workbench/bindings.json，读取 .runtime/optics-access.json；默认兼容旧 projectRoot。认证启动由平台负责。
-- `model: {provider, model}`：可选的新会话模型选择；省略沿用官方 Standard 默认，不再强读安装源码中的模型配置。
-- Canvas 仅点击画板时动态加载 transport。未安装或接口不兼容只反馈画板不可用，聊天与光学 UI 可继续加载。Forms 链接独立探测，缺失不阻止工作台初始化。
-- 光学服务不可达时，可继续一般讨论；携带明确对象引用的提交必须验证当前模型，不能沿用旧引用。
+- 与官方Web共用会话和权限；不创建另一套聊天事实源。
+- UI、对象引用和光学HTTP代理属于本插件；真正的ZOS-API连接/求解/保存属于独立光学执行器。
+- 不要求Python、Zemax、Canvas或Forms才能加载界面。缺光学服务时503 OPTICS_UNAVAILABLE，基础平台与普通会话继续；业务拒绝仍保持原状态，不擅自降级。
+- 不随安装或页面打开自动启动光学服务。用户应显式配置和启动相应执行器；真实模型连接、追迹和写盘须另行授权/验收。
 
-依赖 Node.js 24+ 与 DSH 0.2.1-rc.2 系列。运行数据不在包内。服务端注册/载入失败的整体隔离由平台 Bundle 装配层负责，本插件不替换官方 Agent 循环。
+## 安装和配置
 
-## 独立装配
+本地npm pack产生tgz，用官方 `dsh plugin --profile web add <tgz> --config.auto-install-peers=false` 安装，必要时先安装官方Cordis peer。产品发行包已提供包装脚本 `packaging/windows/install-profile-component.ps1 -Component workbench`；显式Install/Upgrade/Remove，运行中Profile拒绝离线包操作。Profile已有包默认保留版本/开关；升级需先停服，Web管理可启停/卸载。
 
-包内 `dsh.bundle.patch` 指向 cordis.patch.yml。可先 `npm pack` 生成本地 tgz，再通过 DSH 官方插件/Bundle 安装入口选择该文件；启用前在 Profile overlay 注入上述 workspaceRoot/stateRoot（画板还可注入 editorUrl）。不把 checkout 路径写进包，外部运行依赖由用户准备。独立安装后的官方宿主加载仍需验收，不能把 tarball 校验当作端到端成功。
+显式Profile配置优先；默认stateRoot来自运行环境或Home/state/profile，workspaceRoot来自所选运行环境/cwd。editorUrl可使用Home/config/canvas.json的可选默认，但不依赖画板包，损坏默认也不阻止工作台加载。会话绑定按官方session.meta.cwd核对；新建会话和报告的默认目录来自运行配置，不内置课题路径。
 
-### 全新官方Profile的Cordis前置条件
+光学代理仅消费stateRoot/.runtime/optics-access.json的已授权回环服务地址与令牌，白名单路径/方法保持；它不会扫描旧目录或猜测连接。静态资源、Three/manifold及测试由本包负责。停用时清理插件注册和光学提示词，卸载不删除绑定/课题/报告或终止共享执行器。
 
-通过官方 `dsh plugin --profile web add <本插件tgz>` 独立安装时，先在同一DSH_HOME/Profile执行 `dsh plugin --profile web add @deepseek-ai/cordis@4.0.5 --config.auto-install-peers=false`，再安装本插件。宿主范围是DSH 0.2.1-rc.2/Cordis ~4.0.5，不继承旧版豁免。已实测全新Profile仅装工作台会因传递包缺Cordis被预检禁用，补齐后加载通过；不要编辑node_modules解决。产品app安装器已提供宿主依赖，和Profile独立安装是不同路径。
+## 验证状态
+
+本轮已通过离线配置、真实HTTP合成代理、独立Profile与生命周期测试；无真实Zemax/模型调用。许可证与公开发布仍另行确认，当前private=true，仅本地测试包。
