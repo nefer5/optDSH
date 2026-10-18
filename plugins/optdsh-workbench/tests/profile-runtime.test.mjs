@@ -35,7 +35,7 @@ test('missing service/access and stopped service return 503 while independent Pr
  assert.equal((await call({action:'service-status'})).body.state,'unconfigured');
  assert.equal((await call({action:'service-start',python:'arbitrary-command'})).body.state,'unconfigured');
  const cross=await routes.get('/api/optdsh-workbench')(new Request('http://local/api',{method:'POST',headers:{Origin:'http://other.invalid'},body:JSON.stringify({action:'service-start'})}));
- assert.equal(cross.status,400);
+ assert.equal(cross.status,403);
  const missing=await call({action:'optics',path:'/api/snapshot'});assert.equal(missing.status,503);assert.equal(missing.body.error.code,'OPTICS_UNAVAILABLE');assert.doesNotMatch(missing.body.error.message,/ENOENT/);
  assert.equal((await routes.get('/api/optdsh-workbench/view')()).status,200);
  assert.equal((await call({action:'list'})).status,200);assert.equal((await call({action:'create'})).status,200);
@@ -45,6 +45,27 @@ test('missing service/access and stopped service return 503 while independent Pr
  const unreachable=await call({action:'optics',path:'/api/snapshot'});assert.equal(unreachable.status,503);assert.equal(unreachable.body.error.code,'OPTICS_UNAVAILABLE');
  const forbidden=await call({action:'optics',path:'/api/not-allowed'});assert.equal(forbidden.status,400);assert.equal(forbidden.body.error.code,'INVALID_ARGUMENT');
  assert.equal((await call({action:'list'})).status,200);
+});
+
+test('official carrier internal URL preserves real Host for browser Origin without allowing cross-site writes',async()=>{
+ const home=mkdtempSync(join(tmpdir(),'workbench-origin-')), {routes}=harness({}, {home,name:'web'});
+ const invoke=async(headers,action='service-config-save')=>{
+  const response=await routes.get('/api/optdsh-workbench')(new Request('http://dsh.internal/api/optdsh-workbench',{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify({action,version:'invalid-origin-probe'})}));
+  return {status:response.status,body:await response.json()};
+ };
+ const same=await invoke({Host:'127.0.0.1:3380',Origin:'http://127.0.0.1:3380','Sec-Fetch-Site':'same-origin'});
+ assert.equal(same.status,400);assert.equal(same.body.error.code,'SERVICE_CONFIG_INVALID');
+ const alias=await invoke({Host:'localhost:3380',Origin:'http://localhost:3380','Sec-Fetch-Site':'same-origin'},'service-start');assert.equal(alias.status,200);
+ for(const headers of [
+  {Host:'127.0.0.1:3380',Origin:'http://other.invalid'},
+  {Host:'127.0.0.1:3380',Origin:'http://127.0.0.1:3381'},
+  {Host:'127.0.0.1:3380',Origin:'null'},
+  {Host:'127.0.0.1:3380',Origin:'http://127.0.0.1:3380','Sec-Fetch-Site':'cross-site'},
+  {Origin:'http://127.0.0.1:3380'}
+ ])for(const action of ['service-config-save','service-start','service-stop']){
+  const rejected=await invoke(headers,action);assert.equal(rejected.status,403);assert.equal(rejected.body.error.code,'ORIGIN_REJECTED');
+ }
+ const cli=await invoke({},'service-start');assert.equal(cli.status,200);
 });
 
 test('synthetic service receives local token and method; preserves backend stale-model rejection',async t=>{

@@ -12,6 +12,25 @@ export const name='optdsh-workbench';
 export const inject=['connection','sessionController','agents','systemPrompt'];
 const PACKAGE_ROOT=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const PREFIX='/api/optdsh-workbench';
+function requireSameWorkbenchOrigin(request){
+ const rejected=()=>{throw Object.assign(new Error('请求来源校验失败，请从当前 optDSH 入口重新打开工作台后重试。'),{code:'ORIGIN_REJECTED',status:403});};
+ if(request.headers.get('Sec-Fetch-Site')==='cross-site')rejected();
+ const origin=request.headers.get('Origin');if(!origin)return;
+ try{
+  const source=new URL(origin);
+  if(!['http:','https:'].includes(source.protocol)||source.username||source.password||source.pathname!=='/'||source.search||source.hash)rejected();
+  // 官方carrier已鉴权并校验Host；request.url被规范成dsh.internal，不能拿它当浏览器来源。
+  const host=request.headers.get('Host');
+  if(host){
+   const target=new URL(source.protocol+'//'+host);
+   if(target.username||target.password||target.pathname!=='/'||target.search||target.hash||source.host!==target.host)rejected();
+  }else{
+   // 直接Fetch/测试调用可使用真实URL；内部URL缺Host时保持拒绝。
+   const target=new URL(request.url);
+   if(target.hostname==='dsh.internal'||source.origin!==target.origin)rejected();
+  }
+ }catch(e){if(e.code==='ORIGIN_REJECTED')throw e;rejected();}
+}
 export function apply(ctx,config={}){
  config=workbenchRuntimeOptions(config,process.env,ctx.get?.('profileContext')||ctx.profileContext);
  const ROOT=resolve(config.stateRoot||config.projectRoot||process.cwd());
@@ -55,12 +74,12 @@ export function apply(ctx,config={}){
    if(input.action==='service-status')value=await service.status();
    else if(input.action==='service-config')value=await service.configuration();
    else if(input.action==='service-config-save'||input.action==='service-stop'){
-    requireValue(request.headers.get('Sec-Fetch-Site')!=='cross-site'&&(!request.headers.get('Origin')||request.headers.get('Origin')===new URL(request.url).origin),'拒绝跨站配置或停止光学服务');
+    requireSameWorkbenchOrigin(request);
     value=input.action==='service-stop'?await service.stop():await service.saveConfiguration(Object.fromEntries(Object.entries(input).filter(([key])=>key!=='action')));
    }
    else if(input.action==='service-logs')value=service.logs();
    else if(input.action==='service-start'){
-    requireValue(request.headers.get('Sec-Fetch-Site')!=='cross-site'&&(!request.headers.get('Origin')||request.headers.get('Origin')===new URL(request.url).origin),'拒绝跨站启动光学服务');
+    requireSameWorkbenchOrigin(request);
     value=await service.start();
    }
    else if(input.action==='optics')value=await optical(input.path,input.method,input.data);

@@ -76,3 +76,15 @@ test('stopped backend refreshes detected environment even when the same version 
  try{await settle();await f.control.openConfiguration();await f.control.prepareConnection();const actions=calls.map(r=>r.action);assert.equal(actions.filter(x=>x==='service-config-save').length,1);assert.ok(actions.indexOf('service-config-save')<actions.indexOf('service-start'));assert.deepEqual(calls.find(r=>r.action==='service-config-save').data,{version:'modern'});}
  finally{f.control.dispose();}
 });
+
+
+test('configuration/log failures are red alerts, persist through polling, and recover without stale error styling',async()=>{
+ let failConfig=true,failLogs=true;const originError=Object.assign(new Error('请求来源校验失败，请从当前optDSH入口重新打开工作台后重试'),{code:'ORIGIN_REJECTED'});
+ const f=fixture(async action=>{if(action==='service-config'){if(failConfig)throw originError;return config;}if(action==='service-logs'){if(failLogs)throw new Error('日志暂不可读');return {text:'日志恢复正常'};}return {state:'ready'};});
+ try{
+  await settle();await f.control.openConfiguration();assert.equal(f.$('service-config-message').classList.contains('operation-error'),true);assert.equal(f.$('service-config-message').getAttribute('role'),'alert');assert.match(f.$('service-config-message').textContent,/ORIGIN_REJECTED/);
+  await f.control.refresh();assert.match(f.$('service-config-message').textContent,/ORIGIN_REJECTED/);assert.equal(f.$('service-config-message').classList.contains('operation-error'),true);
+  failConfig=false;await f.control.openConfiguration();assert.equal(f.$('service-config-message').classList.contains('operation-error'),false);assert.equal(f.$('service-python-status').classList.contains('operation-error'),false);assert.equal(f.$('service-config-message').getAttribute('role'),'status');
+  await f.$('service-logs').onclick();assert.equal(f.$('service-log-text').classList.contains('operation-error'),true);failLogs=false;await f.$('service-logs').onclick();assert.equal(f.$('service-log-text').classList.contains('operation-error'),false);assert.equal(f.$('service-log-text').textContent,'日志恢复正常');
+ }finally{f.control.dispose();}
+});
