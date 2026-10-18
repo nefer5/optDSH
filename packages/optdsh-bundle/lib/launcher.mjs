@@ -1,5 +1,5 @@
 import {readFileSync,existsSync} from 'node:fs';
-import {resolve,dirname,isAbsolute,join} from 'node:path';
+import {resolve,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 
@@ -23,7 +23,9 @@ export function launchPlan(args,{cwd=process.cwd(),env=process.env}={}){
  const entry=join(installRoot,'scripts/runtime',action==='start'?'open-dsh.ps1':action+'-dsh.ps1');
  if(!existsSync(entry))throw new Error('Installed runtime scripts are missing');
  // Absolute Windows system path: never search PATH for a replacement shell.
- const shell=join(env.SystemRoot||'C:\\Windows','System32/WindowsPowerShell/v1.0/powershell.exe');
+ const systemRoot=env.SystemRoot||env.WINDIR;
+ if(!systemRoot)throw new Error('Windows system directory is unavailable');
+ const shell=join(systemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe');
  const powershell=['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',entry,'-Config',config];
  for(const [flag,parameter]of Object.entries({'--workspace':'Workspace','--home':'Home','--profile':'Profile','--state-root':'StateRoot','--components':'Components','--port':'Port'})){
   if(options[flag]!==undefined)powershell.push('-'+parameter,options[flag]);

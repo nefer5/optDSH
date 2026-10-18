@@ -28,7 +28,9 @@ for(const folder of ['scripts/runtime','packaging/windows'])cpSync(resolve(root,
 cpSync(resolve(root,'docs/refactor/2026-10-18'),resolve(output,'docs/refactor/2026-10-18'),{recursive:true});
 for(const file of ['README.md','docs/architecture.md','docs/runtime.md','docs/contracts.md','docs/installation/README.md','docs/development.md','docs/workspaces.md','docs/agent-resource-layout.md','config/runtime.example.json','推荐插件.md','.agents/plans/261018-platform-plugin-refactor.md','.agents/plans/261018-windows-thin-launcher.md'])if(existsSync(resolve(root,file))){mkdirSync(resolve(output,relative(root,resolve(root,file)),'..'),{recursive:true});copyFileSync(resolve(root,file),resolve(output,file));}
 mkdirSync(resolve(output,'launcher'),{recursive:true});
-const built=spawnSync(resolve(process.env.SystemRoot||'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe'),['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',resolve(root,'scripts/maintenance/build-windows-launcher.ps1'),'-OutputPath',resolve(output,'launcher/optdsh.exe')],{encoding:'utf8'});
+const systemRoot=process.env.SystemRoot||process.env.WINDIR;
+if(!systemRoot)throw new Error('Windows system directory is unavailable for launcher build');
+const built=spawnSync(resolve(systemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe'),['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',resolve(root,'scripts/maintenance/build-windows-launcher.ps1'),'-OutputPath',resolve(output,'launcher/optdsh.exe')],{encoding:'utf8'});
 if(built.status!==0)throw new Error('Thin launcher build failed: '+built.stderr+built.stdout);
 const launcher={file:'launcher/optdsh.exe',sha256:createHash('sha256').update(readFileSync(resolve(output,'launcher/optdsh.exe'))).digest('hex'),kind:'thin-framework-launcher',requiresPowerShell7:false,windowsHelper:'built-in Windows PowerShell 5.1',signed:false};
 let optics;
