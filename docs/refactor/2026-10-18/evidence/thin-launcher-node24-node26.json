@@ -1,0 +1,89 @@
+{
+  "codeRevision": "32cd67f5dec77493314f43dbd557b9b5e780c73e",
+  "sourceDirtyAtBuild": false,
+  "releaseRoot": "E:\\Proj-2026-N06_optDSH-releases\\20261018-thin-launcher-008",
+  "nodeRequirement": ">=24",
+  "installer": "Windows built-in PowerShell 5.1; Node26 runs npm-cli.js explicitly",
+  "cacheMode": "explicit-cache-reuse-not-a-cold-network-test",
+  "exeTests": [
+    {
+      "realZemax": false,
+      "usesPowerShell7": false,
+      "cacheMode": "explicit-cache-reuse-not-a-cold-network-test",
+      "cleanup": "stopped",
+      "entry": "E:\\Proj-2026-N06_optDSH-validation\\20261018-thin-launcher-full-008\\app\\optdsh.exe",
+      "config": "E:\\Proj-2026-N06_optDSH-validation\\20261018-thin-launcher-full-008\\exe-preview-node26\\optdsh-launcher.json",
+      "status": "passed",
+      "nativeImports": "node-pty and koffi passed",
+      "workspace": "E:\\Proj-2026-N06_optDSH-validation\\20261018-thin-launcher-full-008\\exe-preview-node26\\课题 A with spaces",
+      "pid": 58312,
+      "components": [
+        {
+          "id": "workbench",
+          "status": "ready",
+          "scopeState": 2
+        },
+        {
+          "id": "canvas",
+          "status": "ready",
+          "scopeState": 2
+        },
+        {
+          "id": "forms",
+          "status": "ready",
+          "scopeState": 2
+        }
+      ],
+      "browserOpened": false,
+      "port": 55041,
+      "modelCalls": false,
+      "verifiedAt": "2026-10-18T14:51:33.1555116+08:00",
+      "authentication": "HTTP200",
+      "repeatOpen": "same PID",
+      "node": "v26.12.0"
+    },
+    {
+      "realZemax": false,
+      "usesPowerShell7": false,
+      "cacheMode": "explicit-cache-reuse-not-a-cold-network-test",
+      "cleanup": "stopped",
+      "entry": "E:\\Proj-2026-N06_optDSH-validation\\20261018-thin-launcher-full-008\\app\\optdsh.exe",
+      "config": "E:\\Proj-2026-N06_optDSH-validation\\20261018-thin-launcher-full-008\\exe-preview-node24\\optdsh-launcher.json",
+      "status": "passed",
+      "nativeImports": "node-pty and koffi passed",
+      "workspace": "E:\\Proj-2026-N06_optDSH-validation\\20261018-thin-launcher-full-008\\exe-preview-node24\\课题 A with spaces",
+      "pid": 28960,
+      "components": [
+        {
+          "id": "workbench",
+          "status": "ready",
+          "scopeState": 2
+        },
+        {
+          "id": "canvas",
+          "status": "ready",
+          "scopeState": 2
+        },
+        {
+          "id": "forms",
+          "status": "ready",
+          "scopeState": 2
+        }
+      ],
+      "browserOpened": false,
+      "port": 51263,
+      "modelCalls": false,
+      "verifiedAt": "2026-10-18T14:51:43.7101126+08:00",
+      "authentication": "HTTP200",
+      "repeatOpen": "same PID",
+      "node": "v24.19.0"
+    }
+  ],
+  "limits": [
+    "No sandbox or company machine",
+    "No actual browser interaction",
+    "No model or real Zemax calls",
+    "No public release or signing",
+    "Node versions beyond 24 and 26 not tested"
+  ]
+}

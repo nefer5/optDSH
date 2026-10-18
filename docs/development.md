@@ -108,3 +108,5 @@ $env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
 开发根目录CMD仍可使用本机已有pwsh；发布EXE/CMD共用Node入口，运行链已适配Windows内置5.1，包括JSON读取、路径和UTF8处理。无需要求普通用户另装7；不能把同机移除pwsh搜索路径的成功当作沙箱或干净Windows成功。
 
 2026-10-18追加Q10：Node>=24，当前源码预览选择本机Node26；旧24仍属Codex独立工具运行时，无需卸载。已完成的旧版本回执不回写。新版构建及EXE入口将按本次版本规则验证。
+
+当前薄EXE与Node24/26验证结果见[Windows启动器阶段验收](refactor/2026-10-18/thin-launcher.md)。新开发CMD已按本机Node26配置，发布包008不再硬拦截26。
