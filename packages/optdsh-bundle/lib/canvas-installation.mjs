@@ -61,9 +61,27 @@ export async function ensureCanvas(home){
  if(!config.autoStart)throw new Error('Canvas is not running; autoStart is disabled.');
  await freePort(Number(new URL(config.editorUrl).port));
  const runtime=resolve(home,'state/canvas'),logs=join(runtime,'logs');mkdirSync(logs,{recursive:true});
- const stamp=Date.now(),out=openSync(join(logs,stamp+'.stdout.log'),'a'),err=openSync(join(logs,stamp+'.stderr.log'),'a');
- const child=spawn(process.execPath,[info.serverEntry,'--port',new URL(config.editorUrl).port,'--data-root',join(runtime,'catalog')],{cwd:info.installationRoot,detached:true,windowsHide:true,stdio:['ignore',out,err]});
- closeSync(out);closeSync(err);let failure;child.on('error',e=>{failure=e;});child.unref();
+ const stamp=Date.now(),stdout=join(logs,stamp+'.stdout.log'),stderr=join(logs,stamp+'.stderr.log');
+ let child,failure;
+ if(process.platform==='win32'){
+  // Windows PowerShell waits for native console descendants even after the
+  // Node parent exits. Start-Process creates a separate hidden console so a
+  // first editor start cannot keep the user's launcher blocked indefinitely.
+  const quote=x=>"'"+String(x).replaceAll("'","''")+"'";
+  const shell=join(process.env.SystemRoot||process.env.WINDIR,'System32/WindowsPowerShell/v1.0/powershell.exe');
+  const args=[`"${info.serverEntry}"`,'--port',new URL(config.editorUrl).port,'--data-root',`"${join(runtime,'catalog')}"`];
+  // ShellExecute avoids inherited native-command pipe handles. Redirecting
+  // stdio here switches to CreateProcess and can hold the parent PS5 console.
+  atomicJson(join(logs,stamp+'.launch.json'),{node:process.execPath,serverEntry:info.serverEntry,editorUrl:config.editorUrl,installationId:info.installationId});
+  const script=`$ErrorActionPreference='Stop';$p=Start-Process -FilePath ${quote(process.execPath)} -ArgumentList @(${args.map(quote).join(',')}) -WorkingDirectory ${quote(info.installationRoot)} -WindowStyle Hidden -PassThru;$p.Id`;
+  const started=spawnSync(shell,['-NoProfile','-NonInteractive','-EncodedCommand',Buffer.from(script,'utf16le').toString('base64')],{encoding:'utf8',timeout:15000,windowsHide:true});
+  const pid=Number(started.stdout?.trim());if(started.status!==0||!Number.isInteger(pid)||pid<=0)throw new Error('Could not start the independent Canvas process.');
+  child={pid,exitCode:null};
+ }else{
+  const out=openSync(stdout,'a'),err=openSync(stderr,'a');
+  child=spawn(process.execPath,[info.serverEntry,'--port',new URL(config.editorUrl).port,'--data-root',join(runtime,'catalog')],{cwd:info.installationRoot,detached:true,stdio:['ignore',out,err]});
+  closeSync(out);closeSync(err);child.on('error',e=>{failure=e;});child.unref();
+ }
  for(let i=0;i<80;i++){if(failure||child.exitCode!==null)throw new Error('Canvas exited before readiness; inspect its Home/state/canvas/logs.');try{const ready=await health(config.editorUrl);if(!compatibleHealth(ready,info))throw new Error('Canvas identity changed during startup');const receipt={status:'started',editorUrl:config.editorUrl,pid:child.pid,version:info.version,installationId:info.installationId};atomicJson(join(runtime,'host.json'),receipt);return receipt;}catch(e){if(/identity changed/.test(e.message))throw e;}await new Promise(r=>setTimeout(r,250));}
  throw new Error('Canvas readiness timed out; inspect Home/state/canvas/logs.');
 }
