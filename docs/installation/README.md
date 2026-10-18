@@ -2,6 +2,16 @@
 
 本轮开发分支：`codex/platform-dev`。安装包不携带 Node、Python 或 Zemax。Node 24+ 是纯平台前置；光学能力另需 Python 3.12+、依赖和独立安装的 Zemax/许可证。未提供离线完整依赖包。
 
+## 图形安装入口（dev.21）
+
+解压完整本地发行包后，双击`安装optDSH.exe`（或备用`安装optDSH.cmd`）。向导在系统默认浏览器打开，分为位置/组件、环境检查、确认、进度和完成五步；复用下方CLI安装器，不另建安装事实源。缺少Node24+时明确提示先安装，不自动安装系统依赖。
+
+图形向导建议程序目录`%LOCALAPPDATA%/Programs/optDSH/<版本>`，资料默认`~/.optdsh`，首次课题可改为已有工作目录。程序必须放全新位置；升级先并排安装并保留原Home。为独立人工验收，建议使用新的测试Home，不复用正在写入的现役Home。
+
+默认不修改全局.agents或用户PATH。向导仅本机回环监听，随机会话令牌校验请求来源；校验发布包哈希后才安装。错误保留日志及程序回执，不能把“安装完成”当作Zemax/模型业务已验。诊断在发行目录`logs/installer.log`及程序`.runtime`；不要上传包含账号信息的私人Home。
+
+安装包包括公共光学Skills、PPT运行资源，选装Experts/Forms/Canvas/工作台按官方Profile管理。专家公共资料不含私人偏好或图片。Canvas可复用已有兼容安装，或在发行包携带编辑器tgz时单独新装。
+
 ## 本地产物与安装
 
 在开发仓库运行 `npm run release:local -- <新的输出目录>`，生成本地tarball、SHA256清单、运行脚本与离线架构材料。许可证未确定，产物不代表公开发布。
@@ -14,7 +24,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 
 安装后可直接双击程序目录的optdsh.exe，编辑外置optdsh-launcher.json选择课题/资料/端口/插件；配置不含密钥。EXE与CMD共用Node入口，Windows辅助使用内置5.1，无需另装PowerShell7；Node24仍由用户准备。当前EXE为本地测试产物，未签名/公开发布，沙箱及公司实机待验。
 
-显式选装可传 `-Components core,workbench,canvas,forms`。core无Python/Canvas/私人中心依赖；工作台和画板服务仍须单独准备。专家插件未包含私人资源，默认不选；公共资源独立发行尚需核验。推荐市场插件见发布包内的推荐清单，不自动启用历史disabled项，也不继承旧版兼容豁免。
+显式选装可传 `-Components core,workbench,canvas,forms`。core无Python/Canvas/私人中心依赖；工作台和画板服务仍须单独准备。Experts可选装官方Preset和公共基线，不包含私人资源。推荐市场插件见发布包内的推荐清单，不自动启用历史disabled项，也不继承旧版兼容豁免。
 
 ## 数据布局与回退
 
@@ -40,7 +50,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 
 ## 安装时自动装市场与推荐插件
 
-主安装器支持-PluginPreset none、market、recommended。默认none保留纯平台；market只装dshmarket；recommended按包内plugins.snapshot.json安装当前推荐的8项（包含市场）。首次选择后无需逐个搜索。图形安装向导尚未实现，本轮提供自动安装后端。
+主安装器支持-PluginPreset none、market、recommended。默认none保留纯平台；market只装dshmarket；recommended按包内plugins.snapshot.json安装当前推荐的8项（包含市场）。首次选择后无需逐个搜索。图形向导已复用此后端，仍保留CLI入口。
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging/windows/install.ps1 -ReleaseRoot <发布目录> -InstallRoot <新程序目录> -Home <用户资料目录> -Workspace <课题目录> -PluginPreset recommended

@@ -1,6 +1,6 @@
 import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import {validate} from './model.mjs';
 import {hash} from './assets.mjs';
-export const root=path.resolve(import.meta.dirname,'../..');
+export const root=path.resolve(process.env.OPTDSH_WORKSPACE||process.cwd());
 export const data=process.env.PPT_SLIDEWISE_DATA_DIR?path.resolve(process.env.PPT_SLIDEWISE_DATA_DIR):path.join(root,'data/ppt-slidewise');
 export function dir(id){if(!/^[a-z0-9-]{1,64}$/.test(id))throw Error('Invalid document ID');return path.join(data,id);}
 export function revision(id,n){if(!Number.isInteger(n)||n<1)throw Error('Invalid revision');const current=read(id);return n===current.revision?current:JSON.parse(fs.readFileSync(path.join(dir(id),'history',`${n}.json`),'utf8'));}

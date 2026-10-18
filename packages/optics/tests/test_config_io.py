@@ -3,14 +3,14 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
-ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file());sys.path.insert(0,str(ROOT/'packages/optics/src'))
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/"packages/optics/src").is_dir() and (p/"package.json").is_file());sys.path.insert(0,str(ROOT/'packages/optics/src'))
 from optdsh_optics.config_io import load_config,parse_config
 from optdsh_optics.run_bundle import RunBundle
 from optdsh_optics.tx_pilot import validate
 
 class ConfigIOTests(unittest.TestCase):
     def test_yaml_and_legacy_examples_preserve_offline_plan_compatibility(self):
-        yaml_config=load_config(ROOT/'.agents/skills/optdsh-assembly-tolerance/config/tx-pilot.example.yaml')
+        yaml_config=load_config(ROOT/'packages/optics/skills/optdsh-assembly-tolerance/config/tx-pilot.example.yaml')
         legacy=load_config(ROOT/'examples/tx-pilot.example.json')
         self.assertEqual(yaml_config['sources']['indices'],[2,3])
         self.assertEqual(legacy['sources']['indices'],[2,3,4,5])

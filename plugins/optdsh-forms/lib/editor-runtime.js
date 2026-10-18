@@ -8,7 +8,7 @@ const card=doc=>({documentId:doc.id,title:doc.title||doc.sourceName,sourceName:d
 const output={schema:{type:'object',additionalProperties:true},render:(_args,value)=>[{type:'text',text:marker(value)+'\n'+(value.waitingForUser?'参数已在当前会话右侧打开；请用户核对并提交。本轮结束，不轮询、不编写网页。':'读取配置回执，继续本会话原任务。')}]};
 export function registerYamlEditor(ctx,config={}){
  const install=config.installRoot||process.env.OPTDSH_INSTALL_ROOT;
- const store=new YamlEditorStore({stateRoot:config.stateRoot||process.env.OPTDSH_STATE_ROOT||config.projectRoot||process.cwd(),sourceRoots:[...(config.yamlSourceRoots||[]),...(install?[resolve(install,'.agents/skills')]:[])],exampleRoot:resolve(PACKAGE,'examples')});
+ const store=new YamlEditorStore({stateRoot:config.stateRoot||process.env.OPTDSH_STATE_ROOT||config.projectRoot||process.cwd(),sourceRoots:[...(config.yamlSourceRoots||[]),...(install?[resolve(install,'node_modules/optdsh-optics-skills/skills')]:[])],exampleRoot:resolve(PACKAGE,'examples')});
  const stop=new AbortController(),deliveries=new Set();
  async function binding(sessionId){
   if(typeof sessionId!=='string'||sessionId.length>240)fail('无效会话');

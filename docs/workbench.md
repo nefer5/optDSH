@@ -64,11 +64,11 @@ Standard工具/权限保持官方原有机制，不额外施加工作台白名�
 
 运行页选择独立灵敏度或Monte Carlo、None/OD/DLS补偿；草稿按modelId/revision保存，换模型不可套用旧引用。核对机械与测量约定后点击“在副本运行”授权本次配置。服务串行占用宿主，刷新/保存/其他分析会返回忙，关闭弹窗或停止Agent不取消仿真；使用运行页取消按钮。
 
-结果显示实际进度、名义值、MC样本补偿前后、原生灵敏度端点和行程/功率有效性，不包含演示数据或补偿轨迹图。运行包路径可从记录中复制，报告和原生TXT/ZTD随包。执行和配置详见[Tx Skill](../.agents/skills/optdsh-assembly-tolerance/references/tx.md)。首次建议3个MC、1轮OD，低采样仅用于检查链路，不能作为设计收敛或良率证明。
+结果显示实际进度、名义值、MC样本补偿前后、原生灵敏度端点和行程/功率有效性，不包含演示数据或补偿轨迹图。运行包路径可从记录中复制，报告和原生TXT/ZTD随包。执行和配置详见[Tx Skill](../packages/optics/skills/optdsh-assembly-tolerance/references/tx.md)。首次建议3个MC、1轮OD，低采样仅用于检查链路，不能作为设计收敛或良率证明。
 
 
 ### 自定义分析
 
 运行与结果页增加第三种模式，共用装配、源和目标配置。先在Zemax准备参考链并刷新绑定，再勾选参考链确认；程序仍会检查实际子孙关系，发现未知随动则拒绝，不自动重引用。MC样本数沿用现有设置；先采集名义及全部未补偿MC，只补偿最后一个状态。
 
-OD/DLS使用独立局部优化器，逐轴扫描则由脚本处理，可设轮数/初始步长比例/缩步系数；局部灵敏度围绕终点扫描。保存last-mc.zos与final-compensated.zos，原模型不变。结果提供真实MC散点、仅末样本的补偿后值、局部扫描与报告入口。只有完成且已生成报告的运行显示“打开HTML报告”；光斑数组保存在运行包。详见[自定义Tx流程](../.agents/skills/optdsh-assembly-tolerance/references/tx-custom.md)。
+OD/DLS使用独立局部优化器，逐轴扫描则由脚本处理，可设轮数/初始步长比例/缩步系数；局部灵敏度围绕终点扫描。保存last-mc.zos与final-compensated.zos，原模型不变。结果提供真实MC散点、仅末样本的补偿后值、局部扫描与报告入口。只有完成且已生成报告的运行显示“打开HTML报告”；光斑数组保存在运行包。详见[自定义Tx流程](../packages/optics/skills/optdsh-assembly-tolerance/references/tx-custom.md)。

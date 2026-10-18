@@ -37,4 +37,4 @@
 
 ## DSH_HOME与.agents（讨论边界）
 
-DSH_HOME是产品自己的Profile/会话/状态资料根，workspace是实际研究工作目录。.agents可位于用户主目录（共享资源）或课题根（局部资源）；源码项目的.agents用于开发协作。新版官方分别解析DSH_HOME和DSH_AGENTS_HOME，目录归属不能混同。产品内置Skill如何归入插件资源包、源码.agents如何只保留开发配置仍在讨论，本轮没有迁移这些目录或改全局设置。
+DSH_HOME是产品自己的Profile/会话/状态资料根，workspace是实际研究工作目录。.agents可位于用户主目录（共享资源）或课题根（局部资源）；源码项目的.agents用于开发协作。新版官方分别解析DSH_HOME和DSH_AGENTS_HOME，目录归属不能混同。产品Skills现已归所属包，通过官方Provider/注册服务发现；源码.agents保留开发用途。公共专家由Profile注册Preset，未修改全局设置。

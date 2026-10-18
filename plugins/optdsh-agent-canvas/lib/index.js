@@ -6,6 +6,7 @@ import {WorkspaceBoardStore} from './workspace-store.js';
 import {registerCanvasTools} from './tools.js';
 import {canvasMessage} from './messages.js';
 import {canvasRuntimeOptions} from './config.js';
+import * as skillFilesystem from '@deepseek-ai/dsh-skill-filesystem';
 
 export const name = 'optdsh-agent-canvas';
 export const inject = ['connection', 'sessionController', 'tools', 'agents', 'systemPrompt'];
@@ -15,6 +16,7 @@ export function apply(ctx, options={}) {
   options=canvasRuntimeOptions(options,process.env,ctx.get?.('profileContext'));
   const ROOT=resolve(options.stateRoot||options.projectRoot||process.cwd());
   if(options.enabled===false)return;
+  if(ctx.plugin&&ctx.inject)ctx.inject(['skills'],scope=>scope.plugin(skillFilesystem,{providerName:'optdsh-canvas',includeDefaultRoots:false,bundledSkillDir:resolve(PACKAGE_ROOT,'skills')}));
   const editor=new URL(options.editorUrl||'http://127.0.0.1:4173');
   requireValue(['http:','https:'].includes(editor.protocol)&&!editor.username&&!editor.password&&editor.pathname==='/'&&!editor.search&&!editor.hash,'编辑器地址必须是无凭据的HTTP(S) origin');
   const store = new WorkspaceBoardStore({legacyRoot:options.legacyRoot||resolve(ROOT,'data/canvas/boards')});

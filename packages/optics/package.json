@@ -1,0 +1,13 @@
+{
+  "name": "optdsh-optics-skills",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "optDSH可分发光学工作流资源，不包含模型与用户配置",
+  "files": [
+    "skills"
+  ],
+  "exports": {
+    "./package.json": "./package.json"
+  }
+}

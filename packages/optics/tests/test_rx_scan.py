@@ -8,13 +8,13 @@ from types import SimpleNamespace as NS
 import unittest
 from unittest.mock import patch
 
-ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file())
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/"packages/optics/src").is_dir() and (p/"package.json").is_file())
 sys.path.insert(0, str(ROOT/'packages/optics/src'))
 from optdsh_optics import rx_scan as rx
 from optdsh_optics.config_io import load_config
 from optdsh_optics.rx_scan_report import results_section
 
-CONFIG = ROOT/'.agents/skills/optdsh-rx-collection-efficiency/config/rx-scan.example.yaml'
+CONFIG = ROOT/'packages/optics/skills/optdsh-rx-collection-efficiency/config/rx-scan.example.yaml'
 
 
 class Cell:
@@ -204,7 +204,7 @@ class RxTests(unittest.TestCase):
         spec=importlib.util.spec_from_file_location('rx_mcp',ROOT/'packages/optics/scripts/mcp.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
         from unittest.mock import patch
-        with patch.dict('os.environ',{'OPTDSH_SKILLS_ROOT':str(ROOT/'.agents/skills')}):
+        with patch.dict('os.environ',{'OPTDSH_SKILLS_ROOT':str(ROOT/'packages/optics/skills')}):
             r=module.call('workflow_guide',{'name':'rx-collection-efficiency'})
         self.assertFalse(r['isError']);self.assertIn('Rx收光效率',r['content'][0]['text'])
 

@@ -1,13 +1,14 @@
 {
   "name": "optdsh-experts",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "private": true,
   "files": [
     "lib",
     "cordis.patch.yml",
     "README.md",
-    "NOTICE.md"
+    "NOTICE.md",
+    "resources"
   ],
   "main": "lib/index.js",
   "engines": {
@@ -18,8 +19,13 @@
       "patch": "cordis.patch.yml"
     }
   },
-  "dependencies": {
+  "dependencies": {},
+  "peerDependencies": {
+    "@deepseek-ai/dsh-skill-filesystem": "0.2.1-rc.2",
+    "@deepseek-ai/cordis": "~4.0.5",
     "@deepseek-ai/dsh-tools": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-subagent": "0.2.1-rc.2"
+    "@deepseek-ai/dsh-subagent": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-agent-preset": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-tool-subagent": "0.2.1-rc.2"
   }
 }

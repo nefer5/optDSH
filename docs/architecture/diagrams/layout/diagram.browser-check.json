@@ -6,11 +6,11 @@
   "status": "pass",
   "visualReview": "not-requested",
   "provenance": "current",
-  "deliveryReceiptId": "6eff4db3-1904-4610-930b-340c48d36565",
+  "deliveryReceiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58",
   "artifact": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
-    "sha256": "4b314cecfd801a08265f56828a61da29881bebf357bf351032424a0831b8295a",
-    "bytes": 756706
+    "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
+    "bytes": 759586
   },
   "state": {
     "detail": "read",
@@ -41,27 +41,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1188,
-        "diagramWidth": 1158,
+        "readerWidth": 1304,
+        "diagramWidth": 1274,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
           "diagramChromePx": 78,
           "svgPx": 746,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -93,27 +93,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1241,
-        "diagramWidth": 1211,
+        "readerWidth": 1362,
+        "diagramWidth": 1332,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
           "diagramChromePx": 84,
           "svgPx": 780,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -145,27 +145,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1365,
-        "diagramWidth": 1335,
+        "readerWidth": 1498,
+        "diagramWidth": 1468,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
           "diagramChromePx": 84,
           "svgPx": 860,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -197,27 +197,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1729,
-        "diagramWidth": 1679,
+        "readerWidth": 1897,
+        "diagramWidth": 1847,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
           "diagramChromePx": 94,
           "svgPx": 1082,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -302,27 +302,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1188,
-        "diagramWidth": 1158,
+        "readerWidth": 1304,
+        "diagramWidth": 1274,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
           "diagramChromePx": 78,
           "svgPx": 746,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -354,27 +354,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1241,
-        "diagramWidth": 1211,
+        "readerWidth": 1362,
+        "diagramWidth": 1332,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
           "diagramChromePx": 84,
           "svgPx": 780,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -406,27 +406,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1365,
-        "diagramWidth": 1335,
+        "readerWidth": 1498,
+        "diagramWidth": 1468,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
           "diagramChromePx": 84,
           "svgPx": 860,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -458,27 +458,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1729,
-        "diagramWidth": 1679,
+        "readerWidth": 1897,
+        "diagramWidth": 1847,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
           "diagramChromePx": 94,
           "svgPx": 1082,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -515,27 +515,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1188,
-        "diagramWidth": 1158,
+        "readerWidth": 1304,
+        "diagramWidth": 1274,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
           "diagramChromePx": 78,
           "svgPx": 746,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -567,27 +567,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1241,
-        "diagramWidth": 1211,
+        "readerWidth": 1362,
+        "diagramWidth": 1332,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
           "diagramChromePx": 84,
           "svgPx": 780,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -619,27 +619,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1365,
-        "diagramWidth": 1335,
+        "readerWidth": 1498,
+        "diagramWidth": 1468,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
           "diagramChromePx": 84,
           "svgPx": 860,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -671,27 +671,27 @@
         "readerOverflow": null,
         "readerFit": "intrinsic-height",
         "ok": true,
-        "readerWidth": 1729,
-        "diagramWidth": 1679,
+        "readerWidth": 1897,
+        "diagramWidth": 1847,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
           "diagramChromePx": 94,
           "svgPx": 1082,
           "cardsPx": 0,
-          "viewBoxHeight": 728
+          "viewBoxHeight": 738
         },
-        "viewBoxWidth": 1130,
+        "viewBoxWidth": 1260,
         "minimumProjectedNodeTextPx": 8,
         "minimumProjectedNonEdgeTextPx": 9,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "安装程序",
+        "minimumProjectedNodeText": "读写产品资料",
         "minimumProjectedNodeTextDetail": "edge",
         "minimumProjectedNodeTextOwner": {
           "kind": "edge",
-          "id": "setup-app",
-          "from": "setup",
-          "to": "app"
+          "id": "app-home",
+          "from": "app",
+          "to": "home"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -715,6 +715,7 @@
     "contactSheet": null
   },
   "sidecars": {
+    "directory": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review",
     "receipt": "diagram.browser-check.json",
     "files": []
   }

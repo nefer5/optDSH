@@ -1,7 +1,8 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
-const source=path.resolve('node_modules/@textcortex/slidewise/src');
+import {fileURLToPath} from 'node:url';
+const source=path.resolve(path.dirname(fileURLToPath(import.meta.resolve('@textcortex/slidewise'))),'../src');
 export default defineConfig({plugins:[react(),{
   name:'slidewise-local-fonts', enforce:'pre',
   transform(code,id){

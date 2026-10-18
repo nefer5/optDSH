@@ -1,6 +1,6 @@
 {
   "name": "optdsh",
-  "version": "0.2.0-dev.20",
+  "version": "0.2.0-dev.21",
   "private": true,
   "type": "module",
   "description": "Independent optDSH platform and optional optical plugins",
@@ -29,7 +29,8 @@
   },
   "workspaces": [
     "plugins/optdsh-current-info-policy",
-    "plugins/optdsh-experts",
-    "packages/optdsh-bundle"
+    "packages/optdsh-bundle",
+    "packages/optics",
+    "packages/ppt-slidewise"
   ]
 }

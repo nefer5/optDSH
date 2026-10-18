@@ -1,6 +1,6 @@
 {
   "name": "optdsh-agent-canvas",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "description": "optDSH AgentCanvas bridge: right-sidebar canvas tab (client) and submission-to-chat delivery (host)",
   "type": "module",
@@ -27,7 +27,8 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "~4.0.5",
-    "@deepseek-ai/dsh-tools": "0.2.1-rc.2"
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-skill-filesystem": "0.2.1-rc.2"
   },
   "files": [
     "lib",
@@ -35,7 +36,8 @@
     "config",
     "README.md",
     "cordis.patch.yml",
-    "NOTICE.md"
+    "NOTICE.md",
+    "skills"
   ],
   "engines": {
     "node": ">=24",

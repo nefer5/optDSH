@@ -86,7 +86,9 @@ try {
     $childPath = (Split-Path $node -Parent) + ';' + $env:PATH
     $productBin = Join-Path $context.InstallRoot 'node_modules/.bin'
     if (Test-Path -LiteralPath (Join-Path $productBin 'pnpm.cmd') -PathType Leaf) { $childPath = $productBin + ';' + $childPath }
-    $overrides = @{ DSH_HOME=$context.Home; DSH_TELEMETRY_MODE='DISABLED'; OPTDSH_INSTALL_ROOT=$context.InstallRoot; OPTDSH_WORKSPACE=$context.Workspace; OPTDSH_STATE_ROOT=$context.StateRoot; PATH=$childPath }
+    $skillLocator = 'const p=require("node:path");try{process.stdout.write(p.join(p.dirname(require.resolve("optdsh-optics-skills/package.json",{paths:[process.argv[1]]})),"skills"))}catch{}'
+    $skillRoot = & $node -e $skillLocator $context.InstallRoot
+    $overrides = @{ OPTDSH_SKILLS_ROOT=[string]$skillRoot; DSH_HOME=$context.Home; DSH_TELEMETRY_MODE='DISABLED'; OPTDSH_INSTALL_ROOT=$context.InstallRoot; OPTDSH_WORKSPACE=$context.Workspace; OPTDSH_STATE_ROOT=$context.StateRoot; PATH=$childPath }
     $saved = @{}
     try {
         foreach ($name in $overrides.Keys) { $saved[$name] = [Environment]::GetEnvironmentVariable($name, 'Process'); [Environment]::SetEnvironmentVariable($name, $overrides[$name], 'Process') }

@@ -3,9 +3,11 @@ import {dirname,resolve} from 'node:path';
 import {homedir} from 'node:os';
 import {publicBuildInfo} from './version.mjs';
 import {profileComponentState,profileComponentPackages} from './profile-components.mjs';
+import {registerProductSkills} from './product-skills.mjs';
 export const name='optdsh-platform';
 export const inject=['connection'];
 export function apply(ctx,config={}){
+ if(ctx.plugin&&config.installRoot)ctx.inject(['skills'],scope=>registerProductSkills(scope,config.installRoot));
  const buildInfo=publicBuildInfo(config.buildInfo||{product:'optDSH',version:'unknown',buildId:'unknown'});
  ctx.effect(()=>ctx.connection.fetch.register({path:'/api/optdsh-version',methods:['GET'],requestBody:'buffered',fetch:()=>Response.json({...buildInfo,runningNode:process.version})}),'platform version');
  const stateRoot=resolve(config.stateRoot||resolve(process.env.DSH_HOME||resolve(homedir(),'.optdsh'),'state','web'));

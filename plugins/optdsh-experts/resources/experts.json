@@ -1,0 +1,16 @@
+[
+  {
+    "name": "visual-designer",
+    "preset": "optdsh-visual-designer",
+    "title": "视觉设计专家",
+    "description": "专职视觉设计专家：将需求与风格参考转为有辨识度、清晰一致的视觉方案并实现；用于界面、工作台、页面和信息展示的视觉设计、改版及基于真实画面的审美评估。",
+    "tool": "expert_visual_designer"
+  },
+  {
+    "name": "software-architect",
+    "preset": "optdsh-software-architect",
+    "title": "软件架构专家",
+    "description": "专职软件架构专家：为 Python、TypeScript/JavaScript 及 C++ 项目做模块划分、依赖方向、配置边界与文件落点设计，给出可确认的变更方案和骨架，审查架构偏离、重复实现与硬编码，并把约束落成可自动执行的检查。",
+    "tool": "expert_software_architect"
+  }
+]

@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file())
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/"packages/optics/src").is_dir() and (p/"package.json").is_file())
 sys.path.insert(0, str(ROOT/'packages/optics/src'))
 from optdsh_optics.service import Bridge
 from optdsh_optics.domain import OpticsError, make_snapshot

@@ -1,6 +1,6 @@
 # Rx Skill：DSH + GLM 实测复盘
 
-核验日期：2026-09-27。适用环境：本项目官方DSH 0.1.5-rc.3、Standard、glm-5.3-flash、Windows。本文记录原因与边界；行为规则维护在[Rx Skill](../.agents/skills/optdsh-rx-collection-efficiency/SKILL.md)及[执行参考](../.agents/skills/optdsh-rx-collection-efficiency/references/execution.md)。
+核验日期：2026-09-27。适用环境：本项目官方DSH 0.1.5-rc.3、Standard、glm-5.3-flash、Windows。本文记录原因与边界；行为规则维护在[Rx Skill](../packages/optics/skills/optdsh-rx-collection-efficiency/SKILL.md)及[执行参考](../packages/optics/skills/optdsh-rx-collection-efficiency/references/execution.md)。
 
 证据：[表单评测](../runs/skill-eval/260927-02/report.html)、[真实分析报告](../runs/rx-agent/260927-01/report.html)、[审计](../runs/rx-agent/260927-01/audit.json)、[分段计时](../runs/rx-agent/260927-01/timing-summary.json)。历史包不改写。本轮只优化Skill与文档，未重新调用GLM或Zemax，不能把静态校验当行为复测。
 
@@ -16,7 +16,7 @@
 
 已核对[service.py](../packages/optics/src/optdsh_optics/service.py)：桥接服务保存快照，真实操作调用短时worker；工作台每3秒读取缓存，刷新才采集。服务启动也有一次采集，所以“只手动连接”并非完整描述。快照显示通常不占ZOS，但显式刷新、探测、保存、分析仍可能同时到达。
 
-当前[Rx CLI](../.agents/skills/optdsh-rx-collection-efficiency/scripts/scan.py)同时使用端口存活门禁和项目内tx-pilot.lock。端口门禁迫使停启服务，扩大了本来只需协调API操作的冲突范围；项目内锁又不能覆盖另一项目。不能简单删门禁就宣称跨环境安全。
+当前[Rx CLI](../packages/optics/skills/optdsh-rx-collection-efficiency/scripts/scan.py)同时使用端口存活门禁和项目内tx-pilot.lock。端口门禁迫使停启服务，扩大了本来只需协调API操作的冲突范围；项目内锁又不能覆盖另一项目。不能简单删门禁就宣称跨环境安全。
 
 用户选择的方向：业务Skill保持独立，工作台保留缓存；由公共ZOS层按API实例管理短时排他访问，busy时保留缓存并明确状态，不污染成永久采集错误。后续实现需核对所有连接路径、退出/异常释放、锁持有到真实连接释放的时序、同实例竞争与不同实例并行。未接入共同协议的第三方脚本仍无法保证互斥。**这部分尚未实现，3081门禁仍存在。**
 

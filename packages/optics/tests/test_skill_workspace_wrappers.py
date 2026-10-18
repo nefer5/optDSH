@@ -15,7 +15,7 @@ from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[3]
-SKILLS=ROOT/'.agents/skills'
+SKILLS=ROOT/'packages/optics/skills'
 TEMP_ROOT=ROOT/'temp/optics-wrapper-tests'
 TEMP_ROOT.mkdir(parents=True,exist_ok=True)
 WRAPPERS={

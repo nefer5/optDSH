@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "files": [
+    "instructions.md",
+    "library/START.md",
+    "library/catalog.json",
+    "library/collections/product-ui/README.md",
+    "library/collections/product-ui/anytype.DESIGN.md",
+    "library/collections/product-ui/anytype.md",
+    "library/collections/product-ui/conductor.DESIGN.md",
+    "library/collections/product-ui/conductor.md",
+    "library/collections/product-ui/lightyear-2024.DESIGN.md",
+    "library/collections/product-ui/lightyear-2024.md",
+    "library/collections/product-ui/mirror.DESIGN.md",
+    "library/collections/product-ui/mirror.md",
+    "library/collections/product-ui/wow-page.DESIGN.md",
+    "library/collections/product-ui/wow-page.md",
+    "library/few-shot.md",
+    "library/pairings.md",
+    "library/presets.md",
+    "library/scenarios/company-ppt.md",
+    "library/sources.md",
+    "library/styles/editorial/README.md",
+    "library/styles/editorial/anthropic.DESIGN.md",
+    "library/styles/editorial/anthropic.md",
+    "library/styles/expressive/README.md",
+    "library/styles/functional/README.md",
+    "library/styles/minimal/README.md",
+    "library/styles/technical-craft/DESIGN.md",
+    "library/styles/technical-craft/README.md",
+    "library/taxonomy.md"
+  ]
+}

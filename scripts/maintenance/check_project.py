@@ -36,6 +36,7 @@ def check():
     files += list((ROOT / ".experience").rglob("*.md"))
     files += list((ROOT / "planning").glob("*.md"))
     files += list((ROOT / ".agents/skills").rglob("SKILL.md"))
+    files += [p for base in (ROOT/"plugins", ROOT/"packages") for p in base.glob("*/skills/*/SKILL.md")]
     for path in files:
         if not path.is_file():
             continue
@@ -66,7 +67,7 @@ def check():
     except (OSError,ValueError,KeyError,TypeError):errors.append('Missing or invalid project version metadata')
     sys.path.insert(0,str(ROOT/'packages/optics/src'))
     from optdsh_optics.config_io import load_config
-    for path in (ROOT/'.agents/skills').glob('*/config/*.example.yaml'):
+    for path in [p for base in (ROOT/'plugins',ROOT/'packages') for p in base.glob('*/skills/*/config/*.example.yaml')]:
         try:load_config(path)
         except Exception:errors.append(f'Invalid YAML example: {path.relative_to(ROOT)}')
     try:

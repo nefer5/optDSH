@@ -15,6 +15,7 @@ if ($OptDshHome -eq $InstallRoot -or $OptDshHome.StartsWith($InstallRoot.TrimEnd
 $manifest=Get-Content -LiteralPath (Join-Path $ReleaseRoot 'release-manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($manifest.schemaVersion -ne 1) { throw 'Unsupported release manifest' }
 $selected=@('core')+@($Components | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -ne 'core' } | Select-Object -Unique)
+$packageSelection=@($selected)+@($manifest.components | Where-Object { $_.id -in @('optics-skills','ppt') } | ForEach-Object { $_.id })
 $canvasArtifact=$null
 if($CanvasRoot -and $InstallCanvas){throw 'Select existing CanvasRoot or InstallCanvas, not both'}
 if($CanvasRoot -or $InstallCanvas){
@@ -28,7 +29,7 @@ if($CanvasRoot -or $InstallCanvas){
  }
 }
 $artifacts=@()
-foreach ($id in $selected) {
+foreach ($id in $packageSelection) {
  $rows=@($manifest.components | Where-Object id -eq $id)
  if ($rows.Count -ne 1) { throw "Unknown/duplicate component: $id" }
  $item=$rows[0];$path=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $item.file))
@@ -61,9 +62,9 @@ if ($PluginPreset -ne 'none') {
  $community=& $profilePluginScript -InstallRoot $InstallRoot -Home $OptDshHome -Snapshot $pluginSnapshot -Names ($selectedCommunity.name -join ',') | ConvertFrom-Json
  $community=@($community)
 }
-$plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;pluginPreset=$PluginPreset;communityPlugins=$community;communityPluginStatus='not-selected';profileComponentStatus=$(if(@($selected|Where-Object {$_ -in @('canvas','workbench','forms')}).Count){'pending'}else{'not-selected'});userPathRegistration=[bool]$AddToUserPath}
+$plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;pluginPreset=$PluginPreset;communityPlugins=$community;communityPluginStatus='not-selected';profileComponentStatus=$(if(@($selected|Where-Object {$_ -in @('canvas','workbench','forms','experts')}).Count){'pending'}else{'not-selected'});userPathRegistration=[bool]$AddToUserPath}
 $plan.profileComponents=@{}
-foreach($id in @('canvas','workbench','forms')){if($id -in $selected){$plan.profileComponents[$id]=@{status='pending';receipt="profile-$id-receipt.json"}}}
+foreach($id in @('canvas','workbench','forms','experts')){if($id -in $selected){$plan.profileComponents[$id]=@{status='pending';receipt="profile-$id-receipt.json"}}}
 $plan.canvasEditorStatus=if($CanvasRoot -or $InstallCanvas){'pending'}else{'not-configured'}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 8;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
@@ -74,7 +75,7 @@ $npmCli=Join-Path (Split-Path $npmCommand -Parent) 'node_modules/npm/bin/npm-cli
 if (-not (Test-Path -LiteralPath $npmCli -PathType Leaf)) { throw 'The Node.js installation must include npm; its npm-cli.js could not be located.' }
 New-Item -ItemType Directory -Path $InstallRoot | Out-Null
 $dependencies=@{'@deepseek-ai/dsh'=$manifest.dshVersion}
-foreach ($a in $artifacts) { if ($a.item.id -notin @('canvas','workbench','forms')) { $dependencies[$a.item.name]='file:'+($a.path -replace '\\','/') } }
+foreach ($a in $artifacts) { if ($a.item.id -notin @('canvas','workbench','forms','experts')) { $dependencies[$a.item.name]='file:'+($a.path -replace '\\','/') } }
 $package=@{name='optdsh-user-installation';private=$true;type='module';dependencies=$dependencies}
 $package | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'package.json') -Encoding utf8
 $plan | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
@@ -99,7 +100,7 @@ if (-not $OptDshHome) { $OptDshHome=$settings.home }
 node "%~dp0node_modules\optdsh-bundle\lib\launcher.mjs" --config "%~dp0optdsh-launcher.json" %*
 exit /b %errorlevel%
 '@ | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh.cmd') -Encoding ascii
-foreach ($componentId in @('canvas','workbench','forms')) {
+foreach ($componentId in @('canvas','workbench','forms','experts')) {
  if ($componentId -notin $selected) { continue }
  $runtimeLog=Join-Path $InstallRoot '.runtime'
  New-Item -ItemType Directory -Path $runtimeLog -Force|Out-Null

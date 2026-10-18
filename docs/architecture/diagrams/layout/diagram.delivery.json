@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "6eff4db3-1904-4610-930b-340c48d36565",
+  "receiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58",
   "status": "current",
   "command": "deliver",
   "type": "architecture",
   "input": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\candidate.json",
   "output": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
   "specification": {
-    "sha256": "aa16e0f0414c3e337f10bdf2fe99b10f28cbc7d2ca945f24e14c5c1a6c448ae0",
-    "bytes": 5787
+    "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
+    "bytes": 6230
   },
   "artifact": {
-    "sha256": "4b314cecfd801a08265f56828a61da29881bebf357bf351032424a0831b8295a",
-    "bytes": 756706
+    "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
+    "bytes": 759586
   }
 }

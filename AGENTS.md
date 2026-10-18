@@ -61,7 +61,7 @@
 | 课题术语/H-V映射 | 所选Workspace的README、AGENTS、docs/domain及配置；缺失时明确报告，不回退读取旧课题 |
 | 具体研究/光学任务 | 所选Study的README、当次配置和对应.agents/skills/*/SKILL.md |
 
-项目Skill可被DSH产品Agent发现，不假设只供Codex；当前能力清单看实际目录与说明，不把它当禁止新增业务的永久白名单。视觉专家源在.agents/experts，分发维护用.agents/development-skills/expert-distribute。通用经验见.experience/README.md，本机环境事实按shared-memory维护。
+产品Skill实体归所属plugins/packages并通过官方机制随包发现；源码.agents保留开发用途，不假设只供Codex；当前能力清单看实际目录与说明，不把它当禁止新增业务的永久白名单。视觉专家源在.agents/experts，分发维护用.agents/development-skills/expert-distribute。通用经验见.experience/README.md，本机环境事实按shared-memory维护。
 
 检查入口：npm test；.venv/Scripts/python.exe scripts/maintenance/check_project.py。
 

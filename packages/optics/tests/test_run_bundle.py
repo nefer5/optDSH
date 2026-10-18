@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 from html.parser import HTMLParser
-ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file());sys.path.insert(0,str(ROOT/'packages/optics/src'))
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/"packages/optics/src").is_dir() and (p/"package.json").is_file());sys.path.insert(0,str(ROOT/'packages/optics/src'))
 from optdsh_optics.run_bundle import RunBundle,checked,sha
 TEST_TEMP=ROOT/'temp/optics-workspace-tests'
 TEST_TEMP.mkdir(parents=True,exist_ok=True)

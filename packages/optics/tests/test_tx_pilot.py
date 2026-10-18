@@ -6,7 +6,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file())
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/"packages/optics/src").is_dir() and (p/"package.json").is_file())
 sys.path.insert(0,str(ROOT/'packages/optics/src'))
 from optdsh_optics.tx_pilot import validate
 
@@ -35,7 +35,7 @@ class TxPilotTests(unittest.TestCase):
             with self.assertRaises(ValueError):validate(c)
 
     def test_specification_preflight_does_not_infer_project_group_or_metric(self):
-        spec=importlib.util.spec_from_file_location('preflight',ROOT/'.agents/skills/optdsh-assembly-tolerance/scripts/preflight.py')
+        spec=importlib.util.spec_from_file_location('preflight',ROOT/'packages/optics/skills/optdsh-assembly-tolerance/scripts/preflight.py')
         m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
         case=json.loads((ROOT/'examples/txrx-assembly-tolerance.json').read_text(encoding='utf-8'))
         case.update(modelId='model-a',revision='revision-a')
@@ -47,7 +47,7 @@ class TxPilotTests(unittest.TestCase):
         self.assertIn('tx.metric.axis',m.check(case,scope='tx')['missing'])
 
     def test_tx_and_rx_preflight_are_independent(self):
-        spec=importlib.util.spec_from_file_location('preflight',ROOT/'.agents/skills/optdsh-assembly-tolerance/scripts/preflight.py')
+        spec=importlib.util.spec_from_file_location('preflight',ROOT/'packages/optics/skills/optdsh-assembly-tolerance/scripts/preflight.py')
         m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
         for side,other in [('tx','rx'),('rx','tx')]:
             case=json.loads((ROOT/'examples/txrx-assembly-tolerance.json').read_text(encoding='utf-8'))
@@ -59,7 +59,7 @@ class TxPilotTests(unittest.TestCase):
     def test_readonly_guide_routes_and_keeps_legacy_aliases(self):
         spec=importlib.util.spec_from_file_location('mcp',ROOT/'packages/optics/scripts/mcp.py')
         m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
-        with patch.dict('os.environ',{'OPTDSH_SKILLS_ROOT':str(ROOT/'.agents/skills')}):
+        with patch.dict('os.environ',{'OPTDSH_SKILLS_ROOT':str(ROOT/'packages/optics/skills')}):
             for side in ['tx','rx']:
                 result=m.call('workflow_guide',{'name':side+'-tolerance'})
                 self.assertFalse(result['isError'])
@@ -74,10 +74,10 @@ class TxPilotTests(unittest.TestCase):
 
     def test_yaml_preflight_scopes_are_independent_and_non_executable(self):
         from optdsh_optics.config_io import load_config
-        spec=importlib.util.spec_from_file_location('preflight',ROOT/'.agents/skills/optdsh-assembly-tolerance/scripts/preflight.py')
+        spec=importlib.util.spec_from_file_location('preflight',ROOT/'packages/optics/skills/optdsh-assembly-tolerance/scripts/preflight.py')
         m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
         for side,other in [('tx','rx'),('rx','tx')]:
-            case=load_config(ROOT/f'.agents/skills/optdsh-assembly-tolerance/config/{side}-tolerance.example.yaml')
+            case=load_config(ROOT/f'packages/optics/skills/optdsh-assembly-tolerance/config/{side}-tolerance.example.yaml')
             case[other]='malformed but irrelevant'
             result=m.check(case,scope=side)
             self.assertFalse(result['readyToRun'])

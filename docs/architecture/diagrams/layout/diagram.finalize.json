@@ -5,16 +5,16 @@
   "status": "pass",
   "type": "architecture",
   "quality": "showcase",
-  "startedAt": "2026-10-18T13:30:20.767Z",
+  "startedAt": "2026-10-18T15:56:57.150Z",
   "specification": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\candidate.json",
-    "sha256": "aa16e0f0414c3e337f10bdf2fe99b10f28cbc7d2ca945f24e14c5c1a6c448ae0",
-    "bytes": 5787
+    "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
+    "bytes": 6230
   },
   "artifact": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
-    "sha256": "4b314cecfd801a08265f56828a61da29881bebf357bf351032424a0831b8295a",
-    "bytes": 756706
+    "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
+    "bytes": 759586
   },
   "stages": {
     "validate": {
@@ -40,8 +40,8 @@
         "ok": true,
         "command": "validate",
         "specification": {
-          "sha256": "aa16e0f0414c3e337f10bdf2fe99b10f28cbc7d2ca945f24e14c5c1a6c448ae0",
-          "bytes": 5787
+          "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
+          "bytes": 6230
         },
         "validation": {
           "checksPassed": 9,
@@ -56,7 +56,7 @@
     "deliver": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 648,
+      "durationMs": 472,
       "command": [
         "C:\\Program Files\\nodejs\\node.exe",
         "C:\\Users\\admin\\.agents\\skills\\archify\\bin\\archify.mjs",
@@ -72,19 +72,19 @@
       ],
       "receipt": {
         "schemaVersion": 1,
-        "receiptId": "6eff4db3-1904-4610-930b-340c48d36565",
+        "receiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58",
         "ok": true,
         "command": "deliver",
         "type": "architecture",
         "input": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\candidate.json",
         "output": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
         "specification": {
-          "sha256": "aa16e0f0414c3e337f10bdf2fe99b10f28cbc7d2ca945f24e14c5c1a6c448ae0",
-          "bytes": 5787
+          "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
+          "bytes": 6230
         },
         "artifact": {
-          "sha256": "4b314cecfd801a08265f56828a61da29881bebf357bf351032424a0831b8295a",
-          "bytes": 756706
+          "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
+          "bytes": 759586
         },
         "validation": {
           "checksPassed": 9,
@@ -97,8 +97,8 @@
         "evidence": {
           "verified": true,
           "repository": "https://github.com/nefer5/optDSH",
-          "revision": "5d6920e4bf43209435f10fd9e7ffca38dc4d5676",
-          "references": 11,
+          "revision": "534c3a44d0f02e020436d1d15490b880c1a71e89",
+          "references": 9,
           "linkMode": "local-only"
         },
         "update": {
@@ -117,7 +117,7 @@
     "check": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 125,
+      "durationMs": 110,
       "command": [
         "C:\\Program Files\\nodejs\\node.exe",
         "C:\\Users\\admin\\.agents\\skills\\archify\\bin\\archify.mjs",
@@ -129,8 +129,8 @@
         "ok": true,
         "file": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
         "artifact": {
-          "sha256": "4b314cecfd801a08265f56828a61da29881bebf357bf351032424a0831b8295a",
-          "bytes": 756706
+          "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
+          "bytes": 759586
         },
         "checks": [
           {
@@ -197,7 +197,7 @@
             "containerBorderRuns": 0,
             "labelRouteClearanceIssues": 0,
             "labelCanvasOverflowIssues": 0,
-            "minLabelRouteClearance": 136,
+            "minLabelRouteClearance": 122.5,
             "desktopReadabilityIssues": 0,
             "viewportHeightIssues": 0,
             "minProjectedNodeTextPx": 7.5,
@@ -205,7 +205,7 @@
             "routesOverSuggestedBends": 0,
             "maxStretch": 1,
             "routesOverSuggestedStretch": 0,
-            "minSegmentPx": 75,
+            "minSegmentPx": 70,
             "minInteriorSegmentPx": 270,
             "shortSegmentCount": 0,
             "shortEndpointSegmentCount": 0,
@@ -225,20 +225,20 @@
           "leadingSpace": {
             "measured": true,
             "emptyTopPx": 40,
-            "emptyTopRatio": 0.055,
+            "emptyTopRatio": 0.054,
             "occupiedTop": 40,
             "viewBoxTop": 0,
-            "canvasHeight": 728,
-            "typicalNodeHeight": 80,
+            "canvasHeight": 738,
+            "typicalNodeHeight": 90,
             "reviewSuggested": false
           },
           "desktopReadability": {
             "budgetBasis": "recognized-declared-wide",
             "readerContract": "declared-wide-v1",
-            "availableDiagramWidth": 1059.375,
-            "actualBudgetPx": 1059.375,
-            "actualReaderWidth": 1089.375,
-            "desiredReaderWidth": 1089.375,
+            "availableDiagramWidth": 1181.25,
+            "actualBudgetPx": 1181.25,
+            "actualReaderWidth": 1211.25,
+            "desiredReaderWidth": 1211.25,
             "viewportCap": 1376,
             "limit": "source-size",
             "requestedTargetPx": 7.5,
@@ -247,31 +247,33 @@
             "hardFloorMet": true,
             "minimumOwner": {
               "kind": "edge",
-              "id": "setup-app",
-              "from": "setup",
-              "to": "app"
+              "id": "app-home",
+              "from": "app",
+              "to": "home"
             },
             "minimumSourceTextPx": 8,
             "minimumProjectedTextPx": 7.5,
-            "semanticTextCount": 20
+            "semanticTextCount": 23
           },
           "issues": []
         },
         "provenance": "current",
-        "deliveryReceiptId": "6eff4db3-1904-4610-930b-340c48d36565"
+        "deliveryReceiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58"
       }
     },
     "browser-check": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 1292,
+      "durationMs": 1247,
       "command": [
         "C:\\Program Files\\nodejs\\node.exe",
         "C:\\Users\\admin\\.agents\\skills\\archify\\bin\\archify.mjs",
         "browser-check",
         "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
         "--json",
-        "--require-provenance"
+        "--require-provenance",
+        "--out-dir",
+        "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review"
       ],
       "execution": "in-process",
       "receipt": {
@@ -282,11 +284,11 @@
         "status": "pass",
         "visualReview": "not-requested",
         "provenance": "current",
-        "deliveryReceiptId": "6eff4db3-1904-4610-930b-340c48d36565",
+        "deliveryReceiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58",
         "artifact": {
           "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
-          "sha256": "4b314cecfd801a08265f56828a61da29881bebf357bf351032424a0831b8295a",
-          "bytes": 756706
+          "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
+          "bytes": 759586
         },
         "state": {
           "detail": "read",
@@ -317,27 +319,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1188,
-              "diagramWidth": 1158,
+              "readerWidth": 1304,
+              "diagramWidth": 1274,
               "pageComposition": {
                 "bodyPaddingPx": 12,
                 "headerPx": 52,
                 "diagramChromePx": 78,
                 "svgPx": 746,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -369,27 +371,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1241,
-              "diagramWidth": 1211,
+              "readerWidth": 1362,
+              "diagramWidth": 1332,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 60,
                 "diagramChromePx": 84,
                 "svgPx": 780,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -421,27 +423,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1365,
-              "diagramWidth": 1335,
+              "readerWidth": 1498,
+              "diagramWidth": 1468,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 60,
                 "diagramChromePx": 84,
                 "svgPx": 860,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -473,27 +475,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1729,
-              "diagramWidth": 1679,
+              "readerWidth": 1897,
+              "diagramWidth": 1847,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 68,
                 "diagramChromePx": 94,
                 "svgPx": 1082,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -578,27 +580,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1188,
-              "diagramWidth": 1158,
+              "readerWidth": 1304,
+              "diagramWidth": 1274,
               "pageComposition": {
                 "bodyPaddingPx": 12,
                 "headerPx": 52,
                 "diagramChromePx": 78,
                 "svgPx": 746,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -630,27 +632,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1241,
-              "diagramWidth": 1211,
+              "readerWidth": 1362,
+              "diagramWidth": 1332,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 60,
                 "diagramChromePx": 84,
                 "svgPx": 780,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -682,27 +684,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1365,
-              "diagramWidth": 1335,
+              "readerWidth": 1498,
+              "diagramWidth": 1468,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 60,
                 "diagramChromePx": 84,
                 "svgPx": 860,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -734,27 +736,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1729,
-              "diagramWidth": 1679,
+              "readerWidth": 1897,
+              "diagramWidth": 1847,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 68,
                 "diagramChromePx": 94,
                 "svgPx": 1082,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -791,27 +793,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1188,
-              "diagramWidth": 1158,
+              "readerWidth": 1304,
+              "diagramWidth": 1274,
               "pageComposition": {
                 "bodyPaddingPx": 12,
                 "headerPx": 52,
                 "diagramChromePx": 78,
                 "svgPx": 746,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -843,27 +845,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1241,
-              "diagramWidth": 1211,
+              "readerWidth": 1362,
+              "diagramWidth": 1332,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 60,
                 "diagramChromePx": 84,
                 "svgPx": 780,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -895,27 +897,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1365,
-              "diagramWidth": 1335,
+              "readerWidth": 1498,
+              "diagramWidth": 1468,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 60,
                 "diagramChromePx": 84,
                 "svgPx": 860,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -947,27 +949,27 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1729,
-              "diagramWidth": 1679,
+              "readerWidth": 1897,
+              "diagramWidth": 1847,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 68,
                 "diagramChromePx": 94,
                 "svgPx": 1082,
                 "cardsPx": 0,
-                "viewBoxHeight": 728
+                "viewBoxHeight": 738
               },
-              "viewBoxWidth": 1130,
+              "viewBoxWidth": 1260,
               "minimumProjectedNodeTextPx": 8,
               "minimumProjectedNonEdgeTextPx": 9,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "安装程序",
+              "minimumProjectedNodeText": "读写产品资料",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "setup-app",
-                "from": "setup",
-                "to": "app"
+                "id": "app-home",
+                "from": "app",
+                "to": "home"
               },
               "minimumRequiredNodeTextPx": 6,
               "readabilityOk": true,
@@ -991,6 +993,7 @@
           "contactSheet": null
         },
         "sidecars": {
+          "directory": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review",
           "receipt": "diagram.browser-check.json",
           "files": []
         }
@@ -999,23 +1002,23 @@
   },
   "diagnostics": [],
   "evidence": {
-    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.finalize.json",
-    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.finalize-summary.json",
-    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.browser-check.json"
+    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.finalize.json",
+    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.finalize-summary.json",
+    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.browser-check.json"
   },
   "visualReview": "not-requested",
-  "finishedAt": "2026-10-18T13:30:23.164Z",
-  "durationMs": 2396,
+  "finishedAt": "2026-10-18T15:56:59.250Z",
+  "durationMs": 2100,
   "update": {
     "status": "update_available",
     "installedVersion": "3.0.1",
     "availableVersion": "3.1.0",
     "releaseNotes": "https://github.com/tt-a1i/archify/releases/tag/v3.1.0",
     "severity": "normal",
-    "checkedAt": "2026-10-17T18:15:25.575Z",
+    "checkedAt": "2026-10-18T15:56:49.666Z",
     "source": "cache",
     "noticeRequired": true,
-    "noticeText": "Archify update: 3.0.1 → 3.1.0. A previous check at 2026-10-17T18:15:25.575Z found a newer release. Release notes: https://github.com/tt-a1i/archify/releases/tag/v3.1.0. The installed Skill has not changed; ask to snooze or ignore this reminder.",
+    "noticeText": "Archify update: 3.0.1 → 3.1.0. A previous check at 2026-10-18T15:56:49.666Z found a newer release. Release notes: https://github.com/tt-a1i/archify/releases/tag/v3.1.0. The installed Skill has not changed; ask to snooze or ignore this reminder.",
     "eventKey": "archify@sha256:ffedc53390c9da6e859f41e432c5d2d0615a23cf00a503181f07efbba88a7ce8"
   }
 }

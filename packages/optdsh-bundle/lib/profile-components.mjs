@@ -3,7 +3,7 @@ import {resolve,join,relative,isAbsolute} from 'node:path';
 import {createRequire} from 'node:module';
 import {loadProfileDirectory,readProfilePatches,composeEntries} from '@deepseek-ai/dsh-app-boot';
 
-export const profileComponentPackages=Object.freeze({canvas:'optdsh-agent-canvas',workbench:'optdsh-workbench',forms:'optdsh-forms'});
+export const profileComponentPackages=Object.freeze({canvas:'optdsh-agent-canvas',workbench:'optdsh-workbench',forms:'optdsh-forms',experts:'optdsh-experts'});
 export const canvasBridgePackage=profileComponentPackages.canvas;
 const json=path=>JSON.parse(readFileSync(path,'utf8').replace(/^\uFEFF/,''));
 /** Official Profile selection and effective patches are the only enable facts. */

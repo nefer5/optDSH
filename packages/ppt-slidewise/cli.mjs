@@ -6,7 +6,7 @@ const emit=v=>console.log(JSON.stringify(v,null,2));
 const input=()=>JSON.parse(fs.readFileSync(opt('input'),'utf8'));
 function output(value){if(opt('output')){fs.writeFileSync(path.resolve(opt('output')),JSON.stringify(value,null,2));emit({path:path.resolve(opt('output'))});}else emit(value);}
 async function ensure(){try{if((await (await fetch('http://127.0.0.1:3314/health')).json()).app==='ppt-slidewise')return;}catch{}
- const logdir=path.join(root,'logs/ppt-slidewise');fs.mkdirSync(logdir,{recursive:true});const out=fs.openSync(path.join(logdir,'server.log'),'a');const child=spawn(process.execPath,[path.join(import.meta.dirname,'server.mjs')],{detached:true,windowsHide:true,stdio:['ignore',out,out],cwd:import.meta.dirname});child.unref();fs.closeSync(out);
+ const logdir=path.join(root,'logs/ppt-slidewise');fs.mkdirSync(logdir,{recursive:true});const out=fs.openSync(path.join(logdir,'server.log'),'a');const child=spawn(process.execPath,[path.join(import.meta.dirname,'server.mjs')],{detached:true,windowsHide:true,stdio:['ignore',out,out],cwd:process.cwd()});child.unref();fs.closeSync(out);
  for(let i=0;i<40;i++){await new Promise(r=>setTimeout(r,250));try{if((await (await fetch('http://127.0.0.1:3314/health')).json()).app==='ppt-slidewise')return;}catch{}}throw Error('Server failed to start');}
 try{
  if(command==='create'){const file=path.resolve(opt('input'));const plan=YAML.parse(fs.readFileSync(file,'utf8'));const r=save(id,fromPlan(plan,path.dirname(file)),0);await ensure();emit({id,revision:r.revision,url,slides:r.deck.slides.length});}

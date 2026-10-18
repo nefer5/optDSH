@@ -1,6 +1,8 @@
 # 当前状态
 
-2026-10-18；产品 **0.2.0-dev.20**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+2026-10-19；产品 **0.2.0-dev.21**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+
+本轮已实现：产品Skills归所属包并接入官方Provider；Experts0.2使用官方Preset与spawn派工，保留公共资源适配，官方Profile管理整组生命周期；新增中文图形安装向导与独立安装入口。源码外study、空共享根下真实GLM会话已读取Rx Skill、派工架构专家、读取公共资源并收到官方完成通知；停用Experts并重启后Preset消失且core ready。原型真实安装及视觉专家审查通过，完整离线回归通过。最终固定版本发行包与安装验收正在收尾，不将原型等同最终包。见[本轮验证](../docs/verification/product-resources-dev21.md)。
 
 新增共享编辑器：AgentCanvas0.2.4与Canvas桥0.7.0复用完整右栏，DSH日常接入全局同一安装（CLI/编辑器/嵌入一致）；课题与提交仍归官方会话，不混入独立收件箱。原程序、连接及409份资料已备份，切换后首次打开前哈希全一致。187项编辑器界面、181项服务、76项DSH相关检查通过，真实合成会话的发送/去重/历史只读/建议应用已验。详见[统一画板验证](../docs/verification/canvas-shared-editor-20261018.md)。
 
@@ -14,8 +16,8 @@
 
 | 能力 | 已实现/验证 | 实际限制 |
 |---|---|---|
-| 独立平台 | 官方DSH 0.2.1-rc.2、Node>=24、独立Home、任意外部workspace、CMD/薄EXE、版本及构建身份 | 首次图形安装向导未做；旧现场保留 |
-| 插件装配 | 画板桥、工作台和Forms官方Profile安装/启停/升级/卸载；重启不复活；坏插件不拖垮core | Experts/信息策略等其他自有插件仍有过渡装配 |
+| 独立平台 | 官方DSH 0.2.1-rc.2、Node>=24、独立Home、任意外部workspace、CMD/薄EXE、版本及构建身份 | 本地浏览器图形向导已实现/原型实装；新机仍待验 |
+| 插件装配 | 画板桥、工作台、Forms与Experts官方Profile安装/启停/升级/卸载；重启不复活；坏插件不拖垮core | Experts也已收敛；信息策略等剩余装配继续维护 |
 | 画板接入 | 独立编辑器已有/全新本地包路径；iframe握手、外部课题保存回读和重启保持已验 | 已实测合成会话产品Agent提交/建议；跨宿主通用文档协议仍未统一 |
 | 光学工作台 | 统一连接窗口、自动检测Python、两类版本、红字错误、Web启停/日志 | 当前服务就绪不等于模型连接 |
 | 静默后台 | 工作台0.13.4；真实Web启动/状态/日志与Windows无控制台通过，模型文件哈希不变 | 本轮无探测/绑定/保存/追迹；当时无运行中的OpticStudio进程 |
@@ -27,6 +29,6 @@
 
 本轮dev.17打包、图形与归档检查结果见[交付回执](../docs/verification/dev17-docs-release.json)。[静默服务回执](../docs/verification/refactor-20261018/workbench-silent-service.json)和[双版本组件说明](../docs/verification/zemax-connection.md)保留原验证范围。
 
-下一步推荐：先手工体验Forms，再收敛其余插件Profile生命周期和升级恢复；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。本轮用户已授权完成后推送开发分支；不自动合主分支、强推、正式Release或公开npm。
+下一步推荐：人工核验dev.21安装与产品资源，再完善升级恢复和可选共享导出；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。本轮用户已授权完成后推送开发分支；不自动合主分支、强推、正式Release或公开npm。
 
 开发预览已显式安装Forms0.4.0，core/画板/工作台/Forms实际ready；保持原模型、插件与用户课题资料。手工验证可从原启动DSH.cmd进入当前会话，对Agent说‘打开Rx默认YAML，仅编辑参数，不连接Zemax’。
