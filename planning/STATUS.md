@@ -1,5 +1,7 @@
 # 当前状态
 
+2026-10-18 0.2.0-dev.2：修复市场独立调用pnpm仍命中失效全局Corepack入口。Host子进程PATH优先产品node_modules/.bin及所选Node目录，父进程和全局PATH保持；官方管理器和市场均能使用产品pnpm。市场/dsh-market/status已实测pnpm false→true，生命周期回归通过；未更新全局工具或市场包，见evidence/market-pnpm-dev2.json。
+
 2026-10-18版本与Profile续轮：产品及Bundle进入0.2.0-dev.1；统一升版、构建门禁、版本API/CLI已实现，完整回归及独立测试包安装通过，代码提交a3c9040、测试包位于releases/0.2.0-dev.1，证据见docs/refactor/2026-10-18/evidence/version-dev1-installation.json。当前开发Home已恢复zai/glm-5.3-flash默认模型及所需凭据引用，8个旧启用插件已回读active及客户端HTTP200；Better Sidebar升级0.28.0，未沿用兼容豁免、未发送真实模型请求。源码入口和资料目录仍见[开发说明](../docs/development.md)，接续上下文见[开发接续](../docs/handoff/2026-10-18-dev-continuation.md)。
 
 2026-10-18续轮：Q9薄EXE/配置外置与Q10 Node>=24已实现。Node26完整回归通过，仓库外008安装使用内置5.1，EXE在Node24/26下均完成认证、复用、四组件ready、原生依赖及停止。开发CMD保留并使用本机Node26；无全局.agents/Node/PATH修改。见[启动器阶段验收](../docs/refactor/2026-10-18/thin-launcher.md)。正式发行/沙箱/公司实机及真实业务仍待验收。

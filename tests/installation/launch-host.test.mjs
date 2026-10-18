@@ -10,6 +10,8 @@ const base=join(repo,'temp','launch-tests');mkdirSync(base,{recursive:true});
 const root=mkdtempSync(join(base,'host-'));
 const install=join(root,'安装 with spaces'),workspace=join(root,'课题 A'),secondWorkspace=join(root,'课题 B'),home=join(root,'user home');
 for(const path of [workspace,secondWorkspace,join(install,'scripts/runtime'),join(install,'node_modules/@deepseek-ai/dsh/lib'),join(install,'packages/optdsh-bundle/lib')])mkdirSync(path,{recursive:true});
+mkdirSync(join(install,'node_modules/.bin'),{recursive:true});
+writeFileSync(join(install,'node_modules/.bin/pnpm.cmd'),'@echo off\r\necho fixture-product-pnpm\r\n');
 for(const name of ['launch-config.ps1','start-dsh.ps1','open-dsh.ps1','status-dsh.ps1','stop-dsh.ps1'])copyFileSync(join(repo,'scripts/runtime',name),join(install,'scripts/runtime',name));
 // This fixture only returns a synthetic authenticated HTTP page; no DSH/model.
 writeFileSync(join(install,'packages/optdsh-bundle/lib/cli.mjs'),`
@@ -17,9 +19,12 @@ import{writeFileSync,mkdirSync}from'node:fs';import{dirname,join}from'node:path'
 const args=process.argv.slice(3);const get=k=>args[args.indexOf(k)+1];const output=get('--output');
 mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify({stateRoot:get('--state-root')}));console.log(JSON.stringify({patchPath:output}));`);
 writeFileSync(join(install,'node_modules/@deepseek-ai/dsh/lib/bin.js'),`
-import http from'node:http';import{readFileSync,writeFileSync,mkdirSync}from'node:fs';import{join}from'node:path';
+import{spawnSync}from'node:child_process';import http from'node:http';import{readFileSync,writeFileSync,mkdirSync}from'node:fs';import{join}from'node:path';
 const args=process.argv.slice(2),get=k=>args[args.indexOf(k)+1],port=Number(get('--port'));
 const patch=JSON.parse(readFileSync(get('--patch'),'utf8'));const url='http://127.0.0.1:'+port;
+mkdirSync(join(patch.stateRoot,'.runtime'),{recursive:true});
+const pm=spawnSync(process.env.ComSpec||'cmd.exe',['/d','/c','pnpm --version'],{encoding:'utf8',windowsHide:true});
+writeFileSync(join(patch.stateRoot,'.runtime/child-environment.json'),JSON.stringify({pathHead:process.env.PATH.split(';').slice(0,2),pnpmStatus:pm.status,pnpmVersion:pm.stdout.trim()}));
 const server=http.createServer((req,res)=>{res.statusCode=new URL(req.url,url).searchParams.get('token')==='synthetic-test-token'?200:401;res.end('synthetic fixture');});
 server.listen(port,'127.0.0.1',()=>{mkdirSync(join(patch.stateRoot,'.runtime'),{recursive:true});writeFileSync(join(patch.stateRoot,'.runtime/web-launch.json'),JSON.stringify({pid:process.pid,url,authenticatedUrl:url+'/?token=synthetic-test-token'}));});
 setTimeout(()=>server.close(()=>process.exit(0)),300000).unref();`);
@@ -33,7 +38,7 @@ function run(script,args=[],extra=''){
   const out=join(root,`command-${started}.stdout.log`),err=join(root,`command-${started}.stderr.log`);
   const stdout=openSync(out,'w'),stderr=openSync(err,'w');
   let result;
-  try{result=spawnSync(process.env.OPTDSH_TEST_POWERSHELL||'pwsh',['-NoProfile','-NonInteractive','-Command',`$ErrorActionPreference='Stop'; & ${quote(join(install,'scripts/runtime',script))} ${args.map(quote).join(' ')} ${extra}`],{cwd:workspace,env,encoding:'utf8',stdio:['ignore',stdout,stderr],timeout:70000});}finally{closeSync(stdout);closeSync(stderr);}
+  try{result=spawnSync(process.env.OPTDSH_TEST_POWERSHELL||'pwsh',['-NoProfile','-NonInteractive','-Command',`$ErrorActionPreference='Stop'; $pathBefore=$env:PATH; & ${quote(join(install,'scripts/runtime',script))} ${args.map(quote).join(' ')} ${extra}; if($env:PATH -ne $pathBefore){throw 'Parent PATH leaked'}`],{cwd:workspace,env,encoding:'utf8',stdio:['ignore',stdout,stderr],timeout:70000});}finally{closeSync(stdout);closeSync(stderr);}
   result.stdout=readFileSync(out,'utf8');result.stderr=readFileSync(err,'utf8');
   writeFileSync(join(root,`command-${started}.json`),JSON.stringify({script,elapsedMs:Date.now()-started,status:result.status,error:result.error?.message}));
   return result;
@@ -50,6 +55,9 @@ test('synthetic host lifecycle, authentication, workspace isolation and unrelate
     const started=invoke('start-dsh.ps1');assert.equal(started.status,0,started.stderr+started.stdout);
     const state=JSON.parse(readFileSync(statePath,'utf8'));assert.equal(state.home,home);assert.equal(state.workspace,workspace);
     assert.deepEqual(state.components,['core']);
+    const childEnvironment=JSON.parse(readFileSync(join(home,'state/synthetic/.runtime/child-environment.json'),'utf8'));
+    assert.equal(childEnvironment.pathHead[0],join(install,'node_modules/.bin'));
+    assert.equal(childEnvironment.pnpmStatus,0);assert.equal(childEnvironment.pnpmVersion,'fixture-product-pnpm');
     const status=invoke('status-dsh.ps1','| ConvertTo-Json');assert.equal(status.status,0,status.stderr);assert.equal(JSON.parse(status.stdout).Authentication,'Ready');
     assert.equal(invoke('open-dsh.ps1','-NoBrowser').status,0);
     const secondStart=invoke('start-dsh.ps1');assert.equal(secondStart.status,0,secondStart.stderr);assert.equal(JSON.parse(readFileSync(statePath,'utf8')).pid,state.pid);

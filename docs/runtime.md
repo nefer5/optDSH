@@ -115,3 +115,7 @@ npm test
 local-strata当前窗口262144，medium/32768。Standard/PTC/Cordis的compaction-basic thresholdRatio=0.9；Minimal无自动压缩，独立专家预设未改。保留65536额外余量和输出预留，实际阈值min(窗口×0.9,窗口−输出额度−65536)，Strata为163840。正式重启后认证/全部预设/78聊天回读通过，原默认选择保留；真实长输入压缩未测。报告E:/Proj-2026-N07_LLM-study/reports/2026-10-03-Strata-IQ3S-256K与DSH压缩90.md，证据runs/model/261003-02。
 
 后续当前状态（2026-10-03）：用户选择保守方案，Standard/PTC/Cordis ratio已改回0.8，默认headroom65536保留，有效Strata阈值163840。正式重启后实际预设回读通过、全部6预设正常、81聊天可读，Strata256K/medium/32K持续加载；证据runs/model/261003-03/readback.json。上文0.9为此前配置。
+
+## 产品内pnpm与市场调用
+
+optDSH声明自己的pnpm依赖，官方插件管理器使用该命令。启动Host时还会仅为子进程将本产品node_modules/.bin置于PATH前面，其后为选定Node目录，以覆盖市场插件直接执行pnpm的路径。终端/用户/系统PATH和全局pnpm不修改；Node升级遗留的Corepack全局入口不由本项目修补。Node、npm和pnpm是不同组件，市场环境判断以自身/dsh-market/status的pnpm结果为准。

@@ -1,0 +1,13 @@
+{
+  "marketPnpm": true,
+  "marketVersion": "1.66.15",
+  "userAndMachinePathUnchanged": true,
+  "HTTP": 200,
+  "beforeMarketPnpm": false,
+  "productVersion": "0.2.0-dev.2",
+  "scope": "Host child PATH only; no global tool changes",
+  "tests": [
+    "PowerShell7 lifecycle, own pnpm resolution and parent PATH restoration",
+    "WindowsPowerShell5.1 same lifecycle checks"
+  ]
+}

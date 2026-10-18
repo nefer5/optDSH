@@ -64,7 +64,12 @@ try {
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
     $stdout = Join-Path $context.LogDir "$stamp.stdout.log"
     $stderr = Join-Path $context.LogDir "$stamp.stderr.log"
-    $overrides = @{ DSH_HOME=$context.Home; DSH_TELEMETRY_MODE='DISABLED'; OPTDSH_WORKSPACE=$context.Workspace; OPTDSH_STATE_ROOT=$context.StateRoot }
+    # Community plugins also invoke pnpm directly rather than using the
+    # official plugin-manager configuration. Keep this PATH child-local.
+    $childPath = (Split-Path $node -Parent) + ';' + $env:PATH
+    $productBin = Join-Path $context.InstallRoot 'node_modules/.bin'
+    if (Test-Path -LiteralPath (Join-Path $productBin 'pnpm.cmd') -PathType Leaf) { $childPath = $productBin + ';' + $childPath }
+    $overrides = @{ DSH_HOME=$context.Home; DSH_TELEMETRY_MODE='DISABLED'; OPTDSH_WORKSPACE=$context.Workspace; OPTDSH_STATE_ROOT=$context.StateRoot; PATH=$childPath }
     $saved = @{}
     try {
         foreach ($name in $overrides.Keys) { $saved[$name] = [Environment]::GetEnvironmentVariable($name, 'Process'); [Environment]::SetEnvironmentVariable($name, $overrides[$name], 'Process') }
