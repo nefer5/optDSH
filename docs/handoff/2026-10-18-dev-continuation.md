@@ -53,3 +53,7 @@ manual-preview中的installed-home/state是此前独立安装版验证，source-
 ## Codex会话归属状态
 
 已尝试官方move_thread_to_project将本会话移动到已登记项目Proj-2026-N06_optDSH-dev（对应E:/Proj-2026-N06_optDSH-dev）。工具返回confirmation_required，因当前历史仍关联旧目录E:/Proj-2026-N06_optDSH；没有执行迁移，没有改应用内部数据库。用户可在侧栏把本会话拖入新开发项目并确认旧目录访问，以保留完整历史；也可在新项目会话直接读取本摘要继续。不要把“摘要已生成”说成“原会话已迁移”。
+
+后续用户已在Codex侧栏手工完成移动。本会话不指定workdir时的Get-Location、Git仓库根均已实测为E:/Proj-2026-N06_optDSH-dev，分支codex/platform-dev；上述目录确认阻塞已解除，不要再要求用户迁移一次。
+
+0.2.0-dev.2追加修复：dshmarket自行调用pnpm，未使用官方plugin-manager的pnpmCommand，仍命中全局失效Corepack入口。Host启动时仅给子进程优先注入产品node_modules/.bin及所选Node目录；市场status.pnpm已从false变true，用户/系统PATH不变，PowerShell7和内置5.1回归均通过。旧0.2.0-dev.1测试包保持不覆盖。
