@@ -175,5 +175,15 @@
     "No Zemax connection, tracing or model save in this task",
     "Final fresh Home has no model credentials; real GLM Skill/expert pipeline was verified in the earlier isolated Home",
     "No remote push, public Release or npm publication"
-  ]
+  ],
+  "currentLocations": {
+    "date": "2026-10-19",
+    "rawRelease": "E:/Proj-2026-N06_optDSH-releases/0.2.0-dev.25",
+    "userPackage": "E:/Proj-2026-N06_optDSH-releases/0.2.0-dev.25-user",
+    "zip": "E:/Proj-2026-N06_optDSH-releases/optDSH-0.2.0-dev.25.zip",
+    "validation": "E:/Proj-2026-N06_optDSH-validation/261019-resources",
+    "relocatedRuntimeAuthenticatedHTTP": 200,
+    "zipHashUnchanged": true,
+    "historicalPaths": "Original evidence records execution-time paths; use this mapping for current locations."
+  }
 }
