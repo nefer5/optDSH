@@ -99,8 +99,8 @@ exit /b %errorlevel%
 '@ | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh.cmd') -Encoding ascii
 if($CanvasRoot -or $InstallCanvas){
  try{
-  $canvasArguments=@('-Home',$OptDshHome,'-Port',"$CanvasPort")
-  if($InstallCanvas){$canvasArguments+=@('-Package',$canvasArtifact,'-InstallRoot',$CanvasInstallRoot)}else{$canvasArguments+=@('-CanvasRoot',$CanvasRoot)}
+  $canvasArguments=@{DshHome=$OptDshHome;Port=$CanvasPort}
+  if($InstallCanvas){$canvasArguments.Package=$canvasArtifact;$canvasArguments.InstallRoot=$CanvasInstallRoot}else{$canvasArguments.CanvasRoot=$CanvasRoot}
   & (Join-Path $InstallRoot 'scripts/runtime/setup-canvas.ps1') @canvasArguments
   $plan.canvasEditorStatus='configured-not-runtime-verified'
  }catch{

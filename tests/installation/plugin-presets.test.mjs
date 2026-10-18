@@ -21,7 +21,7 @@ function fixture(fail=false){
  writeFileSync(join(home,'.credentials.yaml'),'private-fixture-preserved');
  return {root,release,app,home,npm,snapshotFile};
 }
-function install(f,mode,dry=true){return spawnSync(join(process.env.SystemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe'),['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',join(repo,'packaging/windows/install.ps1'),'-ReleaseRoot',f.release,'-InstallRoot',f.app,'-Home',f.home,'-Workspace',f.root,'-PluginPreset',mode,...dry?['-DryRun']:[]],{cwd:repo,encoding:'utf8',timeout:30000,env:{...process.env,PATH:f.npm+';'+process.env.PATH}});}
+function install(f,mode,dry=true,extra=[]){return spawnSync(join(process.env.SystemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe'),['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',join(repo,'packaging/windows/install.ps1'),'-ReleaseRoot',f.release,'-InstallRoot',f.app,'-Home',f.home,'-Workspace',f.root,'-PluginPreset',mode,...extra,...dry?['-DryRun']:[]],{cwd:repo,encoding:'utf8',timeout:30000,env:{...process.env,PATH:f.npm+';'+process.env.PATH}});}
 const check=(name,fn)=>test(name,{skip:process.platform!=='win32'},fn);
 check('three preset previews select none, marketplace, or enabled recommendations without writes',()=>{
  for(const [mode,count]of [['none',0],['market',1],['recommended',2]]){const f=fixture(),r=install(f,mode);assert.equal(r.status,0,r.stderr);const p=JSON.parse(r.stdout);assert.equal(p.communityPlugins.length,count);assert.equal(existsSync(f.app),false);assert(!p.communityPlugins.some(x=>x.name==='fixture-disabled'));}
@@ -45,4 +45,20 @@ check('a failed recommendation reports incomplete while retaining the installed 
  const f=fixture(true),r=install(f,'recommended',false);assert.notEqual(r.status,0);assert(existsSync(join(f.app,'optdsh.cmd')));assert(existsSync(join(f.home,'.credentials.yaml')));
  const receipt=JSON.parse(readFileSync(join(f.app,'installation-receipt.json'),'utf8').replace(/^\uFEFF/,''));assert.equal(receipt.communityPluginStatus,'incomplete');assert.equal(receipt.coreInstalled,true);
  const plugins=JSON.parse(readFileSync(join(f.app,'community-plugins-receipt.json')));assert.equal(plugins.status,'incomplete');assert.equal(plugins.plugins[1].status,'failed');
+});
+
+check('Canvas installer binds named existing/new parameters in Windows PowerShell 5.1',()=>{
+ for(const mode of ['existing','new']){
+  const f=fixture(),manifest=JSON.parse(readFileSync(join(f.release,'release-manifest.json')));
+  manifest.components.push({id:'canvas',name:'optdsh-agent-canvas',file:'packages/core.tgz',sha256:hash('fixture')});
+  manifest.canvasEditor={file:'packages/core.tgz',sha256:hash('fixture')};save(join(f.release,'release-manifest.json'),manifest);
+  writeFileSync(join(f.release,'scripts/runtime/setup-canvas.ps1'),`param([Alias('Home')][Parameter(Mandatory)][string]$DshHome,[string]$CanvasRoot,[string]$Package,[string]$InstallRoot,[int]$Port)
+if($DshHome -ne '${f.home.replaceAll('\\','/').replaceAll("'","''")}' -and ($DshHome -replace '\\\\','/') -ne '${f.home.replaceAll('\\','/').replaceAll("'","''")}'){throw 'Home binding failed'}
+if($Port -ne 4185){throw 'Port binding failed'}
+if(-not($CanvasRoot -or ($Package -and $InstallRoot))){throw 'Canvas binding failed'}
+`);
+  const args=['-Components','core,canvas','-CanvasPort','4185',...(mode==='existing'?['-CanvasRoot',f.root]:['-InstallCanvas','-CanvasInstallRoot',join(f.root,'editor')])];
+  const r=install(f,'none',false,args);assert.equal(r.status,0,r.stderr+r.stdout);
+  const receipt=JSON.parse(readFileSync(join(f.app,'installation-receipt.json'),'utf8').replace(/^\uFEFF/,''));assert.equal(receipt.canvasEditorStatus,'configured-not-runtime-verified');
+ }
 });
