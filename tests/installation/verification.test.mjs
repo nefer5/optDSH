@@ -1,16 +1,18 @@
-import test from 'node:test';
+import test,{after} from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {mkdirSync,mkdtempSync,writeFileSync,readFileSync,existsSync,copyFileSync,openSync,closeSync,symlinkSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {randomUUID} from 'node:crypto';
+import {validationRun} from './validation-run.mjs';
 
 const repo=resolve(import.meta.dirname,'../..');
 const script=join(repo,'packaging/windows/verify-installation.ps1');
 const temp=join(repo,'temp','installation-verification-tests');mkdirSync(temp,{recursive:true});
 const fixtures=mkdtempSync(join(temp,'fixture-'));
 // Explicitly designated by the user; each test gets a new case, never reused.
-const validationBase=resolve(repo,'../Proj-2026-N06_optDSH-validation');
+const batch=validationRun('installation-verification');after(batch.retire);
+const validationBase=batch.root;
 const nextCase=()=>join(validationBase,'unit-'+randomUUID());
 const quote=value=>`'${value.replaceAll("'","''")}'`;
 const manifest={schemaVersion:1,dshVersion:'0.2.1-rc.2',components:['core','workbench','canvas','forms'].map(id=>({id}))};

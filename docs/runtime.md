@@ -10,6 +10,10 @@
 
 本机开发参数由被Git忽略的.runtime/development.json和preview.json选择，不能当成发布默认。启动器按系统默认浏览器打开认证入口，不更改浏览器设置。认证链接和令牌不粘贴到报告或远程仓库。
 
+日常源码版Home固定为`E:/.optdsh-source`，StateRoot为`E:/.optdsh-source/state/web`，网页3380；原validation/manual-preview下的source-home/source-state已迁出。启动/重启仍使用源码根的中文CMD。源码项目入口为`.dsh/skills`，跨课题入口为Home/skills，由官方发现；不是用户全局.agents。
+
+安装核验版独立位于`E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/program`，资料在同级home，网页3080；使用validation根的“启动 dev.25 安装核验”快捷方式，和日常源码版分开。
+
 ## 安装版与路径
 
 薄optdsh.exe与optdsh.cmd读取外置启动配置，支持Home、Profile、Workspace、StateRoot与端口。Home默认可为用户目录/.optdsh，但用户可指定其他盘。所有课题可共用独立Home；课题可位于任意外部目录。

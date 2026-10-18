@@ -14,6 +14,8 @@ EXE是使用Windows内置.NET与PowerShell5.1的薄启动器；本地向导随�
 
 安装包包括公共光学Skills、PPT运行资源，选装Experts/Forms/Canvas/工作台按官方Profile管理。专家公共资料不含私人偏好或图片。Canvas可复用已有兼容安装，或在发行包携带编辑器tgz时单独新装。
 
+dev.26起安装结束实际建立`<所选Home>/skills/<name>/SKILL.md`标准入口，受管链接指向随包资源；来源清单在Home/config/optdsh-skills.json。源码开发还建立源码.dsh/skills入口。可选Canvas/Forms跟随官方Profile状态，用户自定义同名入口保留。旧dev.25固定ZIP没有改写；当前dev.25核验现场已通过声明的Bundle0.2.0-dev.26/PPT0.2.2组件维护补齐此能力，不等同原始ZIP未经维护的行为。
+
 ## 本地产物与安装
 
 在开发仓库运行 `npm run release:local -- <新的输出目录>`，生成本地tarball、SHA256清单、运行脚本与离线架构材料。许可证未确定，产物不代表公开发布。

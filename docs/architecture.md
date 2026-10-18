@@ -1,6 +1,6 @@
 # 当前架构与目录
 
-当前产品开发版 **0.2.0-dev.25**；官方DSH固定 **0.2.1-rc.2**。已新增Forms原生YAML编辑器、画板共享右栏与统一安装。四视图已按dev.21产品资源、官方专家与图形安装实现更新，各图源码版本见图源JSON。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
+当前产品开发版 **0.2.0-dev.26**；官方DSH固定 **0.2.1-rc.2**。日常源码Home已独立至E:/.optdsh-source，产品标准Skills入口已补齐。图源各有固定提交范围，最新路径说明以本页为准。交互图见[架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
 ## 图怎么看
 
@@ -36,6 +36,7 @@ optDSH源码/
 ├── tests/                      # 跨包安装测试；真实业务默认不执行
 ├── config/                     # 可分发示例，私人配置忽略Git
 ├── .agents/skills/             # 开发技能；产品Skills已归所属包
+├── .dsh/skills/                # 官方项目发现入口；受管链接指向产品实体
 ├── packages/optics/skills/     # 光学工作流，npm资源包随发行版安装
 ├── packages/ppt-slidewise/skills/ # PPT产品Skill与运行代码同包
 ├── plugins/*/skills/           # Canvas/Forms产品Skill
@@ -64,7 +65,7 @@ optDSH源码/
   node_modules/               # 官方DSH及程序依赖；选装包也可能位于Home的Profile
 ~/.optdsh/                     # 默认独立Home；可另选，不能放入InstallRoot
   AGENTS.md                   # 可选：本产品范围的用户规则
-  skills/<技能>/SKILL.md       # 可选：本产品专用、跨课题可发现
+  skills/<技能>/SKILL.md       # 安装器提供启用的产品入口；用户技能也可放这里
   profiles/web/                # 官方Profile的包、bundle选择和用户patch
   config/                      # canvas.json、程序管理的optics.json
   state/web/                   # 默认StateRoot，也可显式另选
@@ -85,6 +86,8 @@ optDSH源码/
 ```
 
 ### Skills与AGENTS如何发现（当前机制）
+
+本机日常源码版：Home=`E:/.optdsh-source`，StateRoot=`E:/.optdsh-source/state/web`，源码=`E:/Proj-2026-N06_optDSH-dev`，网页3380。validation只留安装核验；当前dev.25的program/home/workspace/canvas-editor在`E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25`，网页3080。完整目录与Git工作树解释见[开发规范](development.md)。
 
 以下来自当前安装的官方DSH `0.2.1-rc.2`：`dsh-skill-filesystem`的`roots(cwd)`与`dsh-agent-instructions`的用户/项目规则发现实现。它们是已实现的默认机制，不代表每项资源已经在干净用户环境中验收。
 
@@ -114,6 +117,8 @@ optDSH源码/
 | 资源适配 | `expert_resource`读取包内清单文件，校验当前真实Agent及路径边界 | 外部课题可用；课题AGENTS/README由官方文件工具读取，不限定源码cwd |
 
 开发与安装共用包内资源入口。不会把整个源码`.agents/skills`注入所有产品会话；同名用户/课题Skill按官方优先级覆盖随包资源。Skills目录仍须满足`<root>/<name>/SKILL.md`，只发现一层；目录可见不等于模型已实际调用。
+
+标准路径已落地：源码`.dsh/skills`和开发Home/skills指向当前模块源码；安装Home/skills指向程序/官方Profile中的已安装资源。所有链接有来源清单，不覆盖用户同名入口；可选插件停用只撤下归属可核验的产品链接。官方Provider及注册表负责发现、排序和读取，optDSH只维护受管路径。三种场景各5个Skill的官方catalog与正文读取证据见[本轮验证](verification/source-home-skills-20261019.md)。
 
 ### 发布结构与剩余项
 

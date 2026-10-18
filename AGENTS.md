@@ -28,7 +28,7 @@
 - 不修改相邻项目或全局工具来修复本项目。保留用户数据、既有改动和历史输入；清理可恢复。凭据、商业模型/CAD、原始会话和大体积原始数据不进Git。
 - 浏览器遵循用户当前选择和系统默认关联（当前用户选择Tabbit），不擅自更改系统设置。
 - 更新实现时同步当前状态和必要说明；区分设计、模拟、已接入和已实测，维护消息不能替代用户要的结果。
-- 本机源码、发布与验证固定使用`E:/Proj-2026-N06_optDSH-dev`、`E:/Proj-2026-N06_optDSH-releases`、`E:/Proj-2026-N06_optDSH-validation`；新版本/新case只在对应根内建子目录，不另建E盘顶层目录。目录命名、Git标签与Release附件规则见[开发与验证](docs/development.md)及[版本与发布](docs/versioning.md)。发布区与验证区不另建Git仓库，也不整目录提交源码Git。
+- 本机源码、发布与安装验证固定使用`E:/Proj-2026-N06_optDSH-dev`、`E:/Proj-2026-N06_optDSH-releases`、`E:/Proj-2026-N06_optDSH-validation`；用户明确指定日常源码版Home为`E:/.optdsh-source`，运行状态在其`state/web`，不得再放回validation。新版本/新case只在对应根内建子目录，不另建其他E盘顶层目录。目录、Git标签与Release规则见[开发与验证](docs/development.md)及[版本与发布](docs/versioning.md)。发布区与验证区不另建Git仓库。
 - 按变更范围验证；不为纯文案增加形式测试。默认检查不启动真实模型调用、Zemax追迹或tests/live；这些按具体任务授权执行。未获授权不提交发布动作、推送或安装全局工具。
 
 ## 3. optDSH产品与插件集成原则

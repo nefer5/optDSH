@@ -1,12 +1,14 @@
-import test from 'node:test';
+import test,{after} from 'node:test';
 import assert from 'node:assert/strict';
 import {resolve,join} from 'node:path';
-import {mkdtempSync,mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {mkdirSync} from 'node:fs';
 import {FileSystemSkillProvider} from '@deepseek-ai/dsh-skill-filesystem';
 import {productSkillRoots} from '../../packages/optdsh-bundle/lib/product-skills.mjs';
+import {validationRun} from './validation-run.mjs';
 const root=resolve('.');
+const batch=validationRun('product-skills');after(batch.retire);
 test('official provider discovers product Skills outside source with an empty user root',async()=>{
- const dir=mkdtempSync(join(root,'temp/skill-discovery-'));mkdirSync(join(dir,'study'));mkdirSync(join(dir,'empty'));
+ const dir=batch.root;mkdirSync(join(dir,'study'));mkdirSync(join(dir,'empty'));
  const roots=productSkillRoots(root);assert.equal(roots.length,2);
  const names=[];
  for(const item of roots){

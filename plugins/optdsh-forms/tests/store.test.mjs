@@ -1,12 +1,13 @@
-import test from 'node:test';
+import test,{after} from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdirSync,mkdtempSync,writeFileSync,readFileSync,symlinkSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {stringify} from 'yaml';
 import {FormStore,validateForm,validateValues} from '../lib/store.js';
 import {handlers,apply,inject} from '../lib/index.js';
+import {validationRun} from '../../../tests/installation/validation-run.mjs';
 
-const base=resolve('temp/forms-tests');mkdirSync(base,{recursive:true});
+const batch=validationRun('forms-store');after(batch.retire);const base=batch.root;
 const form={version:1,title:'合成课题',groups:[{id:'general',title:'背景',fields:[{id:'goal',type:'text',label:'目标',required:true},{id:'count',type:'number',label:'数量',min:1,max:10},{id:'choice',type:'select',label:'选项',options:['甲','乙']},{id:'flag',type:'boolean',label:'是否已确认'}]}]};
 function fixture(){
   const root=mkdtempSync(join(base,'case-'));mkdirSync(join(root,'ui'),{recursive:true});

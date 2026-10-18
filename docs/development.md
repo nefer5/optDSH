@@ -5,22 +5,40 @@
 | 目录 | 用途 | Git/发布关系 |
 |---|---|---|
 | E:/Proj-2026-N06_optDSH-dev | 新开发工作树，codex/platform-dev | 从这里提交并推送受跟踪源码/测试/文档 |
+| E:/.optdsh-source | 日常源码版唯一DSH_HOME；状态在state/web | 不进Git，不放validation；保留会话、模型配置和用户数据 |
 | E:/Proj-2026-N06_optDSH | 保留原现场 | 与新工作树共用Git对象库，不随意删除.git |
 | E:/Proj-2026-N06_optDSH-releases | 每个版本的不可变tgz/wheel/EXE/文档/SHA | 不整体提交Git，选定产物供Release附件 |
-| E:/Proj-2026-N06_optDSH-validation | 全新case、独立app/Home/workspace和日志 | 本机验证现场，不推送 |
+| E:/Proj-2026-N06_optDSH-validation | 只用于安装核验：当前核验、历史记录、临时测试 | 不放日常开发版Home；现场不推送 |
 
 这些是本机开发布置，产品不硬编码这些路径。真实课题外置，不在源码区建STUDYS。
 
 ### 固定目录规则
 
-- 以上三个根目录复用；新增版本、安装case或人工核验包只在对应根内建子目录。不得再创建`E:/optDSH-deliveries`、`E:/optDSH-validation`等平行根目录；确需改变整体布局时先与用户确认。
+- 以上已确认根目录复用；源码版Home迁入用户明确指定的E:/.optdsh-source是本轮授权的布局修正。不得再创建其他delivery/validation平行根；确需调整先与用户确认。
 - 发布区：`<版本>/`存固定原始构建；`<版本>-user/`存解压后的用户包；`optDSH-<版本>.zip`及其`.sha256`为可上传附件。例如本次`0.2.0-dev.25/`、`0.2.0-dev.25-user/`与`optDSH-0.2.0-dev.25.zip`均在同一个releases根内。
-- 验证区：`<日期-任务或版本>/`内管理app、Home、合成workspace与回执；本次为`261019-resources/`。验证区中的合成workspace不能用来替代或归拢用户真实课题。
+- 验证区：`当前核验/dev.25/{program,home,workspace,canvas-editor}`供人工核验；旧case与其数据/回执归`历史记录/安装批次`，自动测试记录归`历史记录/自动测试`。测试只写`临时测试/<suite>/<run-id>`，批次退出归档并可恢复回收，不再在根目录生成unit-UUID。真实课题不归拢进这里。
 - 构建原件和ZIP不可覆盖；发现问题使用新版本。移动产物时校验SHA256；验证程序移动前停止本次实例，修正当前启动配置后重新验证。历史会话/日志/回执中的原地址保留，另记路径映射。
 - 本机这两个产物目录不执行`git init`，不作为新分支或新源码仓库。Git管理源码、版本声明、构建脚本、说明和脱敏验收摘要；ZIP/EXE用GitHub Release附件保存，验证现场不上传。
 - 安装验证不得无限累积程序副本：阶段结束清点实际app及运行实例，默认只保留最新人工核验安装，额外回退程序须说明保留目的。旧程序及可重建依赖列入可恢复回收清单，Home、课题、模型、画板、结果与证据分别保留；不能把整个case当旧程序删除。并排安装用于隔离验证，不表示安装器会自动卸载历史版本。
 
-2026-10-19目录纠正：误建的两个平行根已归回约定位置并回收空壳；dev.25 ZIP哈希未变，迁入后的测试程序已重新启动且认证HTTP200。历史证据仍记录执行当时地址；当前入口见[dev.25回执](verification/dev25-user-release.md)。
+2026-10-19再次收尾：251个旧unit目录及源码temp/forms-tests均归档校验后回收；28个历史case与旧发行物分别归位。验证根的“启动 dev.25 安装核验”快捷方式直达当前program。当前路径与验证证据见[本轮回执](verification/source-home-skills-20261019.md)，历史回执保留当时地址，以迁移映射定位。
+
+### 官方Skills标准入口
+
+| 场景 | 实际发现入口 | 实体 |
+|---|---|---|
+| 在源码目录使用 | `E:/Proj-2026-N06_optDSH-dev/.dsh/skills/<name>/SKILL.md` | 所属packages/plugins源码，通过受管链接引用 |
+| 源码版在其他课题使用 | `E:/.optdsh-source/skills/<name>/SKILL.md` | 同一源码实体，保留当前源码编辑 |
+| 当前安装核验版 | `E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/home/skills/<name>/SKILL.md` | 已安装程序/官方Profile中的资源 |
+| 普通用户新安装 | `<所选DSH_HOME>/skills/<name>/SKILL.md` | 安装器随包建立入口；默认Home仍是用户~/.optdsh |
+
+产品实体不复制两份；官方文件系统Provider发现标准入口，同名用户入口保留。来源清单在Home/config/optdsh-skills.json，源码投影清单在.dsh/optdsh-skills.json。可选Canvas/Forms受官方Profile状态控制，停用/卸载时只撤下受管链接，目标内容和用户Skill保留。历史链接对象在清单旁的skill-link-history保存，不在skills根铺临时目录。全局.agents不改写。
+
+### 分支与STUDYS
+
+一个工作树当前只检出一个分支：本目录为codex/platform-dev。旧目录检出codex/platform-plugin-refactor并保留原现场；它是当前开发分支祖先，内容已包含，不是待二次合并的独立重构成果。main尚未吸收当前开发改动，本轮不自动合并/推送。
+
+开发源码根不含真实STUDYS。曾看到的源码temp/forms-tests下STUDYS由旧路径只读兼容测试生成，已归档回收；该测试现使用外部临时批次并退出收尾。原工作树的STUDYS属于保留现场，不作为当前开发课题入口，本轮不移动或清理。
 
 ## 开发与验证入口
 

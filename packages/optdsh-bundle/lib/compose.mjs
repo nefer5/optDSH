@@ -6,6 +6,7 @@ import semver from 'semver';
 import {readBuildInfo} from './version.mjs';
 import {mkdirSync,writeFileSync,existsSync,readFileSync} from 'node:fs';
 import {profileComponentState,profileComponentPackages} from './profile-components.mjs';
+import {syncManagedSkills} from './managed-skills.mjs';
 export const componentPackages=Object.freeze({workbench:'optdsh-workbench',canvas:'optdsh-agent-canvas',forms:'optdsh-forms',experts:'optdsh-experts','current-info':'optdsh-current-info-policy'});
 export function compose(options){
  const installRoot=resolve(options.installRoot),home=resolve(options.home),workspaceRoot=resolve(options.workspace),profile=options.profile||'web';
@@ -39,6 +40,7 @@ export function compose(options){
  }catch(e){return {id,loaderId:componentPackages[id],profileManaged:activeBundles.has(componentPackages[id]),unavailable:e.code==='MODULE_NOT_FOUND'?'Package is not installed':e.message};}});
  for(const state of managed)if(state.installed||selected.includes(state.id))optional.push({...state,...(state.id==='canvas'&&state.enabled&&options.canvasUnavailable?{runtimeUnavailable:options.canvasUnavailable}:{})});
  const config={installRoot,workspaceRoot,stateRoot,home,profile,optional,buildInfo:readBuildInfo(installRoot)};
+ syncManagedSkills(config);
  const name=fileURLToPath(new URL('./index.js',import.meta.url));
  const rows=optional.filter(item=>!item.profileOwned&&!item.unavailable&&!item.profileManaged).map(item=>({id:item.loaderId,name:item.module,config:item.config}));
  // Real Loader entries are necessary for official client module discovery.

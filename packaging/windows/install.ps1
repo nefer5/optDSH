@@ -185,6 +185,13 @@ if ($AddToUserPath) {
  Write-Output 'User PATH updated; open a new terminal, then use optdsh from any research directory.'
 }
 $configDir=Join-Path $OptDshHome 'config';New-Item -ItemType Directory -Path $configDir -Force|Out-Null
+$skillSetup=Join-Path $InstallRoot 'node_modules/optdsh-bundle/lib/managed-skills.mjs'
+if(Test-Path -LiteralPath $skillSetup){
+ & $nodeExecutable $skillSetup $InstallRoot $OptDshHome web
+ if($LASTEXITCODE){throw '产品Skills标准路径安装未完成；程序与用户资料已保留。'}
+}elseif($manifest.skillPaths){
+ throw '发行清单要求标准Skills路径，但运行包缺少安装助手。'
+}
 $portsFile=Join-Path $configDir 'ports.json'
 if(Test-Path -LiteralPath $portsFile){Copy-Item -LiteralPath $portsFile -Destination ($portsFile+'.backup-'+(Get-Date -Format 'yyyyMMdd-HHmmss'))}
 [IO.File]::WriteAllText($portsFile,($plan.ports|ConvertTo-Json -Depth 8),[Text.UTF8Encoding]::new($false))

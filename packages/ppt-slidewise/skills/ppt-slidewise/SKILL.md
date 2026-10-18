@@ -49,7 +49,7 @@ read简版不能直接save。export会检查硬结构错误并缓存相同成品
 
 ## 入口
 
-入口是本Skill目录的`../../cli.mjs`，使用其绝对路径执行`node <CLI绝对路径> <command>`，工作目录保持当前课题。开发源码对应`packages/ppt-slidewise/cli.mjs`；安装版从随包Skill位置解析，不猜源码目录。公开参数/字体/样例见 [使用说明](references/workflow.md)。依赖和构建属于一次性安装工作，普通制作不重复安装。
+先解析本Skill目录的真实路径（realpath，处理Home/skills或.dsh/skills链接），入口是该真实目录的`../../cli.mjs`；使用其绝对路径执行`node <CLI绝对路径> <command>`，工作目录保持当前课题。开发源码对应`packages/ppt-slidewise/cli.mjs`；安装版从实际随包资源位置解析，不从Home的父目录猜CLI。公开参数/字体/样例见 [使用说明](references/workflow.md)。依赖和构建属于一次性安装工作，普通制作不重复安装。
 
 ```text
 create --id <新的英文短名> --input <计划.yaml>

@@ -1,6 +1,6 @@
 # 版本、构建与本地测试包
 
-产品当前开发版本为0.2.0-dev.25；官方DSH依赖版本与独立组件版本分别管理，不机械同号。阶段顺序通常为dev.N、beta.N、rc.N、正式版；只有确认交付的测试包才递增预发布号，日常修改由Git提交及dirty状态追踪。本轮已本地提交；远程推送、Release、主分支合并及公开npm分别按用户授权执行。
+产品当前开发版本为0.2.0-dev.26；官方DSH依赖版本与独立组件版本分别管理，不机械同号。阶段顺序通常为dev.N、beta.N、rc.N、正式版；只有确认交付的测试包才递增预发布号，日常修改由Git提交及dirty状态追踪。本轮已本地提交；远程推送、Release、主分支合并及公开npm分别按用户授权执行。
 
 ## 命令
 
@@ -55,12 +55,12 @@ set默认只预览；加--apply才写入，并在本仓忽略的.backup/version-
 4. 在GitHub创建Release草稿，选择该标签，附上用户ZIP、SHA256校验文件和更新说明。`dev`/`beta`/`rc`勾选Pre-release，不标为稳定最新版。
 5. 核对附件、标签提交及版本后发布；下载远端附件再核对SHA256。只推源码、已上传草稿、已正式公开是三个不同状态。
 
-本次包为`0.2.0-dev.25`，实际构建提交是`db862c008049cfeee1f8d1a43b18493dd3e87c6d`，之后的目录/验收文档提交不改变这一事实。当前仅本地完成；未创建版本标签、未上传Release。分享对象为：
+历史dev.25的构建提交为`db862c008049cfeee1f8d1a43b18493dd3e87c6d`，原ZIP保持不变。本次修订为dev.26，以新包release-manifest.json中的sourceRevision为标签目标；不按后续文档HEAD猜测。当前仅本地构建；未创建版本标签、未上传Release。分享对象为：
 
 ```text
 E:/Proj-2026-N06_optDSH-releases/
-  optDSH-0.2.0-dev.25.zip
-  optDSH-0.2.0-dev.25.zip.sha256
+  optDSH-0.2.0-dev.26.zip
+  optDSH-0.2.0-dev.26.zip.sha256
 ```
 
 可以附加对应原始构建中的`release-manifest.json`方便审计；不要上传整个原始release树、validation目录、账号/会话或私人模型。
@@ -70,7 +70,7 @@ E:/Proj-2026-N06_optDSH-releases/
 下列是操作说明，本次未执行远程发布。需要仓库写权限。
 
 1. 打开仓库首页，进入 **Releases → Draft a new release**。
-2. **Choose a tag**选择已推送的`v0.2.0-dev.25`；本项目优先预先创建精确提交标签，避免网页默认Target选错提交。
+2. **Choose a tag**选择已推送的`v0.2.0-dev.26`；本项目优先预先创建精确提交标签，避免网页默认Target选错提交。
 3. 填写标题和更新说明，说明功能、Node24前置、联网要求、已验证与待验范围；不要写入凭据或认证链接。
 4. 将上述ZIP和`.sha256`拖进附件区域。单独上传薄EXE会缺少_support资源，因此当前必须上传完整用户ZIP。
 5. 勾选 **This is a pre-release**；先 **Save draft**检查，确认后 **Publish release**。
@@ -86,15 +86,17 @@ GitHub官方入口：[管理Release](https://docs.github.com/en/repositories/rel
 git push -u origin codex/platform-dev
 
 # 先核对标签不存在，再把标签固定到真实构建提交
-git tag -a v0.2.0-dev.25 db862c008049cfeee1f8d1a43b18493dd3e87c6d -m "optDSH 0.2.0-dev.25"
-git push origin refs/tags/v0.2.0-dev.25
+$releaseManifest = Get-Content "E:/Proj-2026-N06_optDSH-releases/0.2.0-dev.26/release-manifest.json" -Raw | ConvertFrom-Json
+$releaseTag = "v" + $releaseManifest.version
+git tag -a $releaseTag $releaseManifest.sourceRevision -m "optDSH $($releaseManifest.version)"
+git push origin "refs/tags/$releaseTag"
 
 # 已安装并登录GitHub CLI时，可创建带附件的预发布草稿
-gh release create v0.2.0-dev.25 `
-  "E:/Proj-2026-N06_optDSH-releases/optDSH-0.2.0-dev.25.zip" `
-  "E:/Proj-2026-N06_optDSH-releases/optDSH-0.2.0-dev.25.zip.sha256" `
+gh release create $releaseTag `
+  "E:/Proj-2026-N06_optDSH-releases/optDSH-0.2.0-dev.26.zip" `
+  "E:/Proj-2026-N06_optDSH-releases/optDSH-0.2.0-dev.26.zip.sha256" `
   --repo nefer5/optDSH --verify-tag --draft --prerelease `
-  --title "optDSH 0.2.0-dev.25" `
+  --title "optDSH 0.2.0-dev.26" `
   --notes "开发预发布：图形安装、端口避让及选择性卸载；需Node.js24+与网络，真实光学业务待验。"
 ```
 

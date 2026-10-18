@@ -1,0 +1,318 @@
+{
+  "date": "2026-10-19",
+  "dailyMigration": {
+    "home": "E:\\.optdsh-source",
+    "stateRoot": "E:\\.optdsh-source\\state\\web",
+    "protectedFilesMatchedBeforeConfigUpdate": 186,
+    "updatedCurrentMetadata": [],
+    "originalHome": "E:/Proj-2026-N06_optDSH-validation/manual-preview/source-home",
+    "originalState": "E:/Proj-2026-N06_optDSH-validation/manual-preview/source-state"
+  },
+  "dev25Migration": {
+    "mapping": {
+      "E:\\Proj-2026-N06_optDSH-validation\\261019-resources\\candidate-app": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\program",
+      "E:\\Proj-2026-N06_optDSH-validation\\261019-resources\\candidate-home": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home",
+      "E:\\Proj-2026-N06_optDSH-validation\\261019-resources\\study": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\workspace",
+      "E:\\Proj-2026-N06_optDSH-validation\\261019-resources\\final-editor": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\canvas-editor"
+    },
+    "preservedFilesMatchedBeforeConfigUpdate": 161,
+    "currentConfigChanges": [
+      "program/optdsh-launcher.json",
+      "program/installation-receipt.json",
+      "home/config/canvas.json",
+      "home/storages/workspace.json"
+    ]
+  },
+  "fixtureArchives": [
+    {
+      "archive": "E:\\Proj-2026-N06_optDSH-validation\\历史记录\\自动测试\\legacy-unit-fixtures-20261019.zip",
+      "sourceDirectories": 251,
+      "preservedFiles": 1697,
+      "linksRecorded": 0,
+      "sha256": "bed5715b002c71a86d6069594738f5f0075bb63e48274650d411c4a813fdb324"
+    },
+    {
+      "archive": "E:\\Proj-2026-N06_optDSH-validation\\历史记录\\自动测试\\legacy-forms-fixtures-20261019.zip",
+      "sourceDirectories": 1,
+      "preservedFiles": 1383,
+      "linksRecorded": 39,
+      "sha256": "d7d4ef38753736b511c4d07e667f6fd75346dc639e3d6cc49bc020ea7be33c64"
+    }
+  ],
+  "historyRelocation": {
+    "movedEntries": 59,
+    "hashesVerified": 14791,
+    "mappingFile": "E:\\Proj-2026-N06_optDSH-validation\\历史记录\\目录迁移-20261019.json"
+  },
+  "skillCatalog": [
+    {
+      "scenario": "source-in-repository",
+      "cwd": "E:/Proj-2026-N06_optDSH-dev",
+      "sessionId": "session-skill-paths-79193a01-25a3-44bd-9b81-1ddb04eeee97",
+      "officialRPC": "skills/list",
+      "skills": [
+        {
+          "name": "dsh-forms",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\plugins\\optdsh-forms\\skills\\dsh-forms\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-assembly-tolerance",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\packages\\optics\\skills\\optdsh-assembly-tolerance\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-canvas",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\plugins\\optdsh-agent-canvas\\skills\\optdsh-canvas\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-rx-collection-efficiency",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\packages\\optics\\skills\\optdsh-rx-collection-efficiency\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "ppt-slidewise",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\packages\\ppt-slidewise\\skills\\ppt-slidewise\\SKILL.md",
+          "modelInvocable": true
+        }
+      ]
+    },
+    {
+      "scenario": "source-external-workspace",
+      "cwd": "E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/workspace",
+      "sessionId": "session-skill-paths-3e2ebc1f-f2bb-4970-9f35-bb147b69ffac",
+      "officialRPC": "skills/list",
+      "skills": [
+        {
+          "name": "dsh-forms",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\plugins\\optdsh-forms\\skills\\dsh-forms\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-assembly-tolerance",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\packages\\optics\\skills\\optdsh-assembly-tolerance\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-canvas",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\plugins\\optdsh-agent-canvas\\skills\\optdsh-canvas\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-rx-collection-efficiency",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\packages\\optics\\skills\\optdsh-rx-collection-efficiency\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "ppt-slidewise",
+          "path": "E:\\Proj-2026-N06_optDSH-dev\\packages\\ppt-slidewise\\skills\\ppt-slidewise\\SKILL.md",
+          "modelInvocable": true
+        }
+      ]
+    },
+    {
+      "scenario": "installed-external-workspace",
+      "cwd": "E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/workspace",
+      "sessionId": "session-skill-paths-5223cd0e-4dc0-40ef-b0e4-1cf4a0ba35a5",
+      "officialRPC": "skills/list",
+      "skills": [
+        {
+          "name": "dsh-forms",
+          "path": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home\\profiles\\web\\node_modules\\optdsh-forms\\skills\\dsh-forms\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-assembly-tolerance",
+          "path": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\program\\node_modules\\optdsh-optics-skills\\skills\\optdsh-assembly-tolerance\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-canvas",
+          "path": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home\\profiles\\web\\node_modules\\optdsh-agent-canvas\\skills\\optdsh-canvas\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "optdsh-rx-collection-efficiency",
+          "path": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\program\\node_modules\\optdsh-optics-skills\\skills\\optdsh-rx-collection-efficiency\\SKILL.md",
+          "modelInvocable": true
+        },
+        {
+          "name": "ppt-slidewise",
+          "path": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\program\\node_modules\\optdsh-ppt-slidewise\\skills\\ppt-slidewise\\SKILL.md",
+          "modelInvocable": true
+        }
+      ]
+    }
+  ],
+  "defaultProviderBodyReads": [
+    {
+      "scenario": "source-in-repository",
+      "name": "dsh-forms",
+      "source": "project-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-dev\\.dsh\\skills\\dsh-forms"
+    },
+    {
+      "scenario": "source-in-repository",
+      "name": "optdsh-assembly-tolerance",
+      "source": "project-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-dev\\.dsh\\skills\\optdsh-assembly-tolerance"
+    },
+    {
+      "scenario": "source-in-repository",
+      "name": "optdsh-canvas",
+      "source": "project-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-dev\\.dsh\\skills\\optdsh-canvas"
+    },
+    {
+      "scenario": "source-in-repository",
+      "name": "optdsh-rx-collection-efficiency",
+      "source": "project-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-dev\\.dsh\\skills\\optdsh-rx-collection-efficiency"
+    },
+    {
+      "scenario": "source-in-repository",
+      "name": "ppt-slidewise",
+      "source": "project-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-dev\\.dsh\\skills\\ppt-slidewise"
+    },
+    {
+      "scenario": "source-external-workspace",
+      "name": "dsh-forms",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\.optdsh-source\\skills\\dsh-forms"
+    },
+    {
+      "scenario": "source-external-workspace",
+      "name": "optdsh-assembly-tolerance",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\.optdsh-source\\skills\\optdsh-assembly-tolerance"
+    },
+    {
+      "scenario": "source-external-workspace",
+      "name": "optdsh-canvas",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\.optdsh-source\\skills\\optdsh-canvas"
+    },
+    {
+      "scenario": "source-external-workspace",
+      "name": "optdsh-rx-collection-efficiency",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\.optdsh-source\\skills\\optdsh-rx-collection-efficiency"
+    },
+    {
+      "scenario": "source-external-workspace",
+      "name": "ppt-slidewise",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\.optdsh-source\\skills\\ppt-slidewise"
+    },
+    {
+      "scenario": "installed-external-workspace",
+      "name": "dsh-forms",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home\\skills\\dsh-forms"
+    },
+    {
+      "scenario": "installed-external-workspace",
+      "name": "optdsh-assembly-tolerance",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home\\skills\\optdsh-assembly-tolerance"
+    },
+    {
+      "scenario": "installed-external-workspace",
+      "name": "optdsh-canvas",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home\\skills\\optdsh-canvas"
+    },
+    {
+      "scenario": "installed-external-workspace",
+      "name": "optdsh-rx-collection-efficiency",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home\\skills\\optdsh-rx-collection-efficiency"
+    },
+    {
+      "scenario": "installed-external-workspace",
+      "name": "ppt-slidewise",
+      "source": "user-dsh",
+      "contentLoaded": true,
+      "resourceBase": "E:\\Proj-2026-N06_optDSH-validation\\当前核验\\dev.25\\home\\skills\\ppt-slidewise"
+    }
+  ],
+  "freshInstaller": {
+    "actualInstaller": true,
+    "independentDependencies": true,
+    "skills": [
+      {
+        "name": "optdsh-assembly-tolerance",
+        "source": "user-dsh",
+        "contentLoaded": true
+      },
+      {
+        "name": "optdsh-rx-collection-efficiency",
+        "source": "user-dsh",
+        "contentLoaded": true
+      }
+    ]
+  },
+  "maintenance": {
+    "date": "2026-10-19",
+    "baseProductVersion": "0.2.0-dev.25",
+    "components": {
+      "optdsh-bundle": "0.2.0-dev.26",
+      "optdsh-ppt-slidewise": "0.2.2"
+    },
+    "artifacts": [
+      {
+        "file": "optdsh-bundle-0.2.0-dev.26.tgz",
+        "sha256": "dc91323f7faf539305a57f04cd7a3d92cc2fefaebf883c33ce03ccc74898a9d2"
+      },
+      {
+        "file": "optdsh-ppt-slidewise-0.2.2.tgz",
+        "sha256": "296b877bd50bf83aa7d290ee4dd1d886033ccc3122df72e70017d1133e794dc4"
+      }
+    ],
+    "purpose": "现有dev.25核验现场的Skills路径维护；不覆盖原始ZIP",
+    "changes": [
+      "Home/skills官方入口",
+      "受管链接与用户冲突保护",
+      "官方Profile启停投影",
+      "PPT真实路径入口"
+    ],
+    "immutableDev25ZipSHA256": "599eb0581ad3e3c497779455dfce918fb4937aaeb5d8ab43eadbfb7560ef8bc4"
+  },
+  "tests": {
+    "plugins": 187,
+    "installation": 127,
+    "ppt": 11,
+    "optics": 142,
+    "distribution": 37,
+    "architectureKit": 56,
+    "additionalSkillTests": 4,
+    "temporaryBatchesAfterExit": 0
+  },
+  "git": {
+    "currentBranch": "codex/platform-dev",
+    "oldRefactorIsAncestor": true,
+    "mainMerged": false
+  },
+  "limits": [
+    "没有进行真实光学分析或模型调用",
+    "干净Windows/公司环境未验收",
+    "全新安装实测为core+光学资源；当前完整dev.25维护现场覆盖5个Skills",
+    "原固定dev.25ZIP未修改，修订版使用dev.26"
+  ]
+}

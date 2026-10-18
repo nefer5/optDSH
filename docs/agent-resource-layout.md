@@ -22,7 +22,9 @@ optDSH保留公共专家内容、构建期白名单快照与宿主声明、`expe
 
 ## 发布与开发一致性
 
-开发运行按已声明的工作区包解析产品Skill位置；安装运行按独立程序依赖解析。Bundle挂载官方文件系统Provider，将资源标为bundled（rank 600），保留用户/课题技能的官方覆盖顺序。不存在自建磁盘全盘扫描器，也不把开发技能暴露到所有产品会话。
+开发运行按工作区包解析产品Skill实体，受管链接同时提供源码`.dsh/skills`与日常`E:/.optdsh-source/skills`两个标准入口；安装运行将入口建立到所选Home/skills，指向程序/官方Profile的资源。来源清单保护用户同名内容，Canvas/Forms入口随官方启停状态撤下或恢复。Bundle仍保留官方bundled Provider作为包内注册，官方优先级合并标准目录中的同名入口；没有自建发现扫描器。
+
+源码目录及外部课题、维护后的dev.25安装版，已分别通过实际Host官方skills/list和官方默认Provider正文读取。路径、实体与验证范围见[本轮回执](verification/source-home-skills-20261019.md)。
 
 源码专家唯一中心继续通过开发链接维护；发布基线由`plugins/optdsh-experts/scripts/build-resources.py`白名单导出，固定版本随Git与安装包。构建不读取私人偏好/截图，不修改中心源。固定Standard组合随DSH升级重新生成，避免把过时组合当成自动继承。
 

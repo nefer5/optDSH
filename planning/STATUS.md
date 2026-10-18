@@ -1,6 +1,8 @@
 # 当前状态
 
-2026-10-19；产品 **0.2.0-dev.25**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+2026-10-19；产品 **0.2.0-dev.26**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+
+本轮目录与Skills收尾：日常源码Home迁入E:/.optdsh-source（3380），validation只保留安装验证。当前人工核验dev.25在validation/当前核验/dev.25（3080），已应用明确记录的Skills组件维护；原dev.25 ZIP不变，新安装逻辑以dev.26发行。源码.dsh/skills、开发Home/skills及安装Home/skills都有5个受管入口，三种会话的官方catalog和正文读取通过。251个根unit与源码Forms/STUDYS夹具已归档回收，后续测试按批次退出；28个旧case归历史记录。详见[路径及验证回执](../docs/verification/source-home-skills-20261019.md)。
 
 追加完成：路径选择卸载（课题永久排除）与安装端口自动避让/记录；真实测试程序已回收，6项数据哈希不变。最终dev.25用户包已从顶层EXE完成源码外安装、启动和随包卸载日志验证，保留供人工核验。见[交付回执](../docs/verification/dev25-user-release.md)。
 
