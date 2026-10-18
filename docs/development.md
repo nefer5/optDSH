@@ -53,7 +53,13 @@ pwsh scripts/setup.ps1
 | 人工业务验收 | 独立手动预览home和合成workspace | 浏览器操作、模型配置、会话和插件实际交互 |
 | 沙箱/公司环境 | 后续单独安排 | 干净Windows、权限/网络/许可及真实宿主差异 |
 
-### 首先启动源码版（当前推荐）
+### 日常一键启动源码版（当前推荐）
+
+在资源管理器打开 E:/Proj-2026-N06_optDSH-dev，双击根目录的启动DSH.cmd即可。当前开发机的忽略配置已准备好：自动选择已有Node24，使用manual-preview/source-home、测试workspace、独立source-state及3380端口，默认只启动core，不需要手填参数。再次双击会复用通过身份和认证检查的现有预览服务并打开浏览器。
+
+这是新开发目录的本机配置，不进入发布包，也不改全局PATH或用户.agents。旧目录启动器保持原样。完整光学工作台仍需单独完成光学服务配置，不能把纯平台的一键启动当作全部业务验收。
+
+### 高级手动参数（排查或切换课题时使用）
 
 打开PowerShell，执行以下命令。本机默认Node26不在当前要求范围，下面只为该终端选择已存在的Node24，不改用户PATH；.runtime/development.json是本机忽略的开发记录。
 
@@ -94,3 +100,9 @@ $env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
 4. 画板仍需N05编辑器服务，光学工作台需独立光学服务；当前没有自动启动它们，也不因页面打开就宣称Zemax/画板编辑通过。缺少服务时先检查明确的连接提示，真实Zemax另行授权验收。
 
 本轮机器检查只启动并停止两种纯平台预览，核对认证HTTP200；没有打开浏览器、配置模型、调用Zemax或改写用户全局.agents。离线完整回归和四组件安装证据见[迁移记录](refactor/2026-10-18/worktree-transition.md)。
+
+## Windows发布入口：待确认建议
+
+面向小白，推荐开发期保留.cmd，正式发行提供薄EXE启动器；业务/启动编排复用Node CLI，路径、组件和版本等配置外置，避免把业务逻辑编译进EXE。当前用户仅讨论方案，未创建EXE或新增打包依赖。
+
+当前.cmd实际调用pwsh（PowerShell7），不是Windows自带powershell.exe（5.1）。现有脚本含ConvertFrom-Json -AsHashtable和较新的.NET路径API，不能仅替换命令名就声称5.1兼容。若坚持脚本发行，可选择真正适配并测试5.1，或明确把7列为前置条件；若采用薄EXE/Node入口，则后续逐步解除普通用户启动对PowerShell7的依赖。不能将本机已装7的成功当作干净Windows成功。

@@ -70,3 +70,22 @@ test('synthetic host lifecycle, authentication, workspace isolation and unrelate
     try{const refused=invoke('start-dsh.ps1','-Restart');assert.notEqual(refused.status,0);assert.match(refused.stderr,/unverified process/);assert.equal(server.listening,true);}finally{await new Promise(resolve=>server.close(resolve));}
   }finally{invoke('stop-dsh.ps1');}
 });
+
+
+test('one-click opener uses local preview configuration and preserves explicit home override',{skip:process.platform!=='win32',timeout:90000},async()=>{
+  const previewHome=join(root,'preview home'),port=await freePort();
+  const preview=join(install,'.runtime');mkdirSync(preview,{recursive:true});
+  writeFileSync(join(preview,'preview.json'),JSON.stringify({home:previewHome,profile:'preview',workspace:secondWorkspace,port,components:['core']}));
+  writeFileSync(join(preview,'development.json'),JSON.stringify({nodeExecutable:process.execPath,launchConfig:'preview.json'}));
+  const flags=`-Home ${quote(previewHome)} -Profile preview -Workspace ${quote(secondWorkspace)} -Port ${port}`;
+  try{
+    const opened=run('open-dsh.ps1',[],'-NoBrowser');assert.equal(opened.status,0,opened.stderr+opened.stdout);
+    const state=JSON.parse(readFileSync(join(previewHome,'state/preview/.runtime/dsh-host.json'),'utf8'));
+    assert.equal(state.home,previewHome);assert.equal(state.workspace,secondWorkspace);assert.equal(state.port,port);
+    const override=run('open-dsh.ps1',[],`-NoBrowser -Home ${quote(join(root,'explicit home'))} -Profile explicit -Workspace ${quote(workspace)} -Port ${port}`);
+    assert.notEqual(override.status,0);assert.match(override.stderr,/unverified process/);
+    // A different explicit home must not silently reuse the preview host.
+    const status=run('status-dsh.ps1',[],`${flags} | ConvertTo-Json`);
+    assert.equal(JSON.parse(status.stdout).Authentication,'Ready');
+  }finally{run('stop-dsh.ps1',[],flags);}
+});
