@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Independent optDSH platform and optional optical plugins",
   "engines": {
-    "node": ">=24 <25"
+    "node": ">=24"
   },
   "scripts": {
     "dsh:version": "dsh --version",

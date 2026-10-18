@@ -6,7 +6,7 @@ $context = Resolve-OptDshLaunch -Home $DshHome -Profile $DshProfile -Workspace $
 if (-not (Test-Path -LiteralPath $context.Entry -PathType Leaf)) { throw 'DSH is not installed. Run the platform setup first.' }
 $node = (Get-Command node.exe -ErrorAction Stop).Source
 $nodeVersion = & $node -p 'process.versions.node'
-if ($LASTEXITCODE -ne 0 -or [int]($nodeVersion -split '\.')[0] -ne 24) { throw 'Node.js 24.x must be installed by the user.' }
+if ($LASTEXITCODE -ne 0 -or [int]($nodeVersion -split '\.')[0] -lt 24) { throw 'Node.js 24 or newer must be installed by the user.' }
 New-Item -ItemType Directory -Path $context.RuntimeDir, $context.LogDir, $context.LeaseRoot -Force | Out-Null
 # The profile lease is independent of StateRoot, preventing two custom state
 # directories from becoming concurrent writers to the same official profile.

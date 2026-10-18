@@ -66,8 +66,8 @@ check('failed fake installer retains a sanitized receipt and private output with
  assert.match(readFileSync(join(target,'private-logs/install.stdout.log'),'utf8'),/synthetic-private-token/);
 });
 check('unsupported Node versions fail clearly before the installer and retain a prerequisite receipt',()=>{
- const target=nextCase(),result=verify(release(),target,'',true,'26.12.0');assert.notEqual(result.status,0);assert.match(result.stderr,/Node.js 24/);
- const receipt=JSON.parse(readFileSync(join(target,'verification-receipt.json'),'utf8'));assert.equal(receipt.nodeVersion,'26.12.0');assert.equal(receipt.failure.phase,'prerequisites');assert.equal(existsSync(join(target,'app')),false);
+ const target=nextCase(),result=verify(release(),target,'',true,'22.12.0');assert.notEqual(result.status,0);assert.match(result.stderr,/Node.js 24/);
+ const receipt=JSON.parse(readFileSync(join(target,'verification-receipt.json'),'utf8'));assert.equal(receipt.nodeVersion,'22.12.0');assert.equal(receipt.failure.phase,'prerequisites');assert.equal(existsSync(join(target,'app')),false);
 });
 check('a hung fake installer has a bounded outer timeout and leaves failure evidence',()=>{
  const source=release(),target=nextCase();writeFileSync(join(source,'packaging/windows/install.ps1'),`param($ReleaseRoot,$InstallRoot,[Alias('Home')]$CaseHome,$Workspace,$Components)\nStart-Sleep -Seconds 60`);
@@ -120,4 +120,11 @@ check('fake release exercises install, cookie exchange, selected components, rev
 check('bad client origin fails before fetching outside localhost and still stops the owned fake host',()=>{
  const target=nextCase(),result=verify(serviceRelease({badClient:true}),target,'-Components workbench',true);assert.notEqual(result.status,0);
  const receipt=JSON.parse(readFileSync(join(target,'verification-receipt.json'),'utf8'));assert.equal(receipt.status,'failed');assert.equal(receipt.phase,'client-graph');assert.equal(receipt.cleanup,'owned-host-stopped-or-already-exited');
+});
+
+check('Node26 is allowed past prerequisites without an upper-major cap',()=>{
+ const source=release(),target=nextCase();
+ const result=verify(source,target,'',true,'26.12.0');assert.notEqual(result.status,0);
+ const receipt=JSON.parse(readFileSync(join(target,'verification-receipt.json'),'utf8'));
+ assert.equal(receipt.nodeVersion,'26.12.0');assert.equal(receipt.failure.phase,'install');
 });

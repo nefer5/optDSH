@@ -95,7 +95,7 @@ $app = Join-Path $ValidationRoot 'app'; $caseHome = Join-Path $ValidationRoot 'h
 $cacheRoot = if ($NpmCacheRoot) { Normalize-Root $NpmCacheRoot } else { Join-Path $ValidationRoot 'npm-cache' }
 if ((Test-Overlap $cacheRoot $sourceRoot) -or (Test-Overlap $cacheRoot $ReleaseRoot)) { throw 'npm cache must be independent of source and release directories.' }
 Assert-PlainAncestors $cacheRoot
-$plan = [ordered]@{schemaVersion=1;releaseRoot=$ReleaseRoot;validationRoot=$ValidationRoot;installRoot=$app;home=$caseHome;workspace=$workspace;stateRoot=$stateRoot;components=$selected;port=$Port;installTimeoutSeconds=$InstallTimeoutSeconds;requiredNode='24.x';modelRequests=$false;zemax=$false;globalChanges=$false}
+$plan = [ordered]@{schemaVersion=1;releaseRoot=$ReleaseRoot;validationRoot=$ValidationRoot;installRoot=$app;home=$caseHome;workspace=$workspace;stateRoot=$stateRoot;components=$selected;port=$Port;installTimeoutSeconds=$InstallTimeoutSeconds;requiredNode='>=24';modelRequests=$false;zemax=$false;globalChanges=$false}
 $plan.npmCacheRoot=$cacheRoot
 $plan.cacheMode=if($NpmCacheRoot){'explicit-cache-reuse-not-a-cold-network-test'}else{'fresh-case-cache'}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 5; return }
@@ -107,7 +107,7 @@ try {
     Write-Receipt
     $nodeVersion = & node.exe -p 'process.versions.node'
     $receipt.nodeVersion = [string]$nodeVersion
-    if ($LASTEXITCODE -ne 0 -or [int]($nodeVersion -split '\.')[0] -ne 24) { throw 'Node.js 24.x is required; no runtime is bundled.' }
+    if ($LASTEXITCODE -ne 0 -or [int]($nodeVersion -split '\.')[0] -lt 24) { throw 'Node.js 24 or newer is required; no runtime is bundled.' }
     if (-not $Port) {
         $reservation = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0)
         try { $reservation.Start(); $Port = $reservation.LocalEndpoint.Port } finally { $reservation.Stop() }
@@ -173,7 +173,7 @@ try {
     # Detailed install/server output stays in private logs. Authentication URLs,
     # cookie headers and raw web exceptions are never copied into the receipt.
     $receipt.failure = @{phase=$receipt.phase;exceptionType=$_.Exception.GetType().Name;message='Validation failed; inspect this case private logs.'}
-    if ($receipt.phase -eq 'prerequisites' -and $receipt.nodeVersion -notmatch '^24\.') { $receipt.failure.message='Node.js 24.x is required; the detected or missing runtime was rejected.' }
+    if ($receipt.phase -eq 'prerequisites') { $receipt.failure.message='Node.js 24 or newer is required; the detected or missing runtime was rejected.' }
     if ($receipt.processFailure.kind -eq 'timeout') { $receipt.failure.message="Step $($receipt.processFailure.step) timed out after $($receipt.processFailure.timeoutSeconds) seconds; inspect private logs." }
 } finally {
     try {

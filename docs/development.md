@@ -30,7 +30,7 @@ pwsh scripts/setup.ps1
 
 正式发放只取构建产物，不压缩整个开发目录。源码、公共资源及许可证和发布许可是不同检查项。
 
-开发资源准备使用用户中心分发器的白名单读取能力，只写Git忽略的本机参考包，不分发宿主角色/hook或修改中心。当前全局Node若不是24.x，请在该终端选择已安装的Node24；不要修改全局Node来适配单个项目。
+开发资源准备使用用户中心分发器的白名单读取能力，只写Git忽略的本机参考包，不分发宿主角色/hook或修改中心。Node要求>=24，不设主版本上限；本机24与26分别记录验证结果，不为本项目改全局Node。
 
 ## 可重复安装验收
 
@@ -55,13 +55,13 @@ pwsh scripts/setup.ps1
 
 ### 日常一键启动源码版（当前推荐）
 
-在资源管理器打开 E:/Proj-2026-N06_optDSH-dev，双击根目录的启动DSH.cmd即可。当前开发机的忽略配置已准备好：自动选择已有Node24，使用manual-preview/source-home、测试workspace、独立source-state及3380端口，默认只启动core，不需要手填参数。再次双击会复用通过身份和认证检查的现有预览服务并打开浏览器。
+在资源管理器打开 E:/Proj-2026-N06_optDSH-dev，双击根目录的启动DSH.cmd即可。当前开发机的忽略配置已准备好：自动选择本机已配置的Node26（要求>=24），使用manual-preview/source-home、测试workspace、独立source-state及3380端口，默认只启动core，不需要手填参数。再次双击会复用通过身份和认证检查的现有预览服务并打开浏览器。
 
 这是新开发目录的本机配置，不进入发布包，也不改全局PATH或用户.agents。旧目录启动器保持原样。完整光学工作台仍需单独完成光学服务配置，不能把纯平台的一键启动当作全部业务验收。
 
 ### 高级手动参数（排查或切换课题时使用）
 
-打开PowerShell，执行以下命令。本机默认Node26不在当前要求范围，下面只为该终端选择已存在的Node24，不改用户PATH；.runtime/development.json是本机忽略的开发记录。
+打开PowerShell，执行以下命令。本机默认Node26已纳入要求范围，下面读取本机开发配置选择运行时，只影响该终端，不改用户PATH；.runtime/development.json是本机忽略的开发记录。
 
 ```powershell
 Set-Location E:/Proj-2026-N06_optDSH-dev
@@ -84,7 +84,7 @@ $env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
 
 ### 再对比安装包版
 
-保留上面终端的Node24选择，在源码根调用已验证的002安装目录：
+以下002是早先只允许Node24的历史产物，需要Node24；它不代表当前>=24规则。最新薄EXE安装验证见下方发布说明，平时使用源码CMD即可：
 
 ```powershell
 & E:/Proj-2026-N06_optDSH-validation/20261018-workspace-full-002/app/scripts/runtime/open-dsh.ps1 -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/installed-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/installed-state -Port 3382 -Components core
@@ -106,3 +106,5 @@ $env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
 面向小白，推荐开发期保留.cmd，正式发行提供薄EXE启动器；业务/启动编排复用Node CLI，路径、组件和版本等配置外置，避免把业务逻辑编译进EXE。用户已确认采用该方案，实施与验证状态见[薄启动器计划](../.agents/plans/261018-windows-thin-launcher.md)。
 
 开发根目录CMD仍可使用本机已有pwsh；发布EXE/CMD共用Node入口，运行链已适配Windows内置5.1，包括JSON读取、路径和UTF8处理。无需要求普通用户另装7；不能把同机移除pwsh搜索路径的成功当作沙箱或干净Windows成功。
+
+2026-10-18追加Q10：Node>=24，当前源码预览选择本机Node26；旧24仍属Codex独立工具运行时，无需卸载。已完成的旧版本回执不回写。新版构建及EXE入口将按本次版本规则验证。

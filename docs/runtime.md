@@ -13,7 +13,7 @@
 
 ## 首次安装
 
-Windows、Node.js 24、Python 3.12。Zemax功能另需本机OpticStudio和有效ZOS-API；默认Interactive Extension，不自动打开/保存商业模型。
+Windows、Node.js >=24；光学选装Python 3.12+。Zemax功能另需本机OpticStudio和有效ZOS-API；默认Interactive Extension，不自动打开/保存商业模型。
 
 ```powershell
 pwsh scripts/setup.ps1

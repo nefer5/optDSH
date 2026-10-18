@@ -40,7 +40,7 @@ internal static class Launcher {
                 string candidate=Path.Combine(item.Trim('"'),"node.exe");
                 if(File.Exists(candidate)){node=candidate;break;}
             }
-            if(node==null)throw new Exception("Node.js 24.x is required. Install it, or set nodeExecutable in optdsh-launcher.json.");
+            if(node==null)throw new Exception("Node.js 24 or newer is required. Install it, or set nodeExecutable in optdsh-launcher.json.");
             string script=Path.Combine(root,"node_modules","optdsh-bundle","lib","launcher.mjs");
             if(!File.Exists(script))throw new Exception("The installed optDSH launcher module is missing.");
             var command=new StringBuilder(Quote(script));

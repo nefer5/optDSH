@@ -40,7 +40,7 @@ export function launchPlan(args,{cwd=process.cwd(),env=process.env}={}){
 export function runLauncher(args){
  if(args.includes('--help')){console.log('optDSH [start|status|stop] --config <json> [--workspace <folder>] [--no-browser] [--restart]');return 0;}
  if(process.platform!=='win32')throw new Error('This launcher requires Windows');
- if(Number(process.versions.node.split('.')[0])!==24)throw new Error('Install Node.js 24.x or select its nodeExecutable in the external configuration');
+ if(Number(process.versions.node.split('.')[0])<24)throw new Error('Install Node.js 24 or newer or select its nodeExecutable in the external configuration');
  const plan=launchPlan(args);
  const result=spawnSync(plan.shell,plan.args,{cwd:process.cwd(),stdio:'inherit',windowsHide:true,env:{...process.env,PATH:dirname(process.execPath)+';'+process.env.PATH}});
  if(result.error)throw new Error('Windows built-in launcher could not start: '+result.error.message);

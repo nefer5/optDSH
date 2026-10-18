@@ -1,6 +1,6 @@
 # 独立安装、升级与验证
 
-本轮开发分支：`codex/platform-dev`。安装包不携带 Node、Python 或 Zemax。Node 24 是纯平台前置；光学能力另需 Python 3.12+、依赖和独立安装的 Zemax/许可证。未提供离线完整依赖包。
+本轮开发分支：`codex/platform-dev`。安装包不携带 Node、Python 或 Zemax。Node 24+ 是纯平台前置；光学能力另需 Python 3.12+、依赖和独立安装的 Zemax/许可证。未提供离线完整依赖包。
 
 ## 本地产物与安装
 

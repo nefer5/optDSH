@@ -28,7 +28,7 @@ $plan=@{installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;component
 if ($DryRun) { $plan | ConvertTo-Json -Depth 5;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
 $nodeExecutable=(Get-Command node.exe -ErrorAction Stop).Source
-$nodeMajor=[int]((& $nodeExecutable --version).TrimStart('v').Split('.')[0]);if ($nodeMajor -ne 24) { throw 'Install Node.js 24 first' }
+$nodeMajor=[int]((& $nodeExecutable --version).TrimStart('v').Split('.')[0]);if ($nodeMajor -lt 24) { throw 'Install Node.js 24 or newer first' }
 $npmCommand=(Get-Command npm.cmd -ErrorAction Stop).Source
 $npmCli=Join-Path (Split-Path $npmCommand -Parent) 'node_modules/npm/bin/npm-cli.js'
 if (-not (Test-Path -LiteralPath $npmCli -PathType Leaf)) { throw 'The Node.js installation must include npm; its npm-cli.js could not be located.' }

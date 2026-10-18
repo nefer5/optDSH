@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $node = Get-Command node.exe -ErrorAction Stop
 $version = & $node.Source -p 'process.versions.node'
-if ($LASTEXITCODE -ne 0 -or [int]($version -split '\.')[0] -ne 24) { throw 'Install Node.js 24.x before running platform setup.' }
+if ($LASTEXITCODE -ne 0 -or [int]($version -split '\.')[0] -lt 24) { throw 'Install Node.js 24 or newer before running platform setup.' }
 Push-Location $root
 try {
     & npm.cmd ci --no-audit --no-fund

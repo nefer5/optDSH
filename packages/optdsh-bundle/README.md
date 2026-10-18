@@ -1,6 +1,6 @@
 # optDSH bundle
 
-官方 DSH Profile 的产品组装层，保留官方 Agent loop。默认仅启用 core；工作台、画板桥、Forms、专家均为显式可选组件。Node 24 由用户安装；core 不要求 Python、Zemax、AgentCanvas 或私人 Agent 中心。
+官方 DSH Profile 的产品组装层，保留官方 Agent loop。默认仅启用 core；工作台、画板桥、Forms、专家均为显式可选组件。Node 24+ 由用户安装；core 不要求 Python、Zemax、AgentCanvas 或私人 Agent 中心。
 
 `node lib/cli.mjs compose --install-root <app> --home <home> --profile web --workspace <research> --state-root <state> --components core --output <state>/bundle.patch.yml`
 
@@ -10,7 +10,7 @@
 
 ## Windows共用启动入口
 
-发布EXE和CMD使用lib/launcher.mjs，外部optdsh-launcher.json声明schemaVersion、installRoot、home、workspace、profile、stateRoot、port、components及可选nodeExecutable。相对路径按配置文件目录解析；命令行可覆盖。Node24由用户提供。
+发布EXE和CMD使用lib/launcher.mjs，外部optdsh-launcher.json声明schemaVersion、installRoot、home、workspace、profile、stateRoot、port、components及可选nodeExecutable。相对路径按配置文件目录解析；命令行可覆盖。Node>=24由用户提供。
 
 入口支持start/status/stop、--config、--workspace、--home、--profile、--state-root、--port、--components、--no-browser；--restart必须显式指定。Windows生命周期复用内置PowerShell5.1运行的同一套scripts/runtime，不搜索或要求pwsh。只有核心平台启动，不自动启动Zemax、光学服务或画板编辑器。
 
