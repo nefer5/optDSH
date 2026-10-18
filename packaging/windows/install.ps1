@@ -185,6 +185,14 @@ if ($AddToUserPath) {
  Write-Output 'User PATH updated; open a new terminal, then use optdsh from any research directory.'
 }
 $configDir=Join-Path $OptDshHome 'config';New-Item -ItemType Directory -Path $configDir -Force|Out-Null
+$experienceSetup=Join-Path $InstallRoot 'node_modules/optdsh-bundle/lib/experience.mjs'
+if($manifest.experience){
+ $experienceManifest=Join-Path $ReleaseRoot 'experience-manifest.json'
+ if($manifest.experience.file-ne'experience-manifest.json'-or(Get-ReleaseHash $experienceManifest)-ne$manifest.experience.sha256){throw '经验库清单路径或SHA256不匹配。'}
+ if(-not(Test-Path -LiteralPath $experienceSetup)){throw '经验库已随包，但安装助手缺失。'}
+ & $nodeExecutable $experienceSetup $ReleaseRoot $InstallRoot $OptDshHome
+ if($LASTEXITCODE){throw '经验库安装未完成，用户原有内容已保留。'}
+}
 $skillSetup=Join-Path $InstallRoot 'node_modules/optdsh-bundle/lib/managed-skills.mjs'
 if(Test-Path -LiteralPath $skillSetup){
  & $nodeExecutable $skillSetup $InstallRoot $OptDshHome web

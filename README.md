@@ -1,10 +1,10 @@
 # optDSH
 
-当前版本 **v0.2.0-dev.26 · 重构开发版，未正式发布**。基于官方DSH的光学协作平台，保留官方Web、Agent循环与会话，通过可选插件接入画板、光学工作台和专家能力。
+当前版本 **v0.2.0-dev.27 · 重构开发版，未正式发布**。基于官方DSH的光学协作平台，保留官方Web、Agent循环与会话，通过可选插件接入画板、光学工作台和专家能力。
 
 先看[当前架构四视图](docs/architecture/index.html)、[当前状态](planning/STATUS.md)和[剩余工作优先级](planning/ROADMAP.md)。
 
-用户安装包顶层为`安装optDSH.exe`、`使用说明.txt`与`_support/`；双击EXE进入图形向导，无需输入命令。产品Skills与公共专家基线随包；无需复制源码.agents。当前为待人工核验的开发版，安装/验证范围见当前状态。
+用户安装包顶层为`安装optDSH.exe`、`使用说明.txt`与`_support/`；双击EXE进入图形向导，无需输入命令。产品Skills、公共专家基线与经验库随包；无需复制源码.agents。当前为待人工核验的开发版，安装/验证范围见当前状态。
 
 ## 使用与开发
 
@@ -32,4 +32,4 @@
 
 离线验证：`npm test`；版本检查：`npm run version:check`。真实模型、Zemax追迹/保存与tests/live按任务另行授权。Sandbox和公司实机尚未验收，完整重构未全部完成。
 
-源码远程：https://github.com/nefer5/optDSH 。本轮本地提交供审阅；远程推送、正式Release安装包、主分支合并和公开npm按后续决定。
+源码远程：https://github.com/nefer5/optDSH 。本轮已获授权在验证通过后合入主分支、推送源码并发布GitHub开发预览版；实际结果见当前状态。公开npm不在本轮范围。

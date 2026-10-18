@@ -1,8 +1,8 @@
 # 当前状态
 
-2026-10-19；产品 **0.2.0-dev.26**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+2026-10-19；产品 **0.2.0-dev.27**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
 
-本轮目录与Skills收尾：日常源码Home迁入E:/.optdsh-source（3380），validation只保留安装验证。当前人工核验dev.25在validation/当前核验/dev.25（3080），已应用明确记录的Skills组件维护；原dev.25 ZIP不变，新安装逻辑以dev.26发行。源码.dsh/skills、开发Home/skills及安装Home/skills都有5个受管入口，三种会话的官方catalog和正文读取通过。251个根unit与源码Forms/STUDYS夹具已归档回收，后续测试按批次退出；28个旧case归历史记录。详见[路径及验证回执](../docs/verification/source-home-skills-20261019.md)。
+本轮目录与Skills收尾：日常源码Home迁入E:/.optdsh-source（3380），validation只保留安装验证。当前人工核验dev.25在validation/当前核验/dev.25（3080），已应用明确记录的Skills组件维护；原dev.25 ZIP不变，新安装逻辑和经验库以dev.27发行。源码.dsh/skills、开发Home/skills及安装Home/skills都有5个受管入口，三种会话的官方catalog和正文读取通过。251个根unit与源码Forms/STUDYS夹具已归档回收，后续测试按批次退出；28个旧case归历史记录。详见[路径及验证回执](../docs/verification/source-home-skills-20261019.md)。
 
 追加完成：路径选择卸载（课题永久排除）与安装端口自动避让/记录；真实测试程序已回收，6项数据哈希不变。最终dev.25用户包已从顶层EXE完成源码外安装、启动和随包卸载日志验证，保留供人工核验。见[交付回执](../docs/verification/dev25-user-release.md)。
 
@@ -35,6 +35,6 @@
 
 本轮dev.17打包、图形与归档检查结果见[交付回执](../docs/verification/dev17-docs-release.json)。[静默服务回执](../docs/verification/refactor-20261018/workbench-silent-service.json)和[双版本组件说明](../docs/verification/zemax-connection.md)保留原验证范围。
 
-下一步推荐：人工核验dev.25安装与产品资源，再完善升级恢复和可选共享导出；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。本轮本地提交；远程推送、合主分支、正式Release或公开npm按后续决定。
+下一步推荐：人工核验dev.25安装与产品资源，再完善升级恢复和可选共享导出；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。用户已授权验证后合入main、推送及GitHub开发预览Release；实际远程结果将追加记录，公开npm不在本轮范围。
 
 开发预览已显式安装Forms0.4.0，core/画板/工作台/Forms实际ready；保持原模型、插件与用户课题资料。手工验证可从原启动DSH.cmd进入当前会话，对Agent说‘打开Rx默认YAML，仅编辑参数，不连接Zemax’。

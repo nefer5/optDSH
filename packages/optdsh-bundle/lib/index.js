@@ -1,15 +1,17 @@
-import {mkdirSync,writeFileSync,renameSync} from 'node:fs';
+import {mkdirSync,writeFileSync,renameSync,existsSync} from 'node:fs';
 import {dirname,resolve} from 'node:path';
 import {homedir} from 'node:os';
 import {publicBuildInfo} from './version.mjs';
 import {profileComponentState,profileComponentPackages} from './profile-components.mjs';
 import {registerProductSkills} from './product-skills.mjs';
 import {watchManagedSkills} from './managed-skills.mjs';
+import {experienceRoot} from './experience.mjs';
 export const name='optdsh-platform';
 export const inject=['connection'];
 export function apply(ctx,config={}){
  if(ctx.plugin&&config.installRoot)ctx.inject(['skills'],scope=>registerProductSkills(scope,config.installRoot));
  if(config.installRoot&&config.home)ctx.effect(()=>watchManagedSkills(ctx,config),'official Skills paths');
+ if(config.installRoot&&config.home&&ctx.inject){const root=experienceRoot(config);if(existsSync(resolve(root,'README.md')))ctx.inject(['systemPrompt'],scope=>scope.systemPrompt.section({name:'optdsh:experience',order:85,text:`遇到optDSH、光学或Zemax相关问题时，先读经验索引 ${resolve(root,'README.md')}，再按需读相关条目。历史经验有版本与适用边界，不能覆盖当前课题定义或替代真实验证；历史原始run未随发布包提供。`}));}
  const buildInfo=publicBuildInfo(config.buildInfo||{product:'optDSH',version:'unknown',buildId:'unknown'});
  ctx.effect(()=>ctx.connection.fetch.register({path:'/api/optdsh-version',methods:['GET'],requestBody:'buffered',fetch:()=>Response.json({...buildInfo,runningNode:process.version})}),'platform version');
  const stateRoot=resolve(config.stateRoot||resolve(process.env.DSH_HOME||resolve(homedir(),'.optdsh'),'state','web'));

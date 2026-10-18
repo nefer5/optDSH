@@ -97,3 +97,7 @@ CanvasRoot复用已有兼容安装；InstallCanvas＋CanvasInstallRoot安装发�
 ## 工作台Profile安装
 
 选装workbench与canvas使用相同官方机制，两包都不作为app依赖。包装脚本增加Component=workbench，默认canvas保持兼容；主安装器支持两者分别或一起安装，分别回执。工作台不要求Python/画板/Forms，光学执行器后续显式配置。详见[Profile插件](../profile-plugins.md)。
+
+### 经验库的源码、安装和分享位置
+
+源码权威为仓库`.experience/`，由Git同步。dev.27起，发行包携带`.experience/`原文及`experience-manifest.json`；安装时将可分享Markdown校验后复制到`<DSH_HOME>/.experience/`，记录在`Home/config/experience-installation.json`。安装副本保留用户修改与新增，卸载程序时保留。相关产品任务由官方systemPrompt服务提示读取索引，源码指向仓库，安装版指向Home。它不是Skills发现根，也不是AGENTS或专家Preset；原始run、模型、凭据及会话不随库分享。

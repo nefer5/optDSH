@@ -4,7 +4,7 @@
 
 ## 普通用户入口
 
-下载/传递对象是`E:/Proj-2026-N06_optDSH-releases/optDSH-0.2.0-dev.25.zip`（18,250,690字节），解压后只需双击`安装optDSH.exe`。顶层另有`使用说明.txt`和`_support/`；保持三者在一起，用户无需运行命令，也不必进入内部资源目录。
+下载/传递对象是`E:/Proj-2026-N06_optDSH-releases/历史版本/optDSH-0.2.0-dev.25.zip`（18,250,690字节），解压后只需双击`安装optDSH.exe`。顶层另有`使用说明.txt`和`_support/`；保持三者在一起，用户无需运行命令，也不必进入内部资源目录。
 
 EXE为薄.NET启动器，调用Windows内置PowerShell5.1和本机Node打开中文浏览器向导。Node24+为前置，依赖下载需联网；当前不是完整单文件离线安装器。未签名、未公开发布。ZIP SHA256：`599eb0581ad3e3c497779455dfce918fb4937aaeb5d8ab43eadbfb7560ef8bc4`。
 
@@ -23,7 +23,7 @@ EXE为薄.NET启动器，调用Windows内置PowerShell5.1和本机Node打开中�
 ## 人工核验
 
 1. 双击用户包的安装EXE，体验路径和组件选择；如需再次安装，选择新的程序与测试Home，避免与现役Home并行写入。
-2. 已装现场可直接双击`E:/Proj-2026-N06_optDSH-validation/261019-resources/candidate-app/optdsh.exe`。Web中已有外部study可选；使用模型前自行配置账号/API入口，不会从源码现役Home复制凭据。
+2. 已装现场可直接双击`E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/program/optdsh.exe`。Web中已有外部study可选；使用模型前自行配置账号/API入口，不会从源码现役Home复制凭据。
 3. 在模式菜单确认专家；试用产品Skills、参数编辑器和画板。需要真实Zemax时另按连接与研究流程核验。
 4. 双击程序目录`卸载optDSH.exe`核对路径和选项；课题、Home配置/会话和独立Canvas永久保留，选中共享Profile插件会影响共用该Profile的其他安装。
 
@@ -32,3 +32,5 @@ EXE为薄.NET启动器，调用Windows内置PowerShell5.1和本机Node打开中�
 ## 目录归位（2026-10-19）
 
 用户要求复用既有发布区和验证区；新增平行根已归回并回收空壳。原始构建归`E:/Proj-2026-N06_optDSH-releases/0.2.0-dev.25/`，解压用户包归同根`0.2.0-dev.25-user/`，安装现场归`E:/Proj-2026-N06_optDSH-validation/261019-resources/`。ZIP字节与SHA256不变。当前启动配置已修正，迁入后EXE重启/身份/认证HTTP200通过；历史JSON/日志保留执行当时地址，以现场directory-relocation.json及本节映射查找。规则统一见[开发目录规范](../development.md)。
+
+最新目录与维护状态见[源码Home和Skills回执](source-home-skills-20261019.md)；旧记录保留原执行地址。

@@ -1,6 +1,6 @@
 # 日常源码Home、官方Skills与目录整理回执
 
-2026-10-19。按用户确认的路径方案及software-delivery-guardrails实施；机器记录见[JSON](source-home-skills-20261019.json)。本轮不合并分支、不远程推送、不改变全局.agents。
+2026-10-19。按用户确认的路径方案及software-delivery-guardrails实施；机器记录见[JSON](source-home-skills-20261019.json)。全局.agents保持原样；用户后续已授权验证通过后合并、推送并上传开发预览Release，最终结果在本页追加。
 
 ## 用户现在使用的入口
 
@@ -33,7 +33,7 @@
 
 原dev.25 ZIP保持不变，SHA256仍为`599eb0581ad3e3c497779455dfce918fb4937aaeb5d8ab43eadbfb7560ef8bc4`。当前dev.25核验程序通过npm声明的Bundle0.2.0-dev.26、PPT0.2.2维护组件补齐本功能，没有手改node_modules。维护包及哈希在releases/维护组件/20261019-skills-paths，现场回执在home/config/skills-maintenance-20261019.json。
 
-修订后的完整发行使用dev.26；不能承诺重新安装原dev.25 ZIP会自动得到本轮变化。固定构建的最终ZIP/源提交在发布清单中另行记录。
+修订后的完整发行使用dev.27；不能承诺重新安装原dev.25 ZIP会自动得到本轮变化。固定构建的最终ZIP/源提交在发布清单中另行记录。
 
 ## 目录整理与数据保护
 
@@ -46,7 +46,7 @@
 
 ## 分支及STUDYS
 
-本工作树当前只有一个检出分支codex/platform-dev。旧工作树codex/platform-plugin-refactor是其祖先，改动已被包含；main仍是较早祖先，当前重构尚未合入main。仅查明关系，本轮没有执行merge或push。
+本工作树当前只有一个检出分支codex/platform-dev。旧工作树codex/platform-plugin-refactor是其祖先，改动已被包含；main原为较早祖先；用户已授权本轮验证通过后快进合入并推送，完成状态见最终交付段。
 
 当前开发根没有真实STUDYS；此前源码temp/forms-tests中的STUDYS是只读旧路径兼容夹具，现已迁出并收尾。原E:/Proj-2026-N06_optDSH/STUDYS属于保留原现场，没有清理授权，本轮不动。
 
@@ -55,3 +55,9 @@
 完整npm test通过：187项插件、127项安装、11项PPT、142项光学、37项分发、56项架构kit，另有模拟DOM及项目检查。随后调整产品Skill测试批次退出，相关4项复验通过。测试结束根unit为0、临时批次标记为0。
 
 仍待用户人工核验及干净Windows/公司环境；没有进行真实光学分析。本轮数据哈希覆盖有明确边界：活跃运行状态会自然变化，依赖/下载缓存及部分重建目录没有逐文件内容哈希，不将这些检查表述为整盘无变化。
+
+## 经验库交付
+
+.experience的README与两份经验均由Git管理。dev.27导出原文与experience-manifest.json，主清单校验经验清单哈希，安装器逐文件校验后保存到Home/.experience。未修改的受管条目可升级，用户修改或新增保留。安装后的文档链接适配实际程序路径；历史run仅留来源说明。源码使用仓库原文，安装版通过官方systemPrompt服务提供Home索引入口；索引注入不等于模型已实际阅读。
+
+经验库及安装变更完成后，安装组129项与test:quick重新通过；完整回归的其余组沿用同轮未改动代码的通过记录。

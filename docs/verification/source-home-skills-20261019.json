@@ -314,5 +314,41 @@
     "干净Windows/公司环境未验收",
     "全新安装实测为core+光学资源；当前完整dev.25维护现场覆盖5个Skills",
     "原固定dev.25ZIP未修改，修订版使用dev.26"
-  ]
+  ],
+  "dev26Release": {
+    "version": "0.2.0-dev.26",
+    "sourceRevision": "158114376a4ee97c6c0db4e0508d7d00d51022a2",
+    "sourceDirty": false,
+    "zip": "E:\\Proj-2026-N06_optDSH-releases\\optDSH-0.2.0-dev.26.zip",
+    "sha256": "dd399cc6a9e88ef7bcae35004fd20b26bdb6907aaaff8f13cd1f7a400ee30d4e",
+    "bytes": 18274795,
+    "manifestHashesPassed": 15,
+    "skillPaths": {
+      "home": "skills/<name>/SKILL.md",
+      "managedBy": "optdsh-bundle",
+      "userEntries": "preserved"
+    },
+    "components": {
+      "core": "0.2.0-dev.26.1",
+      "workbench": "0.13.5",
+      "canvas": "0.7.1",
+      "forms": "0.4.1",
+      "experts": "0.2.0",
+      "current-info": "0.1.0",
+      "optics-skills": "0.1.1",
+      "ppt": "0.2.2"
+    },
+    "userTopLevel": [
+      "_support",
+      "使用说明.txt",
+      "安装optDSH.exe"
+    ]
+  },
+  "finalPaths": {
+    "dailyHome": "E:/.optdsh-source",
+    "dailyState": "E:/.optdsh-source/state/web",
+    "installedProgram": "E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/program",
+    "installedHome": "E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/home",
+    "historicalDev25Zip": "E:/Proj-2026-N06_optDSH-releases/历史版本/optDSH-0.2.0-dev.25.zip"
+  }
 }

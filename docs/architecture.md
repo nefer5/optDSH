@@ -1,6 +1,6 @@
 # 当前架构与目录
 
-当前产品开发版 **0.2.0-dev.26**；官方DSH固定 **0.2.1-rc.2**。日常源码Home已独立至E:/.optdsh-source，产品标准Skills入口已补齐。图源各有固定提交范围，最新路径说明以本页为准。交互图见[架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
+当前产品开发版 **0.2.0-dev.27**；官方DSH固定 **0.2.1-rc.2**。日常源码Home已独立至E:/.optdsh-source，产品标准Skills入口已补齐。图源各有固定提交范围，最新路径说明以本页为准。交互图见[架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
 ## 图怎么看
 
@@ -64,6 +64,7 @@ optDSH源码/
 <InstallRoot>/                 # 版本化程序：官方DSH、Bundle、运行脚本
   node_modules/               # 官方DSH及程序依赖；选装包也可能位于Home的Profile
 ~/.optdsh/                     # 默认独立Home；可另选，不能放入InstallRoot
+  .experience/                # dev.27起随包安装的经验Markdown；用户修改保留
   AGENTS.md                   # 可选：本产品范围的用户规则
   skills/<技能>/SKILL.md       # 安装器提供启用的产品入口；用户技能也可放这里
   profiles/web/                # 官方Profile的包、bundle选择和用户patch
@@ -150,3 +151,7 @@ optDSH源码/
 画板桥/工作台/Forms/Experts通过官方Profile安装、启停、升级和卸载；源码改动要显式打包升级安装副本。光学后台由Web显式启动，Windows使用同环境pythonw静默运行，状态和脱敏日志在高级诊断；打开/轮询不连接Zemax，保存独立授权。
 
 [Profile操作](profile-plugins.md) · [安装与数据](installation/README.md) · [实测摘要](../planning/STATUS.md) · [已确认决定](decisions.md) · [历史归档](archive/README.md)
+
+### 经验库的源码、安装和分享位置
+
+源码权威为仓库`.experience/`，由Git同步。dev.27起，发行包携带`.experience/`原文及`experience-manifest.json`；安装时将可分享Markdown校验后复制到`<DSH_HOME>/.experience/`，记录在`Home/config/experience-installation.json`。安装副本保留用户修改与新增，卸载程序时保留。相关产品任务由官方systemPrompt服务提示读取索引，源码指向仓库，安装版指向Home。它不是Skills发现根，也不是AGENTS或专家Preset；原始run、模型、凭据及会话不随库分享。

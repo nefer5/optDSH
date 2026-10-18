@@ -80,6 +80,10 @@ npm run release:local -- <新产物目录> <可选optics-wheel> <可选AgentCanv
 
 ## GitHub放什么
 
-Git推送提交和分支，不上传整个开发文件夹。node_modules/.venv/私人Home/模型/日志/真实课题不进入提交。当前源码远程为https://github.com/nefer5/optDSH.git；本机目录改名不改变它。先推codex/platform-dev供备份与审阅，再按后续决定合入主分支。正式安装包另作GitHub Release附件，不把整个releases目录放进源码树。
+Git推送提交和分支，不上传整个开发文件夹。node_modules/.venv/私人Home/模型/日志/真实课题不进入提交。当前源码远程为https://github.com/nefer5/optDSH.git；本机目录改名不改变它。用户已授权本轮验证通过后快进合入main，并推送main、开发分支与固定构建标签。正式安装包另作GitHub Release附件，不把整个releases目录放进源码树。
 
 本轮代码与文档已本地提交；是否推送源码、推送版本标签或发布Release分别按用户授权执行，不把询问操作方法当作上传授权。具体命令与标签规则见[版本与发布](versioning.md)。
+
+### 经验库的源码、安装和分享位置
+
+源码权威为仓库`.experience/`，由Git同步。dev.27起，发行包携带`.experience/`原文及`experience-manifest.json`；安装时将可分享Markdown校验后复制到`<DSH_HOME>/.experience/`，记录在`Home/config/experience-installation.json`。安装副本保留用户修改与新增，卸载程序时保留。相关产品任务由官方systemPrompt服务提示读取索引，源码指向仓库，安装版指向Home。它不是Skills发现根，也不是AGENTS或专家Preset；原始run、模型、凭据及会话不随库分享。
