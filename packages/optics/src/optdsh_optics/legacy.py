@@ -14,7 +14,10 @@ def capture_legacy(expected_file, instance, probe, target):
     target=validate_target(target)
     if target['family'] not in ('zemax18','zemax19','zemaxLegacy'):
         raise OpticsError('TARGET_VERSION_MISMATCH','旧版只读桥仅支持 Zemax 18/19')
-    executable=Path(os.environ.get('WINDIR','C:/Windows'))/'System32/WindowsPowerShell/v1.0/powershell.exe'
+    windows_root=os.environ.get('WINDIR') or os.environ.get('SystemRoot')
+    if not windows_root:
+        raise OpticsError('DEPENDENCY_MISSING','旧版适配器需要Windows系统的PowerShell 5.1')
+    executable=Path(windows_root)/'System32/WindowsPowerShell/v1.0/powershell.exe'
     script=Path(__file__).with_suffix('.ps1')
     if not executable.is_file() or not script.is_file():
         raise OpticsError('DEPENDENCY_MISSING','缺少 Windows PowerShell 5.1 或包内只读桥')

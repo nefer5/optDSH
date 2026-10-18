@@ -72,7 +72,8 @@ class Legacy19Tests(unittest.TestCase):
     def test_invalid_bridge_response_is_not_success(self):
         from optdsh_optics.legacy import capture_legacy
         from types import SimpleNamespace
-        with patch('optdsh_optics.legacy.validate_target',return_value={'family':'zemax19'}), \
+        with patch.dict(os.environ,{'WINDIR':'test-windows'}), \
+             patch('optdsh_optics.legacy.validate_target',return_value={'family':'zemax19'}), \
              patch('pathlib.Path.is_file',return_value=True), \
              patch('subprocess.run',return_value=SimpleNamespace(stdout='open error',returncode=0)):
             with self.assertRaises(OpticsError) as caught:
