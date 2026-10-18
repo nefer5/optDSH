@@ -37,3 +37,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 安装推荐市场组件前执行 `install-profile-plugins.ps1` 预览；`-Names` 指定选择，`-Apply`才调用官方profile包管理器。disabled项保留不启用，旧版豁免不继承；新版本兼容拒绝必须先处理。11项快照不等于已全部验证。
 
 全新Profile单独安装自有插件时，先通过官方profile包管理器显式安装 `@deepseek-ai/cordis@4.0.5`。实际独立工作台安装曾缺此peer而被预检关闭，补齐后通过；现有app依赖成功不能代替Profile安装验证。
+
+## 安装时自动装市场与推荐插件
+
+主安装器支持-PluginPreset none、market、recommended。默认none保留纯平台；market只装dshmarket；recommended按包内plugins.snapshot.json安装当前推荐的8项（包含市场）。首次选择后无需逐个搜索。图形安装向导尚未实现，本轮提供自动安装后端。
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging/windows/install.ps1 -ReleaseRoot <发布目录> -InstallRoot <新程序目录> -Home <用户资料目录> -Workspace <课题目录> -PluginPreset recommended
+```
+
+推荐清单及其SHA256属于发布版本，不追随开发机所有临时安装项。联网下载使用产品自带pnpm及官方DSH Profile流程，不复制开发机node_modules、账号、密钥和会话。原禁用项不自动开启，用户已有版本和启用状态不被推荐清单覆盖，额外插件不删除。
+
+community-plugins-receipt.json区分installed、existing-preserved、failed与not-attempted；安装成功不等于运行验证成功。若中途失败，总安装器报未完成，保留已装程序、用户Home和.runtime/community-install.log，安装回执带coreInstalled和communityPluginStatus供排查。升级始终选择既有Home并先结束其活动写入；不在每次平台启动时重装推荐项。

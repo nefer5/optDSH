@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory)][string]$ReleaseRoot,
     [Parameter(Mandatory)][string]$ValidationRoot,
     [string[]]$Components = @('core'),
+    [ValidateSet('none','market','recommended')][string]$PluginPreset='none',
     [string]$NpmCacheRoot,
     [ValidateRange(0,65535)][int]$Port = 0,
     [ValidateRange(10,3600)][int]$InstallTimeoutSeconds = 600,
@@ -95,7 +96,7 @@ $app = Join-Path $ValidationRoot 'app'; $caseHome = Join-Path $ValidationRoot 'h
 $cacheRoot = if ($NpmCacheRoot) { Normalize-Root $NpmCacheRoot } else { Join-Path $ValidationRoot 'npm-cache' }
 if ((Test-Overlap $cacheRoot $sourceRoot) -or (Test-Overlap $cacheRoot $ReleaseRoot)) { throw 'npm cache must be independent of source and release directories.' }
 Assert-PlainAncestors $cacheRoot
-$plan = [ordered]@{schemaVersion=1;releaseRoot=$ReleaseRoot;validationRoot=$ValidationRoot;installRoot=$app;home=$caseHome;workspace=$workspace;stateRoot=$stateRoot;components=$selected;port=$Port;installTimeoutSeconds=$InstallTimeoutSeconds;requiredNode='>=24';modelRequests=$false;zemax=$false;globalChanges=$false}
+$plan = [ordered]@{schemaVersion=1;releaseRoot=$ReleaseRoot;validationRoot=$ValidationRoot;installRoot=$app;home=$caseHome;workspace=$workspace;stateRoot=$stateRoot;components=$selected;pluginPreset=$PluginPreset;port=$Port;installTimeoutSeconds=$InstallTimeoutSeconds;requiredNode='>=24';modelRequests=$false;zemax=$false;globalChanges=$false}
 $plan.npmCacheRoot=$cacheRoot
 $plan.cacheMode=if($NpmCacheRoot){'explicit-cache-reuse-not-a-cold-network-test'}else{'fresh-case-cache'}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 5; return }
@@ -122,7 +123,9 @@ try {
         [Environment]::SetEnvironmentVariable($name,$value,'Process')
     }
     $receipt.phase='install'; Write-Receipt
-    Invoke-ValidationProcess $installer @('-ReleaseRoot',$ReleaseRoot,'-InstallRoot',$app,'-Home',$caseHome,'-Workspace',$workspace,'-Components',($selected -join ',')) 'install' $InstallTimeoutSeconds
+    $installArguments=@('-ReleaseRoot',$ReleaseRoot,'-InstallRoot',$app,'-Home',$caseHome,'-Workspace',$workspace,'-Components',($selected -join ','))
+    if($PluginPreset -ne 'none'){$installArguments+=@('-PluginPreset',$PluginPreset)}
+    Invoke-ValidationProcess $installer $installArguments 'install' $InstallTimeoutSeconds
     $receipt.checks += 'release-installer-completed'
     $receipt.phase='start'; Write-Receipt
     $runtime = Join-Path $app 'scripts/runtime'
@@ -155,7 +158,26 @@ try {
     if ($platform.core -ne 'ready' -or $missing.Count) { throw 'Selected components were not ready before the deadline.' }
     $receipt.components = @(@{id='core';status='ready'}) + @($platform.components | Where-Object { $_.id -in $selected } | ForEach-Object { @{id=$_.id;status=$_.status} })
     $receipt.checks += 'selected-components-ready'
+    $communityClients=@()
+    if($PluginPreset -ne 'none'){
+        $communityReceipt=Get-Content -LiteralPath (Join-Path $app 'community-plugins-receipt.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+        if($communityReceipt.status -ne 'installed-or-existing-preserved'){throw 'Community plugin installation was incomplete.'}
+        $request=@{type='client-request';rpcId=([guid]::NewGuid().ToString());method='pluginManager/listPlugins';payload=@{args=@{}}}|ConvertTo-Json -Depth 6
+        $reply=Invoke-RestMethod -Uri ([uri]::new($baseUri,'api/pluginManager/listPlugins')) -Method Post -Body $request -ContentType application/json -WebSession $caseSession -TimeoutSec 10
+        if(-not $reply.result.ok){throw 'Community plugin inventory was unavailable.'}
+        $receipt.communityPlugins=@()
+        foreach($item in $communityReceipt.plugins){
+            $active=@($reply.result.value | Where-Object { $_.moduleName -and $_.moduleName.Contains($item.name) -and $_.enabled -and $_.fiberPhase -eq 'active' })
+            if(-not $active.Count){throw ('Community plugin is not active: '+$item.name)}
+            $receipt.communityPlugins+=@{name=$item.name;version=$item.requestedVersion;state='active'}
+            $communityClients+=$item.name
+        }
+        $market=Invoke-RestMethod -Uri ([uri]::new($baseUri,'dsh-market/status')) -WebSession $caseSession -TimeoutSec 15
+        if(-not $market.pnpm){throw 'Marketplace package manager probe failed.'}
+        $receipt.checks+='recommended-profile-active-and-market-pnpm'
+    }
     $expectedClients = @(); if ('workbench' -in $selected) { $expectedClients += 'optdsh-workbench' }; if ('canvas' -in $selected) { $expectedClients += 'optdsh-agent-canvas' }
+    $expectedClients+=@($communityClients)
     if ($expectedClients.Count) {
         $receipt.phase='client-graph'; Write-Receipt
         $match = [regex]::Match($index.Content,'globalThis\["__DSH_BOOT__"\]\s*=\s*(\{[\s\S]*?\})\s*;?\s*</script>')

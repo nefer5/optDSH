@@ -1,6 +1,12 @@
 [CmdletBinding()]
-param([string]$ReleaseRoot=(Split-Path (Split-Path $PSScriptRoot -Parent) -Parent), [Parameter(Mandatory)][string]$InstallRoot, [Alias('Home')][string]$OptDshHome=(Join-Path $env:USERPROFILE '.optdsh'), [string]$Workspace=(Get-Location).Path, [string[]]$Components=@('core'), [switch]$AddToUserPath, [switch]$DryRun)
+param([string]$ReleaseRoot=(Split-Path (Split-Path $PSScriptRoot -Parent) -Parent), [Parameter(Mandatory)][string]$InstallRoot, [Alias('Home')][string]$OptDshHome=(Join-Path $env:USERPROFILE '.optdsh'), [string]$Workspace=(Get-Location).Path, [string[]]$Components=@('core'), [ValidateSet('none','market','recommended')][string]$PluginPreset='none', [switch]$AddToUserPath, [switch]$DryRun)
 $ErrorActionPreference='Stop'
+function Get-ReleaseHash([string]$Path) {
+ $stream=[IO.File]::OpenRead($Path)
+ $sha=[Security.Cryptography.SHA256]::Create()
+ try { return [BitConverter]::ToString($sha.ComputeHash($stream)).Replace('-','').ToLowerInvariant() }
+ finally { $sha.Dispose();$stream.Dispose() }
+}
 $ReleaseRoot=[IO.Path]::GetFullPath($ReleaseRoot)
 $InstallRoot=[IO.Path]::GetFullPath($InstallRoot)
 $OptDshHome=[IO.Path]::GetFullPath($OptDshHome)
@@ -15,23 +21,36 @@ foreach ($id in $selected) {
  if ($rows.Count -ne 1) { throw "Unknown/duplicate component: $id" }
  $item=$rows[0];$path=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $item.file))
  if (-not $path.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Artifact escapes release root' }
- if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $item.sha256) { throw "Artifact hash mismatch: $id" }
+ if ((Get-ReleaseHash $path) -ne $item.sha256) { throw "Artifact hash mismatch: $id" }
  $artifacts+=@{item=$item; path=$path}
 }
 $launcherArtifact=$null
 if ($manifest.launcher) {
  $launcherArtifact=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.launcher.file))
  if (-not $launcherArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Launcher artifact escapes release root' }
- if ((Get-FileHash -LiteralPath $launcherArtifact -Algorithm SHA256).Hash -ne $manifest.launcher.sha256) { throw 'Launcher artifact hash mismatch' }
+ if ((Get-ReleaseHash $launcherArtifact) -ne $manifest.launcher.sha256) { throw 'Launcher artifact hash mismatch' }
 }
 $buildInfoArtifact=$null
 if ($manifest.buildInfo) {
  $buildInfoArtifact=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.buildInfo.file))
  if (-not $buildInfoArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Build identity escapes release root' }
- if ((Get-FileHash -LiteralPath $buildInfoArtifact -Algorithm SHA256).Hash -ne $manifest.buildInfo.sha256) { throw 'Build identity hash mismatch' }
+ if ((Get-ReleaseHash $buildInfoArtifact) -ne $manifest.buildInfo.sha256) { throw 'Build identity hash mismatch' }
 }
-$plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;userPathRegistration=[bool]$AddToUserPath}
-if ($DryRun) { $plan | ConvertTo-Json -Depth 5;return }
+$profilePluginScript=Join-Path $ReleaseRoot 'packaging/windows/install-profile-plugins.ps1'
+$pluginSnapshot=Join-Path $ReleaseRoot 'packaging/windows/plugins.snapshot.json'
+$community=@()
+if ($PluginPreset -ne 'none') {
+ if (-not $manifest.profilePlugins -or $manifest.profilePlugins.file -ne 'packaging/windows/plugins.snapshot.json') { throw 'Release has no verified plugin recommendation manifest' }
+ if ((Get-ReleaseHash $pluginSnapshot) -ne $manifest.profilePlugins.sha256) { throw 'Plugin recommendation hash mismatch' }
+ $snapshot=Get-Content -LiteralPath $pluginSnapshot -Raw -Encoding UTF8 | ConvertFrom-Json
+ if ($snapshot.targetDsh -ne $manifest.dshVersion) { throw 'Plugin recommendations target a different DSH version' }
+ $selectedCommunity=@(if($PluginPreset -eq 'market'){$snapshot.plugins|Where-Object { $_.name -eq 'dshmarket' -and $_.enabled }}else{$snapshot.plugins|Where-Object enabled})
+ if (-not $selectedCommunity.Count -or @($selectedCommunity|Where-Object name -eq 'dshmarket').Count -ne 1) { throw 'Selected plugin preset must contain the marketplace exactly once' }
+ $community=& $profilePluginScript -InstallRoot $InstallRoot -Home $OptDshHome -Snapshot $pluginSnapshot -Names ($selectedCommunity.name -join ',') | ConvertFrom-Json
+ $community=@($community)
+}
+$plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;pluginPreset=$PluginPreset;communityPlugins=$community;communityPluginStatus='not-selected';userPathRegistration=[bool]$AddToUserPath}
+if ($DryRun) { $plan | ConvertTo-Json -Depth 8;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
 $nodeExecutable=(Get-Command node.exe -ErrorAction Stop).Source
 $nodeMajor=[int]((& $nodeExecutable --version).TrimStart('v').Split('.')[0]);if ($nodeMajor -lt 24) { throw 'Install Node.js 24 or newer first' }
@@ -43,7 +62,7 @@ $dependencies=@{'@deepseek-ai/dsh'=$manifest.dshVersion}
 foreach ($a in $artifacts) { $dependencies[$a.item.name]='file:'+($a.path -replace '\\','/') }
 $package=@{name='optdsh-user-installation';private=$true;type='module';dependencies=$dependencies}
 $package | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'package.json') -Encoding utf8
-$plan | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
+$plan | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
 Push-Location $InstallRoot
 try { & $nodeExecutable $npmCli install --no-audit --no-fund;if ($LASTEXITCODE) { throw 'Dependency installation failed; receipt retained for diagnosis' } } finally { Pop-Location }
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'scripts') -Destination $InstallRoot -Recurse
@@ -65,6 +84,20 @@ if (-not $OptDshHome) { $OptDshHome=$settings.home }
 node "%~dp0node_modules\optdsh-bundle\lib\launcher.mjs" --config "%~dp0optdsh-launcher.json" %*
 exit /b %errorlevel%
 '@ | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh.cmd') -Encoding ascii
+if ($PluginPreset -ne 'none') {
+ $runtimeLog=Join-Path $InstallRoot '.runtime'
+ New-Item -ItemType Directory -Path $runtimeLog -Force|Out-Null
+ $communityReceipt=Join-Path $InstallRoot 'community-plugins-receipt.json'
+ try {
+  & $profilePluginScript -InstallRoot $InstallRoot -Home $OptDshHome -Snapshot $pluginSnapshot -Names ($selectedCommunity.name -join ',') -ReceiptPath $communityReceipt -PreserveExisting -Apply *> (Join-Path $runtimeLog 'community-install.log')
+  $plan.communityPluginStatus='installed-or-existing-preserved'
+ } catch {
+  $plan.communityPluginStatus='incomplete';$plan.coreInstalled=$true
+  $plan | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
+  throw 'The platform is installed, but the selected community plugin preset is incomplete. The program and Home were retained; inspect its receipt and private runtime log.'
+ }
+ $plan | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $InstallRoot 'installation-receipt.json') -Encoding utf8
+}
 if ($AddToUserPath) {
  $previousPath=[Environment]::GetEnvironmentVariable('Path','User')
  $entries=@($previousPath -split ';' | Where-Object { $_ })
