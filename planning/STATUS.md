@@ -1,5 +1,7 @@
 # 当前状态
 
+2026-10-18 0.2.0-dev.8收尾：修复首次Profile创建stderr提示被PS5父重定向误判失败；fresh安装/运行身份通过。Canvas桥0.6.0已迁入日常Home/Profile，官方显示profile且removable；app不带同名包。官方启停、升级保留用户off、卸载重启无回流与画板保护均通过；开发源码修改须显式pack/Upgrade，普通重启不重装。其他自有组件尚待逐项统一，见[生命周期证据](../docs/refactor/2026-10-18/evidence/canvas-profile-dev8.json)。
+
 2026-10-18 0.2.0-dev.7：Canvas桥0.6.0统一官方Profile生命周期，源码留plugins但不作为app隐式workspace依赖；安装器走官方CLI，启动器不insert/force启用/源码回流。真实Profile停用重启、保留停用升级、启用与卸载重启无回流及画板哈希保护通过；完整回归及专项通过。日常预览与独立发行迁入正在收尾。操作与边界见[Profile插件](../docs/profile-plugins.md)。
 
 2026-10-18 0.2.0-dev.6收尾：Windows安装命名传参及首次后台启动控制台继承已修复；最终19项定向通过。dev.5总安装器全新Canvas安装通过，dev.6独立发行安装复用及运行构建身份通过，缺编辑器降级API实测core ready/canvas unavailable。日常预览Home保留模型和插件、启用core+canvas并登记外部2T2R；编辑器来自独立本地包，不依赖旧optDSH或N05源码目录。原4173/旧现场未动。见[验收回执](../docs/refactor/2026-10-18/evidence/canvas-installation-dev6.json)。

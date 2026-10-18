@@ -8,6 +8,8 @@
 
 **日常双击根目录 `启动光学工作台.cmd` 或 `启动DSH.cmd`；修改源码后用 `重启DSH.cmd`。启动DSH复用已有进程，重启DSH核验后关闭再拉起。** 首次安装：`pwsh scripts/setup.ps1`。具体前置条件见[运行指南](docs/runtime.md)。
 
+画板桥源码修改后须先显式打包并升级Profile中的安装副本，普通重启不会覆盖插件版本或启停选择，见[Profile插件开发步骤](docs/profile-plugins.md)。
+
 光学模块使用本项目Python环境和连接代码；画板编辑器独立安装，通过Home连接配置接入，支持已有安装或本地预构建包新装。见[画板安装接入](docs/refactor/2026-10-18/canvas-installation.md)。
 
 | 入口 | 内容 |

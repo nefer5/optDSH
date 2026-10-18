@@ -52,3 +52,7 @@ Install遇到既有依赖保持原版本/开关，不重复默认启用。Upgrad
 官方顺序：Bundle默认 → Profile覆盖 → Home覆盖 → 启动覆盖。Canvas的产品启动覆盖不insert/enable或重写用户配置，只在已启用但编辑器不兼容时隔离对应桥，core继续。Profile显式editorUrl优先于Home连接默认；对应外部服务由该配置的使用者管理。
 
 Bundle推荐不等于强制依赖或周期重放。Profile是包、选中Bundle与用户patch的唯一事实源；平台状态接口只是回读，不是另一套开关。具体画板安装见[编辑器安装说明](refactor/2026-10-18/canvas-installation.md)。
+
+## 本轮验收
+
+最终dev.8本地测试包与日常预览已验证；Canvas桥0.6.0在官方清单中availability=profile、removable=true，app无同名包。官方entry/Bundle停用、重启保留、停服升级测试夹具后仍off、再启用与卸载重启全部通过；画板哈希不变。PS5首次Profile stderr提示按退出码处理，日志保留。无真实模型或Zemax调用，缓存复用，未推送/npm公开。证据：[生命周期回执](refactor/2026-10-18/evidence/canvas-profile-dev8.json)。

@@ -1,0 +1,177 @@
+{
+  "status": "passed",
+  "productVersion": "0.2.0-dev.8",
+  "bridgeVersion": "0.6.0",
+  "sourceCommit": "6599a304ca4fe62aff7d74736330035cf27a3944",
+  "firstRefactorCommit": "10ef5e34c614d558e2938662496110a275e9604b",
+  "profileLifecycle": [
+    {
+      "phase": "installed",
+      "platform": {
+        "id": "canvas",
+        "status": "ready",
+        "scopeState": 2
+      },
+      "inventory": {
+        "name": "optdsh-agent-canvas",
+        "availability": "profile",
+        "version": "0.6.0",
+        "installed": true,
+        "enabled": true,
+        "removable": true
+      },
+      "entry": {
+        "entryId": "include:optdsh-agent-canvas",
+        "moduleName": "optdsh-agent-canvas",
+        "enabled": true,
+        "fiberPhase": "active"
+      }
+    },
+    {
+      "phase": "entry-disabled-after-restart",
+      "platform": {
+        "id": "canvas",
+        "status": "disabled"
+      },
+      "editorMustRemainStopped": true,
+      "officialApplication": "applied"
+    },
+    {
+      "phase": "entry-enabled-official",
+      "officialApplication": "applied"
+    },
+    {
+      "phase": "upgrade-preserved-off",
+      "platform": {
+        "id": "canvas",
+        "status": "unselected"
+      },
+      "packageVersion": "0.6.1",
+      "officialApplication": "applied"
+    },
+    {
+      "phase": "upgraded-and-enabled",
+      "entry": {
+        "entryId": "include:optdsh-agent-canvas",
+        "moduleName": "optdsh-agent-canvas",
+        "enabled": true,
+        "fiberPhase": "active"
+      }
+    },
+    {
+      "phase": "uninstalled-restarted",
+      "platform": {
+        "id": "canvas",
+        "status": "not-installed"
+      },
+      "boardHashUnchanged": true,
+      "keepFile": "project data retained",
+      "officialApplication": "applied"
+    }
+  ],
+  "upgradeFixture": "0.6.1 is isolated test metadata only, not a published version",
+  "installed": {
+    "status": "passed",
+    "platform": {
+      "core": "ready",
+      "components": [
+        {
+          "id": "canvas",
+          "status": "ready",
+          "scopeState": 2
+        }
+      ]
+    },
+    "version": {
+      "schemaVersion": 1,
+      "product": "optDSH",
+      "version": "0.2.0-dev.8",
+      "dshVersion": "0.2.1-rc.2",
+      "channel": "dev",
+      "buildMode": "package",
+      "buildId": "0.2.0-dev.8-2026-10-18T09-45-42-516Z-6599a304ca4f",
+      "builtAt": "2026-10-18T09:45:42.516Z",
+      "builtWithNode": "v26.12.0",
+      "sourceRevision": "6599a304ca4fe62aff7d74736330035cf27a3944",
+      "sourceDirty": false,
+      "runningNode": "v26.12.0"
+    },
+    "canvas": {
+      "name": "optdsh-agent-canvas",
+      "availability": "profile",
+      "version": "0.6.0",
+      "removable": true,
+      "installed": true,
+      "enabled": true
+    },
+    "appCanvasAbsent": true,
+    "profileCanvasPresent": true,
+    "modelRequests": false
+  },
+  "preview": {
+    "status": "passed",
+    "platform": {
+      "core": "ready",
+      "components": [
+        {
+          "id": "canvas",
+          "status": "ready",
+          "scopeState": 2
+        }
+      ]
+    },
+    "version": {
+      "schemaVersion": 1,
+      "product": "optDSH",
+      "version": "0.2.0-dev.7",
+      "channel": "dev",
+      "buildMode": "source",
+      "buildId": "source-10ef5e34c614",
+      "sourceRevision": "10ef5e34c614d558e2938662496110a275e9604b",
+      "sourceDirty": false,
+      "runningNode": "v26.12.0"
+    },
+    "canvas": {
+      "name": "optdsh-agent-canvas",
+      "availability": "profile",
+      "version": "0.6.0",
+      "removable": true,
+      "installed": true,
+      "enabled": true
+    },
+    "appCanvasAbsent": true,
+    "profileCanvasPresent": true,
+    "modelRequests": false
+  },
+  "credentialFileUnchangedDuringPreviewMigration": true,
+  "tests": {
+    "fullRegression": {
+      "plugins": 147,
+      "installation": 81,
+      "ppt": 11,
+      "optics": 123,
+      "distribution": 37,
+      "architectureKit": 56
+    },
+    "finalDirected": 20,
+    "stderrExitCodeRegression": 7
+  },
+  "data": {
+    "workspaceBoardsPreserved": true,
+    "independentEditorNotUninstalled": true,
+    "oldPlatformAnd4173Unchanged": true,
+    "globalAgentsAndPathUnchanged": true
+  },
+  "limitations": [
+    "No model requests, Zemax, sandbox or company validation",
+    "Explicit cache reuse; not cold network",
+    "Other optional components still use transitional assembly",
+    "Source changes require explicit pack and Profile upgrade"
+  ],
+  "publication": {
+    "pushed": false,
+    "npmPublished": false,
+    "localOnly": true
+  },
+  "candidateHistory": "dev.7 preserved; first fresh PS5 redirected stderr notice was treated as failure, fixed and independently reinstalled as dev.8"
+}

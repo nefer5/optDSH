@@ -30,11 +30,13 @@ flowchart TD
 - [x] P1 核对官方包管理/有效配置API；明确源码与安装目录。
 - [x] P2 Canvas Profile状态/装配/配置实现，去app副本及components强启用。
 - [x] P3 总安装器和显式升级入口，保留已有停用与用户数据。
-- [ ] P4 夹具与完整回归，真实Profile启停/升级/卸载/重启无回流、无模型请求。
-- [ ] P5 日常预览迁入Profile、独立测试包、文档/日志、本地提交，无推送。
+- [x] P4 夹具与完整回归，真实Profile启停/升级/卸载/重启无回流、无模型请求。
+- [x] P5 日常预览迁入Profile、独立测试包、文档/日志、本地提交，无推送。
 
 ## 约束
 
 只先改画板桥生命周期；其他自有插件列为后续，不谎报全量已统一。独立编辑器与Profile桥不同生命周期；停用桥不杀共享编辑器。旧OptDSH/全局.agents不改，研究画板不移动/删除。不支持在线原位升级时用官方停服CLI add新tgz并验证用户停用不被重置。旧运行包、许可证与正式公开发布不在本轮。
 
 P4实测：官方listBundles显示availability=profile/removable=true；entry启停和bundle停用、停服升级0.6.1测试夹具、卸载均走官方接口，操作application=applied。disabled重启仍off且不拉编辑器，升级后Bundle未选及单entry disabled均保留，卸载重启后not-installed；课题文件哈希不变。无模型请求。旧config/dsh.local-policy的Canvas源码挂载也已移除。完整回归147插件/81安装/11PPT/123光学/37分发/56架构kit通过；最终补充20项定向通过。
+
+最终：dev.8本地测试包fresh Profile安装/运行/版本身份通过，app无Canvas且Profile中availability=profile/removable=true；PS5 stderr初始化提示兼容已修复，7项专测通过。日常预览已迁入同一Home的Profile，桥0.6.0 active，凭据文件校验未变；旧平台/独立编辑器/课题资料不迁移。dev.7候选保留不覆盖，源提交6599a30，完整证据docs/refactor/2026-10-18/evidence/canvas-profile-dev8.json。
