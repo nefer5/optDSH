@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-18",
+  "productVersion": "0.2.0-dev.14",
+  "workbenchVersion": "0.13.0",
+  "scope": "已确认AgentCanvas无标题三组外框、单一连接窗口，不改光学包或后端接口",
+  "header": {"groups":3,"visibleGroupTitles":false,"operationSettingsRetained":true,"dailyModelActions":["连接 / 切换模型","保存模型","更新模型视图"],"heightCssPx":40},
+  "statusLine": {"actions":["详情"],"heightCssPx":35.33,"serviceAtReadback":"stopped"},
+  "connection": {"singleDialog":true,"pythonAutomatic":true,"versionGroups":["2021及以前","2022起"],"advancedCollapsedByDefault":true,"candidateSaveInAdvanced":true},
+  "behavior": "仅显式探测或高级启动准备配置/服务；打开和轮询只读；ready复用；失败不probe；版本/实例变更使候选失效；确认连接不保存模型",
+  "verification": {"workbenchTestsPassed":77,"actualModuleSmoke":"passed with simulated APIs; cold prepare, ready reuse, dependency failure, candidate invalidation and explicit bind without model save","realBrowser":"Tabbit actual page; 1920x1080 dark, 1440x900 light, 1280x720 dark inspected","singleHeaderRow":true,"horizontalOverflow":false,"dialogAt1280x720CssHeight":481.59,"advancedScrollToConfirmVerified":true},
+  "runtime": {"pageHttp":200,"profileVersion":"0.13.0","backendRecordUnchanged":true,"sourceModelFileHashUnchanged":true,"realProbeInvoked":false,"realModelSaveInvoked":false},
+  "pushed":false,
+  "publicRelease":false,
+  "sandbox":"用户暂缓"
+}

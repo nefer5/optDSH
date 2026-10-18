@@ -3,85 +3,76 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {parseHTML} from 'linkedom';
 import {initServiceControls} from '../web/service-controls.js';
-
-function fixture(api){
- const {document}=parseHTML(readFileSync(new URL('../web/workbench.html',import.meta.url),'utf8'));
- for(const id of ['service-log-dialog','service-config-dialog']){const dialog=document.getElementById(id);dialog.showModal=()=>dialog.open=true;dialog.close=()=>dialog.open=false;}
- let connected=0;document.getElementById('connection-open').onclick=()=>connected++;
- const control=initServiceControls({root:document,api,intervalMs:60000});
- return {document,control,connected:()=>connected,$:id=>document.getElementById(id)};
-}
+const config={configured:true,version:'modern',python:{available:true,label:'Python 自动检测就绪'},targets:{legacy:{available:true,label:'本机19'},modern:{available:true,label:'本机2025'}}};
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
+function fixture(api,options={}){
+ const {document}=parseHTML(readFileSync(new URL('../web/workbench.html',import.meta.url),'utf8'));let invalidations=0;
+ const control=initServiceControls({root:document,api,intervalMs:60000,wait:async()=>{},readyAttempts:3,onConfigurationChanged:()=>invalidations++,...options});
+ return {document,control,$:id=>document.getElementById(id),invalidations:()=>invalidations};
+}
+function select(f,key){for(const value of ['legacy','modern'])f.$('service-version-'+value).checked=value===key;f.$('service-version-'+key).onchange();}
 
-test('status query is read-only; explicit start is deduplicated and readiness never connects',async()=>{
- const calls=[];let finish,startState='stopped';
- const f=fixture(async action=>{calls.push(action);if(action==='service-start')return new Promise(resolve=>finish=resolve);return {state:startState};});
- try{
-  await settle();assert.deepEqual(calls,['service-status']);assert.equal(f.$('service-start').disabled,false);
-  const first=f.$('service-start').onclick();await f.$('service-start').onclick();
-  assert.equal(calls.filter(x=>x==='service-start').length,1);assert.equal(f.$('service-start').disabled,true);
-  finish({state:'starting'});await first;startState='ready';await f.control.refresh();
-  assert.equal(f.$('service-status').textContent,'已就绪');assert.equal(f.$('service-start').hidden,true);assert.equal(f.connected(),0);
-  f.$('service-connect').click();assert.equal(f.connected(),1);
+test('header has three untitled action groups and one shared connection dialog, not a service button row',()=>{
+ const f=fixture(async()=>({state:'ready'}));try{
+  const groups=[...f.document.querySelectorAll('header .header-group')];assert.equal(groups.length,3);
+  assert.deepEqual(groups.map(group=>[...group.children].map(e=>e.id)),[['study-background','tx-tolerance-open'],['theme-toggle','settings'],['connection-open','save-model','refresh']]);
+  assert.equal(f.document.querySelectorAll('#optics-service button').length,1);assert.equal(f.$('service-config-dialog'),null);assert.equal(f.$('service-connect'),null);assert.equal(f.$('connection-advanced').hasAttribute('open'),false);assert.ok(f.$('connection-advanced').contains(f.$('connection-save')));assert.equal(f.$('settings').textContent,'操作设置');
  }finally{f.control.dispose();}
 });
 
-test('unconfigured state directs to Web configuration; diagnostic content remains text',async()=>{
- const malicious='<img src=x onerror=alert(1)>';
- const f=fixture(async action=>action==='service-logs'?{text:malicious}:{state:'unconfigured',logPath:'logs/optics.log'});
- try{
-  await settle();assert.equal(f.$('service-start').disabled,true);assert.match(f.$('service-message').textContent,/配置服务/);assert.doesNotMatch(f.$('service-message').textContent,/optics.json/);
-  await f.$('service-logs').onclick();assert.equal(f.$('service-log-text').textContent,malicious);assert.equal(f.$('service-log-text').querySelector('img'),null);
- }finally{f.control.dispose();}
+test('startup, status polling and opening configuration are read-only; Python is automatic',async()=>{
+ const calls=[];const f=fixture(async action=>{calls.push(action);return action==='service-config'?config:{state:'ready'};});
+ try{await settle();await f.control.openConfiguration();await f.control.refresh();assert.deepEqual(calls,['service-status','service-status','service-config','service-status']);assert.match(f.$('service-python-status').textContent,/自动检测就绪/);assert.equal(f.document.querySelectorAll('#service-version-options input').length,2);assert.equal(f.$('service-version-modern').checked,true);assert.equal(f.$('service-log-text').hidden,true);}
+ finally{f.control.dispose();}
 });
 
-test('failed start surfaces actionable diagnostics and permits an explicit retry',async()=>{
- let starts=0;
- const f=fixture(async action=>{if(action==='service-start'){starts++;throw new Error('Python unavailable');}return {state:'stopped'};});
- try{
-  await settle();await f.$('service-start').onclick();assert.equal(f.$('service-status').textContent,'启动失败');assert.equal(f.$('service-start').disabled,false);assert.match(f.$('service-message').textContent,/Python unavailable/);
-  await f.$('service-start').onclick();assert.equal(starts,2);
- }finally{f.control.dispose();}
+test('explicit preparation of an already ready version reuses backend without saving or starting',async()=>{
+ const calls=[];const f=fixture(async action=>{calls.push(action);return action==='service-config'?config:{state:'ready'};});
+ try{await settle();await f.control.openConfiguration();const value=await f.control.prepareConnection();assert.equal(value.state,'ready');assert.equal(calls.includes('service-config-save'),false);assert.equal(calls.includes('service-start'),false);assert.equal(calls.some(x=>/probe|save-model|model\/save/.test(x)),false);}
+ finally{f.control.dispose();}
 });
 
-const readyConfig={configured:false,version:'legacy',python:{available:true,label:'自动检测可用'},targets:{legacy:{available:true,label:'已检测到 Zemax 19'},modern:{available:true,label:'已检测到 OpticStudio 2025'}}};
-
-test('Web config offers two Zemax versions and saves no Python path without starting service',async()=>{
- const calls=[];let state='unconfigured';
- const f=fixture(async(action,data)=>{calls.push({action,data});if(action==='service-config')return readyConfig;if(action==='service-config-save'){state='stopped';return {...readyConfig,configured:true,version:data.version};}return {state};});
- try{
-  await settle();await f.$('service-config-open').onclick();
-  assert.equal(f.$('service-config-dialog').open,true);assert.match(f.$('service-python-status').textContent,/已就绪/);
-  assert.equal(f.document.querySelectorAll('#service-config-dialog input').length,2);assert.match(f.$('service-legacy-compatibility').textContent,/已实测旧版 19 与新版 2025/);assert.match(f.$('service-version-legacy').parentElement.textContent,/2021及以前/);assert.match(f.$('service-version-modern').parentElement.textContent,/推荐/);
-  f.$('service-version-legacy').checked=false;f.$('service-version-modern').checked=true;f.$('service-version-modern').onchange();
-  await f.$('service-config-form').onsubmit({preventDefault(){}});
-  assert.deepEqual(calls.find(x=>x.action==='service-config-save').data,{version:'modern'});
-  assert.equal(calls.some(x=>x.action==='service-start'),false);assert.equal(f.$('service-start').disabled,false);
-  assert.match(f.$('service-config-message').textContent,/配置已保存/);
- }finally{f.control.dispose();}
+test('first explicit preparation saves chosen version then starts and waits for authenticated ready',async()=>{
+ const calls=[];let state='unconfigured',reads=0;const f=fixture(async(action,data)=>{calls.push({action,data});if(action==='service-config')return {...config,configured:false};if(action==='service-config-save'){state='stopped';return {...config,version:data.version};}if(action==='service-start'){state='starting';return {state};}if(state==='starting'&&++reads===2)state='ready';return {state};});
+ try{await settle();await f.control.openConfiguration();select(f,'legacy');const result=await f.control.prepareConnection();assert.equal(result.version,'legacy');const actions=calls.map(x=>x.action);assert.ok(actions.indexOf('service-config-save')<actions.indexOf('service-start'));assert.deepEqual(calls.find(x=>x.action==='service-config-save').data,{version:'legacy'});assert.equal(actions.filter(x=>x==='service-start').length,1);assert.equal(reads,2);assert.equal(actions.some(x=>/probe|model\/save/.test(x)),false);}
+ finally{f.control.dispose();}
 });
 
-test('configuration disables save when Python detection fails or service is running',async()=>{
- for(const running of [false,true]){
-  const f=fixture(async action=>action==='service-config'?{...readyConfig,python:{available:running,message:'未找到 Python'}}:{state:running?'ready':'unconfigured'});
-  try{await settle();await f.$('service-config-open').onclick();assert.equal(f.$('service-config-save').disabled,true);if(running)assert.match(f.$('service-config-message').textContent,/先停止光学服务/);else assert.match(f.$('service-python-status').textContent,/未找到 Python/);}
+test('preparation deduplicates and never treats a starting/failed service as ready',async()=>{
+ const calls=[];let finish;const f=fixture(async action=>{calls.push(action);if(action==='service-config'||action==='service-config-save')return config;if(action==='service-start')return new Promise(resolve=>finish=resolve);return {state:'stopped'};});
+ try{await settle();await f.control.openConfiguration();const a=f.control.prepareConnection(),b=f.control.prepareConnection();assert.equal(a,b);await settle();finish({state:'failed',message:'无法启动'});await assert.rejects(a,/无法启动/);assert.equal(calls.filter(x=>x==='service-start').length,1);assert.match(f.$('service-config-message').textContent,/无法启动/);}
+ finally{f.control.dispose();}
+});
+
+test('running-version change invalidates candidate and requires an explicit stop, never automatically stops',async()=>{
+ const calls=[];const f=fixture(async action=>{calls.push(action);return action==='service-config'?config:{state:'ready'};});
+ try{await settle();await f.control.openConfiguration();select(f,'legacy');assert.equal(f.invalidations(),1);await assert.rejects(f.control.prepareConnection(),/先.*停止/);assert.equal(calls.includes('service-stop'),false);assert.equal(calls.includes('service-config-save'),false);assert.match(f.$('service-config-message').textContent,/停止/);}
+ finally{f.control.dispose();}
+});
+
+test('failed configuration detection or unavailable Python blocks preparation',async()=>{
+ for(const mode of ['detect','python']){let starts=0;const f=fixture(async action=>{if(action==='service-start')starts++;if(action==='service-config'){if(mode==='detect')throw new Error('检测失败');return {...config,python:{available:false,message:'缺少光学依赖'}};}return {state:'stopped'};});
+  try{await settle();await f.control.openConfiguration();await assert.rejects(f.control.prepareConnection(),mode==='detect'?/检测失败/:/缺少光学依赖/);assert.equal(starts,0);}
   finally{f.control.dispose();}
  }
 });
 
-test('configuration save rejects duplicate submits and exposes backend refusal',async()=>{
- let finish,saves=0;
- const f=fixture(async action=>{if(action==='service-config')return readyConfig;if(action==='service-config-save'){saves++;return new Promise((resolve,reject)=>finish=()=>reject(new Error('409 · 服务运行中，请先停止服务')));}return {state:'stopped'};});
- try{
-  await settle();await f.$('service-config-open').onclick();
-  const saving=f.$('service-config-form').onsubmit({preventDefault(){}});await f.$('service-config-form').onsubmit({preventDefault(){}});
-  assert.equal(saves,1);assert.equal(f.$('service-config-save').disabled,true);finish();await saving;assert.match(f.$('service-config-message').textContent,/409/);
- }finally{f.control.dispose();}
+test('explicit stop succeeds with invalidation; busy refusal preserves ready and exposes reason',async()=>{
+ for(const refused of [false,true]){let state='ready';const f=fixture(async action=>{if(action==='service-config')return config;if(action==='service-stop'){if(refused)throw new Error('HOST_BUSY · 正在执行任务');state='stopped';}return {state};});
+  try{await settle();await f.control.openConfiguration();await f.$('service-stop').onclick();assert.equal(f.$('service-status').textContent,refused?'服务已就绪':'服务未启动');assert.equal(f.invalidations(),refused?0:1);if(refused)assert.match(f.$('service-config-message').textContent,/HOST_BUSY/);}
+  finally{f.control.dispose();}
+ }
 });
 
-test('explicit stop keeps Zemax separate and surfaces a busy refusal',async()=>{
- let stops=0;
- const f=fixture(async action=>{if(action==='service-stop'){stops++;throw new Error('409 · 正在执行光学任务');}return {state:'ready'};});
- try{await settle();assert.equal(f.$('service-stop').hidden,false);await f.$('service-stop').onclick();assert.equal(stops,1);assert.equal(f.connected(),0);assert.match(f.$('service-message').textContent,/正在执行光学任务/);assert.equal(f.$('service-status').textContent,'已就绪');}
+test('logs remain inert text and model operations lock service/version controls',async()=>{
+ const f=fixture(async action=>action==='service-config'?config:action==='service-logs'?{text:'<img src=x onerror=alert(1)>'}:{state:'ready'});
+ try{await settle();await f.control.openConfiguration();f.control.setConnectionBusy(true);assert.equal(f.$('service-stop').disabled,true);assert.equal(f.$('service-version-legacy').disabled,true);await f.$('service-stop').onclick();assert.equal(f.invalidations(),0);f.control.setConnectionBusy(false);await f.$('service-logs').onclick();assert.equal(f.$('service-log-text').querySelector('img'),null);assert.match(f.$('service-log-text').textContent,/<img/);}
+ finally{f.control.dispose();}
+});
+
+
+test('stopped backend refreshes detected environment even when the same version was previously configured',async()=>{
+ const calls=[];let state='stopped';const f=fixture(async(action,data)=>{calls.push({action,data});if(action==='service-config'||action==='service-config-save')return config;if(action==='service-start')state='ready';return {state};});
+ try{await settle();await f.control.openConfiguration();await f.control.prepareConnection();const actions=calls.map(r=>r.action);assert.equal(actions.filter(x=>x==='service-config-save').length,1);assert.ok(actions.indexOf('service-config-save')<actions.indexOf('service-start'));assert.deepEqual(calls.find(r=>r.action==='service-config-save').data,{version:'modern'});}
  finally{f.control.dispose();}
 });

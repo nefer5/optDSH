@@ -10,8 +10,20 @@ const memory=new Map();const localStorage={getItem:k=>memory.get(k)??null,setIte
 const resizeObservers=[],frameCallbacks=[];let draws=0;
 class Renderer{constructor(){this.domElement=document.createElement('canvas');}setPixelRatio(){}setScissorTest(){}setSize(){}setClearColor(){}clear(){}setViewport(){}setScissor(){}render(){draws++;}dispose(){}}
 window.HTMLElement.prototype.getBoundingClientRect=function(){return {left:0,top:0,bottom:600,width:800,height:600};};
-const posts=[],workerUrls=[];
-const context=vm.createContext({window,document,console,crypto:webcrypto,URL,URLSearchParams,Blob,CustomEvent:window.CustomEvent,devicePixelRatio:1,localStorage,sessionStorage:localStorage,location:{origin:"http://127.0.0.1:3080",pathname:"/api/optdsh-workbench/view",search:"",href:"http://127.0.0.1:3080/api/optdsh-workbench/view"},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,requestAnimationFrame:fn=>{frameCallbacks.push(fn);return frameCallbacks.length;},ResizeObserver:class{constructor(fn){this.fn=fn;this.targets=[];resizeObservers.push(this);}observe(target){this.targets.push(target);}disconnect(){}},Worker:class{constructor(url){workerUrls.push(String(url));}postMessage(){}terminate(){}},fetch:async(url,options)=>{const body=options?.body?JSON.parse(options.body):{};if(body.action==='submit')posts.push(url);return {ok:true,json:async()=>body.action==='list'?{sessions:[]}:structuredClone(view)};}});
+const posts=[],workerUrls=[],requests=[];let serviceState='ready',badConfig=false;let serviceConfig={configured:true,version:'modern',python:{available:true,label:'Python 测试环境'},targets:{legacy:{available:true,label:'旧版19'},modern:{available:true,label:'新版2025'}}};
+for(const dialog of document.querySelectorAll('dialog')){dialog.showModal=()=>dialog.open=true;dialog.close=()=>dialog.open=false;}
+const context=vm.createContext({window,document,console,crypto:webcrypto,URL,URLSearchParams,Blob,CustomEvent:window.CustomEvent,devicePixelRatio:1,localStorage,sessionStorage:localStorage,location:{origin:"http://127.0.0.1:3080",pathname:"/api/optdsh-workbench/view",search:"",href:"http://127.0.0.1:3080/api/optdsh-workbench/view"},history:{replaceState(){}},navigator:{clipboard:{writeText:async()=>{}}},setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,requestAnimationFrame:fn=>{frameCallbacks.push(fn);return frameCallbacks.length;},ResizeObserver:class{constructor(fn){this.fn=fn;this.targets=[];resizeObservers.push(this);}observe(target){this.targets.push(target);}disconnect(){}},Worker:class{constructor(url){workerUrls.push(String(url));}postMessage(){}terminate(){}},fetch:async(url,options)=>{
+ const body=options?.body?JSON.parse(options.body):{};requests.push(body);if(body.action==='submit')posts.push(url);
+ let result;
+ if(body.action==='service-status')result={state:serviceState};
+ else if(body.action==='service-config'){if(badConfig)return {ok:false,status:503,json:async()=>({error:{code:'CONFIG_FAILED',message:'环境检测失败'}})};result=serviceConfig;}
+ else if(body.action==='service-config-save'){serviceConfig={...serviceConfig,version:body.version};result=serviceConfig;}
+ else if(body.action==='service-start'){serviceState='ready';result={state:serviceState};}
+ else if(body.action==='optics'&&body.path==='/api/connection/probe')result={candidateId:'candidate-test',candidate:{sourceFile:snapshot.sourceFile,instance:body.data.instance,objectCount:snapshot.objectCount,mode:'NSC',lengthUnit:'mm',hostVersion:'2025'}};
+ else if(body.action==='optics'&&body.path==='/api/connection/bind')result={...view,binding:{id:'binding-test',sourceFile:snapshot.sourceFile,instance:2}};
+ else result=body.action==='list'?{sessions:[]}:view;
+ return {ok:true,json:async()=>structuredClone(result)};
+}});
 const cache=new Map();
 async function load(spec,parent){
  if(spec==='/vendor/three.module.js'){if(!cache.has(spec)){cache.set(spec,new vm.SyntheticModule(Object.keys(THREE),function(){for(const k of Object.keys(THREE))this.setExport(k,k==='WebGLRenderer'?Renderer:THREE[k]);},{context}));}return cache.get(spec);}
@@ -40,3 +52,20 @@ const viewObserver=resizeObservers.find(o=>o.targets.some(t=>t.id==='viewport-wr
 assert.equal(viewObserver.targets.filter(t=>t.classList.contains('view-surface')).length,2);
 const pending=frameCallbacks.length,beforeDraw=draws;viewObserver.fn();viewObserver.fn();assert.equal(frameCallbacks.length,pending+1);frameCallbacks.pop()();assert.ok(draws>beforeDraw);
 console.log('PASS: real module startup, two views, compact list, multi-select, draft isolation, roll/flip/reset, axis labels; WebGL renderer stubbed.');
+
+// 连接主流程使用真实前端模块与模拟API，不触碰Zemax。
+const mutating=()=>requests.filter(r=>['service-start','service-stop','service-config-save'].includes(r.action)||r.action==='optics'&&r.method==='POST');
+assert.equal(mutating().length,0);
+await document.getElementById('connection-open').onclick();assert.equal(mutating().length,0);assert.equal(document.getElementById('connection-advanced').open,false);
+badConfig=true;await document.getElementById('connection-open').onclick();await document.getElementById('connection-probe').onclick();assert.equal(requests.filter(r=>r.path==='/api/connection/probe').length,0);assert.equal(document.getElementById('connection-confirm').disabled,true);
+badConfig=false;await document.getElementById('connection-open').onclick();await document.getElementById('connection-probe').onclick();assert.equal(document.getElementById('connection-confirm').disabled,false);
+assert.equal(requests.filter(r=>['service-start','service-config-save'].includes(r.action)).length,0);
+document.getElementById('connection-instance').value='2';document.getElementById('connection-instance').oninput();assert.equal(document.getElementById('connection-confirm').disabled,true);
+await document.getElementById('connection-probe').onclick();assert.equal(document.getElementById('connection-confirm').disabled,false);
+document.getElementById('service-version-modern').checked=false;document.getElementById('service-version-legacy').checked=true;document.getElementById('service-version-legacy').onchange();assert.equal(document.getElementById('connection-confirm').disabled,true);
+const beforeProbe=requests.filter(r=>r.path==='/api/connection/probe').length;
+await document.getElementById('connection-probe').onclick();assert.equal(requests.filter(r=>r.path==='/api/connection/probe').length,beforeProbe);assert.match(document.getElementById('connection-status').textContent,/停止/);
+serviceState='stopped';await document.getElementById('connection-probe').onclick();assert.equal(document.getElementById('connection-confirm').disabled,false);
+const savedConfig=requests.findIndex(r=>r.action==='service-config-save'),started=requests.findIndex(r=>r.action==='service-start');assert.ok(savedConfig>=0&&started>savedConfig);
+await document.getElementById('connection-confirm').onclick();assert.equal(requests.filter(r=>r.path==='/api/connection/bind').length,1);assert.equal(requests.some(r=>r.path==='/api/model/save'),false);
+console.log('PASS: shared connection dialog read-only open, prepare gating, candidate invalidation, explicit bind without model save; simulated API only.');
