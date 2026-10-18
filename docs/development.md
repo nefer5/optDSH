@@ -110,3 +110,11 @@ $env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
 2026-10-18追加Q10：Node>=24，当前源码预览选择本机Node26；旧24仍属Codex独立工具运行时，无需卸载。已完成的旧版本回执不回写。新版构建及EXE入口将按本次版本规则验证。
 
 当前薄EXE与Node24/26验证结果见[Windows启动器阶段验收](refactor/2026-10-18/thin-launcher.md)。新开发CMD已按本机Node26配置，发布包008不再硬拦截26。
+
+## 当前Profile已恢复（2026-10-18）
+
+source-home现已持久保存GLM-5.3-Flash默认配置及所需凭据引用，并恢复8个原启用市场插件。普通关闭/重启平台不会丢失，不需要每次重配；新建独立安装验证Home仍故意为空，不自动把私人配置复制进测试包。
+
+manual-preview/source-home和source-state用于源码版，installed-home和installed-state用于旧安装版对比；workspace是课题文件。Home可用-Home或外部JSON配置，默认用户主目录不是强制位置。图形安装选择路径的向导尚未实现，正式发行前补齐；当前不会在你手工验证期间移动source-home。
+
+版本命令、构建追踪和发布门禁见[版本管理](versioning.md)，会话接续见[开发接续摘要](handoff/2026-10-18-dev-continuation.md)。

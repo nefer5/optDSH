@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "source": "local profile package selection snapshot 2026-10-18; no credentials/config copied",
+  "source": "old enabled selection migrated and loaded on DSH0.2.1-rc.2, 2026-10-18; no credentials included",
   "targetDsh": "0.2.1-rc.2",
   "plugins": [
     {
@@ -13,7 +13,7 @@
       "name": "@changfenhuang/dsh-genui",
       "version": "0.11.4",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
     },
     {
       "name": "@goodandready/dsh-voice",
@@ -25,37 +25,37 @@
       "name": "@weibaohui/dsh-tasks",
       "version": "0.5.9",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
     },
     {
       "name": "dsh-better-sidebar",
-      "version": "0.25.0",
+      "version": "0.28.0",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "0.25.0 waited on removed webRuntime; 0.28.0 uses connection and was loaded active on 0.2.1-rc.2"
     },
     {
       "name": "dsh-claude-style",
       "version": "0.13.1",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
     },
     {
       "name": "dsh-context",
       "version": "0.68.0",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
     },
     {
       "name": "dsh-quote-followup",
       "version": "0.2.10",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
     },
     {
       "name": "dsh-theme-firefly",
       "version": "0.1.3",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
     },
     {
       "name": "dsh-voice-mode",
@@ -67,7 +67,7 @@
       "name": "dshmarket",
       "version": "1.66.15",
       "enabled": true,
-      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
     }
   ]
 }

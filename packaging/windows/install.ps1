@@ -24,7 +24,13 @@ if ($manifest.launcher) {
  if (-not $launcherArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Launcher artifact escapes release root' }
  if ((Get-FileHash -LiteralPath $launcherArtifact -Algorithm SHA256).Hash -ne $manifest.launcher.sha256) { throw 'Launcher artifact hash mismatch' }
 }
-$plan=@{installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;userPathRegistration=[bool]$AddToUserPath}
+$buildInfoArtifact=$null
+if ($manifest.buildInfo) {
+ $buildInfoArtifact=[IO.Path]::GetFullPath((Join-Path $ReleaseRoot $manifest.buildInfo.file))
+ if (-not $buildInfoArtifact.StartsWith($ReleaseRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Build identity escapes release root' }
+ if ((Get-FileHash -LiteralPath $buildInfoArtifact -Algorithm SHA256).Hash -ne $manifest.buildInfo.sha256) { throw 'Build identity hash mismatch' }
+}
+$plan=@{productVersion=$manifest.version;buildId=$manifest.buildId;sourceRevision=$manifest.sourceRevision;installRoot=$InstallRoot;home=$OptDshHome;workspace=$Workspace;components=$selected;dshVersion=$manifest.dshVersion;runtimeBundled=$false;userPathRegistration=[bool]$AddToUserPath}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 5;return }
 if (Test-Path -LiteralPath $InstallRoot) { throw 'InstallRoot already exists; install a new version beside it. Existing files were not changed.' }
 $nodeExecutable=(Get-Command node.exe -ErrorAction Stop).Source
@@ -42,6 +48,8 @@ Push-Location $InstallRoot
 try { & $nodeExecutable $npmCli install --no-audit --no-fund;if ($LASTEXITCODE) { throw 'Dependency installation failed; receipt retained for diagnosis' } } finally { Pop-Location }
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'scripts') -Destination $InstallRoot -Recurse
 Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'docs') -Destination $InstallRoot -Recurse
+if ($buildInfoArtifact) { Copy-Item -LiteralPath $buildInfoArtifact -Destination (Join-Path $InstallRoot 'build-info.json') }
+Copy-Item -LiteralPath (Join-Path $ReleaseRoot 'release-manifest.json') -Destination (Join-Path $InstallRoot 'release-manifest.json')
 if ($launcherArtifact) { Copy-Item -LiteralPath $launcherArtifact -Destination (Join-Path $InstallRoot 'optdsh.exe') }
 @{schemaVersion=1;installRoot='.';nodeExecutable=$nodeExecutable;home=$OptDshHome;workspace=$Workspace;profile='web';port=3080;components=$selected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $InstallRoot 'optdsh-launcher.json') -Encoding utf8
 $launcher=Join-Path $InstallRoot 'optdsh.ps1'

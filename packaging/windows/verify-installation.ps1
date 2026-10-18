@@ -137,6 +137,12 @@ try {
     if ($index.StatusCode -ne 200) { throw 'Authenticated index did not return HTTP 200.' }
     $baseUri = [uri]("http://127.0.0.1:$Port/")
     $receipt.checks += 'identity-and-authenticated-cookie'
+    if ($manifest.buildInfo) {
+        $identity = Invoke-RestMethod -Uri ([uri]::new($baseUri,'api/optdsh-version')) -WebSession $caseSession -TimeoutSec 5
+        if ($identity.version -ne $manifest.version -or $identity.buildId -ne $manifest.buildId -or $identity.sourceRevision -ne $manifest.sourceRevision -or $identity.sourceDirty) { throw 'Running product identity differs from the installed build.' }
+        $receipt.buildInfo = $identity
+        $receipt.checks += 'running-product-version-and-build-identity'
+    }
     $receipt.phase='components'; Write-Receipt
     $deadline = [DateTime]::UtcNow.AddSeconds(20)
     do {

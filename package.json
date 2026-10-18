@@ -1,6 +1,6 @@
 {
   "name": "optdsh",
-  "version": "0.1.1",
+  "version": "0.2.0-dev.1",
   "private": true,
   "type": "module",
   "description": "Independent optDSH platform and optional optical plugins",
@@ -13,7 +13,11 @@
     "test": "node scripts/maintenance/test.mjs",
     "check": ".venv/Scripts/python.exe scripts/maintenance/check_project.py",
     "test:installation": "node --test tests/installation/*.test.mjs",
-    "release:local": "node scripts/maintenance/export-release.mjs"
+    "release:local": "node scripts/maintenance/export-release.mjs",
+    "version:show": "node scripts/maintenance/version.mjs show",
+    "version:check": "node scripts/maintenance/version.mjs check",
+    "version:set": "node scripts/maintenance/version.mjs set",
+    "release:check": "node scripts/maintenance/version.mjs release-check"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.2.1-rc.2",

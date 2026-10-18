@@ -1,6 +1,7 @@
 import {readFileSync,existsSync} from 'node:fs';
 import {resolve,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {readBuildInfo} from './version.mjs';
 import {spawnSync} from 'node:child_process';
 
 export function launchPlan(args,{cwd=process.cwd(),env=process.env}={}){
@@ -8,9 +9,9 @@ export function launchPlan(args,{cwd=process.cwd(),env=process.env}={}){
  const switches=new Set(['--no-browser','--restart','--no-pause']);
  const values=new Set(['--config','--workspace','--home','--profile','--state-root','--components','--port']);
  for(let i=0;i<args.length;i++){
-  const aliases={'-Workspace':'--workspace','-Home':'--home','-Port':'--port','-NoBrowser':'--no-browser','-Config':'--config'};
+  const aliases={'-Workspace':'--workspace','-Home':'--home','-Port':'--port','-NoBrowser':'--no-browser','-Config':'--config','--version':'version'};
   const key=aliases[args[i]]||args[i];
-  if(['start','status','stop'].includes(key)){if(actionSeen)throw new Error('Duplicate launcher action');action=key;actionSeen=true;continue;}
+  if(['start','status','stop','version'].includes(key)){if(actionSeen)throw new Error('Duplicate launcher action');action=key;actionSeen=true;continue;}
   if(switches.has(key)){options[key]=true;continue;}
   if(!values.has(key)||!args[i+1]||args[i+1].startsWith('--'))throw new Error('Unknown or incomplete launcher option: '+key);
   options[key]=args[++i];
@@ -20,7 +21,7 @@ export function launchPlan(args,{cwd=process.cwd(),env=process.env}={}){
  const settings=JSON.parse(readFileSync(config,'utf8').replace(/^\uFEFF/,''));
  if(!settings||Array.isArray(settings)||typeof settings!=='object'||settings.schemaVersion!==1)throw new Error('Unsupported launcher configuration');
  const base=dirname(config),installRoot=resolve(base,settings.installRoot||'.');
- const entry=join(installRoot,'scripts/runtime',action==='start'?'open-dsh.ps1':action+'-dsh.ps1');
+ const entry=join(installRoot,'scripts/runtime',action==='start'||action==='version'?'open-dsh.ps1':action+'-dsh.ps1');
  if(!existsSync(entry))throw new Error('Installed runtime scripts are missing');
  // Absolute Windows system path: never search PATH for a replacement shell.
  const systemRoot=env.SystemRoot||env.WINDIR;
@@ -38,10 +39,11 @@ export function launchPlan(args,{cwd=process.cwd(),env=process.env}={}){
 }
 
 export function runLauncher(args){
- if(args.includes('--help')){console.log('optDSH [start|status|stop] --config <json> [--workspace <folder>] [--no-browser] [--restart]');return 0;}
+ if(args.includes('--help')){console.log('optDSH [start|status|stop|version] --config <json> [--workspace <folder>] [--no-browser] [--restart]');return 0;}
  if(process.platform!=='win32')throw new Error('This launcher requires Windows');
  if(Number(process.versions.node.split('.')[0])<24)throw new Error('Install Node.js 24 or newer or select its nodeExecutable in the external configuration');
  const plan=launchPlan(args);
+ if(plan.action==='version'){console.log(JSON.stringify(readBuildInfo(plan.installRoot),null,2));return 0;}
  const result=spawnSync(plan.shell,plan.args,{cwd:process.cwd(),stdio:'inherit',windowsHide:true,env:{...process.env,PATH:dirname(process.execPath)+';'+process.env.PATH}});
  if(result.error)throw new Error('Windows built-in launcher could not start: '+result.error.message);
  return result.status??1;

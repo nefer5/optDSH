@@ -23,3 +23,10 @@ test('launcher artifact traversal is rejected before reading outside release',()
  writeFileSync(join(root,'release-manifest.json'),JSON.stringify(manifest));
  const run=invoke(root);assert.notEqual(run.status,0);assert.match(run.stderr,/Launcher artifact escapes/);assert.equal(existsSync(join(root,'app')),false);
 });
+
+test('build identity tampering is rejected before installation',()=>{
+ const {root,manifest}=fixture();writeFileSync(join(root,'build-info.json'),'tampered');
+ manifest.buildInfo={file:'build-info.json',sha256:createHash('sha256').update('original').digest('hex')};
+ writeFileSync(join(root,'release-manifest.json'),JSON.stringify(manifest));
+ const run=invoke(root);assert.notEqual(run.status,0);assert.match(run.stderr,/Build identity hash mismatch/);assert.equal(existsSync(join(root,'app')),false);
+});

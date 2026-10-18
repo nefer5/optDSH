@@ -14,11 +14,15 @@ $leaseFile=Join-Path $OptDshHome ".runtime/profiles/$OptDshProfile/host.json"
 if (Test-Path -LiteralPath $leaseFile) { $lease=Get-Content -LiteralPath $leaseFile -Raw | ConvertFrom-Json; $process=Get-Process -Id $lease.pid -ErrorAction SilentlyContinue;if ($process -and $process.StartTime.ToUniversalTime() -eq ([DateTimeOffset]$lease.startedUtc).UtcDateTime) { throw 'Profile is running; stop it before dependency changes' } }
 $entry=Join-Path $InstallRoot 'node_modules/@deepseek-ai/dsh/lib/bin.js'
 $savedHome=$env:DSH_HOME
+$savedPath=$env:PATH
+$localPnpm=Join-Path $InstallRoot "node_modules/.bin/pnpm.cmd"
+if (-not (Test-Path -LiteralPath $localPnpm)) { throw "The product package manager is missing; install the declared optdsh-bundle dependencies first" }
 try {
  $env:DSH_HOME=$OptDshHome
+ $env:PATH=(Split-Path $localPnpm -Parent)+";"+$savedPath
  foreach ($item in $chosen) {
   & node $entry plugin --profile $OptDshProfile add ($item.name+'@'+$item.version) --config.auto-install-peers=false
   if ($LASTEXITCODE) { throw "Plugin installation failed: $($item.name). No version exemption was granted; inspect compatibility and network before retrying." }
  }
-}finally{$env:DSH_HOME=$savedHome}
+}finally{$env:DSH_HOME=$savedHome;$env:PATH=$savedPath}
 Write-Output 'Selected packages processed. Verify official bundle registration, actual load and interaction separately; disabled snapshot entries were skipped.'

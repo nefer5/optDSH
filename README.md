@@ -1,6 +1,6 @@
 # optDSH
 
-当前版本 **v0.1.1 · 重构开发分支，未发布**；本轮结构重整尚未发布新版本，见[CHANGELOG](CHANGELOG.md)。
+当前版本 **v0.2.0-dev.1 · 重构开发分支，未发布**；当前为本地开发测试版本，尚未正式发布，见[CHANGELOG](CHANGELOG.md)。
 
 面向光学模型的专家—Agent协作工作台：官方DSH会话、三维近似视图、会话画板和独立光学工具。
 
@@ -27,3 +27,5 @@
 PPT制作首版：[ppt-slidewise](docs/ppt-slidewise.md)，独立SlideWise编辑页、项目稿件保存及可编辑PPTX导出。
 
 离线检查：`npm test`。本项目不会因普通刷新而保存Zemax；显式保存按钮点击即授权，具体门禁见工作台说明。
+
+本轮0.2.0-dev.1版本机制见[版本与发布](docs/versioning.md)；切换到新开发目录继续的上下文见[开发接续摘要](docs/handoff/2026-10-18-dev-continuation.md)。
