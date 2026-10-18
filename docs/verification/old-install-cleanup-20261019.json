@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-19",
+  "oldProgramsRecycled": 17,
+  "recycledTargets": 82,
+  "remainingTargets": [],
+  "preservedFilesChecked": 3382,
+  "changedPreservedFiles": [],
+  "missingPreservedFiles": [],
+  "remainingInstalledPrograms": [
+    {
+      "path": "E:\\Proj-2026-N06_optDSH-validation\\261019-resources\\candidate-app",
+      "version": "0.2.0-dev.25"
+    }
+  ],
+  "recoveryManifest": "E:\\.safe-delete-trash\\20261019-013249\\manifest.json",
+  "logicalBytesQuarantined": 13020789699,
+  "permanentDeletion": false,
+  "globalToolsRemoved": false,
+  "latestAuthenticatedHTTP": 200,
+  "quickCheck": {
+    "elapsedSeconds": 12.47,
+    "exitCode": 0,
+    "initialAttempt": "One concurrent workbench-binding test returned 400; isolated rerun and complete quick rerun passed. Cause not established; no product assertion weakened."
+  }
+}

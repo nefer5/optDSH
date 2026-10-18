@@ -11,6 +11,7 @@
     "dsh:version": "dsh --version",
     "dsh:help": "dsh --help",
     "test": "node scripts/maintenance/test.mjs",
+    "test:quick": "node scripts/maintenance/test.mjs --quick",
     "check": ".venv/Scripts/python.exe scripts/maintenance/check_project.py",
     "test:installation": "node --test tests/installation/*.test.mjs",
     "release:local": "node scripts/maintenance/export-release.mjs",

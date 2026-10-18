@@ -4,6 +4,8 @@
 
 追加完成：路径选择卸载（课题永久排除）与安装端口自动避让/记录；真实测试程序已回收，6项数据哈希不变。最终dev.25用户包已从顶层EXE完成源码外安装、启动和随包卸载日志验证，保留供人工核验。见[交付回执](../docs/verification/dev25-user-release.md)。
 
+旧验证安装已按用户授权收尾：17份旧程序及可重建依赖可恢复回收，保留Home/课题/结果/回执，验证区只留一份dev.25；3382份保留文件哈希不变。新增test:quick实测12.47秒通过，完整安装/回归门禁保留。见[清理与提速记录](../docs/verification/old-install-cleanup-20261019.md)。
+
 本轮已实现：产品Skills归所属包并接入官方Provider；Experts0.2使用官方Preset与spawn派工，保留公共资源适配，官方Profile管理整组生命周期；新增中文图形安装向导与独立安装入口。源码外study、空共享根下真实GLM会话已读取Rx Skill、派工架构专家、读取公共资源并收到官方完成通知；停用Experts并重启后Preset消失且core ready。原型真实安装及视觉专家审查通过，完整离线回归通过。最终dev.25用户包的实际安装、5组件ready及卸载EXE已另行复验。见[本轮验证](../docs/verification/product-resources-dev21.md)。
 
 新增共享编辑器：AgentCanvas0.2.4与Canvas桥0.7.0复用完整右栏，DSH日常接入全局同一安装（CLI/编辑器/嵌入一致）；课题与提交仍归官方会话，不混入独立收件箱。原程序、连接及409份资料已备份，切换后首次打开前哈希全一致。187项编辑器界面、181项服务、76项DSH相关检查通过，真实合成会话的发送/去重/历史只读/建议应用已验。详见[统一画板验证](../docs/verification/canvas-shared-editor-20261018.md)。

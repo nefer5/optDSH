@@ -38,6 +38,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 
 ## 卸载与永久保留的数据（dev.24）
 
+当前optDSH采用目录部署：安装器不登记Windows服务、开机任务或“应用和功能”卸载项；后台是启动器拉起的普通进程。默认不改用户PATH，只有显式`-AddToUserPath`才添加程序路径。不要把这一点套用到独立官方DeepSeek Harness桌面版，它有自己的Windows安装/卸载注册，与本项目验证包分开管理。
+
+因此，在先停止属于本安装的进程、确认程序与数据分离且没有PATH登记之后，回收准确的InstallRoot可移除主程序；这不会连带移除Home/Profile中的插件或独立Canvas。仍推荐随包卸载入口，它会核验归属、停止自己的Host、处理所选项及自己登记的PATH，并记录回执。不能删除整个验证case、Home或课题来代替卸载；Node、Python与Zemax等共享运行环境也不随主程序卸载。
+
 安装目录中的`卸载optDSH.exe`打开路径选择向导（备用CMD）。主程序、已安装的自有Profile插件、运行日志分别可选；默认仅选主程序。界面先展示实际路径与共用Profile影响，再最终确认。若Node已被移除，提供原生确认的仅主程序卸载后备入口。
 
 **课题目录永远不在卸载范围，也没有删除选项。** Home配置/账号/会话、课题模型/画板/运行结果、全局.agents、独立AgentCanvas均保留。未勾选插件继续保留在Home/Profile；勾选插件只通过官方管理器移除，可能影响共用该Profile的其他安装。日志选项只回收明确的服务日志目录。
