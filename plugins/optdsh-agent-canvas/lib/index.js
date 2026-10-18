@@ -1,4 +1,4 @@
-import {dirname, resolve} from 'node:path';
+import {dirname, resolve, basename} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readFileSync} from 'node:fs';
 import {requireValue, sceneContext} from './boards.js';
@@ -103,7 +103,7 @@ export function apply(ctx, options={}) {
           }
           result={...store.public(b),submissionId:s.id,status:s.status};
         } else throw new Error('Unknown canvas action');
-        return Response.json(result,{headers:{'Cache-Control':'no-store'}});
+        return Response.json({...result,host:{name:'DSH',workspaceRoot:workspaces.get(input.sessionId),workspaceName:basename(workspaces.get(input.sessionId))}},{headers:{'Cache-Control':'no-store'}});
       } catch(e) {
         return Response.json({error:{code:e.code||'CANVAS_ERROR',message:e.message,recoveryPath:e.recoveryPath}},
           {status:400,headers:{'Cache-Control':'no-store'}});

@@ -11,7 +11,7 @@ export function attachCanvasBridge({frame,sessionId,channel,snapshot='',onState=
   const m=event.data;if(event.origin!==CANVAS_ORIGIN||event.source!==frame.contentWindow||m?.type!=='optdsh-canvas-request'||m.channel!==channel)return;
   pending++;
   try{
-   if(!['load','save','submit','status','preview_edit','apply_edit','reject_edit'].includes(m.action))throw new Error('Unsupported embedded action');
+   if(!['load','save','submit','status','preview_edit','apply_edit','reject_edit','snapshot','complete'].includes(m.action))throw new Error('Unsupported embedded action');
    if(snapshot&&m.action!=='load')throw new Error('历史快照只读');
    const result=await api(sessionId,snapshot?'snapshot':m.action,snapshot?{submissionId:snapshot}:m.payload||{});
    if(!live)return;clearTimeout(timer);onState(result,m.action);onError('');onReady();event.source.postMessage({type:'optdsh-canvas-response',channel,id:m.id,result},CANVAS_ORIGIN);

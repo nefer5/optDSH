@@ -34,7 +34,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/runtime/setup-ca
 
 连接信息存Home/config/canvas.json；重配前自动备份。仅选择canvas组件时按配置启动/复用编辑器；失败记录unavailable，core继续。编辑器与DSH生命周期独立，停止DSH不杀共享编辑器。编辑器自己的目录/日志在Home/state/canvas；DSH画板数据在各会话workspace/.agent-canvas/optdsh/boards。配置编辑器不等于已给任意既有平台安装桥包，需同时安装canvas组件。
 
-官方Web的工作区选择独立于启动默认cwd：先选择课题再打开本会话画板。草稿保存不发送，提交才进入当前聊天；本轮不发送真实模型请求。独立Canvas通用文档协议仍未统一，不能宣称薄桥重构已完成。
+官方Web的工作区选择独立于启动默认cwd：先选择课题再打开本会话画板。草稿保存不发送，提交才进入当前聊天；本轮不发送真实模型请求。独立Canvas通用文档协议仍未统一。0.2.4已复用完整右栏与诊断，DSH桥仅提供当前会话/课题/状态和操作传输，不再自建精简提交界面。共享编辑器程序不等于共享提交队列。
 
 ## 课题与公共能力
 
@@ -47,3 +47,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/runtime/setup-ca
 最终交付测试版本dev.6，AgentCanvas0.2.3。已有/全新安装、Windows5.1首次后台启动和复用、真实iframe握手、外部2T2R绘图保存/DSH重启回读、异常时core降级均通过；独立发行包运行身份匹配。新装安装器路径在dev.5实测，后台拉起修复后的dev.6复用安装及运行通过。原临时case已停止；日常预览保留core+canvas，root启动/重启CMD沿用，网页选择已登记2T2R工作区再打开画板。证据见[evidence/canvas-installation-dev6.json](../verification/refactor-20261018/canvas-installation-dev6.json)。
 
 完整回归通过后又完成19项最终定向；一次Windows临时文件EPERM重跑通过，保留原日志；不等于真实模型/光学分析/公司环境验收。
+
+## 共享运行包与升级（dev.20）
+
+本机日常DSH现连接LOCALAPPDATA/Programs/AgentCanvas/app，与agent-canvas全局CLI和快捷方式共用；原validation安装保留作历史回退。Home/config/canvas.json保存连接，Profile显式editorUrl仍优先。独立安装在同一路径兼容升级后，DSH校验实际安装身份/契约/服务版本，再更新版本记录；不会静默接入别的安装或抢占端口。
+
+右栏复用独立AgentCanvas组件，显示课题/会话、元素数、内容版本、说明、提交和连接诊断；历史只读、保存不发送。说明及提交身份可在同源浏览器草稿中跨重开保留。独立模式继续按CLI接收流程；DSH提交自动进入同一官方会话，不调用独立inbox。
+
+[验证与回退](../verification/canvas-shared-editor-20261018.md)；N05源码即开发目录，发布物和独立验证分开，现役程序继续位于用户安装区。无需为日常开发复制第二份源码；并行版本才另开worktree。

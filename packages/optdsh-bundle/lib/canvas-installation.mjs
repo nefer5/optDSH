@@ -55,9 +55,10 @@ async function freePort(port){return new Promise((ok,no)=>{const server=createSe
 export async function ensureCanvas(home){
  const config=readCanvasConfig(home);if(!config)throw new Error('Canvas connection is not configured; run setup-canvas.ps1 first.');
  const info=describeCanvas(config.installationRoot);
- if(info.installationId!==config.installationId||info.version!==config.version)throw new Error('Canvas installation changed; reconnect it to confirm compatibility.');
+ if(info.installationId!==config.installationId)throw new Error('Canvas installation changed; reconnect it to confirm compatibility.');
+ const syncVersion=()=>{if(config.version!==info.version)atomicJson(configPath(home),{...config,version:info.version});};
  let existing;try{existing=await health(config.editorUrl);}catch{}
- if(existing){if(!compatibleHealth(existing,info))throw new Error('Canvas port belongs to another installation or incompatible service; it was preserved.');return {status:'reused',editorUrl:config.editorUrl,version:info.version};}
+ if(existing){if(!compatibleHealth(existing,info))throw new Error('Canvas port belongs to another installation or incompatible service; it was preserved.');syncVersion();return {status:'reused',editorUrl:config.editorUrl,version:info.version};}
  if(!config.autoStart)throw new Error('Canvas is not running; autoStart is disabled.');
  await freePort(Number(new URL(config.editorUrl).port));
  const runtime=resolve(home,'state/canvas'),logs=join(runtime,'logs');mkdirSync(logs,{recursive:true});
@@ -82,6 +83,6 @@ export async function ensureCanvas(home){
   child=spawn(process.execPath,[info.serverEntry,'--port',new URL(config.editorUrl).port,'--data-root',join(runtime,'catalog')],{cwd:info.installationRoot,detached:true,stdio:['ignore',out,err]});
   closeSync(out);closeSync(err);child.on('error',e=>{failure=e;});child.unref();
  }
- for(let i=0;i<80;i++){if(failure||child.exitCode!==null)throw new Error('Canvas exited before readiness; inspect its Home/state/canvas/logs.');try{const ready=await health(config.editorUrl);if(!compatibleHealth(ready,info))throw new Error('Canvas identity changed during startup');const receipt={status:'started',editorUrl:config.editorUrl,pid:child.pid,version:info.version,installationId:info.installationId};atomicJson(join(runtime,'host.json'),receipt);return receipt;}catch(e){if(/identity changed/.test(e.message))throw e;}await new Promise(r=>setTimeout(r,250));}
+ for(let i=0;i<80;i++){if(failure||child.exitCode!==null)throw new Error('Canvas exited before readiness; inspect its Home/state/canvas/logs.');try{const ready=await health(config.editorUrl);if(!compatibleHealth(ready,info))throw new Error('Canvas identity changed during startup');const receipt={status:'started',editorUrl:config.editorUrl,pid:child.pid,version:info.version,installationId:info.installationId};atomicJson(join(runtime,'host.json'),receipt);syncVersion();return receipt;}catch(e){if(/identity changed/.test(e.message))throw e;}await new Promise(r=>setTimeout(r,250));}
  throw new Error('Canvas readiness timed out; inspect Home/state/canvas/logs.');
 }

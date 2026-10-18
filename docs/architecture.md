@@ -1,6 +1,6 @@
 # 当前架构与目录
 
-当前产品开发版 **0.2.0-dev.18**；官方DSH固定 **0.2.1-rc.2**。本轮新增Forms原生YAML编辑器；既有三视图保留dev.17取证范围，新链路见下表及Forms说明。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
+当前产品开发版 **0.2.0-dev.20**；官方DSH固定 **0.2.1-rc.2**。本轮新增Forms原生YAML编辑器、画板共享右栏与统一安装；既有三视图保留dev.17取证范围，新链路见下表及Forms说明。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
 ## 图怎么看
 
@@ -17,7 +17,7 @@
 | 官方DSH | Web、Standard循环、会话、模型、认证及Profile | 唯一会话事实源，不修改node_modules |
 | packages/optdsh-bundle | 组装、版本、能力状态、启动配置 | 不恢复用户停用/卸载的画板桥或工作台 |
 | plugins/optdsh-agent-canvas | 会话画板工具、提交/建议、BoardStore与编辑器桥接 | 官方Profile生命周期；通用文档权威仍在桥内，尚未完全独立 |
-| 独立AgentCanvas | 独立安装的编辑器与宿主无关入口 | 已有安装/全新本地包接入，不依赖N05源码 |
+| 独立AgentCanvas | 独立安装的编辑器、共享AgentPanel/诊断组件及宿主适配 | CLI/独立页面/DSH复用同一运行包；不依赖N05源码；跨宿主存储协议尚未统一 |
 | plugins/optdsh-workbench | 模型视图、同会话聊天、光学代理和服务管理 | 官方Profile生命周期；缺服务不影响基础平台 |
 | packages/optics | 可安装CLI/HTTP/MCP、版本连接、身份/实例锁与确定性分析 | legacy/modern复用组件；19和2025只读已验，其他版本及业务另验 |
 | plugins/optdsh-forms | 原生工具/随包Skill、通用YAML侧栏、会话回投及prepared Run | 官方Profile生命周期；维护/Run分离和幂等，编辑不运行Zemax |

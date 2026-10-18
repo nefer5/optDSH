@@ -23,3 +23,14 @@ test('known editor starts in Home catalog and is reused; no unrelated process st
 test('port collision and changed installation fail without replacing service',async()=>{const f=fixture(),s=createServer((q,r)=>{r.setHeader('content-type','application/json');r.end('{"ok":true,"product":"someone-else"}');});await new Promise(r=>s.listen(0,'127.0.0.1',r));configureCanvas({home:f.home,root:f.app,port:s.address().port});try{await assert.rejects(ensureCanvas(f.home),/another installation/);assert.ok(s.listening);}finally{await new Promise(r=>s.close(r));}writeFileSync(join(f.app,'package.json'),'{"name":"@nefer5/agent-canvas","version":"0.2.4"}');await assert.rejects(ensureCanvas(f.home),/contract/);});
 test('new installation never overwrites an existing directory or connection',()=>{const f=fixture();const file=join(f.root,'local.tgz');writeFileSync(file,'not a tarball');assert.throws(()=>installCanvas({tarball:file,installRoot:f.app,npmCli:process.execPath}),/already exists/);assert.ok(existsSync(join(f.app,'dist/index.html')));});
 test('missing connection and disabled autostart give explicit diagnostic',async()=>{const f=fixture();await assert.rejects(ensureCanvas(f.home),/not configured/);configureCanvas({home:f.home,root:f.app,port:await port(),autoStart:false});await assert.rejects(ensureCanvas(f.home),/disabled/);});
+
+test('same installed Canvas follows a compatible version update without another installation or config growth',async()=>{
+ const f=fixture(),old=describeCanvas(f.app),info={...old,version:'0.2.4',embed:{dsh:4,sidebar:1}};
+ const server=createServer((_q,r)=>{r.setHeader('content-type','application/json');r.end(JSON.stringify({...info,ok:true}));});await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ try{
+  configureCanvas({home:f.home,root:f.app,port:server.address().port});
+  writeFileSync(join(f.app,'package.json'),JSON.stringify({name:'@nefer5/agent-canvas',version:info.version,type:'module'}));writeFileSync(join(f.app,'scripts/agent-canvas.mjs'),'console.log('+JSON.stringify(JSON.stringify(info))+')');
+  const result=await ensureCanvas(f.home);assert.equal(result.status,'reused');assert.equal(readCanvasConfig(f.home).version,'0.2.4');assert.equal(readCanvasConfig(f.home).installationRoot,old.installationRoot);
+  const bytes=readFileSync(join(f.home,'config/canvas.json'),'utf8');await ensureCanvas(f.home);assert.equal(readFileSync(join(f.home,'config/canvas.json'),'utf8'),bytes);
+ }finally{await new Promise(r=>server.close(r));}
+});

@@ -3,11 +3,6 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
   const {Button}=require('@deepseek-ai/dsh-client-ui-primitives');
   const ID='optdsh-agent-canvas/canvas', KIND='agentCanvas';
   const inject=['slots','locale','sidebarRightTabs','sidebarRight'];
-  const labels={accepting:'正在交付',queued:'已排队',running:'处理中',answered:'已回答，待确认',processed:'已确认处理',uncertain:'交付状态待核对（不会自动重发）','needs-attention':'需要处理'};
-  async function api(sessionId,action,data={}) {
-    const response=await fetch('/api/optdsh-canvas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,sessionId,action})});
-    const result=await response.json();if(!response.ok)throw new Error(result.error?.message||'画板请求失败');return result;
-  }
   function parseCanvasMessage(data) {
     const rpcId=data?.source?.rpcId;
     if(typeof rpcId==='string'&&rpcId.startsWith('optics-')){
@@ -61,35 +56,22 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
   }
   function CanvasBody({sessionId}) {
     const frame=React.useRef(null),[channel]=React.useState(()=>crypto.randomUUID());
-    const [state,setState]=React.useState(null),[error,setError]=React.useState(''),[ready,setReady]=React.useState(false);
+    const [error,setError]=React.useState(''),[ready,setReady]=React.useState(false);
     const [transportReady,setTransportReady]=React.useState(false),[source,setSource]=React.useState('');
-    const [snapshot,setSnapshot]=React.useState(''),[attempt,setAttempt]=React.useState(0);
-    React.useEffect(()=>{
-      let live=true;
-      const refresh=()=>api(sessionId,'status').then(x=>{if(live)setState(x);}).catch(e=>{if(live)setError(e.message);});
-      refresh();const timer=setInterval(refresh,2500);return()=>{live=false;clearInterval(timer);};
-    },[sessionId]);
+    const [attempt,setAttempt]=React.useState(0);
     React.useEffect(()=>{
       setReady(false);setError('');setTransportReady(false);let live=true,bridge;
       const loading=window.__optdshCanvasTransport?Promise.resolve(window.__optdshCanvasTransport):import('/api/optdsh-canvas/transport');
-      loading.then(({attachCanvasBridge,canvasSource})=>{if(!live)return;bridge=attachCanvasBridge({frame:frame.current,sessionId,channel,snapshot,onState:setState,onError:setError,onReady:()=>setReady(true)});setSource(canvasSource(channel));setTransportReady(true);}).catch(e=>{if(live)setError(e.message);});
+      loading.then(({attachCanvasBridge,canvasSource})=>{if(!live)return;bridge=attachCanvasBridge({frame:frame.current,sessionId,channel,onError:setError,onReady:()=>setReady(true)});setSource(canvasSource(channel));setTransportReady(true);}).catch(e=>{if(live)setError(e.message);});
       return()=>{live=false;bridge?.dispose();};
-    },[sessionId,channel,snapshot,attempt]);
-    const rows=(state?.submissions||[]).slice(-12).reverse();
-    return h('div',{'data-agent-canvas-session':sessionId,style:{display:'flex',flexDirection:'column',height:'100%',minHeight:0}},
-      h('div',{style:{padding:8,display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}},
-        h('strong',null,'本会话画板'),h('span',{title:sessionId},sessionId.slice(-8)),
-        h('span',null,ready?'画板已连接':'正在连接画板'),
-        h('button',{onClick:()=>{setAttempt(x=>x+1);setError('');}},'重新打开'),
-        snapshot&&h('button',{onClick:()=>setSnapshot('')},'返回当前画板')),
-      error&&h('p',{role:'alert',style:{padding:'0 8px',color:'#bd572f'}},error),
-      h('iframe',{key:sessionId+snapshot+attempt,ref:frame,src:transportReady?source:undefined,title:snapshot?'历史画板快照':'本会话绑定画板',style:{flex:'1 1 auto',width:'100%',minHeight:320,border:0}}),
-      rows.length>0&&h('details',{style:{padding:8,maxHeight:180,overflow:'auto'},open:true},h('summary',null,'本会话提交记录'),
-        rows.map(s=>h('div',{key:s.id,style:{display:'flex',gap:8,marginTop:6,alignItems:'center'}},
-          h('button',{onClick:()=>setSnapshot(s.id)},'版本 '+s.revision),
-          h('span',{title:s.note},(s.note||'画板提交').slice(0,28)),h('span',null,labels[s.status]||s.status),
-          s.status==='answered'&&h('button',{onClick:()=>api(sessionId,'complete',{submissionId:s.id}).then(setState).catch(e=>setError(e.message))},'确认已处理')))));
+    },[sessionId,channel,attempt]);
+    // 编辑器拥有完整右栏；宿主仅负责iframe生命周期和失败恢复。
+    return h('div',{'data-agent-canvas-session':sessionId,style:{position:'relative',height:'100%',minHeight:0}},
+      error&&h('div',{role:'alert',style:{padding:8,color:'var(--dsw-alias-state-error-primary,#b42318)'}},error,h(Button,{variant:'ghost',size:'sm',onClick:()=>setAttempt(x=>x+1)},'重新连接')),
+      !ready&&!error&&h('span',{role:'status',style:{position:'absolute',top:8,left:8,zIndex:1,fontSize:12}},'正在连接画板…'),
+      h('iframe',{key:sessionId+attempt,ref:frame,src:transportReady?source:undefined,title:'本会话绑定画板',style:{width:'100%',height:'100%',minHeight:320,border:0}}));
   }
+
   function apply(ctx) {
     registerCanvasMessages(ctx);
     ctx.effect(()=>ctx.sidebarRightTabs.register({id:ID,kind:KIND,title:()=> '画板',guide:[{order:40,title:()=> '本会话画板',description:()=> '打开并恢复当前聊天的独立画板'}]}),'canvas tab');
