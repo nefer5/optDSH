@@ -9,9 +9,9 @@ import {handlers,apply,inject} from '../lib/index.js';
 const base=resolve('temp/forms-tests');mkdirSync(base,{recursive:true});
 const form={version:1,title:'合成课题',groups:[{id:'general',title:'背景',fields:[{id:'goal',type:'text',label:'目标',required:true},{id:'count',type:'number',label:'数量',min:1,max:10},{id:'choice',type:'select',label:'选项',options:['甲','乙']},{id:'flag',type:'boolean',label:'是否已确认'}]}]};
 function fixture(){
-  const root=mkdtempSync(join(base,'case-'));mkdirSync(join(root,'STUDYS/demo/ui'),{recursive:true});
-  writeFileSync(join(root,'STUDYS/demo/study.yaml'),stringify({version:1,form:'ui/form.yaml',values:'configs/background.local.yaml'}));
-  writeFileSync(join(root,'STUDYS/demo/ui/form.yaml'),stringify(form));return {root,store:new FormStore(root)};
+  const root=mkdtempSync(join(base,'case-'));mkdirSync(join(root,'ui'),{recursive:true});
+  writeFileSync(join(root,'study.yaml'),stringify({version:1,id:'demo',form:'ui/form.yaml',values:'configs/background.local.yaml'}));
+  writeFileSync(join(root,'ui/form.yaml'),stringify(form));return {root,store:new FormStore(root)};
 }
 test('Study discovery and YAML save survive a new store instance',()=>{
   const {root,store}=fixture();assert.equal(store.list()[0].id,'demo');const x=store.get('study','demo');
@@ -23,7 +23,7 @@ test('stale browser/Agent writes are rejected and preserve bytes',()=>{
   const path=join(root,x.storage),before=readFileSync(path,'utf8');assert.throws(()=>store.save('study','demo',x.revision,{goal:'覆盖'}),/别处修改/);assert.equal(readFileSync(path,'utf8'),before);
 });
 test('editing the definition invalidates an open form revision',()=>{
-  const {root,store}=fixture(),x=store.get('study','demo');writeFileSync(join(root,'STUDYS/demo/ui/form.yaml'),stringify({...form,title:'新定义'}));
+  const {root,store}=fixture(),x=store.get('study','demo');writeFileSync(join(root,'ui/form.yaml'),stringify({...form,title:'新定义'}));
   assert.throws(()=>store.save('study','demo',x.revision,{}),/别处修改/);
 });
 test('temporary requests isolate values and freeze on submit',()=>{
@@ -45,11 +45,11 @@ test('definition rejects unsupported versions, types and duplicate identities',(
 });
 test('path traversal and external junctions are rejected',()=>{
   const {root,store}=fixture();assert.throws(()=>store.get('study','../demo'));
-  writeFileSync(join(root,'STUDYS/demo/study.yaml'),stringify({version:1,form:'../../outside.yaml',values:'configs/background.local.yaml'}));assert.throws(()=>store.get('study','demo'),/路径/);
+  writeFileSync(join(root,'study.yaml'),stringify({version:1,id:'demo',form:'../../outside.yaml',values:'configs/background.local.yaml'}));assert.throws(()=>store.get('study','demo'),/路径/);
   const outside=mkdtempSync(join(base,'outside-'));symlinkSync(outside,join(root,'escape'),process.platform==='win32'?'junction':'dir');assert.throws(()=>store.path('escape','new.yaml'),/项目外部/);
 });
 test('study output cannot overwrite definitions or other arbitrary files',()=>{
-  const {root,store}=fixture();writeFileSync(join(root,'STUDYS/demo/study.yaml'),stringify({version:1,form:'ui/form.yaml',values:'ui/form.yaml'}));assert.throws(()=>store.get('study','demo'),/configs/);
+  const {root,store}=fixture();writeFileSync(join(root,'study.yaml'),stringify({version:1,id:'demo',form:'ui/form.yaml',values:'ui/form.yaml'}));assert.throws(()=>store.get('study','demo'),/configs/);
 });
 test('HTTP API supports generic request creation, submission and readback',async()=>{
   const {root}=fixture(),h=handlers(root),url='http://localhost/api/optdsh-forms';
@@ -78,8 +78,8 @@ test('plugin mounts using only official connection, without any workbench servic
   assert.equal(routes.size,6);for(const route of routes.values())assert.equal(route.requestBody,'buffered');const page=await routes.get('/api/optdsh-forms/view').fetch();assert.equal(page.status,200);assert.doesNotMatch(await page.text(),/optdsh-workbench/);
   const list=await routes.get('/api/optdsh-forms').fetch(new Request('http://local/api/optdsh-forms'));assert.equal((await list.json()).studies.length,1);
 });
-test('numeric-leading Study names are discovered',()=>{
-  const {root,store}=fixture();mkdirSync(join(root,'STUDYS/2t2rLidar/ui'),{recursive:true});writeFileSync(join(root,'STUDYS/2t2rLidar/study.yaml'),stringify({version:1,form:'ui/form.yaml',values:'configs/background.local.yaml'}));writeFileSync(join(root,'STUDYS/2t2rLidar/ui/form.yaml'),stringify(form));assert.ok(store.list().some(x=>x.id==='2t2rLidar'));
+test('legacy numeric-leading Study names are discovered read-only',()=>{
+  const root=mkdtempSync(join(base,'legacy-')),store=new FormStore(root);mkdirSync(join(root,'STUDYS/2t2rLidar/ui'),{recursive:true});writeFileSync(join(root,'STUDYS/2t2rLidar/study.yaml'),stringify({version:1,id:'demo',form:'ui/form.yaml',values:'configs/background.local.yaml'}));writeFileSync(join(root,'STUDYS/2t2rLidar/ui/form.yaml'),stringify(form));assert.ok(store.list().some(x=>x.id==='2t2rLidar'));const loaded=store.get('study','2t2rLidar');assert.equal(loaded.readOnly,true);assert.throws(()=>store.save('study','2t2rLidar',loaded.revision,{goal:'no write'}),/仅支持读取/);
 });
 test('official DSH normalized URL retains browser origin via Host',async()=>{
   const {root}=fixture(),h=handlers(root);const make=origin=>new Request('http://dsh.internal/api/optdsh-forms',{method:'POST',headers:{Host:'127.0.0.1:3080',Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({action:'create',form})});

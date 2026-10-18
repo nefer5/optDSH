@@ -1,0 +1,75 @@
+# 合成映射，只用于离线计划；先inspect真实模型，再填写身份、对象和角度约定。
+kind: rx-collection-efficiency
+modelId: REPLACE_MODEL_ID
+expectedRevision: REPLACE_REVISION
+expectedInspectionDigest: REPLACE_FROM_DRY_RUN
+expertConfirmation: REPLACE_WITH_REVIEWED_INTENT_AND_CONFIRMATION
+units: mm
+controlFrame: object-local
+controls:
+  scanner_h:
+    object_id: 1
+    expectedType: Rectangular Pipe
+    expectedComment: REPLACE_H_CONTROL
+    field: TiltAboutY
+    initial: 45
+    range: {start: -5, stop: 5, num: 3}
+    # angle_H = actual * scale + offset_deg；仅复现旧模型约定，须重新确认。
+    fov: {scale: -2, offset_deg: 90}
+  echo_v:
+    object_id: 2
+    expectedType: Rectangular Pipe
+    expectedComment: REPLACE_V_CONTROL
+    field: TiltAboutX
+    initial: 0
+    deltas: [-2, 0, 2]
+    fov: {scale: -1, offset_deg: 0}
+pickups:
+  - object_id: 3
+    expectedType: Rectangular Pipe
+    expectedComment: REPLACE_H_PICKUP
+    field: TiltAboutY
+    from_control: scanner_h
+    scale: 1
+    offset: -90
+source:
+  object_id: 4
+  expectedType: Source Rectangle
+  expectedComment: REPLACE_ECHO_SOURCE
+  analysis_rays_col: 12
+  power_field_col: 13
+  x_half_width_col: 16
+  y_half_width_col: 17
+efficiency:
+  # 合成值，真实运行由专家指定；不能从旧模型1020 mm²直接沿用。
+  max_receive_area_mm2: 100
+detectors:
+  mirror:
+    object_id: 5
+    expectedType: Detector Rectangle
+    expectedComment: REPLACE_MIRROR_REFERENCE
+    metric: total_flux
+  near_rx:
+    object_id: 6
+    expectedType: Detector Rectangle
+    expectedComment: REPLACE_RX_ENTRANCE
+    metric: total_flux
+  spad:
+    object_id: 7
+    expectedType: Detector Rectangle
+    expectedComment: REPLACE_SPAD
+    metric: total_flux
+trace: {split: true, scatter: false, polarization: true, seed: 17}
+report:
+  title: Rx收光效率随H/V视场的变化
+  background: 已建NSC接收系统可能随视场出现截获量变化与接收链渐晕。
+  objective: 分别比较转镜参考面、Rx入口和SPAD的通量及面积归一化效率。
+
+# 可选：仅在专家确认后启用，仅改变独立副本的分析光线数。
+# 主模型的发光状态/源功率/pickup保持不变；实际对象身份须先inspect。
+# copySourcePreparation:
+#   analysisRays: 100000
+#   disableSources:
+#     - object_id: 8
+#       expectedType: Source Diode
+#       expectedComment: REPLACE_CONFIRMED_TX_SOURCE

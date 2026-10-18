@@ -1,8 +1,8 @@
 # 当前状态
 
-2026-10-18目录分离：本地源码checkpoint为ed6fbda；新开发工作树 E:/Proj-2026-N06_optDSH-dev（codex/platform-dev），发布根及验证根已独立建立。后续改动仅在新目录继续；原目录/真实数据未迁移，未启停原现场服务。新Node/Python依赖已独立安装（Node24进程级选择），正在做完整回归和新产物真实安装。详见[开发布局](../docs/development.md)。
+2026-10-18目录分离：本地源码checkpoint为ed6fbda；新开发工作树 E:/Proj-2026-N06_optDSH-dev（codex/platform-dev），发布根及验证根已独立建立。后续改动仅在新目录继续；原目录/真实数据未迁移，未启停原现场服务。新Node/Python依赖已独立安装（Node24进程级选择），完整首轮回归及仓库外Node四组件冷缓存安装、独立Python完整依赖和synthetic服务安装已通过，外部workspace增量继续验证。详见[开发布局](../docs/development.md)。
 
-2026-10-18首轮重构阶段完成，分支 `codex/platform-plugin-refactor`，详见[实施摘要](../docs/refactor/2026-10-18/implementation.md)与[计划状态](../.agents/plans/261018-platform-plugin-refactor.md)。独立home/workspace启动、可选Bundle/三插件、光学wheel、共享锁、本地发布/复制迁移工具已实现。DSH声明/锁升级0.2.1-rc.2，新版在隔离目录实测；现役root node_modules/3080和旧数据未切换。完整npm test与23项安装相关测试通过；仓库外实际包组件ready、官方客户端加载图/脚本与创建会话/加载画板通过。18专用桥、Canvas独立文档协议、真实React/编辑器握手、市场全组合/公共专家发行、光学完整依赖全新联网安装及真实业务仍待完成；Sandbox/VM/公司验证用户明确暂缓。未提交/发布/推送。
+2026-10-18首轮重构阶段完成，分支 `codex/platform-plugin-refactor`，详见[实施摘要](../docs/refactor/2026-10-18/implementation.md)与[计划状态](../.agents/plans/261018-platform-plugin-refactor.md)。独立home/workspace启动、可选Bundle/三插件、光学wheel、共享锁、本地发布/复制迁移工具已实现。DSH声明/锁升级0.2.1-rc.2，新版在隔离目录实测；现役root node_modules/3080和旧数据未切换。完整npm test与23项安装相关测试通过；仓库外实际包组件ready、官方客户端加载图/脚本与创建会话/加载画板通过。18专用桥、Canvas独立文档协议、真实React/编辑器握手、市场全组合/公共专家发行、光学完整依赖全新联网安装及真实业务仍待完成；Sandbox/VM/公司验证用户明确暂缓。已做本地checkpoint提交，未公开发布或推送；后续验证以本页顶部新开发记录为准。
 
 2026-10-03最新：恢复Standard/PTC/Cordis保守压缩ratio0.8、默认64K余量，正式重启与回读通过；81聊天可读，Strata256K/medium/32K持续加载，没有重载模型。实际阈值160K；证据runs/model/261003-03/readback.json。
 

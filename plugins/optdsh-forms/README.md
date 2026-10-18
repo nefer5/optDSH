@@ -10,7 +10,7 @@ Agent使用入口：[dsh-forms Skill](../../.agents/skills/dsh-forms/SKILL.md)�
 
 ## 课题模式
 
-`STUDYS/<topic>/study.yaml` 仅声明版本、表单路径和数值路径：
+将任意外部课题目录作为 `workspaceRoot`，其根 `study.yaml` 可声明版本、表单路径和数值路径：
 
 ```yaml
 version: 1
@@ -18,11 +18,15 @@ form: ui/background.form.yaml
 values: configs/background.local.yaml
 ```
 
-不规定 models、runs 或其他研究目录。数值文件按项目规则忽略 Git。示例定义在 `STUDYS/2t2rLidar/ui/`，长期课题未确认数值留空；保存时才创建本地文件。可以复制结构化配置/文字摘要，或让 Agent 读取值文件和对应表单定义。浏览器与 CLI 共享版本校验，检测文件、目标路径或定义变化后拒绝覆盖。
+不规定 models、runs 或其他研究目录。数值文件按项目规则忽略 Git。合成表单示例定义在包内 `examples/`，长期课题未确认数值留空；保存时才创建本地文件。可以复制结构化配置/文字摘要，或让 Agent 读取值文件和对应表单定义。浏览器与 CLI 共享版本校验，检测文件、目标路径或定义变化后拒绝覆盖。
 
 `version: 1` 基础表单保留兼容；`version: 2` 支持递归 object、array（表格/卡片）、record（有限键逐行编辑）、引用选择、多选、条件字段与联合校验。字段约束、分组和显示元数据放在一份 YAML；这是本插件的有限协议，不是完整 JSON Schema 实现。详细定义见[结构化协议](protocol-v2.md)。
 
-同一 Study 可通过 `forms` 增加多个配置页面，用 `defaultForm` 指定默认页。2t2rLidar 的参数页保存至 `configs/parameters.local.yaml`，旧说明页仍使用 `configs/background.local.yaml`；不自动搬迁、合并或重解释旧值。API GET 查询 `form=parameters|background`，保存携带 `formId`。CLI `read --mode study --id 2t2rLidar --form parameters`。
+根 manifest 可选 `id`（ASCII 标识）；省略时 API/CLI 使用固定 `workspace`，不会从中文或空格目录名推断 id。无 study.yaml 的普通目录仍可创建/保存/提交临时请求，无需补建课题入口或 STUDYS。
+
+旧父目录中的 `STUDYS/<id>/study.yaml` 仅作只读兼容，保存返回明确错误，不创建或迁移该目录。显式将某个旧课题目录自身指定为 workspaceRoot 后，其根 study.yaml 按正常独立课题处理。
+
+同一 Study 可通过 `forms` 增加多个配置页面，用 `defaultForm` 指定默认页。2t2rLidar 的参数页保存至 `configs/parameters.local.yaml`，旧说明页仍使用 `configs/background.local.yaml`；不自动搬迁、合并或重解释旧值。API GET 查询 `form=parameters|background`，保存携带 `formId`。CLI `read --root "E:/任意 课题目录" --mode study --id workspace --form parameters`。
 
 ## 临时 Skill 请求
 
@@ -42,19 +46,19 @@ node plugins/optdsh-forms/lib/cli.js create --config .agents/skills/optdsh-rx-co
 
 ### 已有表单描述的请求
 
-Skill 可以准备一个 YAML 请求，内容包括 `caller`、`form` 和可选的 `values`。`form` 使用完全相同的协议，且不要求存在 Study。复杂示例：`STUDYS/2t2rLidar/ui/tolerance-request.example.yaml`；旧简单示例 `briefing-request.example.yaml` 仍可使用。
+Skill 可以准备一个 YAML 请求，内容包括 `caller`、`form` 和可选的 `values`。`form` 使用完全相同的协议，且不要求存在 Study。复杂示例：`examples/tolerance-request.example.yaml`；旧简单示例 `briefing-request.example.yaml` 仍可使用。
 
 从项目根目录创建请求：
 
 ```powershell
-node plugins/optdsh-forms/lib/cli.js create --input STUDYS/2t2rLidar/ui/tolerance-request.example.yaml
+node plugins/optdsh-forms/lib/cli.js create --input plugins/optdsh-forms/examples/tolerance-request.example.yaml
 ```
 
 命令返回唯一请求 id 和相对页面 URL。在已认证的官方 DSH 主机下打开该 URL，让用户填写。用户可保存不完整草稿，提交时才强制检查必填项。正式提交后页面明确标为“已提交 · 只读回执”；点击“继续修改”可携带已有值创建可编辑副本，旧回执不变。新页面使用新的请求ID，调用方应读取新ID，不把旧已提交请求视为后续修改的自动更新通道。
 
 ```powershell
 node plugins/optdsh-forms/lib/cli.js read --id req-返回的请求ID
-node plugins/optdsh-forms/lib/cli.js read --mode study --id 2t2rLidar
+node plugins/optdsh-forms/lib/cli.js read --root "E:/任意 课题目录" --mode study --id workspace
 ```
 
 读取返回 `status`、`values`、`activeValues`、`summary` 和版本。`values` 保存全部已填写分支，切换模式不丢数据；`activeValues` 按当前条件投影，只含当前生效分支。**只有 `status: submitted` 才代表用户已正式提交**，pending 中的草稿不能当作已确认答案。收集答案不等于执行授权。返回文字属于用户输入，调用方应按数据使用。
@@ -95,3 +99,9 @@ HTTP 调用可对 `/api/optdsh-forms` POST JSON：`action:create` 加上述请�
 ### 全新官方Profile的Cordis前置条件
 
 通过官方 `dsh plugin --profile web add <本插件tgz>` 独立安装时，先在同一DSH_HOME/Profile执行 `dsh plugin --profile web add @deepseek-ai/cordis@4.0.5 --config.auto-install-peers=false`，再安装本插件。宿主范围是DSH 0.2.1-rc.2/Cordis ~4.0.5，不继承旧版豁免。已实测全新Profile仅装工作台会因传递包缺Cordis被预检禁用，补齐后加载通过；不要编辑node_modules解决。产品app安装器已提供宿主依赖，和Profile独立安装是不同路径。
+
+## 本轮适用范围
+
+workspaceRoot 是调用所在课题目录，不是 optDSH 平台根。当前 HTTP Forms 实例仍绑定装配配置中的单一 workspaceRoot；本轮没有实现随不同官方 session.cwd 自动切换表单目录，也没有新增 workspace 注册服务。需要另一课题时显式配置该根或通过 CLI --root 访问；不能宣称同时打开多个会话就已实现动态 Forms 隔离。CLI 分别指向两个外部中文/空格目录的存取和冲突保护已有离线测试。
+
+examples/ 只有合成表单协议例子与带 REPLACE 占位符的 Rx 导入例子，不是真实课题资料，不含模型文件或真实模型路径；表单示例不证明业务执行器兼容，不授权运行光学分析。平台源码与发布不需要根 STUDYS。

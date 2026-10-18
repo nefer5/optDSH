@@ -18,9 +18,9 @@ runs/<workflow>/YYMMDD-NN/
 
 workflow使用tx、rx、baseline等短名。日期取分配时本地日期，序号至少两位、同一父目录递增，排他创建、不覆盖。开始只分配一次，所有阶段接收同一目录；不再嵌套时间戳或重复workflow。完整时间含时区，任务描述写manifest，不拼进目录。仓库相对路径按UTF-16计数，>180警告，>220拒绝，包含文件名。
 
-具体研究使用`STUDYS/<study>/runs/<workflow>/YYMMDD-NN/`；平台验收仍可使用根runs，均采用同一公共分配器。
+具体研究使用`<workspace>/runs/<workflow>/YYMMDD-NN/`；平台验收使用独立验证case中的合成workspace，均采用同一公共分配器。源码与发布包不建立真实课题根。
 
-Study配置自动归属：当source配置位于STUDYS/<study>/下且未显式--runs-root时，新run写入该Study/runs/<workflow>/YYMMDD-NN。历史run内容保持不变；经用户明确指示可整体迁移，须保存路径映射并验证文件哈希。
+输入配置和输出均以显式workspace为边界；source祖先存在可选study.yaml时可就近归该声明目录。旧STUDYS布局仅作兼容，不成为默认要求。历史run内容保持不变；经用户明确指示可整体迁移，须保存路径映射并验证文件哈希。
 
 ## 配置与证据
 

@@ -19,7 +19,7 @@
 | [重构设计工作簿](docs/refactor/2026-10-18/index.html) | 现状/目标多视图、已确认决定与实施进度 |
 | [文档导航](docs/README.md) | 7个现行主题；旧文档归档ZIP |
 | [工作台操作](docs/workbench.md) | 连接、保存、视图、会话与画板 |
-| [研究区](STUDYS/README.md) | 模型、配置和研究run就近组织 |
+| [外部课题目录](docs/workspaces.md) | 任意目录研究，课题资料不随平台源码或发布包分发 |
 | [业务Skills](.agents/skills) | 装调公差、画板、Rx收光效率；[参数配置/可视化](.agents/skills/dsh-forms/SKILL.md) |
 
 正式实现：plugins/、packages/；运行入口：scripts/；第三方依赖：node_modules/、.venv/。持久用户数据在data/，服务日志logs/，临时任务temp/；runs保持完整证据包，不能当缓存清理。

@@ -1,3 +1,4 @@
+import {fileURLToPath} from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync,mkdtempSync,existsSync} from 'node:fs';
@@ -6,7 +7,7 @@ import {parse} from 'yaml';
 import {inferForm,importYaml,exportYaml} from '../lib/yaml-input.js';
 import {validateValues,activeValues} from '../shared/schema.js';
 import {FormStore} from '../lib/store.js';
-const source=resolve('.agents/skills/optdsh-rx-collection-efficiency/config/rx-scan.example.yaml');
+const source=fileURLToPath(new URL('../examples/rx-scan.example.yaml',import.meta.url));
 function fixture(){const base=resolve('temp/forms-yaml-tests');mkdirSync(base,{recursive:true});const root=mkdtempSync(join(base,'case-'));return {root,store:new FormStore(root)};}
 test('unchanged Rx YAML imports without form metadata and retains native scalar arrays',()=>{
   const x=importYaml(source);assert.equal(x.origin.inferred,true);assert.deepEqual(activeValues(x.form,x.values),parse(readFileSync(source,'utf8')));

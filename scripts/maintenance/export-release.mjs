@@ -20,13 +20,13 @@ for(const [id,path]of Object.entries(components)){
  const result=spawnSync(process.execPath,[npmCli,'pack','--json','--pack-destination',resolve(output,'packages')],{cwd:folder,encoding:'utf8'});
  if(result.status!==0)throw new Error(result.stderr);
  const pack=JSON.parse(result.stdout)[0];
- for(const item of pack.files){if(/(^|\/)(?:\.agents|\.runtime|data|node_modules|\.env|preferences\.md|private)(\/|$)/.test(item.path))throw new Error('Private file in package: '+item.path);}
+ for(const item of pack.files){if(/(^|\/)(?:\.agents|\.runtime|data|node_modules|STUDYS|STUDIES|studies|\.env|preferences\.md|private)(\/|$)/.test(item.path))throw new Error('Private file in package: '+item.path);}
  const file='packages/'+pack.filename;
  artifacts.push({id,name:meta.name,version:meta.version,file,sha256:createHash('sha256').update(readFileSync(resolve(output,file))).digest('hex'),publication:'local-only-license-pending'});
 }
 for(const folder of ['scripts/runtime','packaging/windows'])cpSync(resolve(root,folder),resolve(output,folder),{recursive:true,filter:source=>!existsSync(source)||realpathSync(source)===resolve(source)});
 cpSync(resolve(root,'docs/refactor/2026-10-18'),resolve(output,'docs/refactor/2026-10-18'),{recursive:true});
-for(const file of ['README.md','docs/architecture.md','docs/runtime.md','docs/contracts.md','docs/installation/README.md','docs/development.md','config/runtime.example.json','推荐插件.md','.agents/plans/261018-platform-plugin-refactor.md'])if(existsSync(resolve(root,file))){mkdirSync(resolve(output,relative(root,resolve(root,file)),'..'),{recursive:true});copyFileSync(resolve(root,file),resolve(output,file));}
+for(const file of ['README.md','docs/architecture.md','docs/runtime.md','docs/contracts.md','docs/installation/README.md','docs/development.md','docs/workspaces.md','docs/agent-resource-layout.md','config/runtime.example.json','推荐插件.md','.agents/plans/261018-platform-plugin-refactor.md'])if(existsSync(resolve(root,file))){mkdirSync(resolve(output,relative(root,resolve(root,file)),'..'),{recursive:true});copyFileSync(resolve(root,file),resolve(output,file));}
 let optics;
 if(wheelArgument){const source=resolve(wheelArgument),file='packages/'+source.split(/[\\/]/).at(-1);if(!file.endsWith('.whl'))throw new Error('Expected optical wheel');copyFileSync(source,resolve(output,file));optics={file,sha256:createHash('sha256').update(readFileSync(source)).digest('hex'),requirements:'packaging/windows/optics-requirements.txt'};}
 copyFileSync(resolve(root,'package-lock.json'),resolve(output,'build-dependency-lock.json'));

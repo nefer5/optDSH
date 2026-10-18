@@ -36,15 +36,23 @@ export class FormStore {
   }
   releaseLock(lock) { unlinkSync(lock); }
   list() {
-    const base = this.path('STUDYS'); if(!existsSync(base)) return [];
-    return readdirSync(base, {withFileTypes:true}).filter(e => e.isDirectory() && key.test(e.name) && existsSync(resolve(base,e.name,'study.yaml'))).map(e => {
-      try { const x = this.study(e.name); return {id:e.name, title:x.form.title}; } catch { return {id:e.name, title:e.name + '（配置需检查）'}; }
+    if(existsSync(this.path('study.yaml'))) {
+      const manifest=this.read(this.path('study.yaml')),id=manifest.id||'workspace';ident(id);
+      try { const x=this.study(id);return [{id,title:x.form.title}]; } catch {return [{id,title:id+'（配置需检查）'}];}
+    }
+    const base=this.path('STUDYS');if(!existsSync(base))return [];
+    return readdirSync(base,{withFileTypes:true}).filter(e=>e.isDirectory()&&key.test(e.name)&&existsSync(resolve(base,e.name,'study.yaml'))).map(e=>{
+      try{const x=this.study(e.name);return {id:e.name,title:x.form.title,readOnly:true};}catch{return {id:e.name,title:e.name+'（配置需检查）',readOnly:true};}
     });
   }
   study(id,formId) {
-    ident(id); const base = this.path('STUDYS',id), manifest = this.read(this.path('STUDYS',id,'study.yaml'));
+    ident(id);
+    const rootManifest=this.path('study.yaml');
+    const local=existsSync(rootManifest),base=local?this.root:this.path('STUDYS',id);
+    const manifest=this.read(local?rootManifest:this.path('STUDYS',id,'study.yaml'));
+    if(local)check(id===(manifest.id||'workspace'),'课题标识与当前工作目录不符',404);
     check(manifest.version === 1, '不支持的 Study 入口版本');
-    const within = value => { check(typeof value === 'string' && !isAbsolute(value) && !value.split(/[\\/]/).includes('..'), 'Study 入口路径无效'); return this.path('STUDYS',id,value); };
+    const within = value => { check(typeof value === 'string' && !isAbsolute(value) && !value.split(/[\\/]/).includes('..'), 'Study 入口路径无效'); return this.path(relative(this.root,base),value); };
     const entries={background:{title:'背景说明',form:manifest.form,values:manifest.values},...(manifest.forms||{})};
     formId=formId||manifest.defaultForm||'background';ident(formId);check(Object.hasOwn(entries,formId),'课题表单不存在',404);
     const entry=entries[formId];
@@ -53,14 +61,14 @@ export class FormStore {
     check(relative(base,valuePath).replaceAll('\\','/').startsWith('configs/') && /\.local\.yaml$/.test(valuePath), '背景信息需保存于 configs/*.local.yaml');
     const state = existsSync(valuePath) ? this.read(valuePath) : {version:1, values:{}, updatedAt:null};
     check(state?.version === 1, '不支持的背景信息版本'); validateValues(form,state.values);
-    return {mode:'study', id, formId, forms:Object.entries(entries).map(([id,x])=>({id,title:x.title||id})), form, values:state.values, updatedAt:state.updatedAt, revision:hash({form,state,formId,valuePath}), status:'editable', storage:relative(this.root,valuePath).replaceAll('\\','/'), valuePath, demo:manifest.requestExample || null};
+    return {mode:'study', id, formId, forms:Object.entries(entries).map(([id,x])=>({id,title:x.title||id})), form, values:state.values, updatedAt:state.updatedAt, revision:hash({form,state,formId,valuePath,manifest}), status:local?'editable':'read-only', readOnly:!local, basePath:base, storage:relative(this.root,valuePath).replaceAll('\\','/'), valuePath, demo:manifest.requestExample || null};
   }
   request(id) {
     ident(id); const path = this.path('data','forms','requests',id + '.yaml'), state = this.read(path);
     check(state.version === 1 && state.id === id, '请求记录格式无效'); validateForm(state.form); validateValues(state.form,state.values);
     return {mode:'request', ...state, revision:hash(state), storage:relative(this.root,path).replaceAll('\\','/'), valuePath:path};
   }
-  get(mode,id,formId) { check(['study','request'].includes(mode), '模式无效'); const {valuePath,demo,...x} = this[mode](id,formId); return {...x,summary:summary(x.form,x.values),activeValues:activeValues(x.form,x.values)}; }
+  get(mode,id,formId) { check(['study','request'].includes(mode), '模式无效'); const {valuePath,demo,basePath,...x} = this[mode](id,formId); return {...x,summary:summary(x.form,x.values),activeValues:activeValues(x.form,x.values)}; }
   create(input) {
     check(object(input), '请求格式无效'); const form = validateForm(input.form), values = validateValues(form,input.values || {});
     check(input.caller === undefined || (typeof input.caller === 'string' && input.caller.length <= 200), '调用方说明过长');
@@ -72,12 +80,13 @@ export class FormStore {
   }
   demo(id) {
     const study = this.study(id); check(typeof study.demo === 'string' && !isAbsolute(study.demo) && !study.demo.split(/[\\/]/).includes('..'), '该课题未提供临时表单示例');
-    return this.create(this.read(this.path('STUDYS',id,study.demo)));
+    return this.create(this.read(this.path(relative(this.root,study.basePath),study.demo)));
   }
   save(mode,id,revision,values,submit=false,formId) {
     check(['study','request'].includes(mode), '模式无效');
     return this.locked(() => {
       const current = this[mode](id,formId);
+      check(!current.readOnly,'旧课题布局仅支持读取；请将课题显式迁移到独立工作目录后再保存',409);
       check(current.revision === revision, '文件已在别处修改，请复制当前输入后重新载入。',409);
       check(current.status !== 'submitted', '该请求已提交，不能覆盖；请新建请求。',409);
       check(!submit || mode === 'request', '课题背景只支持保存');

@@ -39,3 +39,5 @@ pwsh scripts/setup.ps1
 原现场以本地checkpoint保存；恢复旧提交不等于恢复未跟踪用户数据。回退标签与快照位置见实施计划。用户中心仍被多个项目共用，普通项目重构不能修改这些链接的目标。
 
 完整回归包括独立PPT模块，该模块有自己的依赖锁；需另行在packages/ppt-slidewise执行npm ci。根npm ci只安装平台工作区，不应误认为已安装所有可选包。纯平台安装不要求PPT。
+
+源码根不再跟踪或创建STUDYS；真实课题外置，示例只归包examples/tests，详见[课题与源码边界](workspaces.md)。[Agent资源共享提案](agent-resource-layout.md)仍处讨论阶段，没有迁移全局.agents或强制安装共享资源。

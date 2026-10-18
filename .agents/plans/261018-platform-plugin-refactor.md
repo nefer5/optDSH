@@ -281,3 +281,12 @@ W4附加真实缺口：boards.js原子替换新增replaceBoardFile，仅重试�
 新版回归补验：分发器测试run_yaml改用独立fixture源，避免读真实Junction；预设保留检查改为与当前安装的完整Standard插件栈比较（仅persona prefix允许改变），不再硬编码旧suffix字段。仅修改本项目测试，不改用户中心或宿主配置。
 
 干净checkout文档检查：Git忽略的历史runs证据原件留旧现场；检查器仅在限定runs角色且git check-ignore确认时标注本地证据缺席，不当作源文档损坏。普通文档、temp与越界路径仍严格报错；四项交互预检通过。
+
+## 用户追加：课题不归源码（已授权落实）
+
+- 新工作树根STUDYS仅含10份跟踪元数据副本，已可恢复移出；旧真实资料完全保留，不移到发布/验证区。
+- T4表单支持workspace根study.yaml及无manifest临时请求；模板归包examples。旧STUDYS聚合读取仅兼容，单HTTP实例动态多workspace仍待做。
+- T1/T6 run_bundle以显式workspace输出，默认workspace/runs；可选marker就近，旧布局仅兼容。历史导入必需--workspace、默认dry-run，输出/链接越界拒绝。
+- 后续补查三条业务Skill脚本的workspace/state注入，不迁移.agents目录；DSH_HOME与.agents职责的新增讨论不视为目录迁移授权。
+
+用户新增Agent资源共享目标及推荐双层方案记录于docs/agent-resource-layout.md；此项先讨论，不将安装导出或个人Agent配置合并当作已经实现。当前继续已授权的workspace外置收尾。

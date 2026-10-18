@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory)][string]$ReleaseRoot,
     [Parameter(Mandatory)][string]$ValidationRoot,
     [string[]]$Components = @('core'),
+    [string]$NpmCacheRoot,
     [ValidateRange(0,65535)][int]$Port = 0,
     [ValidateRange(10,3600)][int]$InstallTimeoutSeconds = 600,
     [switch]$DryRun
@@ -91,7 +92,12 @@ foreach ($id in $selected) {
 }
 if ($Port -ne 0 -and $Port -lt 1024) { throw 'Port must be zero (automatic) or 1024..65535.' }
 $app = Join-Path $ValidationRoot 'app'; $caseHome = Join-Path $ValidationRoot 'home'; $workspace = Join-Path $ValidationRoot 'workspace'; $stateRoot = Join-Path $ValidationRoot 'state'; $logRoot = Join-Path $ValidationRoot 'private-logs'; $receiptPath = Join-Path $ValidationRoot 'verification-receipt.json'
+$cacheRoot = if ($NpmCacheRoot) { Normalize-Root $NpmCacheRoot } else { Join-Path $ValidationRoot 'npm-cache' }
+if ((Test-Overlap $cacheRoot $sourceRoot) -or (Test-Overlap $cacheRoot $ReleaseRoot)) { throw 'npm cache must be independent of source and release directories.' }
+Assert-PlainAncestors $cacheRoot
 $plan = [ordered]@{schemaVersion=1;releaseRoot=$ReleaseRoot;validationRoot=$ValidationRoot;installRoot=$app;home=$caseHome;workspace=$workspace;stateRoot=$stateRoot;components=$selected;port=$Port;installTimeoutSeconds=$InstallTimeoutSeconds;requiredNode='24.x';modelRequests=$false;zemax=$false;globalChanges=$false}
+$plan.npmCacheRoot=$cacheRoot
+$plan.cacheMode=if($NpmCacheRoot){'explicit-cache-reuse-not-a-cold-network-test'}else{'fresh-case-cache'}
 if ($DryRun) { $plan | ConvertTo-Json -Depth 5; return }
 New-Item -ItemType Directory -Path $ValidationRoot,$workspace,$logRoot -Force | Out-Null
 $receipt = [ordered]@{schemaVersion=1;plan=$plan;status='running';phase='prerequisites';checks=@();clients=@();cleanup='not-started';limitations=@('No model calls, Zemax, browser interaction, sandbox or company validation.');updatedAt=$null}
@@ -112,7 +118,7 @@ try {
     # user's Node and network environment, with bounded npm retries/downloads.
     foreach ($name in @('OPTDSH_HOME','OPTDSH_PROFILE','OPTDSH_WORKSPACE','OPTDSH_STATE_ROOT','OPTDSH_COMPONENTS','OPTDSH_PORT','DSH_HOME','npm_config_cache','npm_config_fetch_timeout','npm_config_fetch_retries','npm_config_fetch_retry_mintimeout','npm_config_fetch_retry_maxtimeout')) {
         $savedEnvironment[$name] = [Environment]::GetEnvironmentVariable($name,'Process')
-        $value = switch ($name) { 'npm_config_cache' {Join-Path $ValidationRoot 'npm-cache'} 'npm_config_fetch_timeout' {'60000'} 'npm_config_fetch_retries' {'1'} 'npm_config_fetch_retry_mintimeout' {'1000'} 'npm_config_fetch_retry_maxtimeout' {'5000'} default {$null} }
+        $value = switch ($name) { 'npm_config_cache' {$cacheRoot} 'npm_config_fetch_timeout' {'60000'} 'npm_config_fetch_retries' {'1'} 'npm_config_fetch_retry_mintimeout' {'1000'} 'npm_config_fetch_retry_maxtimeout' {'5000'} default {$null} }
         [Environment]::SetEnvironmentVariable($name,$value,'Process')
     }
     $receipt.phase='install'; Write-Receipt

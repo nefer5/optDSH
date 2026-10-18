@@ -2,10 +2,10 @@
 
 通用插件位置、Study公共参数契约或“完整检查Skill配置表”的请求，转读[dsh-forms入口](../../dsh-forms/SKILL.md)；当前页保留Rx快速创建/读取流程。
 
-用户不想手改 YAML 时，从项目根运行：
+用户不想手改 YAML 时，使用已安装表单CLI；显式--root指定课题根，样例从Skill安装位置读取：
 
 ```powershell
-node plugins/optdsh-forms/lib/cli.js create --config .agents/skills/optdsh-rx-collection-efficiency/config/rx-scan.example.yaml --brief
+node $formsCli create --root $workspace --config "$skillRoot/config/rx-scan.example.yaml" --brief
 ```
 
 也可将 `--config` 指向已有本地配置。命令直接按 YAML 的层级和值类型生成一次性表单，不要求 Skill 原先存在 UI 定义。`--brief`返回ID、DSH填写URL和短回执，原值已载入页面，不是空白表单。将链接交给用户即可；当前官方DSH主机存在时URL为不含令牌的绝对地址，主机信息缺失时返回相对地址。不打开模型、不追迹、不生成run。
@@ -13,9 +13,9 @@ node plugins/optdsh-forms/lib/cli.js create --config .agents/skills/optdsh-rx-co
 用户提交后主要由Agent读取处理，不需要先导出文件：
 
 ```powershell
-node plugins/optdsh-forms/lib/cli.js read --id req-实际ID --brief
+node $formsCli read --root $workspace --id req-实际ID --brief
 # 仅后续工具需要文件或用户要求时才导出：
-node plugins/optdsh-forms/lib/cli.js export --id req-实际ID --output STUDYS/2t2rLidar/configs/rx-scan.form.local.yaml
+node $formsCli export --root $workspace --id req-实际ID --output "$workspace/configs/rx-scan.form.local.yaml"
 ```
 
 `ready:false`时不返回未确认草稿，说明用户尚未提交后结束，不循环查询。`ready:true`时config即生效配置，清空字段保留null。仅接受`status: submitted`为正式提交；导出目标必须是新文件，绝不覆盖原样例或已有配置。原始controls、pickups、source、detectors等结构保留，占位身份和合成值也保留，不自动变成真实值。

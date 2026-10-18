@@ -38,16 +38,16 @@ Tx已加入原生NSC公差执行入口：见[Tx流程](references/tx.md)、[正�
 
 ## 配置与命令
 
-包内模板复制到项目`config/`后核对；优先YAML，旧JSON兼容，同一流程只维护一份有效配置。位置mm、转角deg；模板中的null代表待确认，不能当正式规格。
+包内模板复制到选定课题`configs/`后核对；优先YAML，旧JSON兼容，同一流程只维护一份有效配置。位置mm、转角deg；模板中的null代表待确认，不能当正式规格。
 
-| 阶段 | 包内模板 → 本机配置 | 项目根目录命令 |
+| 阶段 | 包内模板 → 本机配置 | 所选workspace命令（脚本路径按实际安装位置） |
 |---|---|---|
 | Tx自定义脚本 | [tx-custom.example.yaml](config/tx-custom.example.yaml) → Study配置 | `python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_native.py <配置.yaml> --execute --wait` |
 | Tx原生公差 | [tx-native.example.yaml](config/tx-native.example.yaml) → Study配置 | `python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_native.py <配置.yaml> --execute --wait` |
-| Tx未补偿试跑 | [tx-pilot.example.yaml](config/tx-pilot.example.yaml) → `STUDYS/2t2rLidar/configs/tx-pilot.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_pilot.py STUDYS/2t2rLidar/configs/tx-pilot.local.yaml` |
-| Tx完整装调预检 | [tx-tolerance.example.yaml](config/tx-tolerance.example.yaml) → `STUDYS/2t2rLidar/configs/tx-tolerance.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/preflight.py STUDYS/2t2rLidar/configs/tx-tolerance.local.yaml --scope tx` |
-| Rx装调预检 | [rx-tolerance.example.yaml](config/rx-tolerance.example.yaml) → `STUDYS/2t2rLidar/configs/rx-tolerance.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/preflight.py STUDYS/2t2rLidar/configs/rx-tolerance.local.yaml --scope rx` |
+| Tx未补偿试跑 | [tx-pilot.example.yaml](config/tx-pilot.example.yaml) → `configs/tx-pilot.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/run_tx_pilot.py configs/tx-pilot.local.yaml` |
+| Tx完整装调预检 | [tx-tolerance.example.yaml](config/tx-tolerance.example.yaml) → `configs/tx-tolerance.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/preflight.py configs/tx-tolerance.local.yaml --scope tx` |
+| Rx装调预检 | [rx-tolerance.example.yaml](config/rx-tolerance.example.yaml) → `configs/rx-tolerance.local.yaml` | `python .agents/skills/optdsh-assembly-tolerance/scripts/preflight.py configs/rx-tolerance.local.yaml --scope rx` |
 
-Tx命令默认只生成plan，追加`--execute`才进入已授权的副本追迹；使用`config/optics.local.json`指定的Python环境。预检只读、不会追迹；旧组合配置可用`--scope tx/rx`只检查所选侧。完整装调预检即使规格完整也不返回可执行，因为优化执行器尚未实现。
+Tx命令默认只生成离线plan，显式`--dry-run`才调用只读服务预检，追加`--execute`才进入已授权的副本追迹。配置和run归`--workspace`（默认当前目录）；桥配置/访问记录来自所选optDSH Home和state root，不再来自平台源码。包内脚本应从实际安装路径调用，Python需安装optdsh-optics。预检只读、不会追迹；旧组合配置可用`--scope tx/rx`只检查所选侧。完整装调预检即使规格完整也不返回可执行，因为优化执行器尚未实现。
 
 正式产物遵循[公共运行包规范](../../../docs/runs-and-reports.md)，执行消费包内冻结配置，简单任务可MD、复杂任务HTML，背景与关键Setup先行、配置原文折叠，输入证据与SHA-256随包；简短预检可只输出JSON。历史run不随本次整合改写。

@@ -89,3 +89,54 @@ def validate_host_version(version,target):
     expected=target.get('year')
     if expected is not None and year!=int(expected):
         raise OpticsError('TARGET_VERSION_MISMATCH','Connected host differs from target.year')
+
+
+def add_paths(parser, *, bridge_config=True):
+    """Shared CLI paths for installed optical workflow frontends."""
+    parser.add_argument('config',type=Path)
+    parser.add_argument('--workspace',type=Path,default=Path.cwd())
+    parser.add_argument('--home',type=Path)
+    parser.add_argument('--profile',default=os.environ.get('OPTDSH_PROFILE','web'))
+    parser.add_argument('--state-root',type=Path)
+    if bridge_config:parser.add_argument('--bridge-config',type=Path)
+    parser.add_argument('--runs-root',type=Path)
+    parser.add_argument('--package-source',type=Path,help='Explicit development source path; normally use installed optdsh-optics')
+
+
+def launch_paths(args):
+    """Return workspace, state, input and bridge config paths without creating any."""
+    import re
+    workspace=args.workspace.expanduser().resolve()
+    if not workspace.is_dir():raise ValueError('Workspace must be an existing directory')
+    home=(args.home or Path(os.environ.get('OPTDSH_HOME',Path.home()/'.optdsh'))).expanduser().resolve()
+    if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}',args.profile):raise ValueError('Invalid profile name')
+    state=(args.state_root or Path(os.environ.get('OPTDSH_STATE_ROOT',home/'state'/args.profile))).expanduser().resolve()
+    source=args.config.expanduser()
+    source=(source if source.is_absolute() else workspace/source).resolve()
+    bridge=getattr(args,'bridge_config',None) or home/'config/optics.json'
+    bridge=(bridge if bridge.is_absolute() else workspace/bridge).expanduser().resolve()
+    return workspace,state,source,bridge
+
+
+def access_for_workspace(state,workspace):
+    """Refuse legacy/foreign records before credentials reach any HTTP client."""
+    state=Path(state).resolve();workspace=Path(workspace).resolve()
+    path=state/'.runtime/optics-access.json'
+    if not path.exists():return None
+    record=json.loads(path.read_text(encoding='utf-8'))
+    if not record.get('workspace') or Path(record['workspace']).resolve()!=workspace:
+        raise ValueError('Optics access workspace mismatch; refusing another research directory')
+    if not record.get('stateRoot') or Path(record['stateRoot']).resolve()!=state:
+        raise ValueError('Optics access stateRoot mismatch')
+    return record
+
+
+def snapshot_code(bundle,entrypoint):
+    """Freeze installed package source and the selected frontend, never a checkout root."""
+    from .run_bundle import sha
+    entrypoint=Path(entrypoint).resolve()
+    bundle.manifest['code']={}
+    for source in [entrypoint,*sorted(Path(__file__).parent.glob('*.py'))]:
+        name=('entrypoint/' if source==entrypoint else 'optdsh_optics/')+source.name
+        bundle.copy(source,'code/'+name)
+        bundle.manifest['code'][name]=sha(source)

@@ -22,7 +22,8 @@
     "protocol-v2.md",
     "skill-packaging.md",
     "cordis.patch.yml",
-    "NOTICE.md"
+    "NOTICE.md",
+    "examples"
   ],
   "exports": {
     ".": "./lib/index.js",

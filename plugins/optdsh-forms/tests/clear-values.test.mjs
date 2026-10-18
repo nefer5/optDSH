@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,mkdirSync,mkdtempSync} from 'node:fs';
 import {resolve,join} from 'node:path';
-import {pathToFileURL} from 'node:url';
+import {pathToFileURL,fileURLToPath} from 'node:url';
 import {parseHTML} from 'linkedom';
 import {parse,stringify} from 'yaml';
 import {FormStore} from '../lib/store.js';
@@ -39,7 +39,7 @@ test('required validation never converts a cleared key into omission or zero',()
  setValue(values,'/nested/item',undefined);assert.deepEqual(values.nested,{item:null});
 });
 test('Agent readback and optional export retain cleared Rx fields, original sample stays byte-identical',()=>{
- const source=resolve('.agents/skills/optdsh-rx-collection-efficiency/config/rx-scan.example.yaml'),before=readFileSync(source),base=resolve('temp/forms-clear-tests');mkdirSync(base,{recursive:true});const root=mkdtempSync(join(base,'case-')),store=new FormStore(root),x=store.create(importYaml(source));
+ const source=fileURLToPath(new URL('../examples/rx-scan.example.yaml',import.meta.url)),before=readFileSync(source),base=resolve('temp/forms-clear-tests');mkdirSync(base,{recursive:true});const root=mkdtempSync(join(base,'case-')),store=new FormStore(root),x=store.create(importYaml(source));
  setValue(x.values,'/controls/scanner_h/initial',null);setValue(x.values,'/report/background',null);const saved=store.save('request',x.id,x.revision,x.values,true),read=store.get('request',x.id);assert.ok(Object.hasOwn(read.activeValues.controls.scanner_h,'initial'));assert.equal(read.activeValues.controls.scanner_h.initial,null);assert.equal(read.activeValues.report.background,null);
  const target=join(root,'optional.yaml');exportYaml(saved,target);assert.equal(parse(readFileSync(target,'utf8')).controls.scanner_h.initial,null);assert.deepEqual(readFileSync(source),before);
 });

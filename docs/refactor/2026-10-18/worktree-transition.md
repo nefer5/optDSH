@@ -33,3 +33,20 @@
 指定路径使用Git原生worktree创建。Codex托管工作树登记工具拒绝该自定义路径（not a managed worktree），未修改应用内部数据库或自动创建替代目录。本聊天的命令已显式在新工作树执行；以后可从新目录打开开发。不要把应用未托管与Git工作树无效混淆。
 
 本轮新环境中已补齐独立PPT依赖；分发器测试使用夹具源并保留完整新版Standard插件栈比较；文档检查区分Git忽略的历史run证据与真实源码断链。未复制历史run来让检查通过。
+
+## 外部课题与资源共享的补充边界
+
+新源码根目录已移除复制过来的10项Study元数据（可恢复回收清单 E:/.safe-delete-trash/20261018-140651/manifest.json；实际路径见docs/workspaces.md），原现场真实STUDYS未移动；原10项元数据SHA256逐项回读一致。Forms示例转归插件examples，支持外部workspace/study.yaml及无manifest临时请求；旧聚合入口只读。Forms HTTP仍绑定profile配置的workspace，随会话cwd动态切换尚未完成。
+
+光学run包及三个Skill入口按显式workspace/cwd定位；运行时状态独立在用户home，脚本默认导入已安装公共包。native默认只生成离线计划，--dry-run才查询服务，--execute才提交。未执行真实Zemax。
+
+Agent资源采用包内完整基线、可选共享导出与宿主适配的讨论提案，见[Agent资源布局](../../agent-resource-layout.md)；尚未实现共享安装器，也未改写用户级.agents。DSH_HOME与.agents职责独立，用户目录无需互相嵌套。
+
+## 已有独立安装证据
+
+- 20261018-worktree-001发布物来自干净提交6e70956，六个npm包及光学wheel具备哈希清单。
+- validation/20261018-worktree-full-001：隔离目录、全新npm缓存的四组件安装、认证、组件ready及官方client图/JS检查通过；只停止自有验证进程。
+- validation/20261018-optics-full-001：独立Python环境完整安装依赖与wheel，pip check、隔离导入及synthetic服务启动/回读/停止通过。
+- 更新后的外部workspace产物使用新的002子目录，不改写001证据。复用下载缓存时显式标注非冷网络安装。
+
+这些证据不代表Sandbox、公司实机、真实模型或Zemax验收。

@@ -91,3 +91,8 @@ STUDYS/**/runs/
 /.agents/experts/
 /.agents/distribution.json
 /.agents/development-skills/project-docs/
+
+# Real research workspaces are external to the platform source tree.
+/STUDYS/
+/STUDIES/
+/studies/

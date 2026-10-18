@@ -33,6 +33,13 @@ check('dry-run describes distinct app/home/workspace/state and writes no validat
  const target=nextCase(),result=verify(release(),target,'-DryRun');assert.equal(result.status,0,result.stderr);
  const plan=JSON.parse(result.stdout);assert.equal(new Set([plan.installRoot,plan.home,plan.workspace,plan.stateRoot]).size,4);assert.deepEqual(plan.components,['core']);assert.equal(plan.modelRequests,false);assert.equal(existsSync(target),false);
 });
+check('explicit validation cache reuse is labelled and never points into source or release',()=>{
+ const source=release(),target=nextCase(),cache=join(validationBase,'shared-cache-'+randomUUID());
+ const result=verify(source,target,`-NpmCacheRoot ${quote(cache)} -DryRun`);
+ assert.equal(result.status,0,result.stderr);const plan=JSON.parse(result.stdout);
+ assert.equal(plan.npmCacheRoot,cache);assert.equal(plan.cacheMode,'explicit-cache-reuse-not-a-cold-network-test');assert.equal(existsSync(target),false);
+ for(const invalid of [join(repo,'node_modules'),join(source,'npm-cache')])assert.notEqual(verify(source,nextCase(),`-NpmCacheRoot ${quote(invalid)} -DryRun`).status,0);
+});
 check('component selection normalizes core and comma lists; unknown and duplicate manifest IDs fail',()=>{
  const valid=release(),result=verify(valid,nextCase(),'-Components canvas,workbench,forms,canvas -DryRun');assert.equal(result.status,0,result.stderr);assert.deepEqual(JSON.parse(result.stdout).components,['core','canvas','workbench','forms']);
  assert.notEqual(verify(valid,nextCase(),'-Components missing -DryRun').status,0);

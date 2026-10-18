@@ -43,15 +43,16 @@ near_rx_over_mirror = flux_near_rx / flux_mirror
 
 用户希望通过界面填写、或不想手改 YAML 时，可用[表单填写入口](form-input.md)从现有配置直接创建临时表单，再读取已提交结果并导出新 YAML。此步骤仅收集配置；不连接模型、不生成 run，也不代替以下预检与执行确认。
 
-使用`config/optics.local.json`中记录的隔离Python解释器（须有现有numpy/PyYAML/pythonnet）。从项目根执行：
+使用已安装optdsh-optics的隔离Python解释器；从实际课题根执行，脚本位置由安装资源给出。以下变量需按当前环境确定，不要求课题携带平台源码：
 
 ```powershell
-$py = (Get-Content config/optics.local.json -Raw | ConvertFrom-Json).python
-$entry = '.agents/skills/optdsh-rx-collection-efficiency/scripts/scan.py'
-& $py $entry STUDYS/2t2rLidar/configs/rx-scan.local.yaml
-& $py $entry STUDYS/2t2rLidar/configs/rx-scan.local.yaml --dry-run
-# 专家审阅dry-run后，填入expectedInspectionDigest和expertConfirmation再执行：
-& $py $entry STUDYS/2t2rLidar/configs/rx-scan.local.yaml --execute
+# $py 是所选Python解释器，$skillRoot是已安装Skill根，$workspace是当前课题根
+$entry = Join-Path $skillRoot 'scripts/scan.py'
+$config = Join-Path $workspace 'configs/rx-scan.local.yaml'
+& $py $entry $config --workspace $workspace
+& $py $entry $config --workspace $workspace --dry-run
+# 专家审阅后按既有确认门禁执行：
+& $py $entry $config --workspace $workspace --execute
 ```
 
 - 默认命令仅离线计划，绝不连接Zemax；`initial: null`在计划中保留未解析，dry-run才读取真实初值。

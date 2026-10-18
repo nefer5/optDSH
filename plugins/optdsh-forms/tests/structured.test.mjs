@@ -5,8 +5,8 @@ import {resolve,join} from 'node:path';
 import {parse,stringify} from 'yaml';
 import {validateForm,validateValues,issues,activeValues,summary} from '../shared/schema.js';
 import {FormStore} from '../lib/store.js';
-const tolerance=parse(readFileSync('STUDYS/2t2rLidar/ui/tolerance-request.example.yaml','utf8'));
-const lidar=parse(readFileSync('STUDYS/2t2rLidar/ui/lidar-parameters.form.yaml','utf8'));
+const tolerance=parse(readFileSync(new URL('../examples/tolerance-request.example.yaml',import.meta.url),'utf8'));
+const lidar=parse(readFileSync(new URL('../examples/lidar-parameters.form.yaml',import.meta.url),'utf8'));
 function fixture(){const base=resolve('temp/forms-v2-tests');mkdirSync(base,{recursive:true});const root=mkdtempSync(join(base,'case-'));return {root,store:new FormStore(root)};}
 const fresh=()=>structuredClone(tolerance.values);
 test('v2 examples validate, synthetic tolerance can be submitted without changing shape',()=>{
@@ -57,10 +57,10 @@ test('spectral points and pulse timing enforce order without mutating inputs',()
   const pulses={exposure:{pulses:[{time_offset_ns:0,energy_nj:1},{time_offset_ns:0,energy_nj:2}]}};assert.throws(()=>validateValues(lidar,pulses),/严格递增/);
 });
 test('study forms isolate files, preserve background and use path-bound revisions',()=>{
-  const {root,store}=fixture();mkdirSync(join(root,'STUDYS/demo/ui'),{recursive:true});
+  const {root,store}=fixture();mkdirSync(join(root,'ui'),{recursive:true});
   const background={version:1,title:'背景',groups:[{id:'g',title:'背景',fields:[{id:'note',type:'text',label:'说明'}]}]};
-  writeFileSync(join(root,'STUDYS/demo/ui/bg.yaml'),stringify(background));writeFileSync(join(root,'STUDYS/demo/ui/lidar.yaml'),stringify(lidar));
-  writeFileSync(join(root,'STUDYS/demo/study.yaml'),stringify({version:1,form:'ui/bg.yaml',values:'configs/background.local.yaml',forms:{parameters:{form:'ui/lidar.yaml',values:'configs/parameters.local.yaml'}},defaultForm:'parameters'}));
+  writeFileSync(join(root,'ui/bg.yaml'),stringify(background));writeFileSync(join(root,'ui/lidar.yaml'),stringify(lidar));
+  writeFileSync(join(root,'study.yaml'),stringify({version:1,id:'demo',form:'ui/bg.yaml',values:'configs/background.local.yaml',forms:{parameters:{form:'ui/lidar.yaml',values:'configs/parameters.local.yaml'}},defaultForm:'parameters'}));
   const bg=store.get('study','demo','background');store.save('study','demo',bg.revision,{note:'已有背景'},false,'background');
   const params=store.get('study','demo');store.save('study','demo',params.revision,{target:{range_m:123}},false,'parameters');
   assert.equal(store.get('study','demo','background').values.note,'已有背景');assert.equal(store.get('study','demo').values.target.range_m,123);
