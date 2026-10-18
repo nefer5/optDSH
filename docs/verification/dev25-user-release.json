@@ -1,0 +1,179 @@
+{
+  "date": "2026-10-19",
+  "package": {
+    "version": "0.2.0-dev.25",
+    "sourceRevision": "db862c008049cfeee1f8d1a43b18493dd3e87c6d",
+    "sourceDirty": false,
+    "packageHash": "599eb0581ad3e3c497779455dfce918fb4937aaeb5d8ab43eadbfb7560ef8bc4",
+    "checkedArtifacts": 15,
+    "allHashesMatch": true,
+    "userTopLevel": [
+      "_support",
+      "使用说明.txt",
+      "安装optDSH.exe"
+    ],
+    "zipBytes": 18250690,
+    "privateRuntimeIncluded": false
+  },
+  "installation": {
+    "entry": "E:/optDSH-deliveries/optDSH-0.2.0-dev.25/安装optDSH.exe",
+    "zip": "E:/optDSH-deliveries/optDSH-0.2.0-dev.25.zip",
+    "installRoot": "E:/optDSH-validation/261019-resources/candidate-app",
+    "home": "E:/optDSH-validation/261019-resources/candidate-home",
+    "workspace": "E:/optDSH-validation/261019-resources/study",
+    "guiInstallation": "passed",
+    "recommendedPlugins": 8,
+    "platform": {
+      "core": "ready",
+      "canvas": "ready",
+      "workbench": "ready",
+      "forms": "ready",
+      "experts": "ready"
+    },
+    "authenticatedWebHTTP": 200,
+    "nativePresets": [
+      "optdsh-visual-designer",
+      "optdsh-software-architect"
+    ],
+    "runtime": {
+      "productVersion": "0.2.0-dev.25",
+      "sourceRevision": "db862c008049cfeee1f8d1a43b18493dd3e87c6d",
+      "skills": [
+        {
+          "name": "optdsh-assembly-tolerance",
+          "provider": "optdsh-optics-skills",
+          "contentLoaded": true,
+          "installedResource": true
+        },
+        {
+          "name": "optdsh-rx-collection-efficiency",
+          "provider": "optdsh-optics-skills",
+          "contentLoaded": true,
+          "installedResource": true
+        },
+        {
+          "name": "ppt-slidewise",
+          "provider": "optdsh-ppt-slidewise",
+          "contentLoaded": true,
+          "installedResource": true
+        },
+        {
+          "name": "dsh-forms",
+          "provider": "optdsh-forms",
+          "contentLoaded": true,
+          "installedResource": true
+        },
+        {
+          "name": "optdsh-canvas",
+          "provider": "optdsh-agent-canvas",
+          "contentLoaded": true,
+          "installedResource": true
+        }
+      ],
+      "portRecordsMatch": true,
+      "ports": {
+        "schemaVersion": 1,
+        "checkedAt": "2026-10-18T17:10:06.356Z",
+        "host": "127.0.0.1",
+        "web": {
+          "port": 3080,
+          "url": "http://127.0.0.1:3080",
+          "requestedPort": 3080,
+          "conflictAvoided": false,
+          "status": "configured-not-started"
+        },
+        "canvas": {
+          "port": 4174,
+          "url": "http://127.0.0.1:4174",
+          "requestedPort": 4173,
+          "conflictAvoided": true,
+          "status": "configured-not-started"
+        },
+        "optics": {
+          "port": 3082,
+          "url": "http://127.0.0.1:3082",
+          "requestedPort": 3081,
+          "conflictAvoided": true,
+          "status": "configured-not-started"
+        },
+        "ppt": {
+          "port": 3314,
+          "url": "http://127.0.0.1:3314",
+          "requestedPort": 3314,
+          "conflictAvoided": false,
+          "status": "configured-not-started"
+        },
+        "sharedWebModules": [
+          "Forms",
+          "Experts",
+          "画板桥",
+          "工作台界面"
+        ]
+      },
+      "canvasRuntime": {
+        "product": "AgentCanvas",
+        "version": "0.2.4",
+        "installationId": "6ffe3ac9523a4e5954418384",
+        "embed": {
+          "dsh": 4,
+          "sidebar": 1
+        }
+      },
+      "profileComponentStatus": "installed-or-existing-preserved",
+      "communityPluginStatus": "installed-or-existing-preserved"
+    }
+  },
+  "uninstall": {
+    "packagedEXE": "passed",
+    "selected": [
+      "logs"
+    ],
+    "hostStoppedBeforeRecycle": true,
+    "programRetained": true,
+    "preservationHashes": [
+      {
+        "path": "E:\\optDSH-validation\\261019-resources\\candidate-app\\optdsh.exe",
+        "unchanged": true
+      },
+      {
+        "path": "E:\\optDSH-validation\\261019-resources\\candidate-home\\config\\canvas.json",
+        "unchanged": true
+      },
+      {
+        "path": "E:\\optDSH-validation\\261019-resources\\candidate-home\\config\\ports.json",
+        "unchanged": true
+      },
+      {
+        "path": "E:\\optDSH-validation\\261019-resources\\study\\models\\keep-model.zmx",
+        "unchanged": true
+      },
+      {
+        "path": "E:\\optDSH-validation\\261019-resources\\study\\.agent-canvas\\keep-board.txt",
+        "unchanged": true
+      }
+    ],
+    "previousProgramPluginLogRemoval": {
+      "programRemoved": true,
+      "selectedLogsRemoved": true,
+      "dataHashes": {
+        "E:\\optDSH-validation\\261019-resources\\final-home\\sessions\\keep-user-session.txt": true,
+        "E:\\optDSH-validation\\261019-resources\\final-home\\config\\keep-user-settings.json": true,
+        "E:\\optDSH-validation\\261019-resources\\study\\models\\keep-model.zmx": true,
+        "E:\\optDSH-validation\\261019-resources\\study\\.agent-canvas\\keep-board.txt": true,
+        "E:\\optDSH-validation\\261019-resources\\final-home\\config\\canvas.json": true,
+        "E:\\optDSH-validation\\261019-resources\\final-editor\\node_modules\\@nefer5\\agent-canvas\\package.json": true
+      },
+      "allExistingDataUnchanged": true,
+      "workbenchRemoved": true,
+      "otherOwnedPluginsPresent": true
+    },
+    "workspaceNeverSelectable": true
+  },
+  "limits": [
+    "Windows same-machine isolated directories and cached dependencies; no VM or clean-machine acceptance",
+    "Node24 prerequisite; no full offline runtime bundle",
+    "No Zemax connection, tracing or model save in this task",
+    "Final fresh Home has no model credentials; real GLM Skill/expert pipeline was verified in the earlier isolated Home",
+    "No remote push, public Release or npm publication"
+  ]
+}

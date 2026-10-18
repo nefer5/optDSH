@@ -1,6 +1,6 @@
 # 当前架构与目录
 
-当前产品开发版 **0.2.0-dev.24**；官方DSH固定 **0.2.1-rc.2**。已新增Forms原生YAML编辑器、画板共享右栏与统一安装。四视图已按dev.21产品资源、官方专家与图形安装实现更新，各图源码版本见图源JSON。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
+当前产品开发版 **0.2.0-dev.25**；官方DSH固定 **0.2.1-rc.2**。已新增Forms原生YAML编辑器、画板共享右栏与统一安装。四视图已按dev.21产品资源、官方专家与图形安装实现更新，各图源码版本见图源JSON。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
 ## 图怎么看
 
@@ -119,7 +119,9 @@ optDSH源码/
 
 发布流程按组件npm pack生成固定版本资源；CLI与图形向导复用安装器。程序安装、Home、用户共享根、课题分别保留；图形向导在本机浏览器显示，不新增系统服务、不改默认浏览器或全局PATH。Node需用户安装，光学Python环境与Zemax仍独立准备。
 
-已实现产品Skills随包、官方专家装配及本地安装向导；本轮运行验收详情见[资源与安装验证](verification/product-resources-dev21.md)。可选跨宿主共享导出、用户修改冲突/升级回执、完整升级恢复矩阵、Sandbox/公司新机和正式公开发布仍是后续项。专家Preset包含固定官方Standard组合快照，升级DSH时需重新生成并验证，不能假定自动继承未来Standard变更。
+面向用户再整理为`安装optDSH.exe`、`使用说明.txt`与`_support/`，由薄EXE自动定位随包资源；普通用户只双击向导，不执行构建命令。开发原始release与历史验证目录独立保留。
+
+已实现产品Skills随包、官方专家装配及本地安装向导；本轮资源会话证据见[资源与安装验证](verification/product-resources-dev21.md)，最终用户包见[dev.25交付回执](verification/dev25-user-release.md)。可选跨宿主共享导出、用户修改冲突/升级回执、完整升级恢复矩阵、Sandbox/公司新机和正式公开发布仍是后续项。专家Preset包含固定官方Standard组合快照，升级DSH时需重新生成并验证，不能假定自动继承未来Standard变更。
 
 当前源码仅用于开发，不再要求用户复制源码根的`.agents`来获得产品能力。详细资源边界见[资源布局](agent-resource-layout.md)。源码证据：`packages/optdsh-bundle/lib/product-skills.mjs`、`plugins/optdsh-experts/cordis.patch.yml`、`plugins/optdsh-experts/lib/{index,core}.js`、`packaging/windows/{install,install-gui}.ps1`。
 
