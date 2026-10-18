@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "plan": {
+    "schemaVersion": 1,
+    "releaseRoot": "E:\\Proj-2026-N06_optDSH-releases\\0.2.0-dev.3",
+    "validationRoot": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.3-recommended",
+    "installRoot": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.3-recommended\\app",
+    "home": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.3-recommended\\home",
+    "workspace": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.3-recommended\\workspace",
+    "stateRoot": "E:\\Proj-2026-N06_optDSH-validation\\0.2.0-dev.3-recommended\\state",
+    "components": [
+      "core"
+    ],
+    "pluginPreset": "recommended",
+    "port": 55799,
+    "installTimeoutSeconds": 600,
+    "requiredNode": ">=24",
+    "modelRequests": false,
+    "zemax": false,
+    "globalChanges": false,
+    "npmCacheRoot": "E:\\Proj-2026-N06_optDSH-validation\\20261018-worktree-full-001\\npm-cache",
+    "cacheMode": "explicit-cache-reuse-not-a-cold-network-test"
+  },
+  "status": "passed",
+  "phase": "complete",
+  "checks": [
+    "release-installer-completed",
+    "identity-and-authenticated-cookie",
+    "running-product-version-and-build-identity",
+    "selected-components-ready",
+    "recommended-profile-active-and-market-pnpm",
+    "official-client-graph-and-revisioned-scripts"
+  ],
+  "clients": [
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "@changfenhuang/dsh-genui",
+      "discoverable": true
+    },
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "@weibaohui/dsh-tasks",
+      "discoverable": true
+    },
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "dsh-better-sidebar",
+      "discoverable": true
+    },
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "dsh-claude-style",
+      "discoverable": true
+    },
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "dsh-context",
+      "discoverable": true
+    },
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "dsh-quote-followup",
+      "discoverable": true
+    },
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "dsh-theme-firefly",
+      "discoverable": true
+    },
+    {
+      "revisioned": true,
+      "http": 200,
+      "registration": true,
+      "id": "dshmarket",
+      "discoverable": true
+    }
+  ],
+  "cleanup": "owned-host-stopped-or-already-exited",
+  "limitations": [
+    "No model calls, Zemax, browser interaction, sandbox or company validation."
+  ],
+  "updatedAt": "2026-10-18T16:41:14.5580197+08:00",
+  "nodeVersion": "26.12.0",
+  "buildInfo": {
+    "schemaVersion": 1,
+    "product": "optDSH",
+    "version": "0.2.0-dev.3",
+    "dshVersion": "0.2.1-rc.2",
+    "channel": "dev",
+    "buildMode": "package",
+    "buildId": "0.2.0-dev.3-2026-10-18T08-39-11-106Z-0a69ac4611bc",
+    "builtAt": "2026-10-18T08:39:11.106Z",
+    "builtWithNode": "v26.12.0",
+    "sourceRevision": "0a69ac4611bc5223813041431444a71e710a7328",
+    "sourceDirty": false,
+    "runningNode": "v26.12.0"
+  },
+  "components": [
+    {
+      "id": "core",
+      "status": "ready"
+    }
+  ],
+  "communityPlugins": [
+    {
+      "name": "@changfenhuang/dsh-genui",
+      "version": "0.11.4",
+      "state": "active"
+    },
+    {
+      "name": "@weibaohui/dsh-tasks",
+      "version": "0.5.9",
+      "state": "active"
+    },
+    {
+      "name": "dsh-better-sidebar",
+      "version": "0.28.0",
+      "state": "active"
+    },
+    {
+      "name": "dsh-claude-style",
+      "version": "0.13.1",
+      "state": "active"
+    },
+    {
+      "name": "dsh-context",
+      "version": "0.68.0",
+      "state": "active"
+    },
+    {
+      "name": "dsh-quote-followup",
+      "version": "0.2.10",
+      "state": "active"
+    },
+    {
+      "name": "dsh-theme-firefly",
+      "version": "0.1.3",
+      "state": "active"
+    },
+    {
+      "name": "dshmarket",
+      "version": "1.66.15",
+      "state": "active"
+    }
+  ],
+  "snapshot": {
+    "schemaVersion": 1,
+    "source": "old enabled selection migrated and loaded on DSH0.2.1-rc.2, 2026-10-18; no credentials included",
+    "targetDsh": "0.2.1-rc.2",
+    "plugins": [
+      {
+        "name": "@ahggg/dsh-side-chat",
+        "version": "1.0.1",
+        "enabled": false,
+        "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      },
+      {
+        "name": "@changfenhuang/dsh-genui",
+        "version": "0.11.4",
+        "enabled": true,
+        "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
+      },
+      {
+        "name": "@goodandready/dsh-voice",
+        "version": "0.9.8",
+        "enabled": false,
+        "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      },
+      {
+        "name": "@weibaohui/dsh-tasks",
+        "version": "0.5.9",
+        "enabled": true,
+        "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
+      },
+      {
+        "name": "dsh-better-sidebar",
+        "version": "0.28.0",
+        "enabled": true,
+        "compatibility": "0.25.0 waited on removed webRuntime; 0.28.0 uses connection and was loaded active on 0.2.1-rc.2"
+      },
+      {
+        "name": "dsh-claude-style",
+        "version": "0.13.1",
+        "enabled": true,
+        "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
+      },
+      {
+        "name": "dsh-context",
+        "version": "0.68.0",
+        "enabled": true,
+        "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
+      },
+      {
+        "name": "dsh-quote-followup",
+        "version": "0.2.10",
+        "enabled": true,
+        "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
+      },
+      {
+        "name": "dsh-theme-firefly",
+        "version": "0.1.3",
+        "enabled": true,
+        "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
+      },
+      {
+        "name": "dsh-voice-mode",
+        "version": "0.7.15",
+        "enabled": false,
+        "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+      },
+      {
+        "name": "dshmarket",
+        "version": "1.66.15",
+        "enabled": true,
+        "compatibility": "loaded active on 0.2.1-rc.2; full interaction still requires manual verification"
+      }
+    ]
+  },
+  "testSummary": {
+    "plugin": 147,
+    "installation": 59,
+    "ppt": 11,
+    "optics": 121,
+    "distribution": 37,
+    "architectureKit": 56,
+    "fullTestExitCode": 0,
+    "targetedInstallerAndRelease": 11
+  },
+  "existingUserHomeModified": false
+}

@@ -1,6 +1,6 @@
 # 当前状态
 
-2026-10-18 0.2.0-dev.3：主安装器新增可选插件预设none（默认纯平台）/market/recommended，包内固定版本清单绑定SHA256，推荐安装沿用官方Profile流程及产品pnpm。已装用户版本/开关和额外插件保留；失败保留主程序/Home并写未完成回执。定向11项及完整npm test通过，独立测试包推荐安装正在验收；图形安装向导、沙箱及公司实机未验证。见[安装说明](../docs/installation/README.md)。
+2026-10-18 0.2.0-dev.3：主安装器新增可选插件预设none（默认纯平台）/market/recommended，包内固定版本清单绑定SHA256，推荐安装沿用官方Profile流程及产品pnpm。已装用户版本/开关和额外插件保留；失败保留主程序/Home并写未完成回执。定向11项及完整npm test通过，独立dev.3测试包推荐安装8项active/8客户端HTTP200/市场pnpm通过，测试Host已停止（缓存复用）；图形安装向导、沙箱及公司实机未验证。见[安装说明](../docs/installation/README.md)。
 
 2026-10-18 0.2.0-dev.2：修复市场独立调用pnpm仍命中失效全局Corepack入口。Host子进程PATH优先产品node_modules/.bin及所选Node目录，父进程和全局PATH保持；官方管理器和市场均能使用产品pnpm。市场/dsh-market/status已实测pnpm false→true，生命周期回归通过；未更新全局工具或市场包，见evidence/market-pnpm-dev2.json。
 

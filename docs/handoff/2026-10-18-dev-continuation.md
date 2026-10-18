@@ -57,3 +57,5 @@ manual-preview中的installed-home/state是此前独立安装版验证，source-
 后续用户已在Codex侧栏手工完成移动。本会话不指定workdir时的Get-Location、Git仓库根均已实测为E:/Proj-2026-N06_optDSH-dev，分支codex/platform-dev；上述目录确认阻塞已解除，不要再要求用户迁移一次。
 
 0.2.0-dev.2追加修复：dshmarket自行调用pnpm，未使用官方plugin-manager的pnpmCommand，仍命中全局失效Corepack入口。Host启动时仅给子进程优先注入产品node_modules/.bin及所选Node目录；市场status.pnpm已从false变true，用户/系统PATH不变，PowerShell7和内置5.1回归均通过。旧0.2.0-dev.1测试包保持不覆盖。
+
+0.2.0-dev.3追加：安装器支持-PluginPreset none（默认）/market/recommended；公共推荐清单固定版本与SHA256随包，8项经独立新Home联网安装、active与客户端200验证，市场pnpm=true。代码0a69ac4；测试包releases/0.2.0-dev.3，验证根validation/0.2.0-dev.3-recommended（测试Host已停）。保留用户已有版本/开关，不复制账号/会话；图形向导仍待做。完整回归通过，缓存复用/无真实模型/无沙箱公司实测；不得覆盖已有同版本测试包。证据evidence/recommended-plugins-dev3.json。

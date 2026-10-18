@@ -49,3 +49,5 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 推荐清单及其SHA256属于发布版本，不追随开发机所有临时安装项。联网下载使用产品自带pnpm及官方DSH Profile流程，不复制开发机node_modules、账号、密钥和会话。原禁用项不自动开启，用户已有版本和启用状态不被推荐清单覆盖，额外插件不删除。
 
 community-plugins-receipt.json区分installed、existing-preserved、failed与not-attempted；安装成功不等于运行验证成功。若中途失败，总安装器报未完成，保留已装程序、用户Home和.runtime/community-install.log，安装回执带coreInstalled和communityPluginStatus供排查。升级始终选择既有Home并先结束其活动写入；不在每次平台启动时重装推荐项。
+
+2026-10-18独立安装验收：dev.3测试包在仓库外新建程序/Home完成recommended自动安装，8项active、8客户端HTTP200、市场pnpm=true、运行构建身份匹配，测试Host退出。复用下载缓存，不等于冷网络或新机器验收；未验证全部插件交互。证据：[dev.3回执](../refactor/2026-10-18/evidence/recommended-plugins-dev3.json)。失败后先查回执和日志，停止该Home写入，再用install-profile-plugins.ps1显式选择修复；主安装器不会覆盖已有程序目录。
