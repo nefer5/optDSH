@@ -1,10 +1,6 @@
 # 光学工作台使用
 
-当前0.9.0工作台由官方Profile独立安装/启停/升级/卸载，普通启动不恢复已关闭插件。根CMD默认仅打开UI，不自动启动Python或连接Zemax；光学服务需明确配置和单独启动，StartOptics为显式请求。无后端时页面及普通会话可用，光学调用503。操作见[Profile插件](profile-plugins.md)。
-
-下文旧端口/按需启动记录供历史对照，以当前Profile配置及上段行为为准。
-
-根目录“启动光学工作台.cmd”按需启动光学服务及官方DSH。页面由3080承载，3081只提供光学接口；完整Web与工作台共用官方session，不使用旧headless聊天。
+工作台由官方Profile管理。根CMD打开已启用的界面，不重装/启用插件，不自动连接Zemax。当前目录与生命周期见[插件说明](profile-plugins.md)。
 
 ## Windows静默后台与诊断
 
@@ -53,7 +49,7 @@ Windows服务使用自动检测环境内的pythonw.exe启动，不创建控制�
 
 光学自动附带的模型身份折叠为“光学上下文”，不表示启用了画板。画板消息包装器使用全部slot注册项寻找下一级渲染器，避免只读优先级胜出项而吞掉用户消息。
 
-“画板”按需弹窗，完整Web与弹窗复用同一BoardStore和transport。画板编辑器暂由N05的4173提供；正式数据在data/canvas/boards，不是.agent-canvas独立项目收件箱。保存画板不自动发送；Agent修改建议须预览/应用，拒绝可附反馈。多窗口冲突保留恢复副本，不静默覆盖。
+“画板”按需弹窗，完整Web与弹窗复用同一BoardStore和transport。画板编辑器独立安装，通过Home/config/canvas.json接入；新画板在当前workspace/.agent-canvas/optdsh/boards，旧板原位兼容，不混用独立项目收件箱。保存画板不自动发送；Agent修改建议须预览/应用，拒绝可附反馈。多窗口冲突保留恢复副本，不静默覆盖。
 
 Standard工具/权限保持官方原有机制，不额外施加工作台白名单。光学MCP查询只读；保存由用户按钮触发，副本分析按Skill与授权执行。停止回答仅取消Agent，不停止Zemax作业。
 

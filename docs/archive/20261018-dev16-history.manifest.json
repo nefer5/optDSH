@@ -1,0 +1,936 @@
+{
+  "date": "2026-10-18",
+  "sourceRevision": "5d6920e4bf43209435f10fd9e7ffca38dc4d5676",
+  "archive": "20261018-dev16-history.zip",
+  "archiveSha256": "d2c5ee45e0031974216c4c5583536c147efcfb944b5f1fbcc3a279d4d3d6ecba",
+  "verifiedEntries": 181,
+  "entries": [
+    {
+      "path": "docs/arch-hook-delivery-loop-handoff.md",
+      "bytes": 8451,
+      "sha256": "e7bb15e1420c84dd97faecee9b01c6e36845a4b00345794bb5ddc682bc1ab590"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 5602,
+      "sha256": "5afaa47edaab0389a2421f9e3319160f688dcc5988ba52b68627a22f71b090e3"
+    },
+    {
+      "path": "docs/development.md",
+      "bytes": 11591,
+      "sha256": "09a5ebe82684e3015b1be13f933e7ba9357ca09f6bef5c873b329e374e981310"
+    },
+    {
+      "path": "docs/dsh-0.2-upgrade.md",
+      "bytes": 4310,
+      "sha256": "7f3c1a033810ccffbea34ddbd6fa99d12746f2e1e6744ba7f6c252c5eb786ac9"
+    },
+    {
+      "path": "docs/dsh-plugin-research.md",
+      "bytes": 4796,
+      "sha256": "4e9013874926f675753017ba34935fa09e0e37b4c9fe7f5f0af49fd746dde912"
+    },
+    {
+      "path": "docs/handoff/2026-10-18-dev-continuation.md",
+      "bytes": 10072,
+      "sha256": "1bab054dbda28c682351c3cffe3be7965a7d12b6a154dea8bc7abf1706c1fd77"
+    },
+    {
+      "path": "docs/profile-plugins.md",
+      "bytes": 9821,
+      "sha256": "0d0b66cf950e28b4568377117a1c6306a2c0580ff796ae0872bdf50ac1e51a36"
+    },
+    {
+      "path": "docs/README.md",
+      "bytes": 1678,
+      "sha256": "b74ff747c34766227c39c204634a284ba9b8d9ea235eeafa728931ab8e359517"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/c4-perspective.md",
+      "bytes": 6305,
+      "sha256": "f1f24255b44ca9dc3a42caea1d2bc40a4c37688ae760901e4d8569d129357e6e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/canvas-installation.md",
+      "bytes": 4167,
+      "sha256": "532505f70c3c8efa78caa6e3febbca8209c58c7ff95bccd68b98846f27327432"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/connection-component-review.md",
+      "bytes": 2838,
+      "sha256": "89ab6796ef57e957a4d7c478313c2741614498e2c17a5e0edd6a10611982d1e5"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/decisions.md",
+      "bytes": 7242,
+      "sha256": "2f14aa5f58edf4c18a4fb70fb449dba19cc4380c5a23d7cbdf4cf629ca66d7da"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/design.md",
+      "bytes": 20590,
+      "sha256": "10626c92922c0e4b90a981b4bd5e85814f3d23d4edd6614a3940d99f75ec2880"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/candidate.json",
+      "bytes": 9219,
+      "sha256": "07fc2acd257b051d7658ca5da58b0d770c8b6f60cceb88347ccfdd77b97d986e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/diagram.delivery.json",
+      "bytes": 631,
+      "sha256": "5dd7d463f1dec8f14dc2129a4fa15a701f0312d5da4489da99a234a8b00efdf8"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/diagram.html",
+      "bytes": 785183,
+      "sha256": "7a53868ff196451d0f6318aa4590ff6e91472e8e75307a0f2eb2257aef272e80"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/verified/diagram.browser-check.json",
+      "bytes": 22306,
+      "sha256": "c038aaca4a5edd6deee90eb54b4080a30192ec371cfb46409fb41205b39178e7"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/verified/diagram.finalize-summary.json",
+      "bytes": 3274,
+      "sha256": "179f5b2af56f1613449db49a73b8f56e67dfed66d092ad956bb6d80b9693dad6"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/verified/diagram.finalize.json",
+      "bytes": 37168,
+      "sha256": "5665986758bdfcfe7ff1bfe4a462d2ca881afa76f98b7315a7e9edee61bdcb16"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/visual-review/diagram.visual-check.1440x900.dark.png",
+      "bytes": 105966,
+      "sha256": "34e1de3087105e0baf8d95dc43d3afb8d2349dc67723c6d70f68594a55d1c978"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/visual-review/diagram.visual-check.1440x900.light.png",
+      "bytes": 95618,
+      "sha256": "c8e5bc9f53ac611c0cae50370a13102f603518370ab750610513bb0887a2bcb0"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/visual-review/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 142166,
+      "sha256": "80ef4736d21cd534a096cc34a782c8113a9f2154643f2b8285b3662a0906c3b4"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/visual-review/diagram.visual-check.2048x1320.light.png",
+      "bytes": 128568,
+      "sha256": "d021342bfdabf569c53f010082d9185ca590b8897bf708da85822c0de374c5ad"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/visual-review/diagram.visual-check.html",
+      "bytes": 1974,
+      "sha256": "e1fcedb231d219c81533bc5cdb3e1c3db6eacce29e219e1631ec3c969ffdb7b0"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/visual-review/diagram.visual-check.json",
+      "bytes": 30145,
+      "sha256": "6f2056bf6eb485841f15f2aa83b8a45abe623a292a934b3c32c901e5478ffa6c"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-current/visual-review/review.md",
+      "bytes": 639,
+      "sha256": "dfa9083caf12b931fa7b9dafe85ba9c0cb49d51ba9605afedb05f742f11d8aee"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/candidate-before-layout.json",
+      "bytes": 7167,
+      "sha256": "13d39d531dd4695d32affff4ce726a207c5c0243d13d8ec1d85cefe4fe338ce1"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/candidate.json",
+      "bytes": 7166,
+      "sha256": "9a2214613373d386da0e5f10e180819eadf43689d81f6ae5e49ebb596cfa2d74"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/diagram.delivery.json",
+      "bytes": 629,
+      "sha256": "1b20d8557fbcc1afe1572fe66c1805f400de9d26daf22b079f62323f52a09e4e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/diagram.html",
+      "bytes": 788519,
+      "sha256": "abc405eb938900558387381c12cb6846783485f80df7c9aaabda877ceaa42486"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified/diagram.browser-check.json",
+      "bytes": 22097,
+      "sha256": "8b8ce73426a5e1cb3f53b3258715c6ed2229d45a3abcd181ba8328e1106c85c3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified/diagram.finalize-summary.json",
+      "bytes": 3758,
+      "sha256": "3f6248227d8b62dca924304c8ba64d5faf8ff62354d61b2d65494e79551d6adc"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified/diagram.finalize.json",
+      "bytes": 36962,
+      "sha256": "fbe2cce95a082795841336b167cf9c2e37a5f3304906f6ededfb54def4003786"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified-design/diagram.browser-check.json",
+      "bytes": 22284,
+      "sha256": "87b5df3217b5d8545a6b4cb527a40447d49ff9d8e52d8ed908ad5df0e38c3efd"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified-design/diagram.finalize-summary.json",
+      "bytes": 5115,
+      "sha256": "93124acbf36d26c95a67bdf93c48143b17eeff3321153427748dc34a2d54a358"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified-design/diagram.finalize.json",
+      "bytes": 38313,
+      "sha256": "7139a2bff30e2536d5c071fe5ba656253515c09b0c242072277f761d7bf7853f"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified-layout/diagram.browser-check.json",
+      "bytes": 22284,
+      "sha256": "37b24ec72bbafe8ce17943783440fdcccdc9645a66e30f57cbccaf1c06473ea3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified-layout/diagram.finalize-summary.json",
+      "bytes": 3293,
+      "sha256": "003e04c35f4184ca7530f5204eaf122cce72cd093ab1eb841bab9611c7bfaff5"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/verified-layout/diagram.finalize.json",
+      "bytes": 36795,
+      "sha256": "cc3f238d13752f56c5f8009c57cc359fb1e76ce5e3dd195fbb1ec9843439c2b4"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/visual-review/diagram.visual-check.1440x900.dark.png",
+      "bytes": 115296,
+      "sha256": "f626bbe06733c9635c5379e97ec6e0660b9bc713238be9bdf84d4bc2f408f2ea"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/visual-review/diagram.visual-check.1440x900.light.png",
+      "bytes": 102486,
+      "sha256": "be16a2b680061465b0af93f5f3b9e6c974bfa50be150e7604db54be1eef804bf"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/visual-review/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 146908,
+      "sha256": "f156d86281935eb4ff3c807477cd8294b8f08b4ed8ee36ad4c230a75b42fd626"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/visual-review/diagram.visual-check.2048x1320.light.png",
+      "bytes": 132297,
+      "sha256": "dcb5983546b992c06fd3cb9f9bf4c47db6ac9de877d77f6835016d67133eeb90"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/visual-review/diagram.visual-check.html",
+      "bytes": 1974,
+      "sha256": "e1fcedb231d219c81533bc5cdb3e1c3db6eacce29e219e1631ec3c969ffdb7b0"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/visual-review/diagram.visual-check.json",
+      "bytes": 30089,
+      "sha256": "327181a8511012b7c93e5385646065070b2767d33e56bb26bf2d34c3244b00d3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/architecture-target/visual-review/review.md",
+      "bytes": 639,
+      "sha256": "70c3f490aaf7cd069411ebef9647bd5fa27da37e4a13cdef2f5bd0303eab171c"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/candidate.fixed.json",
+      "bytes": 7209,
+      "sha256": "8102ae193102b44d7122bc592fdea26de92cdf1c978386fae6bef5d924b435f6"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/candidate.json",
+      "bytes": 7237,
+      "sha256": "163f55c51631b89a58334aa41dac0f205e1196f20848b23af9450f0b22edaeb9"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/diagram.browser-check.json",
+      "bytes": 21696,
+      "sha256": "d0c7de4fff2b5c2ed3d5cdc03070fed0f56ca06e919125d45c6a1ca993f96f3e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/diagram.delivery.json",
+      "bytes": 615,
+      "sha256": "765a22ffe4e9f06d92a4432ce04b4dd9c81afe0a37bd4de876739c4b44b124f6"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/diagram.finalize-summary.json",
+      "bytes": 2913,
+      "sha256": "abc2ccee5e55ecc9c1fcd013f5c2625bc9ce0cf7368545b12c99bd593ccfb855"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/diagram.finalize.json",
+      "bytes": 35858,
+      "sha256": "5b53f11b850fa901e058b1f6171d589f9b173fdca033e07ef140f9de8ae2d6d0"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/diagram.html",
+      "bytes": 778956,
+      "sha256": "9004a504593cca38623cc3e172912ab124fb64e85d49c6afd4190101262ece9c"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/verification.md",
+      "bytes": 799,
+      "sha256": "df23b3bf2111ce1e83e0e050d4d31e656b22f6363da49c7d66bb2c1449dd6c06"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/visual-check/diagram.visual-check.1440x900.dark.png",
+      "bytes": 121074,
+      "sha256": "56b49d653a764215820151304800e83c7a636b805934a03bd17e775162074df4"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/visual-check/diagram.visual-check.1440x900.light.png",
+      "bytes": 115779,
+      "sha256": "220cf9b14fb2f43d6ab2ed155aed158d839e9dce88dd5fcc307a6911935034c7"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/visual-check/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 149960,
+      "sha256": "121b7b3e1ec7952ccd7eda9fdf005a3798a9b424a2d2e2f2cff2f564b9913d44"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/visual-check/diagram.visual-check.2048x1320.light.png",
+      "bytes": 144538,
+      "sha256": "f0988414d00a850d74728a36de26f5f50e18fb4bbb7b061a372189a43068a786"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/visual-check/diagram.visual-check.html",
+      "bytes": 1974,
+      "sha256": "e1fcedb231d219c81533bc5cdb3e1c3db6eacce29e219e1631ec3c969ffdb7b0"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/visual-check/diagram.visual-check.json",
+      "bytes": 29508,
+      "sha256": "e65851aaa18c000b8bff8d444e49f18e16a5c34a4297d19691052f03178267e1"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/width-review/diagram.browser-check.json",
+      "bytes": 21809,
+      "sha256": "47be8fc3288e2bc64342e068e0a1b94b80866329377dc33a40319b6625ca1a94"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/width-review/diagram.finalize-summary.json",
+      "bytes": 2013,
+      "sha256": "f20314c8abdd16f857033c1f422fa216c697662791c49df4e2c531692f4987fe"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-current/width-review/diagram.finalize.json",
+      "bytes": 36144,
+      "sha256": "68bcfb5e76a24da16ed48f0902b1cdbbbe0dce37e27689af47e27606192c2c33"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/candidate.fixed.json",
+      "bytes": 5873,
+      "sha256": "34b1936ae7443023dcdca447587bc905afef7bb0b2d6d2b2ec5f3705af6fe633"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/candidate.json",
+      "bytes": 5901,
+      "sha256": "5e04a2f9030ed5ca07b8a40c0eee0338a8c8a005b1da58439a553946bfd02828"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/diagram.browser-check.json",
+      "bytes": 21731,
+      "sha256": "06dc117cdae12548ea2d1ab58c0a70cc585a2db6617388fb217e766b67fd68f2"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/diagram.delivery.json",
+      "bytes": 613,
+      "sha256": "3b2fe7a8bf7e9f0d3c327e86d423bd6fb654dd94ca02ee3f9979d15bba1b8e08"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/diagram.finalize-summary.json",
+      "bytes": 2908,
+      "sha256": "789248f650aa440402c7d32aeb86b98b3407751023c7a8926e810344dcc6304a"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/diagram.finalize.json",
+      "bytes": 35521,
+      "sha256": "124b4f8702883153fda8a1fefd277a8cc42caaf481652732918c072154e29f3d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/diagram.html",
+      "bytes": 775755,
+      "sha256": "732341bf6fe984c5e9f2caaa70edcabd5f47f3af99afb3c712620f7b3794b65b"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/verification.md",
+      "bytes": 801,
+      "sha256": "817e416aefc883466ca8e8e3cf9bca0af8fc737e6c1a98e69437b60ece61d67f"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/visual-check/diagram.visual-check.1440x900.dark.png",
+      "bytes": 112148,
+      "sha256": "a37a0c083a82576c898c57c64071d889008e3bf601cedab13fcd84f5dde0abc8"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/visual-check/diagram.visual-check.1440x900.light.png",
+      "bytes": 107172,
+      "sha256": "c205ecbd50ae7bdbeb12861a17631b0f637e52d78ddd5cde9baa617f62f6ab74"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/visual-check/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 142635,
+      "sha256": "596fd0729e1ff569d3a4a9d078783ada681c2d638b0e9c95adffa6c69496afcb"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/visual-check/diagram.visual-check.2048x1320.light.png",
+      "bytes": 137433,
+      "sha256": "0a71db307dd662c4492359b390e5f4d2c845f7823d1d6b2f4e6813e751161f29"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/visual-check/diagram.visual-check.html",
+      "bytes": 1974,
+      "sha256": "e1fcedb231d219c81533bc5cdb3e1c3db6eacce29e219e1631ec3c969ffdb7b0"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/visual-check/diagram.visual-check.json",
+      "bytes": 29320,
+      "sha256": "b2f153f5e2d1cc5fea880291eb467083b4a0cde7432d7e440bd5a8952d1468f1"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/width-review/diagram.browser-check.json",
+      "bytes": 21687,
+      "sha256": "3a53fd036e3e6ae20bbd4dc05230171ca3364bdb8a0579aa5557e0f1a74b5800"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/width-review/diagram.finalize-summary.json",
+      "bytes": 2008,
+      "sha256": "1f21a26d2997790c982709c20aed47c7687e54ef630a86db425fc50391e04117"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/canvas-target/width-review/diagram.finalize.json",
+      "bytes": 35641,
+      "sha256": "edbb33a0faeba35d1633c8289caf7a143f7970fd7a14a1ff308c968c61b1737e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/candidate.json",
+      "bytes": 8135,
+      "sha256": "64587db8b96386b82ceb0c548b5258758f859e9c60642ea41bdac1686c24b71c"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/diagram.delivery.json",
+      "bytes": 611,
+      "sha256": "d7c6e5c8e6fb7226f429bf2a242c155fe33c86047b46af5c36b3b64433becd0e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/diagram.finalize-summary.json",
+      "bytes": 3199,
+      "sha256": "b2a4539909627e30bf518c2c0385f1d7f54c07aa81005c0338aac756855288d3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/diagram.finalize.json",
+      "bytes": 6538,
+      "sha256": "4e226616fa3bf9e1d9143d6d51513ac808b798473a5c49f51cf91613a7916bc9"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/diagram.html",
+      "bytes": 777168,
+      "sha256": "6f6d20edd679cf4ea05e1199841fa5a98d3253dddd8cec29cfd41acc5adc6069"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/review-final/diagram.browser-check.json",
+      "bytes": 21034,
+      "sha256": "6b1ca5ef05df45166615dfd592d4575fa769b1c219f0ad07138472f4b9942ad6"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/review-final/diagram.finalize-summary.json",
+      "bytes": 2003,
+      "sha256": "341bb154087c8d6b39c2b9e3677b3f92701a3f0243e4bdcdc251cfefac6e2dfc"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/review-final/diagram.finalize.json",
+      "bytes": 34981,
+      "sha256": "ec972c5442ffc545f5f59bdf365de63e7e81ba14bc17cc2f999625e2be6b1e93"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/visual-review/diagram.visual-check.1440x900.dark.png",
+      "bytes": 145114,
+      "sha256": "f3f12934103b9204af2fa4d3d162c6e58d5f51a6c798dd44fcb84b8d97dc221a"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/visual-review/diagram.visual-check.1440x900.light.png",
+      "bytes": 133542,
+      "sha256": "1b3925e490d39f8d7c9b3cc06c883bba176247a246d212a8e1630c05f40b35da"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/visual-review/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 223010,
+      "sha256": "940f72437e421a273997288401419448292cefad6c4e4df7425854c987003fba"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/visual-review/diagram.visual-check.2048x1320.light.png",
+      "bytes": 210263,
+      "sha256": "35bb7f064b4873295f34559b38872b021b8d4fc9315be958a8ab72d299e9d4f4"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/visual-review/diagram.visual-check.html",
+      "bytes": 1918,
+      "sha256": "3f5bfec9ec84b3b2b8bd52a1dde695230af4eb7f45f479cc46a9b4af95769c7d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/visual-review/diagram.visual-check.json",
+      "bytes": 28496,
+      "sha256": "6fea5bfe995a27b6e6db91cbf60d119923d6a192f94b6cd9027aa58d87c925ff"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-current/visual-review/review.md",
+      "bytes": 602,
+      "sha256": "1321605d87abbf60bb3380e5b35de6331f72d6c6d332bc044ac43859f090359b"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/candidate.json",
+      "bytes": 7036,
+      "sha256": "78c6f196ca225166903532ab47db7ce689671ee448b5dc42462ddd077e1e168d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/diagram.delivery.json",
+      "bytes": 609,
+      "sha256": "74af02998685b24f8f88d77a80ee2dd891c8a6d36f65e2e7be73ab9a98839b2d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/diagram.finalize-summary.json",
+      "bytes": 3198,
+      "sha256": "04e2e739901a9e2c1f28d9372abf2b2e0dc5975b2730d6477061c88ef5a93192"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/diagram.finalize.json",
+      "bytes": 6227,
+      "sha256": "60822f24c6edea2500877ad74532e5705b54d29dd63eb062266de3755dbd26f1"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/diagram.html",
+      "bytes": 782487,
+      "sha256": "a26ee1bb7d9f93d498f60ac347f36537786e200ce015d1a5964570e4a135a7ec"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/review-final/diagram.browser-check.json",
+      "bytes": 21044,
+      "sha256": "bffdcdbf575fddf5568880d90e2568b40eaf01b94f6d1cddd8ecd390473f8317"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/review-final/diagram.finalize-summary.json",
+      "bytes": 1998,
+      "sha256": "5fa32c1fbd18b3cb8e59db3d8fc3e83a633ac3f4e8fb6b9defe2766b89ac6261"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/review-final/diagram.finalize.json",
+      "bytes": 34606,
+      "sha256": "18b153482d1ce16d284e747582d38ba1ae425430f8b30af62b472c14bed538fa"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/visual-review/diagram.visual-check.1440x900.dark.png",
+      "bytes": 146351,
+      "sha256": "73cd35c530d8dc31344f2a280e088f72ec3a6606503526887491d56570179acb"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/visual-review/diagram.visual-check.1440x900.light.png",
+      "bytes": 132646,
+      "sha256": "f3b155b6df0b7a4b1ebee217b86bab1174d9ae61905f88e9f95a64eddb46a701"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/visual-review/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 218913,
+      "sha256": "0905919e4c73932a5072053481ec56ed616d7eb3b90207b53a8a9ed49ac21b84"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/visual-review/diagram.visual-check.2048x1320.light.png",
+      "bytes": 201533,
+      "sha256": "e24366907a3966f2cd7c54d46e73354db2e9ebceeb8f9b03d52c5d64dc1386df"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/visual-review/diagram.visual-check.html",
+      "bytes": 1918,
+      "sha256": "3f5bfec9ec84b3b2b8bd52a1dde695230af4eb7f45f479cc46a9b4af95769c7d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/visual-review/diagram.visual-check.json",
+      "bytes": 28510,
+      "sha256": "16cee6ffd01a24d0a6ea9328a39d64735e8c8e4fcf60e62f3029fbce76154577"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/data-target/visual-review/review.md",
+      "bytes": 602,
+      "sha256": "973bdeda5f8be1ff47b793f41bbc5db351580e4678f08f729081b9b90c7e325c"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/candidate.json",
+      "bytes": 6529,
+      "sha256": "068daa4fbcab6deba2e204b9c862a476d77d8ea5c6fb375d4f35614f4604ac17"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/diagram.delivery.json",
+      "bytes": 617,
+      "sha256": "bd97d507e2cab0b2e39604f532aa5fc10d38572eabfb91549eef2139143e27a7"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/diagram.finalize-summary.json",
+      "bytes": 3453,
+      "sha256": "510cb8582cf347f074412ec1120d93cdce7c6a166831ea9dc1f57e79e0a6da13"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/diagram.finalize.json",
+      "bytes": 11025,
+      "sha256": "0625aab11c6ac97c98cf5c544f535e60240ee5242316737d8c4a06934938c3e3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/diagram.html",
+      "bytes": 772999,
+      "sha256": "be090c4a78c7d98a50705d4151d3a80a7f42b5b9cc189a8c99cc13f503404f34"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/review-final/diagram.finalize-summary.json",
+      "bytes": 3242,
+      "sha256": "7bd28304108c7e0af8cb44aef9a1d03d8a2046d01e1c8f45a534eb74bd477cb1"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/review-final/diagram.finalize.json",
+      "bytes": 6596,
+      "sha256": "3bd7ce81ae40a6149e18ed1f3452600ba0596fa5e28fa17ae51983556c15d3e3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/verified/diagram.browser-check.json",
+      "bytes": 36420,
+      "sha256": "c406f05bd37a90ee4ec65234c36972a1ed62a1b0f1e934882c5f582fa61336b8"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/verified/diagram.finalize-summary.json",
+      "bytes": 2006,
+      "sha256": "c150593f00629e52a2a9d13f9ba9ae2bb50c503bd0f7a37a943fa6e80363646b"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/verified/diagram.finalize.json",
+      "bytes": 54070,
+      "sha256": "097eca4836b96e9049367b88cf2324503d48f25acf2445eee5d91a106686e740"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/visual-review/diagram.visual-check.1440x900.dark.png",
+      "bytes": 124703,
+      "sha256": "8c2f7f819e9e3e421aac4ccc64222a21c59398a09c724ae2c8482360e577a5a6"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/visual-review/diagram.visual-check.1440x900.light.png",
+      "bytes": 112432,
+      "sha256": "41e7ed50b9f5914bae543fd59b98daa6cd4d619c6736cca30832df6d28875187"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/visual-review/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 194561,
+      "sha256": "d29971b1cd85a60a499b4a7aa28f7bb80c2f78e59ff497dd4a921624ecf7aeaf"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/visual-review/diagram.visual-check.2048x1320.light.png",
+      "bytes": 176956,
+      "sha256": "b879d16b3e4c8e7b6b0dabcb600fb6bc88ffc5cf883848415850737ee9079ee5"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/visual-review/diagram.visual-check.html",
+      "bytes": 1918,
+      "sha256": "3f5bfec9ec84b3b2b8bd52a1dde695230af4eb7f45f479cc46a9b4af95769c7d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/visual-review/diagram.visual-check.json",
+      "bytes": 49018,
+      "sha256": "3dae941686525285b340c02ee84cd78602806b546c2a2034fb75eadfcfa04b92"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-current/visual-review/review.md",
+      "bytes": 593,
+      "sha256": "eb831d60c73a0553bad09a253cf31dad4f37de2d2fbe4941f853413f9077da5f"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/candidate.json",
+      "bytes": 5159,
+      "sha256": "07b5196d7f2720ebb0ebaac3fa0772312a4077b0a5ef8cd8e72fafe4949525c2"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/diagram.delivery.json",
+      "bytes": 615,
+      "sha256": "02a68d9d15e7b6f33eacf23edf39d518020bfa950b2f4e5dff472927f15982bf"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/diagram.finalize-summary.json",
+      "bytes": 3459,
+      "sha256": "86e9ee9c5c4a9c414eb9c3d410e4ce0c732369fc9e2580ca96f64414e873931a"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/diagram.finalize.json",
+      "bytes": 11389,
+      "sha256": "1af756b06f7c1b924fe3a9aa73c9891bd5924efd87406772477773bf91821358"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/diagram.html",
+      "bytes": 773555,
+      "sha256": "04cb54e0a8df96ea4622a89a041c23725dd90f3c07fcdd138cf365306d35b5ff"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/review-final/diagram.finalize-summary.json",
+      "bytes": 3238,
+      "sha256": "102ae1f6a1ab3a0e4b640f15af32cea70c2a42ea00d2f08080755791fb3abfb6"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/review-final/diagram.finalize.json",
+      "bytes": 6279,
+      "sha256": "19bd96b96299d39340a92d17c2cac3bbe52ee566ddcebc16160cb4d5e886395e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/verified/diagram.browser-check.json",
+      "bytes": 36742,
+      "sha256": "6c82d523770735894af24c51441d75c95d23953508434d06399c3782e015612b"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/verified/diagram.finalize-summary.json",
+      "bytes": 3202,
+      "sha256": "365a41713e9b3da5df1dfb2126a58dd02a268709182fc932f3d7ffbac89664e3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/verified/diagram.finalize.json",
+      "bytes": 54448,
+      "sha256": "2ccdc5874d37fdc2c8dd0176337eb8125893c5c4cd0a2ca4425daf402a796cf3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/visual-review/diagram.visual-check.1440x900.dark.png",
+      "bytes": 125121,
+      "sha256": "942e8c508ef32f4b588ceba98e8f24d57d7a8ce30e7112c33d1a78514f211f72"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/visual-review/diagram.visual-check.1440x900.light.png",
+      "bytes": 111280,
+      "sha256": "2212577d72e2687ea933877597f91afc53bf3939c595ca142fe39d50d40d2066"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/visual-review/diagram.visual-check.2048x1320.dark.png",
+      "bytes": 194923,
+      "sha256": "ec4dc17c0c55bb20e23c217f39cc05ee7827c9d6c726df3e786bbee5716f8951"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/visual-review/diagram.visual-check.2048x1320.light.png",
+      "bytes": 175816,
+      "sha256": "7deba28e9ee54d442136bc25b63072631c2346de27234e934d2884bf196c4b06"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/visual-review/diagram.visual-check.html",
+      "bytes": 1918,
+      "sha256": "3f5bfec9ec84b3b2b8bd52a1dde695230af4eb7f45f479cc46a9b4af95769c7d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/visual-review/diagram.visual-check.json",
+      "bytes": 49448,
+      "sha256": "a9882cca447fece6dde8698d5b80914484cabcabf18e6dc7b3d5fe1ce8f5b055"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/diagrams/install-target/visual-review/review.md",
+      "bytes": 593,
+      "sha256": "53adcf305bd93688c8576f0f1bbacddabe9f4d69edcae336faedb0a8929cc574"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/directories.md",
+      "bytes": 15855,
+      "sha256": "f6f10b83157dd54c5f3fc5f5e1e848405c50b893a83f5261269f240e0ddabcc4"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/discussion.md",
+      "bytes": 6646,
+      "sha256": "630f91b33a72b68a748e360ecee3aac8dd98666e791d1d4e9887ab2c33fcd604"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/canvas-installation-dev6.json",
+      "bytes": 5040,
+      "sha256": "354bf32375c67b63c212323cdb22f475dd38e5f0ccdc022fab8a46264549c853"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/canvas-profile-dev8.json",
+      "bytes": 4855,
+      "sha256": "44e9d9b456cae967522cd5391d8d274b560b6ecb2bb7f26a5590dce3c4bce007"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/implementation/receipt.json",
+      "bytes": 2441,
+      "sha256": "537a3c01321347a390450b953b035f32cd7453a77341d7425f1e67eeff517c51"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/market-pnpm-dev2.json",
+      "bytes": 390,
+      "sha256": "dfa3fb5539cc7efe6131e138df9facc895db5d12c2d24ac62533f9fe879fe1ac"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/portal-sandbox.png",
+      "bytes": 534258,
+      "sha256": "fdb356b9e9c7ca8ab457833668e699032860801ca3c81648b2bb89ec7cfa0d52"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/portal-target.png",
+      "bytes": 359038,
+      "sha256": "b180abcc27718c75f6aea55b399f34145b3e8a23557bfd14f8efe8864920e922"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/prior/current.html",
+      "bytes": 172,
+      "sha256": "b4b24e7d227d81d19a2813d60326a5a3a8b18868f09386ca3a2ed1c541a29006"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/prior/directories-20261018.md",
+      "bytes": 18384,
+      "sha256": "0cda89ab928e7c14ba971186ae552df5ed8a7997a7d84ae4bf8e52e587a7b903"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/prior/proposed.html",
+      "bytes": 171,
+      "sha256": "211f2c6ecc694ac8902f51155549c68ee9d7d72c2ba5b2f2d1fdb8a47dd18bb7"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/prior/research-20261013.md",
+      "bytes": 32390,
+      "sha256": "2dfd952033e6802dab069f5d8796927fd7fffd8d1538284f12f0c23d4b5e8a4d"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/prior/verification.md",
+      "bytes": 195,
+      "sha256": "5cf0e3ae3f18112610279b4f54656efab1ede2ca509aef666fbd2117cfc97073"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/profile-import.json",
+      "bytes": 2218,
+      "sha256": "dbaaa5b55b8ec0db80ba5a84963d156120da1ecbbb84f106da4b34316073ad1c"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/recommended-plugins-dev3.json",
+      "bytes": 7113,
+      "sha256": "b8509feb3b45473a42bb4d635f7d3174ad084fa91aa8b22b4b254e282a35e584"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/thin-launcher-node24-node26.json",
+      "bytes": 3069,
+      "sha256": "6f48d4b44d9b758793a60880447e147811a69d54320f50597547198746d12d99"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/version-dev1-installation.json",
+      "bytes": 2647,
+      "sha256": "4d48545ab3be69a2426c7b4a747ce2a1fb851dad29fdbc97b519d3ad14eafc19"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/web-optics-configuration-dev13.json",
+      "bytes": 2044,
+      "sha256": "a6a7856321c6b18b7a3facf19cb09f56bf6ba113655e5eb12019bacd0eb1f1b4"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/workbench-compact-ui-dev14.json",
+      "bytes": 1896,
+      "sha256": "dc2008b55f856f062d01e1e2bbd7615a464daf082bfa988b0b3094a46e9907db"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/workbench-origin-fix-dev16.json",
+      "bytes": 1870,
+      "sha256": "d8339540c0f049a5e02d3f73155758c3221cb3dd6b5707a99586b5605786bdf5"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/workbench-profile-dev11.json",
+      "bytes": 7454,
+      "sha256": "3a5b52d46fb0db273ee1ab7c18541907cf3b71e47e652474b537bfbb6474382c"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/workbench-silent-service.json",
+      "bytes": 979,
+      "sha256": "f0033e8bf7cae2edd868cd74006bcbe90e289d34b06f4d4b6fce20b6a56cdca3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/workbench-web-service-dev12.json",
+      "bytes": 1374,
+      "sha256": "342536307d92c59da4a52e943b07ebed6428b9cdee3b073fd5279b62fd7ee2d6"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/evidence/worktree-workspaces-verification.json",
+      "bytes": 3719,
+      "sha256": "61dee3c31b02b80137d7f250c27238b7ecccefa1e3ce63d4b41c552f16ec9ce0"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/implementation.md",
+      "bytes": 6651,
+      "sha256": "5a694cfcd9d56ba05817e27f42bbe0c716ecb1e43d81f8b46b68511608b7f78e"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/index.html",
+      "bytes": 177743,
+      "sha256": "707830dab64c5e988ed8521c5a86d36e26aa879b3b836c3069c6bb7612adf6f5"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/README.md",
+      "bytes": 2563,
+      "sha256": "717a689255b4bfecec7743663cfe07dd645a10ed553d5e3d7424402ceb4d1b34"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/thin-launcher.md",
+      "bytes": 2795,
+      "sha256": "f03cb52f07d9a613057626840935ae09b9e24df0e77b105c12b5774f4db4fd74"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/verification.json",
+      "bytes": 4643,
+      "sha256": "1b99a286e61e3fdf7b85a6f70464feecfddef9b980a01c90dbd74e8910ba9edb"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/verification.md",
+      "bytes": 6037,
+      "sha256": "e7d5e3dd5d738ea25f3c2f5a5c13c45a1a6cbce6b6f5d5f024234f9beb06531b"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/windows-validation.md",
+      "bytes": 9682,
+      "sha256": "7251846064f8be9a3b70252e14579f813d6df20b9eae9607185ae686a72bf0b3"
+    },
+    {
+      "path": "docs/refactor/2026-10-18/worktree-transition.md",
+      "bytes": 6328,
+      "sha256": "4551aa1af77a2a54bcc669c9e0c085f0c9c253bd4b73ab199fa132fd6832242d"
+    },
+    {
+      "path": "docs/runtime.md",
+      "bytes": 13480,
+      "sha256": "97e56b6bda4e34cdeb0a32c295a5c5aa1a31d1b9e0cfb3b778e592860f37bf8c"
+    },
+    {
+      "path": "docs/workbench.md",
+      "bytes": 9320,
+      "sha256": "d4b3e1512b6a6d606da626d39a61fac7411175c928ac1205d6c7d1c714faf855"
+    },
+    {
+      "path": "planning/ROADMAP.md",
+      "bytes": 3124,
+      "sha256": "f873a69d08e21c8004f701cb4eb8a0f3860f792ceb2006ef5ff1dbd04695a3b3"
+    },
+    {
+      "path": "planning/STATUS.md",
+      "bytes": 34585,
+      "sha256": "34a03283fc89f3b84c4b2c1c4a159c49f908bcc852a2cb513abcfad0c8acf61e"
+    },
+    {
+      "path": "scripts/maintenance/build-refactor-portal-20261018.py",
+      "bytes": 21672,
+      "sha256": "9fe0aa11d1678869dce5a45d29e67a98be71cfd5d394bd356f58e710dd4c7d7b"
+    }
+  ],
+  "promoted": {
+    "docs/refactor/2026-10-18/decisions.md": "docs/decisions.md",
+    "docs/refactor/2026-10-18/canvas-installation.md": "docs/installation/canvas.md",
+    "docs/refactor/2026-10-18/windows-validation.md": "docs/installation/windows-validation.md",
+    "docs/refactor/2026-10-18/connection-component-review.md": "docs/verification/zemax-connection.md",
+    "docs/refactor/2026-10-18/evidence/canvas-installation-dev6.json": "docs/verification/refactor-20261018/canvas-installation-dev6.json",
+    "docs/refactor/2026-10-18/evidence/canvas-profile-dev8.json": "docs/verification/refactor-20261018/canvas-profile-dev8.json",
+    "docs/refactor/2026-10-18/evidence/market-pnpm-dev2.json": "docs/verification/refactor-20261018/market-pnpm-dev2.json",
+    "docs/refactor/2026-10-18/evidence/profile-import.json": "docs/verification/refactor-20261018/profile-import.json",
+    "docs/refactor/2026-10-18/evidence/recommended-plugins-dev3.json": "docs/verification/refactor-20261018/recommended-plugins-dev3.json",
+    "docs/refactor/2026-10-18/evidence/thin-launcher-node24-node26.json": "docs/verification/refactor-20261018/thin-launcher-node24-node26.json",
+    "docs/refactor/2026-10-18/evidence/version-dev1-installation.json": "docs/verification/refactor-20261018/version-dev1-installation.json",
+    "docs/refactor/2026-10-18/evidence/web-optics-configuration-dev13.json": "docs/verification/refactor-20261018/web-optics-configuration-dev13.json",
+    "docs/refactor/2026-10-18/evidence/workbench-compact-ui-dev14.json": "docs/verification/refactor-20261018/workbench-compact-ui-dev14.json",
+    "docs/refactor/2026-10-18/evidence/workbench-origin-fix-dev16.json": "docs/verification/refactor-20261018/workbench-origin-fix-dev16.json",
+    "docs/refactor/2026-10-18/evidence/workbench-profile-dev11.json": "docs/verification/refactor-20261018/workbench-profile-dev11.json",
+    "docs/refactor/2026-10-18/evidence/workbench-silent-service.json": "docs/verification/refactor-20261018/workbench-silent-service.json",
+    "docs/refactor/2026-10-18/evidence/workbench-web-service-dev12.json": "docs/verification/refactor-20261018/workbench-web-service-dev12.json",
+    "docs/refactor/2026-10-18/evidence/worktree-workspaces-verification.json": "docs/verification/refactor-20261018/worktree-workspaces-verification.json",
+    "docs/refactor/2026-10-18/evidence/implementation/receipt.json": "docs/verification/refactor-20261018/implementation/receipt.json"
+  },
+  "restore": "Extract into a NEW directory, verify per-file SHA256, then inspect; never overwrite the active repository or user data."
+}

@@ -1,6 +1,6 @@
 # 版本、构建与本地测试包
 
-产品当前开发线为0.2.0-dev.1；官方DSH依赖版本与独立组件版本分别管理，不机械同号。阶段顺序通常为dev.N、beta.N、rc.N、正式版；只有确认交付的测试包才递增预发布号，日常修改由Git提交及dirty状态追踪。当前仅授权本地提交和测试包，不推送、不正式发布。
+产品当前开发版本为0.2.0-dev.17；官方DSH依赖版本与独立组件版本分别管理，不机械同号。阶段顺序通常为dev.N、beta.N、rc.N、正式版；只有确认交付的测试包才递增预发布号，日常修改由Git提交及dirty状态追踪。本轮已授权完成后推送开发分支；正式Release、主分支合并及公开npm另行决定。
 
 ## 命令
 
@@ -33,3 +33,18 @@ set默认只预览；加--apply才写入，并在本仓忽略的.backup/version-
 ## 不混入测试包的内容
 
 独立Home、模型凭据、浏览器登录密钥、历史会话、真实研究和全局.agents均不随包。插件安装选择用公开快照描述，Profile实际依赖及配置留在用户选择的Home；升级不应清空这些内容。
+
+## GitHub源码与安装包
+
+远程仓库仍为https://github.com/nefer5/optDSH.git。目录改名不改变Git仓库身份。源码从开发工作树推送，安装产物不整体提交Git；GitHub Releases可关联标签并附加安装包，详见[GitHub官方说明](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)。
+
+```powershell
+git status --short
+git fetch origin
+# 本轮只推开发分支，使用正常快进更新，不覆盖远端独立提交
+git push -u origin codex/platform-dev
+```
+
+推送后用git ls-remote核对远端分支SHA与本地HEAD一致。已有远端分叉时先检查并合并，不使用force覆盖。Git会自然更新被跟踪文件的新增、修改和删除；.gitignore不追溯清除历史已提交的敏感文件，推送前仍须检查本次提交内容。
+
+版本通过验证后可创建本地v0.2.0-dev.17标签；标签是否推远程/创建Prerelease单独决定。正式稳定版本再经主分支合并/审阅，上传对应不可变安装包和SHA清单。发布目录与验证目录不作为Git分支。

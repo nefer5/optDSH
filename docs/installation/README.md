@@ -50,11 +50,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 
 community-plugins-receipt.json区分installed、existing-preserved、failed与not-attempted；安装成功不等于运行验证成功。若中途失败，总安装器报未完成，保留已装程序、用户Home和.runtime/community-install.log，安装回执带coreInstalled和communityPluginStatus供排查。升级始终选择既有Home并先结束其活动写入；不在每次平台启动时重装推荐项。
 
-2026-10-18独立安装验收：dev.3测试包在仓库外新建程序/Home完成recommended自动安装，8项active、8客户端HTTP200、市场pnpm=true、运行构建身份匹配，测试Host退出。复用下载缓存，不等于冷网络或新机器验收；未验证全部插件交互。证据：[dev.3回执](../refactor/2026-10-18/evidence/recommended-plugins-dev3.json)。失败后先查回执和日志，停止该Home写入，再用install-profile-plugins.ps1显式选择修复；主安装器不会覆盖已有程序目录。
+2026-10-18独立安装验收：dev.3测试包在仓库外新建程序/Home完成recommended自动安装，8项active、8客户端HTTP200、市场pnpm=true、运行构建身份匹配，测试Host退出。复用下载缓存，不等于冷网络或新机器验收；未验证全部插件交互。证据：[dev.3回执](../verification/refactor-20261018/recommended-plugins-dev3.json)。失败后先查回执和日志，停止该Home写入，再用install-profile-plugins.ps1显式选择修复；主安装器不会覆盖已有程序目录。
 
 ## 可选独立画板编辑器
 
-CanvasRoot复用已有兼容安装；InstallCanvas＋CanvasInstallRoot安装发行清单携带的本地tgz。连接配置在Home，选择canvas时按需启动；现役旧服务或端口冲突不接管。完整命令、数据归属和旧版本限制见[画板安装接入](../refactor/2026-10-18/canvas-installation.md)。
+CanvasRoot复用已有兼容安装；InstallCanvas＋CanvasInstallRoot安装发行清单携带的本地tgz。连接配置在Home，选择canvas时按需启动；现役旧服务或端口冲突不接管。完整命令、数据归属和旧版本限制见[画板安装接入](canvas.md)。
 
 ## 画板桥的官方Profile生命周期
 

@@ -1,120 +1,43 @@
-# 开发、发布与安装验证目录
+# 开发、交付与验证
 
-本机采用同一Git仓库的两个工作树。旧目录保留现场，新工作树继续重构；发布包和安装测试独立于源码目录。
+## 本机目录分工
 
-| 角色 | 本机位置 | 边界 |
+| 目录 | 用途 | Git/发布关系 |
 |---|---|---|
-| 原现场 | `E:/Proj-2026-N06_optDSH` | 保留旧依赖、资料与历史输入，不因新开发切换分支或重启服务 |
-| 开发工作树 | `E:/Proj-2026-N06_optDSH-dev` | 后续正式源码修改、独立安装开发依赖；与原现场共享Git对象库 |
-| 发布产物 | `E:/Proj-2026-N06_optDSH-releases` | 每次构建使用新子目录，保存tarball/wheel、哈希、离线说明 |
-| 安装验证 | `E:/Proj-2026-N06_optDSH-validation` | 每次用新case，独立app/home/workspace及可选Python环境，不借源码依赖 |
+| E:/Proj-2026-N06_optDSH-dev | 新开发工作树，codex/platform-dev | 从这里提交并推送受跟踪源码/测试/文档 |
+| E:/Proj-2026-N06_optDSH | 保留原现场 | 与新工作树共用Git对象库，不随意删除.git |
+| E:/Proj-2026-N06_optDSH-releases | 每个版本的不可变tgz/wheel/EXE/文档/SHA | 不整体提交Git，选定产物供Release附件 |
+| E:/Proj-2026-N06_optDSH-validation | 全新case、独立app/Home/workspace和日志 | 本机验证现场，不推送 |
 
-本机路径是开发布置，不进入产品的默认运行路径；实际用户资料仍由Home/Workspace参数决定。Windows沙箱暂缓；本机分目录测试不冒充操作系统隔离。
+这些是本机开发布置，产品不硬编码这些路径。真实课题外置，不在源码区建STUDYS。
 
-## 新工作树准备
+## 开发与验证入口
 
-```powershell
-pwsh scripts/maintenance/bootstrap-dev.ps1
-py -3.12 scripts/maintenance/prepare-dev-resources.py
-pwsh scripts/setup.ps1
-# 选装光学开发依赖：pwsh scripts/setup.ps1 -WithOptics
-```
+安装根依赖执行npm ci；可选PPT有独立锁文件，按该模块说明准备。纯平台不依赖个人专家中心；光学能力单独安装Python依赖和本项目wheel。开发资源bootstrap只恢复本机开发引用，不修改中心权威源。
 
-`bootstrap-dev`只建立本机开发引用，不改用户中心源。专家权威、私人资料不再作为项目源码重复跟踪；相关本机链接被Git忽略。缺少用户中心时可运行纯平台和安装产物测试，专家资源与完整开发文档检查需先恢复相应中心。
-
-依赖重新安装，不复制旧node_modules或.venv；安装器不要求终端具有私人专家中心。项目保留的专家分发器用于开发兼容与测试，不是新的专家权威。
-
-## 工作树及回退
-
-当前工作树和分支用 `git worktree list` 核对；在新开发目录提交只更新其分支，原目录的文件不会自动变化。本地提交/标签不等于推送，未经用户授权不推送。不要删除原目录的.git；新工作树依赖共用对象库。现役用户资料、未跟踪商业模型和历史run不由Git回退，需要单独保留。
-
-正式发放只取构建产物，不压缩整个开发目录。源码、公共资源及许可证和发布许可是不同检查项。
-
-开发资源准备使用用户中心分发器的白名单读取能力，只写Git忽略的本机参考包，不分发宿主角色/hook或修改中心。Node要求>=24，不设主版本上限；本机24与26分别记录验证结果，不为本项目改全局Node。
-
-## 可重复安装验收
-
-`packaging/windows/verify-installation.ps1 -ReleaseRoot <本地产物> -ValidationRoot <验证根下全新case> -Components core,workbench,canvas,forms`：使用独立app/home/workspace和npm-cache，执行安装、认证与所选能力/client脚本检查，最后仅停止本次身份匹配的服务。默认不发模型请求、不接Zemax。失败保留回执和私有日志；不在控制台打印令牌，默认-DryRun可先查看路径方案。
-
-原现场以本地checkpoint保存；恢复旧提交不等于恢复未跟踪用户数据。回退标签与快照位置见实施计划。用户中心仍被多个项目共用，普通项目重构不能修改这些链接的目标。
-
-完整回归包括独立PPT模块，该模块有自己的依赖锁；需另行在packages/ppt-slidewise执行npm ci。根npm ci只安装平台工作区，不应误认为已安装所有可选包。纯平台安装不要求PPT。
-
-源码根不再跟踪或创建STUDYS；真实课题外置，示例只归包examples/tests，详见[课题与源码边界](workspaces.md)。[Agent资源共享设计](agent-resource-layout.md)已获用户确认；公共基线和可选共享的完整实现仍待做，当前不改写本机全局.agents。
-
-## 沙箱未启用时，如何亲自验证新版
-
-分目录验证能发现漏打包、缺依赖、工作目录写错和启动故障；仍共享本机操作系统、注册表、网络与已装软件，因此不能证明公司新机必定可用。
-
-| 验证层 | 入口 | 主要确认 |
-|---|---|---|
-| 源码验证 | 新开发目录的启动器 | 最新源码能否启动、改动是否正确 |
-| 安装包验证 | 002 case的app启动器 | 脱离源码后是否漏文件/依赖；自动验收会停止自己的服务 |
-| 人工业务验收 | 独立手动预览home和合成workspace | 浏览器操作、模型配置、会话和插件实际交互 |
-| 沙箱/公司环境 | 后续单独安排 | 干净Windows、权限/网络/许可及真实宿主差异 |
-
-### 日常一键启动源码版（当前推荐）
-
-在资源管理器打开 E:/Proj-2026-N06_optDSH-dev，双击根目录的启动DSH.cmd即可。当前开发机的忽略配置已准备好：自动选择本机已配置的Node26（要求>=24），使用manual-preview/source-home、测试workspace、独立source-state及3380端口，默认只启动core，不需要手填参数。两个根入口明确区分：启动DSH.cmd复用身份匹配的旧Host，没有则启动；重启DSH.cmd核验并停止本项目旧Host，等端口释放后重新拉起，确保加载最新源码。修改源码后双击重启DSH.cmd。其他程序/其他安装目录占用端口时均拒绝接管，不受本机隐藏的自动重启配置影响。
-
-这是新开发目录的本机配置，不进入发布包，也不改全局PATH或用户.agents。旧目录启动器保持原样。完整光学工作台仍需单独完成光学服务配置，不能把纯平台的一键启动当作全部业务验收。
-
-### 高级手动参数（排查或切换课题时使用）
-
-打开PowerShell，执行以下命令。本机默认Node26已纳入要求范围，下面读取本机开发配置选择运行时，只影响该终端，不改用户PATH；.runtime/development.json是本机忽略的开发记录。
+日常双击“启动DSH.cmd”；平台源码变化用“重启DSH.cmd”。画板桥/工作台从Profile运行，修改源码后先npm pack再显式Upgrade，见[插件说明](profile-plugins.md)。本机预览配置以.runtime/preview.json为准：当前使用外部2T2R课题和source-home/source-state，模型/插件已迁入配置，不能沿用早期“全新空Home”描述。
 
 ```powershell
-Set-Location E:/Proj-2026-N06_optDSH-dev
-$nodeExe = (Get-Content .runtime/development.json -Raw | ConvertFrom-Json).nodeExecutable
-$env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
-./启动DSH.cmd -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/source-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/source-state -Port 3380 -Components core
+npm test
+npm run version:check
+npm run release:check
+# 干净本地提交后，输出必须是全新目录
+npm run release:local -- <新产物目录> <可选optics-wheel> <可选AgentCanvas-tgz>
 ```
 
-预览目录已由本轮检查准备，workspace只有合成/测试内容，未复制真实课题。启动器会按系统默认浏览器打开认证入口；不要仅手打localhost地址代替首次认证。主入口为http://127.0.0.1:3380，认证链接和令牌不粘贴到报告或聊天。
+必要检查按变更范围执行，不自动跑tests/live、真实模型推理、Zemax追迹或保存。验证发布物用packaging/windows/verify-installation.ps1，指定独立的ValidationRoot；它只管理本次身份匹配的进程，凭据和原始日志留本机。
 
-该命令启动纯平台。新home内没有复制旧模型配置、密钥、市场插件和历史会话，需要在新版界面配置自己的模型后再手动测试对话；本轮未代发真实模型请求。重新运行启动DSH.cmd会复用身份匹配的服务；要加载源码改动，使用重启DSH.cmd。底层仍由显式-Restart控制。关闭浏览器不等于停止后台服务。
+## 四层验证
 
-停止本次源码预览：
+1. 源码/模块测试：逻辑及协议回归，合成服务不能当作真实Zemax验收。
+2. 仓库外安装：独立程序、Home、缓存和Python环境，检查漏文件/依赖、构建身份和插件组合。
+3. 真实产品验收：官方会话、实际模型、独立编辑器、Zemax，按授权分别记录。
+4. 干净Windows/公司环境：操作系统、权限、网络、许可证与部署恢复；当前暂缓。
 
-```powershell
-./scripts/runtime/stop-dsh.ps1 -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/source-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/source-state -Port 3380
-```
+分目录测试共享开发机操作系统，不代表沙箱/新机通过。[剩余事项与配合](../planning/ROADMAP.md)和[Windows验证方案](installation/windows-validation.md)是后续入口。
 
-官方DSH允许同一Host中的不同会话使用不同Workspace/cwd；通过官方项目/会话流程打开另一个课题，不要求重启Host。只有更改这个测试启动器记录的Host默认Workspace/StateRoot时，当前归属检查才要求先停止旧实例再以新参数启动，这不是普通用户切换项目的推荐流程。Forms HTTP仍未随所有会话cwd自动切换；工作台部分创建/报告路径仍用默认Workspace。
+## GitHub放什么
 
-### 再对比安装包版
+Git推送提交和分支，不上传整个开发文件夹。node_modules/.venv/私人Home/模型/日志/真实课题不进入提交。当前源码远程为https://github.com/nefer5/optDSH.git；本机目录改名不改变它。先推codex/platform-dev供备份与审阅，再按后续决定合入主分支。正式安装包另作GitHub Release附件，不把整个releases目录放进源码树。
 
-以下002是早先只允许Node24的历史产物，需要Node24；它不代表当前>=24规则。最新薄EXE安装验证见下方发布说明，平时使用源码CMD即可：
-
-```powershell
-& E:/Proj-2026-N06_optDSH-validation/20261018-workspace-full-002/app/scripts/runtime/open-dsh.ps1 -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/installed-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/installed-state -Port 3382 -Components core
-```
-
-安装版固定于提交1e273cb，不会随源码改动自动更新；新的改动须重新打包、在新的case安装。这里只借用已安装app，人工数据写入manual-preview，不改写自动验收case的home/workspace证据。停止时调用同一app下的stop-dsh.ps1并传相同Home/Workspace/StateRoot/Port。
-
-### 建议依次检查什么
-
-1. 纯平台：页面加载、创建会话、刷新后仍能读回；手动配置模型后测试一次简单对话和合成文件读取。
-2. 课题归属：在合成workspace写一个测试文件，确认它落在所选目录；之后换另一个测试目录重复检查。
-3. 插件：停止纯平台后在源码启动命令中把-Components改为core,workbench,canvas,forms；分别检查入口和故障提示。组件ready只证明加载，不等于完整业务通过。
-4. 画板仍需N05编辑器服务，光学工作台需独立光学服务；当前没有自动启动它们，也不因页面打开就宣称Zemax/画板编辑通过。缺少服务时先检查明确的连接提示，真实Zemax另行授权验收。
-
-本轮机器检查只启动并停止两种纯平台预览，核对认证HTTP200；没有打开浏览器、配置模型、调用Zemax或改写用户全局.agents。离线完整回归和四组件安装证据见[迁移记录](refactor/2026-10-18/worktree-transition.md)。
-
-## Windows发布入口：已确认Q9
-
-面向小白，推荐开发期保留.cmd，正式发行提供薄EXE启动器；业务/启动编排复用Node CLI，路径、组件和版本等配置外置，避免把业务逻辑编译进EXE。用户已确认采用该方案，实施与验证状态见[薄启动器计划](../.agents/plans/261018-windows-thin-launcher.md)。
-
-开发根目录CMD仍可使用本机已有pwsh；发布EXE/CMD共用Node入口，运行链已适配Windows内置5.1，包括JSON读取、路径和UTF8处理。无需要求普通用户另装7；不能把同机移除pwsh搜索路径的成功当作沙箱或干净Windows成功。
-
-2026-10-18追加Q10：Node>=24，当前源码预览选择本机Node26；旧24仍属Codex独立工具运行时，无需卸载。已完成的旧版本回执不回写。新版构建及EXE入口将按本次版本规则验证。
-
-当前薄EXE与Node24/26验证结果见[Windows启动器阶段验收](refactor/2026-10-18/thin-launcher.md)。新开发CMD已按本机Node26配置，发布包008不再硬拦截26。
-
-## 当前Profile已恢复（2026-10-18）
-
-source-home现已持久保存GLM-5.3-Flash默认配置及所需凭据引用，并恢复8个原启用市场插件。普通关闭/重启平台不会丢失，不需要每次重配；新建独立安装验证Home仍故意为空，不自动把私人配置复制进测试包。
-
-manual-preview/source-home和source-state用于源码版，installed-home和installed-state用于旧安装版对比；workspace是课题文件。Home可用-Home或外部JSON配置，默认用户主目录不是强制位置。图形安装选择路径的向导尚未实现，正式发行前补齐；当前不会在你手工验证期间移动source-home。
-
-版本命令、构建追踪和发布门禁见[版本管理](versioning.md)，会话接续见[开发接续摘要](handoff/2026-10-18-dev-continuation.md)。
+开发分支推送已获本轮用户授权；不因此自动合并主分支、强制推送、公开npm或正式Release。具体命令与标签规则见[版本与发布](versioning.md)。

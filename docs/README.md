@@ -1,21 +1,24 @@
-# 文档入口
+# 文档导航
 
-日常使用先看根 README；Agent 先看根 AGENTS。当前能力和限制仅维护在 planning/STATUS.md。
+新用户：根[README](../README.md) → [安装](installation/README.md) → [运行](runtime.md) → [工作台](workbench.md)。开发者：先读根AGENTS及[当前状态](../planning/STATUS.md)。
 
-| 需要了解什么 | 唯一现行入口 |
+| 需要了解什么 | 现行入口 |
 |---|---|
-| 模块归属、依赖、文件应放哪里 | [架构与目录](architecture.md) |
-| 安装、启动、认证、恢复、日志 | [运行指南](runtime.md) |
-| 铁律、权限、配置与备份边界 | [工程规则](rules.md) |
-| 模型身份、坐标、快照、几何/布尔 | [光学契约](contracts.md) |
-| 工作台操作、会话、画板、保存 | [工作台](workbench.md) |
-| Skill、专家、Harness扩展、模型基线 | [Agent开发](agents.md) |
-| 一次运行的配置/结果/报告/证据 | [运行包与报告](runs-and-reports.md) |
+| 当前三张架构图、源码和安装目录 | [交互架构页](architecture/index.html)、[架构正文](architecture.md) |
+| 剩余工作优先级、我能继续做/需要用户配合 | [路线图](../planning/ROADMAP.md) |
+| 实际能力及验证范围 | [当前状态](../planning/STATUS.md) |
+| 已确认方向和边界 | [决定](decisions.md) |
+| 安装、选装、升级和卸载 | [安装说明](installation/README.md)、[画板安装](installation/canvas.md) |
+| 启动、认证、后台、状态和日志 | [运行](runtime.md) |
+| 开发目录、测试与本地产物 | [开发验证](development.md) |
+| Git推送、版本、构建身份和Release | [版本与发布](versioning.md) |
+| Profile插件、源码与安装副本 | [插件管理](profile-plugins.md) |
+| 工作台、模型连接、保存与画板 | [工作台](workbench.md) |
+| 光学数据/权限/研究执行边界 | [契约](contracts.md)、[工程规则](rules.md)、[运行包](runs-and-reports.md) |
+| 产品Agent、公共能力与专家 | [Agent开发](agents.md)、[Agent资源](agent-resource-layout.md)、[课题边界](workspaces.md) |
+| Windows沙箱和新环境部署 | [验证方案](installation/windows-validation.md)，暂缓 |
+| 有用的实测回执 | [本轮交付](verification/dev17-docs-release.json)、[双版本连接](verification/zemax-connection.md) |
+| PPT独立模块 | [SlideWise](ppt-slidewise.md) |
+| 历史方案/重复图稿/阶段流水 | [归档索引与恢复](archive/README.md) |
 
-旧文档与重整前planning完整保存在 [历史ZIP](archive/20260927-before-restructure.zip)，不作为当前入口。新增说明优先归入上述平台主题，不为每次修改新增一篇阶段文档。
-
-具体研究目标、指标口径和对象配置归对应Study及业务Skill，平台docs不重复维护光学分析流程。
-
-重构前设计讨论另见[2026-10-18工作簿](refactor/2026-10-18/index.html)及[文档索引](refactor/2026-10-18/README.md)：汇集现状/建议架构、安装流程、画板时序、数据归属、源码与安装目录，以及待确认的目标设计和计划。它是设计材料，不替代上表现行说明，也不表示重构已实施。
-
-领域契约单独分区：[2t2rLidar术语与H/V约定](2t2rLidar/README.md)。这里只维护跨模型可复用的概念、方向和映射要求，不重新承载研究执行流程；具体对象、零位和采样参数仍在Study配置。
+研究课题的业务背景、专用配置和结果归所选workspace。docs/2t2rLidar仅保留跨模型术语契约；具体对象与指标不提升为平台通用规则。

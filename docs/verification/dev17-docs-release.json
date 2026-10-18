@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-18",
+  "version": "0.2.0-dev.17",
+  "scope": "Current diagrams/docs, recoverable archive, version and release documentation; no running Home, service or Zemax changed",
+  "runtimeSourceRevision": "5d6920e4bf43209435f10fd9e7ffca38dc4d5676",
+  "diagrams": {
+    "runtime": {
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidateSha256": "fab843482a450eb6f5fb7e1df08a7e4496496f2ac2da912836facdf124f5e99b",
+      "htmlSha256": "d41e2284dfc7b44c3c6c793a3e1d1a987a36017d9c4d275da3f2a1a56a069ae6",
+      "visualReview": "actual screenshots inspected; no horizontal overflow"
+    },
+    "source": {
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidateSha256": "b1d7cdc4485fe174d59777f37e4dfe939ebebd53366d03675e2db09cb98dc98d",
+      "htmlSha256": "95ae94abb08cf7a21f8adddfeb1cbbee59debc9110ce07eedb5bf2d1b501391e",
+      "visualReview": "actual screenshots inspected; no horizontal overflow"
+    },
+    "layout": {
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidateSha256": "aa16e0f0414c3e337f10bdf2fe99b10f28cbc7d2ca945f24e14c5c1a6c448ae0",
+      "htmlSha256": "4b314cecfd801a08265f56828a61da29881bebf357bf351032424a0831b8295a",
+      "visualReview": "actual screenshots inspected; no horizontal overflow"
+    }
+  },
+  "archive": {
+    "file": "../archive/20261018-dev16-history.zip",
+    "verifiedEntries": 181,
+    "sha256": "d2c5ee45e0031974216c4c5583536c147efcfb944b5f1fbcc3a279d4d3d6ecba"
+  },
+  "credentialsPatternScan": "no high-entropy token/bearer/sk patterns found in tracked text and archived text; not a guarantee about all historical commits",
+  "packageVerification": "pending clean source commit and immutable build; final result is recorded after build",
+  "pushAuthorization": "user authorized normal push of codex/platform-dev only; no force/main merge/public npm/official Release",
+  "sourceChecks": {
+    "fullNpmTest": "passed",
+    "counts": {
+      "plugins": 175,
+      "installation": 98,
+      "ppt": 11,
+      "optics": 139,
+      "expertDistribution": 37,
+      "architectureKit": 56
+    },
+    "documentLinks": "passed; 4 historical private run links intentionally ignored",
+    "versions": "0.2.0-dev.17 / DSH 0.2.1-rc.2"
+  },
+  "integratedPage": {
+    "threeIframesLoaded": true,
+    "directoriesAndPrioritiesChecked": true,
+    "horizontalOverflow": false,
+    "visualReview": "actual screenshots and rendered layout checked"
+  }
+}

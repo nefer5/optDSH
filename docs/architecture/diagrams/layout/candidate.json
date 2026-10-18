@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "optDSH · 安装位置与数据归属",
+    "locale": "zh-CN",
+    "output": "docs/architecture/diagrams/layout/diagram.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/nefer5/optDSH.git",
+      "revision": "5d6920e4bf43209435f10fd9e7ffca38dc4d5676",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "setup",
+      "type": "backend",
+      "label": "安装与启动配置",
+      "sublabel": "InstallRoot / Home / Workspace",
+      "pos": [
+        440,
+        40
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packaging/windows/install.ps1",
+          "line": 1,
+          "end_line": 18
+        },
+        {
+          "path": "packages/optdsh-bundle/lib/launcher.mjs",
+          "line": 19,
+          "end_line": 38
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "type": "backend",
+      "label": "程序安装区",
+      "sublabel": "官方 DSH、Bundle、运行脚本",
+      "pos": [
+        40,
+        310
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packaging/windows/install.ps1",
+          "line": 70,
+          "end_line": 100
+        }
+      ]
+    },
+    {
+      "id": "home",
+      "type": "database",
+      "label": "独立 Home",
+      "sublabel": "Profile 插件、模型设置、会话",
+      "pos": [
+        440,
+        310
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packages/optdsh-bundle/lib/profile-components.mjs",
+          "line": 16,
+          "end_line": 35
+        }
+      ]
+    },
+    {
+      "id": "workspace",
+      "type": "database",
+      "label": "任意外部课题目录",
+      "sublabel": "研究资料 / 专用配置 / runs",
+      "pos": [
+        840,
+        310
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packages/optdsh-bundle/lib/compose.mjs",
+          "line": 10,
+          "end_line": 15
+        },
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/workspace-store.js",
+          "line": 10,
+          "end_line": 22
+        }
+      ]
+    },
+    {
+      "id": "editor",
+      "type": "external",
+      "label": "独立编辑器安装区",
+      "sublabel": "已有安装或本地安装包",
+      "pos": [
+        40,
+        580
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packaging/windows/install.ps1",
+          "line": 17,
+          "end_line": 28
+        }
+      ]
+    },
+    {
+      "id": "state",
+      "type": "database",
+      "label": "StateRoot · 可单独配置",
+      "sublabel": "data / logs / .runtime",
+      "pos": [
+        440,
+        580
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packages/optdsh-bundle/lib/compose.mjs",
+          "line": 14,
+          "end_line": 15
+        },
+        {
+          "path": "plugins/optdsh-workbench/lib/service-manager.js",
+          "line": 17,
+          "end_line": 20
+        }
+      ]
+    },
+    {
+      "id": "canvas",
+      "type": "database",
+      "label": "课题内画板目录",
+      "sublabel": "画板、提交与修改建议",
+      "pos": [
+        840,
+        580
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/workspace-store.js",
+          "line": 10,
+          "end_line": 22
+        },
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/boards.js",
+          "line": 28,
+          "end_line": 40
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "setup-app",
+      "from": "setup",
+      "to": "app",
+      "label": "安装程序",
+      "variant": "default"
+    },
+    {
+      "id": "setup-home",
+      "from": "setup",
+      "to": "home",
+      "label": "指定资料根",
+      "variant": "default"
+    },
+    {
+      "id": "setup-workspace",
+      "from": "setup",
+      "to": "workspace",
+      "label": "指定工作目录",
+      "variant": "default"
+    },
+    {
+      "id": "app-editor",
+      "from": "app",
+      "to": "editor",
+      "label": "可选安装 / 接入",
+      "variant": "dashed"
+    },
+    {
+      "id": "home-state",
+      "from": "home",
+      "to": "state",
+      "label": "默认在 Home 下",
+      "variant": "default"
+    },
+    {
+      "id": "workspace-canvas",
+      "from": "workspace",
+      "to": "canvas",
+      "label": "随课题保存",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "升级与卸载",
+      "items": [
+        "替换程序包，不清空 Home、课题或历史 run。",
+        "插件卸载与用户资料删除是两件不同的操作。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "路径由用户配置",
+      "items": [
+        "Home 不是源码目录，也不是研究根；所有课题可共用同一 optDSH Home。",
+        "StateRoot 默认归 Home，可显式另选；课题可放任意磁盘目录。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "未完成的体验",
+      "items": [
+        "CLI/外置配置支持路径选择；首次图形安装向导尚未实现。",
+        ".agents 可选分享方案已确认，自动分享安装器尚未完成。"
+      ]
+    }
+  ]
+}

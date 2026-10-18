@@ -1,99 +1,27 @@
-# 插件源码、安装与官方Profile
+# 官方Profile插件管理
 
-dev.14工作台将配置、实例探测和高级诊断收敛到同一个连接窗口；打开不会启动服务，显式探测才按需准备。顶栏只留无标题分组、日常模型按钮与只读状态。参见[工作台说明](workbench.md)。
+画板桥optdsh-agent-canvas和光学工作台optdsh-workbench已统一官方Profile安装、启停、升级和卸载。源码保留plugins，运行副本安装在Home/profiles/web；Bundle仅提供推荐/默认，启动器不恢复关闭/卸载的功能。Forms/Experts等其他组件仍需收敛，见[优先级](../planning/ROADMAP.md)。
 
-## Web配置与版本分组（dev.13）
+## 用户日常操作
 
-用户在工作台点击“配置服务”，只选择旧版（2021及以前）或新版（2022起，默认推荐）。Python由程序自动检测，并验证光学包和依赖；用户不选择解释器、不手改JSON。安装位置从系统登记及有限的标准目录识别，产品版本与API构建号分别保存。未发现可用环境时给出缺失诊断，不自动安装全局工具。
+- 在官方Web“插件”界面启用、停用或卸载。卸载本地tgz安装的插件与其他Profile插件走同一入口。
+- 停用/卸载保留画板、会话、绑定、课题与报告；不自动关闭共享编辑器/光学服务。
+- 升级须先结束活动任务、停止同一Home/Profile的Host，再显式安装新本地tgz；当前不承诺在线热升级。
 
-保存配置后点击“开启光学服务”，再在独立连接弹窗探测并确认模型。切换分组时先显式“停止光学服务”，仅结束本平台启动且已验证身份的空闲后台，拒绝在采集/仿真或恢复未确认时停止，保留Zemax窗口和模型。保存清理跨版本模型绑定；仍在运行时拒绝改配置。独立Home/config/optics.json是程序管理的持久配置，已有配置在更新前备份。
-
-两个分组是项目暂定的API适配假设，不意味着所有年份已验证，也不把“Ansys后bug更少”当成已测结论。本轮旧版19/API190513和新版2025产品25.1/API241210均已通过Web只读probe/bind，92对象、模型文件哈希不变；18及20/21/22等其他具体版本尚未实测。完整构建号与安装文件元数据不一致时拒绝连接，多个窗口同实例号不静默猜测。
-
-画板与光学工作台的会话头部入口统一使用官方Button ghost/sm，主题和皮肤样式由宿主提供；工作台保留新标签页语义及官方外链图标。
-
-下述dev.12说明保留为阶段记录；日常配置入口以本节为准。
-
-## Web启动光学服务（dev.12）
-
-工作台作为optDSH随包可选模块，保留Profile启停/升级/卸载，不要求作为独立产品分发。工作台0.10.0新增常驻服务状态条：用户点击“开启光学服务”后，后端按可信Profile/Home配置启动光学执行器，不接受网页传来的Python路径或命令。查询状态、打开页面和重启DSH不会自动启动执行器。
-
-配置默认独立Home/config/optics.json，python填写已安装光学wheel环境的可执行文件绝对路径（相对路径按配置文件目录解析）。Profile可显式设置opticsConfig和opticsPort；默认端口3081。缺配置时显示“尚未配置”，本轮不新增安装向导或在线安装依赖。Python包需optdsh-optics>=0.3.0，支持认证health和延迟连接；旧服务缺health时不会误报就绪。
-
-Web采用serve --defer-connect，仅启动HTTP后台，不自动采集或连接Zemax。显示“已就绪”后，仍需用户在原连接弹窗探测、核对并确认模型；真实模型状态以快照为准。共享进程不会因停用/卸载插件自动结束，运行中任务不会被本轮按钮终止。诊断只读取本次启动日志尾部并脱敏，不返回访问令牌。模拟服务验收不代表真实Zemax已通过。
-
-
-当前Canvas桥与光学工作台均按下述官方Profile机制管理；Forms/专家等其他可选组件继续逐项收敛。
-
-## 目录位置
-
-```text
-开发源码/
-  plugins/optdsh-agent-canvas/        画板桥源码
-  plugins/optdsh-workbench/           工作台源码
-发行包/
-  packages/optdsh-agent-canvas-0.6.0.tgz
-平台程序/
-  node_modules/@deepseek-ai/         官方DSH和基础依赖
-  node_modules/optdsh-bundle/        推荐、默认与平台引导
-Home/
-  profiles/web/
-    package.json                    依赖及dsh.profile.bundles
-    pnpm-lock.yaml                  官方包管理器锁
-    cordis.patch.yml                用户启停及配置覆盖
-    node_modules/optdsh-agent-canvas/ 画板安装副本
-    node_modules/optdsh-workbench/    工作台安装副本（pnpm可能使用链接）
-  config/canvas.json                独立编辑器连接默认
-任意课题/
-  .agent-canvas/optdsh/boards/        画板、提交及建议稿
-```
-
-源码目录与安装目录不同，包内lib等相对结构保留；package.json files决定内容，npm/pnpm搬运与依赖解析，不逐文件自定义复制。安装副本不从旧平台、源码checkout或app同名包回退。
-
-## 用户操作
-
-- 新装平台时选择canvas组件：安装器把发行tgz通过官方CLI登记到所选Home/Profile；app依赖不含画板桥。
-- 后续在官方Web的“插件”管理中停用/启用或卸载画板桥；Bundle停用保留包，单插件停用保留配置，卸载移除包依赖。
-- 启动器读取官方合成后的配置，不安装插件，不强行加入Bundle，不用components覆盖用户关停。即使旧components仍含canvas，卸载后也不会回来。
-- 画板编辑器是独立程序，和桥插件分开；停用/卸载桥不终止共享编辑器、不删除课题画板。没有运行的编辑器可用原独立入口启动，或启用桥后重启DSH按Home配置拉起；不承诺任意外部服务在HMR启用时自动启动。
-- Canvas与工作台已收敛；Forms等其他自有组件仍处过渡阶段，不能说已经全部统一。
-
-## 本地包安装与升级
-
-官方CLI支持本地tgz，不要求公开npm或市场。平台包内便捷脚本只转发官方流程和写事实回执，不另造启停数据库。
+## 开发与本地包
 
 ```powershell
-# 先停止同一Home/Profile的活动任务和服务；预览默认不写
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File packaging/windows/install-profile-component.ps1 -InstallRoot <平台程序> -Home <资料目录> -Package <画板桥tgz> -Operation Install
-# 确认参数后加-Apply。升级显式改为-Operation Upgrade；卸载用-Operation Remove（无需Package）。
+npm pack ./plugins/optdsh-workbench --pack-destination ./temp/<本次任务>
+# 先安全停止相同Home/Profile；预览默认不写，确认参数后加-Apply
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File packaging/windows/install-profile-component.ps1 -InstallRoot <程序根> -Home <资料根> -Component workbench -Operation Upgrade -Package <本地tgz> -Apply
 ```
 
-Install遇到既有依赖保持原版本/开关，不重复默认启用。Upgrade调用官方CLI add新tgz，保留未选Bundle和disabled patch。当前官方在线原位升级受HMR接口限制，采用停服后的CLI升级，不伪称在线热升级。运行中的Profile拒绝离线包操作；命令失败保留原资料和回执，不能只凭HTTP200判断实际效果。
+画板桥使用-Component canvas；Install/Upgrade需要Package，Remove不需要Package。Install保留已有包和开关，Upgrade保留用户disabled patch，Remove不删除资料。开发源码改变后单纯重启不会升级Profile安装副本。不同源码/应用副本遮蔽Profile时应修复安装，不修改node_modules。
 
-## 开发步骤
+## 配置与隔离
 
-画板桥与工作台源码保留plugins目录，但从根workspaces的隐式安装列表中移出，避免官方优先解析app副本、盖住Profile版本。源码变化需要显式npm pack、停止测试Profile、通过上述Upgrade安装，然后启动验证；单纯重启不会偷偷重装或把用户停用项打开。根npm install/ci按声明维护安装树，无手改node_modules适配。
+Profile显式设置优先于Home默认。Home/config/canvas.json指定独立编辑器；工作台自动检测Python并通过Web保存Home/config/optics.json。官方SDK使用宿主peer，避免卸载时带走共享依赖。
 
-## 配置与组合
+光学服务启动保持延迟连接，普通打开和轮询不采集。连接窗口内选择旧版（2021及以前）/新版（2022起，默认），核对实例与实际探测身份后确认；19和2025已实测，其他具体年份待验。Windows后台用同环境pythonw静默运行；状态和脱敏日志在“高级与诊断”，停止仅处理已确认归属且空闲的后台，不关闭Zemax。
 
-官方顺序：Bundle默认 → Profile覆盖 → Home覆盖 → 启动覆盖。Canvas的产品启动覆盖不insert/enable或重写用户配置，只在已启用但编辑器不兼容时隔离对应桥，core继续。Profile显式editorUrl优先于Home连接默认；对应外部服务由该配置的使用者管理。
-
-Bundle推荐不等于强制依赖或周期重放。Profile是包、选中Bundle与用户patch的唯一事实源；平台状态接口只是回读，不是另一套开关。具体画板安装见[编辑器安装说明](refactor/2026-10-18/canvas-installation.md)。
-
-## 本轮验收
-
-最终dev.8本地测试包与日常预览已验证；Canvas桥0.6.0在官方清单中availability=profile、removable=true，app无同名包。官方entry/Bundle停用、重启保留、停服升级测试夹具后仍off、再启用与卸载重启全部通过；画板哈希不变。PS5首次Profile stderr提示按退出码处理，日志保留。无真实模型或Zemax调用，缓存复用，未推送/npm公开。证据：[生命周期回执](refactor/2026-10-18/evidence/canvas-profile-dev8.json)。
-
-## 光学工作台
-
-工作台使用同一helper，添加 `-Component workbench`，包名optdsh-workbench。主安装器选择workbench时通过官方CLI装入Profile，不作为app依赖。停止同一Profile后显式Upgrade；Web插件管理可启停/卸载。源码改动先pack插件再显式升级，普通启动不覆盖用户开关。
-
-根“启动光学工作台.cmd”使用Windows自带PowerShell5.1，默认只打开已启用的工作台；缺包/停用会给诊断，基础DSH可用，不自动重新安装或启用。光学执行器独立管理，明确传StartOptics才请求启动，当前重构没有执行该选项或真实Zemax连接。没有Python/画板/Forms仍能加载页面及管理会话；访问光学能力时未配置/不通返回503 OPTICS_UNAVAILABLE，真实业务403/409继续拒绝。
-
-停用/卸载工作台撤销其给绑定Agent注入的光学规则，保留历史会话、绑定文件、报告和课题。无光学服务与不兼容/损坏包的隔离均已取证，不能把synthetic视为真实光学验收。
-
-共享官方SDK应声明宿主peer，不作为插件私有运行依赖重复放进Profile；工作台0.9.2已按此修正dsh-llm。否则卸载可能移除进程正在使用的共享库，使文件删除后官方热重载仍报failed。验收要求检查application结果与重启状态，不能只看包目录消失。
-
-## 工作台本轮验收
-
-最终平台dev.11、工作台0.9.2。独立Profile无Canvas/Forms可加载，缺后端503不影响core；官方启停、停服升级保留off、卸载applied及重启无回流、数据保护通过。实际发行包卸载后core即时保持ready；日常预览保留。前两候选的共享SDK打包问题已修，不把当时application=failed当作成功。最终58工作台/98安装项回归通过（光学等其余完整回归此前通过），无真实Zemax/模型调用。见[工作台证据](refactor/2026-10-18/evidence/workbench-profile-dev11.json)。
+[画板接入](installation/canvas.md) · [工作台操作](workbench.md) · [当前验证](../planning/STATUS.md) · [历史资料](archive/README.md)

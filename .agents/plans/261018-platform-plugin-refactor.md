@@ -1,12 +1,12 @@
 # 计划：平台独立安装与可选插件重构
 
-> 此文件保留首轮任务设计和当时的回执范围；后续插件生命周期、双版本连接、安装验证与静默后台的累计状态，统一见[当前实施进度](../../docs/refactor/2026-10-18/implementation.md)和[路线图](../../planning/ROADMAP.md)。不要把下文历史“未实施/未验证”直接当成当前结论。
+> 此文件保留首轮任务设计和当时的回执范围；后续插件生命周期、双版本连接、安装验证与静默后台的累计状态，统一见[当前实施进度](../../planning/STATUS.md)和[路线图](../../planning/ROADMAP.md)。不要把下文历史“未实施/未验证”直接当成当前结论。
 
 - **日期**：2026-10-18。
 - **级别**：L2；安装入口、公共协议、多个模块与迁移数据边界均改变。
 - **状态**：**已授权实施**。用户已确认Q1–Q5、暂缓沙箱，其余按推荐方式实施；分支 codex/platform-plugin-refactor。
-- **设计摘要**：[目标架构](../../docs/refactor/2026-10-18/design.md)。
-- **决定入口**：[已确认方向与待定项](../../docs/refactor/2026-10-18/decisions.md)。
+- **设计摘要**：[目标架构](../../docs/archive/README.md)。
+- **决定入口**：[已确认方向与待定项](../../docs/decisions.md)。
 - **本轮允许范围**：允许本仓产品实现、合成数据测试和隔离打包。保留Study/run与活跃资料，暂不迁移切换、重启现役服务、修改邻接项目/全局工具、执行真实光学/模型/沙箱、发布或推送。
 
 - **已确认选择Q1**：optDSH独立一套用户资料目录，所有光学课题共用；与普通DSH隔离，具体路径和迁入流程待定。其余决定现已确认，见 decisions.md；实际迁移切换仍需停写窗口。
@@ -168,7 +168,7 @@ ROADMAP 维护固定 M 编号五列，任务状态以本计划为准；本计划
 
 ### T10 Windows隔离安装与公司验收（用户明确暂缓）
 
-详细方案与本机只读状态见[Windows沙箱与换机安装验证](../../docs/refactor/2026-10-18/windows-validation.md)。该目标已由用户明确提出；本轮仅补文档，没有启用系统功能或运行guest安装。
+详细方案与本机只读状态见[Windows沙箱与换机安装验证](../../docs/installation/windows-validation.md)。该目标已由用户明确提出；本轮仅补文档，没有启用系统功能或运行guest安装。
 
 - **文件落点**：拟 `tests/installation/windows/{smoke.wsb,bootstrap.ps1,vm-checklist.md,company-checklist.md}`；拟 `docs/installation/windows-testing.md`；`runs/install/<批次>/`保留清单、日志和失败证据。
 - **接口**：测试入口接受发布包根与结果导出根，不读取宿主私人 home；Sandbox/VM自身 localhost 与宿主分开。

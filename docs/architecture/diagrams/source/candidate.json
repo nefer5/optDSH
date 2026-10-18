@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "optDSH · 当前源码与包边界",
+    "locale": "zh-CN",
+    "output": "docs/architecture/diagrams/source/diagram.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/nefer5/optDSH.git",
+      "revision": "5d6920e4bf43209435f10fd9e7ffca38dc4d5676",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "repo",
+      "type": "backend",
+      "label": "开发仓库",
+      "sublabel": "正式实现按所属包归位",
+      "pos": [
+        440,
+        50
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "package.json",
+          "line": 1,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "scripts",
+      "type": "backend",
+      "label": "scripts / packaging",
+      "sublabel": "开发启动、安装与版本化交付",
+      "pos": [
+        40,
+        330
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "scripts/runtime/start-dsh.ps1",
+          "line": 1,
+          "end_line": 15
+        },
+        {
+          "path": "packaging/windows/install.ps1",
+          "line": 1,
+          "end_line": 18
+        }
+      ]
+    },
+    {
+      "id": "packages",
+      "type": "backend",
+      "label": "packages",
+      "sublabel": "Bundle / optics / PPT 公共包",
+      "pos": [
+        440,
+        330
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packages/optdsh-bundle/lib/compose.mjs",
+          "line": 9,
+          "end_line": 15
+        },
+        {
+          "path": "packages/optics/pyproject.toml",
+          "line": 1,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "plugins",
+      "type": "frontend",
+      "label": "plugins",
+      "sublabel": "画板桥 / 工作台 / Forms / 专家",
+      "pos": [
+        840,
+        330
+      ],
+      "size": [
+        250,
+        80
+      ],
+      "sources": [
+        {
+          "path": "packages/optdsh-bundle/lib/compose.mjs",
+          "line": 9,
+          "end_line": 24
+        },
+        {
+          "path": "packages/optdsh-bundle/lib/profile-components.mjs",
+          "line": 6,
+          "end_line": 16
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "repo-scripts",
+      "from": "repo",
+      "to": "scripts",
+      "label": "启动与交付",
+      "variant": "default"
+    },
+    {
+      "id": "repo-packages",
+      "from": "repo",
+      "to": "packages",
+      "label": "公共能力",
+      "variant": "default"
+    },
+    {
+      "id": "repo-plugins",
+      "from": "repo",
+      "to": "plugins",
+      "label": "可选扩展",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "源码不等于安装位置",
+      "items": [
+        "plugins 保存源码；画板桥和工作台打成 tgz 后安装到 Home/Profile。",
+        "Bundle 配置推荐组合，不复制运行副本或重启用已关闭功能。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "课题与公共能力",
+      "items": [
+        "具体模型、业务约定、专用 Skill 和运行结果归外部 workspace。",
+        "公共包不导入课题目录；独立编辑器不依赖 N05 源码。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "尚未收敛",
+      "items": [
+        "Forms、专家等其他可选包仍需逐项统一 Profile 生命周期。",
+        "精确目录树及职责见本页面“目录结构”；不把文件树误当运行服务图。"
+      ]
+    }
+  ]
+}

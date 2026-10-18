@@ -1,35 +1,33 @@
 # optDSH
 
-当前版本 **v0.2.0-dev.16 · 重构开发分支，未发布**；当前为本地开发测试版本，尚未正式发布，见[CHANGELOG](CHANGELOG.md)。
+当前版本 **v0.2.0-dev.17 · 重构开发版，未正式发布**。基于官方DSH的光学协作平台，保留官方Web、Agent循环与会话，通过可选插件接入画板、光学工作台和专家能力。
 
-面向光学模型的专家—Agent协作工作台：官方DSH会话、三维近似视图、会话画板和独立光学工具。
+先看[当前架构三视图](docs/architecture/index.html)、[当前状态](planning/STATUS.md)和[剩余工作优先级](planning/ROADMAP.md)。
 
-**过渡说明：新启动器默认使用独立home；旧3080尚未切换，端口占用会保守拒绝接管。独立安装与启动见[说明](docs/installation/README.md)。**
+## 使用与开发
 
-**工作台CMD默认只打开UI，不自动启动光学服务或连接Zemax。**
+- 普通用户：[安装、选装与升级](docs/installation/README.md) → [运行入口](docs/runtime.md) → [工作台使用](docs/workbench.md)。
+- 开发者：根AGENTS → [开发与验证](docs/development.md) → [版本、Git推送与交付](docs/versioning.md)。
+- 纯平台需要用户安装Node>=24；光学另需Python及声明依赖、Zemax/许可证。运行环境不随包，普通用户不必另装PowerShell7。
+- 研究课题可在任意外部workspace；源码、程序、独立Home、验证现场和真实课题分开。
 
-**日常双击根目录 `启动光学工作台.cmd` 或 `启动DSH.cmd`；修改源码后用 `重启DSH.cmd`。启动DSH复用已有进程，重启DSH核验后关闭再拉起。** 首次安装：`pwsh scripts/setup.ps1`。具体前置条件见[运行指南](docs/runtime.md)。
+开发机双击“启动DSH.cmd”复用已有Host；平台源码变化用“重启DSH.cmd”。“启动光学工作台.cmd”只打开已启用工作台。画板桥/工作台源码变化须显式打包并升级Profile，普通重启不覆盖用户开关。
 
-画板桥和工作台源码修改后须先显式打包并升级Profile中的安装副本，普通重启不会覆盖插件版本或启停选择，见[Profile插件开发步骤](docs/profile-plugins.md)。
+光学后台在Web连接窗口显式启动，Windows静默运行，状态和日志在高级诊断。打开/轮询不连接Zemax；探测、确认与保存分别操作。画板编辑器独立安装，支持[已有安装或全新本地包](docs/installation/canvas.md)。
 
-光学模块使用本项目Python环境和连接代码；画板编辑器独立安装，通过Home连接配置接入，支持已有安装或本地预构建包新装。见[画板安装接入](docs/refactor/2026-10-18/canvas-installation.md)。
+## 文档导航
 
-| 入口 | 内容 |
+| 主题 | 入口 |
 |---|---|
-| [开发与验证目录](docs/development.md) | 工作树、独立依赖、发布及安装验证 |
-| [当前状态](planning/STATUS.md) | 已实测、待验证和下一步 |
-| [推荐插件](推荐插件.md) | 市场插件固定版本、安装命令与新机器 Agent 适配检查 |
-| [模块和目录](docs/architecture.md) | 官方依赖/插件/公共光学能力/数据分类 |
-| [重构设计工作簿](docs/refactor/2026-10-18/index.html) | 现状/目标多视图、已确认决定与实施进度 |
-| [文档导航](docs/README.md) | 7个现行主题；旧文档归档ZIP |
-| [工作台操作](docs/workbench.md) | 连接、保存、视图、会话与画板 |
-| [外部课题目录](docs/workspaces.md) | 任意目录研究，课题资料不随平台源码或发布包分发 |
-| [业务Skills](.agents/skills) | 装调公差、画板、Rx收光效率；[参数配置/可视化](.agents/skills/dsh-forms/SKILL.md) |
+| 当前运行、源码包与安装布局 | [交互架构页](docs/architecture/index.html)、[架构正文](docs/architecture.md) |
+| 已确认决定与剩余优先级 | [决定](docs/decisions.md)、[路线图](planning/ROADMAP.md) |
+| 安装与官方Profile插件 | [安装](docs/installation/README.md)、[Profile](docs/profile-plugins.md)、[推荐插件](推荐插件.md) |
+| 课题/公共技能边界与专家 | [workspace](docs/workspaces.md)、[Agent开发](docs/agents.md) |
+| 真实光学约束与运行包 | [契约](docs/contracts.md)、[报告](docs/runs-and-reports.md) |
+| 全部现行说明与归档恢复 | [文档导航](docs/README.md)、[历史ZIP/哈希](docs/archive/README.md) |
 
-正式实现：plugins/、packages/；运行入口：scripts/；第三方依赖：node_modules/、.venv/。持久用户数据在data/，服务日志logs/，临时任务temp/；runs保持完整证据包，不能当缓存清理。
+代码归plugins/、packages/；运行脚本归scripts/runtime，交付工具归packaging/windows。node_modules/.venv可重建，Home、模型、课题、日志和凭据不随源码推送。发布目录是安装产物，验证目录是本机现场，均不作为Git源码目录。
 
-PPT制作首版：[ppt-slidewise](docs/ppt-slidewise.md)，独立SlideWise编辑页、项目稿件保存及可编辑PPTX导出。
+离线验证：`npm test`；版本检查：`npm run version:check`。真实模型、Zemax追迹/保存与tests/live按任务另行授权。Sandbox和公司实机尚未验收，完整重构未全部完成。
 
-离线检查：`npm test`。本项目不会因普通刷新而保存Zemax；显式保存按钮点击即授权，具体门禁见工作台说明。
-
-本轮0.2.0-dev.1版本机制见[版本与发布](docs/versioning.md)；切换到新开发目录继续的上下文见[开发接续摘要](docs/handoff/2026-10-18-dev-continuation.md)。
+源码远程：https://github.com/nefer5/optDSH 。本轮推送开发分支供备份和审阅；正式Release安装包、主分支合并和公开npm按后续决定。

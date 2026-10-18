@@ -1,183 +1,20 @@
 # 当前状态
 
-2026-10-18 工作台0.13.4：Windows后台改为所选环境的pythonw.exe，避免虚拟环境控制台窗口；输出无缓冲写日志，Web高级诊断沿用状态/启停/脱敏日志。82项专项与实际模块模拟通过；本轮不连接、绑定、保存或追迹Zemax。产品沿用dev.16开发线，本轮仅本地插件包。累计已完成与未完成见[重构总进展](../docs/refactor/2026-10-18/implementation.md)，实际现场验证见[静默启动回执](../docs/refactor/2026-10-18/evidence/workbench-silent-service.json)。
-
-2026-10-18 dev.16：工作台0.13.3统一配置加载状态，检测期间禁用探测/关闭/版本，避免读取旧就绪状态。此前dev.15已修Origin比较和错误红色、旧快照候选误清；本轮最终真实浏览器已探测92对象，候选跨轮询保持、确认enabled，跨站HTTP403与深浅红字通过；80项工作台及实际模块模拟检查通过，未保存/追迹模型。见来源修复计划和workbench-origin-fix-dev16.json。
-
-
-2026-10-18 dev.15：工作台0.13.2修复同源浏览器被误拒（官方carrier内部URL为dsh.internal，现按已验证Host/Origin比较，跨站继续403）。配置/连接错误红色、按阶段诊断，旧快照提示不再误清新候选。79项回归和模拟流程通过；真实浏览器已确认配置/启动/读取92对象可达，最终候选保持与红色视验见本轮收尾证据。未保存/追迹模型。
-
-
-2026-10-18 dev.14：工作台0.13.0按已确认画布落地三个无标题外框，保留操作设置；服务条只读状态+详情，版本/环境/实例/候选与高级诊断合入唯一连接窗口。77项工作台测试及实际模块模拟流程通过；显式探测按需准备、就绪复用、失败不探测、候选失效和确认不保存均验证。Profile已升级，当前后台只读回读为stopped；未启停/新探测/保存真实Zemax，模型文件哈希不变。实际画面验收与本地构建结果见本轮计划。
-
-
-2026-10-18 dev.13：工作台0.12.2支持Web自动检测Python、两类版本配置与安全停止/启动；分组按2021及以前/2022起，默认新版。optics0.4.0旧版正式legacy组件和新版连接器复用同一服务/身份/锁接口；19和2025实际Web只读探测/绑定92对象通过、源模型哈希不变。多个同号Extension误连被完整API构建门禁拒绝；18/其他年份尚未实测。画板桥0.6.1与工作台入口统一官方Button，专家中心强化宿主风格一致性要求。源更新已核对，宿主分发受已有资源/版本预检阻止，未强行覆盖。详见本轮方案及连接审查报告。
-
-
-2026-10-18 dev.12：工作台0.10.0增加Web“开启光学服务”、常驻状态和脱敏日志；optics0.3.0提供认证health和--defer-connect。模拟子进程验证重复启动去重、重载复用、无隐式模型采集；前端交互和完整离线回归通过。日常Profile已升级且接口/资源200；当前独立Home未配置optics.json，显示尚未配置。未连接真实Zemax。见[Web服务启动](../.agents/plans/261018-workbench-web-service.md)。
-
-2026-10-18 0.2.0-dev.11收尾：工作台0.9.2完整官方Profile生命周期通过。共享dsh-llm改宿主peer，修复首轮“删包但热重载failed”；最终官方卸载applied、即时core ready及重启无回流通过，独立发行安装/构建身份通过，app无工作台副本。日常预览Canvas/工作台ready，CMD仅开UI，缺光学后端503且保存禁用，未连接真实Zemax或模型推理。详见[最终证据](../docs/refactor/2026-10-18/evidence/workbench-profile-dev11.json)。
-
-2026-10-18 0.2.0-dev.9：工作台0.9.0统一官方Profile生命周期，复用Canvas机制且不再app/source回流；默认CMD不启动光学服务。独立Profile无Canvas/Forms/后端、合成代理、官方启停/升级保留off/卸载重启与数据哈希通过；损坏插件core存活、不兼容升级官方拒绝并恢复原包。清理绑定Agent光学提示词，未连接真实Zemax/模型。日常预览/发行安装正在收尾。见[方案](../.agents/plans/261018-workbench-profile-lifecycle.md)。
-
-2026-10-18 0.2.0-dev.8收尾：修复首次Profile创建stderr提示被PS5父重定向误判失败；fresh安装/运行身份通过。Canvas桥0.6.0已迁入日常Home/Profile，官方显示profile且removable；app不带同名包。官方启停、升级保留用户off、卸载重启无回流与画板保护均通过；开发源码修改须显式pack/Upgrade，普通重启不重装。其他自有组件尚待逐项统一，见[生命周期证据](../docs/refactor/2026-10-18/evidence/canvas-profile-dev8.json)。
-
-2026-10-18 0.2.0-dev.7：Canvas桥0.6.0统一官方Profile生命周期，源码留plugins但不作为app隐式workspace依赖；安装器走官方CLI，启动器不insert/force启用/源码回流。真实Profile停用重启、保留停用升级、启用与卸载重启无回流及画板哈希保护通过；完整回归及专项通过。日常预览与独立发行迁入正在收尾。操作与边界见[Profile插件](../docs/profile-plugins.md)。
-
-2026-10-18 0.2.0-dev.6收尾：Windows安装命名传参及首次后台启动控制台继承已修复；最终19项定向通过。dev.5总安装器全新Canvas安装通过，dev.6独立发行安装复用及运行构建身份通过，缺编辑器降级API实测core ready/canvas unavailable。日常预览Home保留模型和插件、启用core+canvas并登记外部2T2R；编辑器来自独立本地包，不依赖旧optDSH或N05源码目录。原4173/旧现场未动。见[验收回执](../docs/refactor/2026-10-18/evidence/canvas-installation-dev6.json)。
-
-2026-10-18 0.2.0-dev.4：Canvas已有/全新本地包接入、Home配置、身份/协议核验与按需启动已实现；包名@nefer5/agent-canvas，CLI不改，未公开npm。独立安装/复用、5.1启动、真实Web iframe握手、外部2T2R画矩形保存与DSH重启后回读通过；提交/建议仍以离线回归为证，未做真实模型调用。2T2R资料归外部课题，公共装调/Rx Skill已去课题绑定，光学包0.2.1离线123测通过。详见[画板与课题](../docs/refactor/2026-10-18/canvas-installation.md)。
-
-2026-10-18 0.2.0-dev.3：主安装器新增可选插件预设none（默认纯平台）/market/recommended，包内固定版本清单绑定SHA256，推荐安装沿用官方Profile流程及产品pnpm。已装用户版本/开关和额外插件保留；失败保留主程序/Home并写未完成回执。定向11项及完整npm test通过，独立dev.3测试包推荐安装8项active/8客户端HTTP200/市场pnpm通过，测试Host已停止（缓存复用）；图形安装向导、沙箱及公司实机未验证。见[安装说明](../docs/installation/README.md)。
-
-2026-10-18 0.2.0-dev.2：修复市场独立调用pnpm仍命中失效全局Corepack入口。Host子进程PATH优先产品node_modules/.bin及所选Node目录，父进程和全局PATH保持；官方管理器和市场均能使用产品pnpm。市场/dsh-market/status已实测pnpm false→true，生命周期回归通过；未更新全局工具或市场包，见evidence/market-pnpm-dev2.json。
-
-2026-10-18版本与Profile续轮：产品及Bundle进入0.2.0-dev.1；统一升版、构建门禁、版本API/CLI已实现，完整回归及独立测试包安装通过，代码提交a3c9040、测试包位于releases/0.2.0-dev.1，证据见docs/refactor/2026-10-18/evidence/version-dev1-installation.json。当前开发Home已恢复zai/glm-5.3-flash默认模型及所需凭据引用，8个旧启用插件已回读active及客户端HTTP200；Better Sidebar升级0.28.0，未沿用兼容豁免、未发送真实模型请求。源码入口和资料目录仍见[开发说明](../docs/development.md)，接续上下文见[开发接续](../docs/handoff/2026-10-18-dev-continuation.md)。
-
-2026-10-18续轮：Q9薄EXE/配置外置与Q10 Node>=24已实现。Node26完整回归通过，仓库外008安装使用内置5.1，EXE在Node24/26下均完成认证、复用、四组件ready、原生依赖及停止。开发CMD保留并使用本机Node26；无全局.agents/Node/PATH修改。见[启动器阶段验收](../docs/refactor/2026-10-18/thin-launcher.md)。正式发行/沙箱/公司实机及真实业务仍待验收。
-
-2026-10-18目录分离：本地源码checkpoint为ed6fbda；新开发工作树 E:/Proj-2026-N06_optDSH-dev（codex/platform-dev），发布根及验证根已独立建立。后续改动仅在新目录继续；原目录/真实数据未迁移，未启停原现场服务。新Node/Python依赖已独立安装（Node24进程级选择），完整首轮回归及仓库外Node四组件冷缓存安装、独立Python完整依赖和synthetic服务安装已通过，外部workspace增量继续验证。详见[开发布局](../docs/development.md)。
-
-2026-10-18首轮重构阶段完成，分支 `codex/platform-plugin-refactor`，详见[实施摘要](../docs/refactor/2026-10-18/implementation.md)与[计划状态](../.agents/plans/261018-platform-plugin-refactor.md)。独立home/workspace启动、可选Bundle/三插件、光学wheel、共享锁、本地发布/复制迁移工具已实现。DSH声明/锁升级0.2.1-rc.2，新版在隔离目录实测；现役root node_modules/3080和旧数据未切换。完整npm test与23项安装相关测试通过；仓库外实际包组件ready、官方客户端加载图/脚本与创建会话/加载画板通过。18专用桥、Canvas独立文档协议、真实React/编辑器握手、市场全组合/公共专家发行、光学完整依赖全新联网安装及真实业务仍待完成；Sandbox/VM/公司验证用户明确暂缓。已做本地checkpoint提交，未公开发布或推送；后续验证以本页顶部新开发记录为准。
-
-2026-10-03最新：恢复Standard/PTC/Cordis保守压缩ratio0.8、默认64K余量，正式重启与回读通过；81聊天可读，Strata256K/medium/32K持续加载，没有重载模型。实际阈值160K；证据runs/model/261003-03/readback.json。
-
-2026-10-03最新：Strata目录已同步256K/medium/32K，Standard/PTC/Cordis压缩ratio0.9，正式重启与配置/预设/78聊天回读通过；原默认保留。实际压缩阈值受输出及64K额外余量限制，Strata为160K；真实触发未测。见docs/runtime.md及runs/model/261003-02。
-
-2026-10-03：本地Strata原版IQ3_S已通过llm-pi-ai热配置接入，128K/medium/32K，回环8080；Standard文字/思考流、原生read闭环及截图附件实测通过。默认DeepSeek官方Flash/high恢复保留，测试会话本地选择保留；没有DSH/模型重启或光学工作台绑定。子Agent仅追加可选条目，复杂任务/子Agent/耐久未验。[使用](../docs/runtime.md) · [证据](../runs/model/261003-01/verification.json)。
-
-2026-10-02 架构专家v0.2.0轻量化：会话开始/恢复仅注入规范；Codex/Claude/DSH架构Stop handler已移除，遗留stop命令无payload/Git/扫描/状态操作。Git pre-commit按真实暂存区检查一次，只报告不阻断；用户审查/整改入口arch-review，不再要求--record。optDSH四宿主、AgentTyvate三宿主托管配置已分发且--check通过；OpenCode没有原命令hook，更新角色/技能并共用Git hook。npm test通过138项插件、11项PPT、105项光学、37项分发和56项架构kit测试；真实隔离Git提交、部分暂存与--only临时索引通过，实际DSH桥接的控制服务回归25次Stop零脚本/零续轮、SessionStart一次注入通过。用户授权后DSH Web已从PID35952重启至46292，认证HTTP200，专家/桥接/预设active，73会话可读；Bonsai PID69432/1235及模型配置保留。没有真实模型调用/Zemax/新会话首请求遵循验收；Codex/Claude新开场上下文待下一SessionStart加载。[方案与证据](../.agents/plans/261002-architecture-trigger-simplification.md) · [用法](../.agents/experts/software-architect/README.md)。
-
-2026-10-02启动器恢复：实际监听进程诊断、过期/损坏PID记录恢复、当前认证检查和显式`-Restart`已实现；真实3080正常复用、旧PID/损坏记录恢复、失效认证保留进程与无关端口占用（含Restart）拒绝均通过。后续架构触发优化中获用户授权，显式重启完整分支已实测：PID35952停止、新PID46292认证Ready/HTTP200，既有会话可读，模型服务未停止。用法见[运行指南](../docs/runtime.md)。
-
-2026-10-02时间与资讯规则：官方time-context在Web profile热加载，Asia/Singapore/600000毫秒；optdsh-current-info-policy注册静态研究规则。现有Standard记录确认系统段落与时间快照；两轮日期/时区正确，约30秒内仅注入一次。没有DSH/模型重启、联网复测或后台提醒任务。[配置](../docs/runtime.md) · [证据](../runs/model/261002-02/report.html)。
-
-2026-10-02后续命名：本地Bonsai正式ID改为Qwen3.8-27B-Bonsai2-PQ2_0-MTP-Q8_0，显示底座/参数量/主量化/MTP头；本地会话后续选择同步，历史回答保留。服务支持旧短名兼容，200K参数不变。DSH新ID来源与身份/算术回复通过，原云端默认保留。[说明](../docs/runtime.md)。
-
-2026-10-02：本地 ProCreations Bonsai2 MTP 已接入现行DSH Web，`local-bonsai / bonsai2-pro-mtp`、200K/32K输出/Medium；官方配置接口持久化并热加载。Standard真实会话文字计算、流式思考、原生read工具与结果回传通过，模型来源记录明确为本地。原云端默认保留；仅此验收会话选择本地。用户明确本轮不接光学工作台，既有400问题未处理；DSH图片、真实光学和复杂Agent未验。[使用](../docs/runtime.md) · [证据](../runs/model/261002-01/report.html)。
-
-更新：2026-10-02。此文件只维护当前能力和待办，不继续追加阶段流水。重整前完整状态在docs/archive/20260927-before-restructure.zip。
-
-2026-09-29 分发说明：根目录新增[推荐插件](../推荐插件.md)，记录市场插件当前版本、安装命令与目标机器适配检查。市场插件仍按需安装，未接入setup自动安装；本次仅文档交付，未在新机器重放安装。
-
-2026-09-30升级验收：135项插件、11项PPT、105项光学、19项分发离线测试通过；旧版预设加载及冷启动深链接已适配，实际插件验证和回退见[DSH 0.2升级记录](../docs/dsh-0.2-upgrade.md)。核心当前0.2.0-rc.2，Side Chat1.0.1仅本机精确版本豁免；不沿用下文历史版本号作为当前运行版本。
-
-2026-09-30用户后续调整：新增Better Sidebar0.24.1、Quote Followup0.2.10、Firefly0.1.3；与市场1.66.5共同live。Side Chat1.0.1和旧划词0.1.0保留安装但暂时disabled，未重新启用；[推荐列表](../推荐插件.md)已按当前选择更新。新插件仅核验实际加载与市场空诊断，未声称完整交互验收。
-
-后续运行待排查：2026-09-30用户调整插件后曾出现3080 PID与`.runtime/web-launch.json`记录不同、旧认证URL返回401；2026-10-02启动器恢复与授权重启后当前认证Ready/HTTP200。此前Tabbit登录态下市场API正常、表单页200，但工作台view返回400、过滤会话列表为空；工作台这两项尚未复测，原因未定位，不归因于某个新插件，也不据此判断会话文件丢失。前述升级验收是此前进程的结果。
-
-提交前离线检查（2026-09-28）：`npm test`通过134项插件、11项PPT、105项光学和19项专家分发测试，以及工作台DOM冒烟与项目文档检查；PPT生产构建通过。本次没有新增真实模型、Zemax或浏览器交互验收，既有待验证项仍保留。
-
-| 能力 | 当前状态 |
-|---|---|
-| 官方DSH 0.2.0-rc.2 / Standard | 已升级并重启；37个原项目会话仍可读，专家预设/GLM委派、市场与Side Chat侧聊、引用及表单闭环已验证；完整光学/多模态未重验 |
-| ppt-slidewise | 项目级首版；直接调用与DSH+glm-5.3-flash生成/修改/导出闭环已实测，七种中文字体浏览器实际命中与LibreOffice渲染确认；PowerPoint像素保真、复杂模板未验，证据runs/ppt/260927-01 |
-
-PPT内容策划增量：已展开六步流程、首轮1–2题/每题三选项加自定义输入，并按用户最新要求设R1内容逻辑文档、R2实际1–2页样例PPT两处审查。简短表单两个分组的实际控件已验证；早期GLM样本出现用途明确后越步生成，后续样本取消/超时。最新双审查协议已落Skill和文档、链接检查通过，但完整模型遵循回归尚未通过，记录runs/ppt/260927-02；勿将首版导出闭环等同策划质量验收。
-| 同会话光学工作台 | 共享官方控制器及实时消息流；本地回显/去重/重连、选中文字引用；双窗口GLM两轮验证通过，证据runs/chat-sync/260927-01 |
-| 画板 | 按会话BoardStore、临时弹窗、反向编辑/预览/确认；编辑器暂依赖N05 |
-| 几何与视图 | 近似镜片、6组布尔曾实测；双视图、固定轴向、分隔线和多选引用 |
-| 模型连接/保存 | 手动实例探测/确认，版本和身份检查；两次真实保存记录在runs/model-save |
-| Tx装调 | 已接原生NSC灵敏度/MC/OD副本执行；低样本少量自由度实测，完整6D装调质量未验 |
-| Tx自定义分析 | 已实现脚本独立MC、仅末样本OD/DLS或逐轴补偿、网格RMS/散点/局部扫描与最终副本；新92对象模型预处理后2MC/OD1轮通过独立复测，两die角宽改善；完整6D与采样收敛未验 |
-| Tx原生公差 | 正式工作台三页双主题、真对象/全局Z、串行作业与取消；原生TDE/MFE编译及TXT/ZTD、MC/SAVE端点回读。浏览器启动至结果闭环已实测 |
-| Rx FOV | 实例2副本扫描已实测；本轮DSH+GLM完成9点及独立中心复测，当前中心结果相差6.2倍，重复性异常，不能作为定量视场验收 |
-| 视觉专家 | 原生专家Preset/子Agent接入GLM已验证；资源分发保留library层级，公共素材读取统一；不等于设计质量或像素能力验证 |
-| 结构重整 | 已验证：模块归位、独立Python/连接源码、认证去日志依赖、数据迁移、根入口与平台文档收敛 |
-
-规则入口已按平台通用、插件/光学后端、领域研究分层；根AGENTS不把光学只读或性能约束施加给普通DSH任务。模块开发规则归对应目录AGENTS，产品指令明确按本轮任务适用。
-
-## 证据入口
-
-- STUDYS/2t2rLidar/runs/tx、rx-fov、rx-report：10个研究运行包已整体迁入，102个文件哈希不变；内容和原始执行配置保留。
-- runs/model-switch、runs/model-save、runs/save-ui：绑定和保存证据。
-- runs/workbench、runs/ui-feedback、runs/splitters、runs/experts：既有平台验收。
-- runs/restructure：本轮迁移清单、原源码快照、历史run哈希与验证报告。
-
-研究导航：STUDYS/2t2rLidar/README.md。平台docs不再维护光学分析流程，执行约束以Skill为准。
-
-2t2rLidar通用术语与H/V方向已从N02提炼至docs/2t2rLidar，来源路径/哈希随文档；控制角关系已于2026-09-27获用户确认继续沿用，没有变化。当前为文档契约采用，未修改执行器、现有配置或重新标定模型。
-
-## Rx Skill 表单路径真实模型验收（2026-09-27）
-
-- 用户指定官方DSH + glm-5.3-flash，未运行OpenCode模型。主Skill分流参数收集/提交读取/真实分析，执行参考按需加载；新增CLI --brief减少模型上下文，源配置不覆盖、清空保留null。
-- 两个Standard真实会话四回合：两次创建仅skill+pwsh各一次，墙钟38.83/32.74秒；提交读回仅一次pwsh，28.73秒；pending检查仅一次pwsh，16.44秒。工具累计0.58–0.63秒，模型调用占主要时间。未发现轮询、重复创建或光学调用。
-- 首轮“未填任何值”表述不准确，已修正为保留样例值待核对并复测通过；H=5/V=3、面积120及initial=null读回正确，未补默认值。
-- 124项Node串行及文档检查通过。原生轨迹、输入、分段指标与评分封于runs/skill-eval/260927-01；260927-02是Setup表述完善的报告整理包，复制前者证据，未新增模型调用。样本量有限，无原始Skill基线，不声称速度提升比例；未验证真实光学执行或自动唤醒。
-## 下一步
-
-- 参数配置发现入口（2026-09-27）：新增项目级`.agents/skills/dsh-forms`，描述包含用户指定五个触发词，按Study公共参数契约、Skill临时参数、完整配置审查分流。Skill格式/引用/项目文档检查通过；官方FileSystemSkillProvider离线指向项目技能目录能发现并加载正文，现有Study的list/read命令通过。实现能力仍由独立optdsh-forms提供；未新增全局意图钩子/提交回调，未做GLM选择新Skill的行为实测。旧会话是否刷新技能目录需按宿主核对。
-
-- Rx Skill复盘（2026-09-27）：已明确参考面积来自当次用户/Study定义，不能用源或detector面积替换；新增重复性与分层计时验收，取消Agent短命令自动停启常驻3081的指导。当前CLI端口门禁未改；后续公共ZOS实例级互斥、工作台busy/缓存处理及服务共存实测仍待实现。详见[经验复盘](../.experience/rx-skill-dsh-glm-review.md)。本轮为Skill/文档优化，未重跑GLM或Zemax。
-
-- 划词客户端冲突修复：用户发现Side Chat与自有画板插件同时注册user/-100导致HARNESS加载失败；画板包装器改为-200并动态串联后续渲染器，18项定向测试通过。Side Chat已恢复启用、3080空闲重启；浏览器刷新和批注交互待用户确认，不能以市场live推断客户端成功。
-
-- DSH市场/划词（2026-09-27）：项目Web profile固定安装dshmarket 1.66.2、dsh-ui-quote-selection 0.1.0、@ahggg/dsh-side-chat 0.7.3；空闲后3080重启，两个划词插件activation=live且市场诊断无问题。Side Chat声明peer范围较旧，交互兼容待验；用户选择不建Tabbit组、自行体验，菜单共存与侧聊模型请求尚未验证。市场目录与30会话读回此前通过。见[调研记录](../docs/dsh-plugin-research.md)。
-
-- 真实Rx小扫描（2026-09-27）：用户要求DSH完全权限，官方设置已持久化并回读。260927-10只读预检通过；11为9点×20000光线、脚本34.6s、扫描循环20.532s；12为独立中心点、脚本15.5s、循环1.531s。两次primaryUnchanged/copyClosed均true，3081最终恢复且版本仍r-2f894e5021e1a8215f58。
-- 当前中心norm_eff_spad从9点中的0.201416%变为独立点0.032469%，同配置声明seed下相差6.20倍。数据链/安全检查通过，定量重复性未通过；未记录命中数/权重方差，不把异常直接归因几何、噪声或顺序bug。没有扩大扫描或覆盖旧run。
-- GLM半宽面积误算、归一化混淆和过强几何归因已被监督纠正；Windows Job等待常驻3081使工具不返回，外层接管服务生命周期才完成，不算完全自主成功。完整计时、原生轨迹和独立复算见runs/rx-agent/260927-01/report.html。
-
-- 研究参数表单 MVP 0.3：独立optdsh-forms保留v1/v2结构化编辑；新增create --config直接从旧YAML推断表单、标量列表/JSON回退和submitted后原结构导出，原文件不改写；清空输入统一保留键写null，以提交结果供Agent读取，已通过5项针对性测试及浏览器读回；已提交页明确标只读，继续修改会保值创建新请求，已浏览器验证。Rx原样例无需专用UI：浏览器填写/保存/提交、CLI导出、原Rx纯离线15点validate/plan已验证，未连接模型/未生成run。支持Skill随包表单YAML；自动加载Skill自定义JS/CSS仍未实现，分发设计见插件skill-packaging.md。默认并发全仓测试遇到其他模块Windows临时rename EPERM，串行复测通过；光学105、分发16、DOM/文档检查通过。配置/范围联动与v0.2验证见插件README。
-
-1. 本轮已完成：74项Node、87项光学Python及16项专家分发测试，DOM/文档检查；真实92对象采集、6/6裁剪和画板弹窗通过，26会话可读、16份画板保留、270历史run文件哈希不变。测试夹具约890 MiB已可恢复移出，后续成功测试自动清理自有沙箱。
-2. Tx原生执行已接入，使用[Tx执行流程](../.agents/skills/optdsh-assembly-tolerance/references/tx.md)和v1 YAML；旧H-D86试跑保留。后续按实际任务做光线/像素收敛及多自由度装调验证；DLS已可选，本轮未实测。
-3. 画板独立打包暂缓；不宣称当前整个产品完全自包含。
-
-
-## Tx原生公差本轮验证
-
-- `runs/tx-native/260927-05`：独立Sensitivity、MC=0、2千光线/源、OBJ7 x±0.01 mm；原生SAVE两端点模型回读die1/die2，主模型不变且副本关闭，28份清单文件哈希一致。
-- `runs/tx-native/260927-04`：3样本OD初试发现各样本约0.000106 mm超出−0.05 mm行程，均正确标无效；增大MF行程惩罚权重后复核，未隐去失效样本。该开发期包progress.json在封包后更新过，历史清单不重写；不用它做最终完整性证明。
-- `runs/tx-native/260927-06`：由正式工作台点击一次启动，3080代理→3081→原生工具；1MC/OD1轮/每源1000光线。OBJ1控制Z±0.05 mm，成员die1—4；die1 0.540717→0.483158 mrad，die2 0.575255→0.516101 mrad；补偿−0.0500000099 mm，在1e−7 mm数值容差内有效。低采样仅功能验证，不代表光学收敛/良率。
-- 用户确认专用探测器OBJ37/38采用GetMatrix全局Z=10011 mm、H=局部X；局部Z=1 mm不作为传播距离。原模型采集字段、dirty、MFE/TDE摘要及磁盘哈希前后相同；独立副本关闭。
-- 修复Windows轮询读取导致progress原子替换短暂拒绝：有界重试，进度写入失败不再取消原生求解；新增跨进程采集排他锁，避免服务重启后与原生作业交叉。
-- 93项光学Python（含6项原生配置边界）、12项相关Node和真实DOM模块检查通过；浏览器浅深主题/真实对象/任务状态可读、真实start仅一次。未进行高样本MC或DLS对照。
-
-
-## Tx自定义分析（2026-09-27）
-
-- 用户确认仅补偿最后MC，保存最终副本，活动原模型不变；保留OD/DLS独立局部优化并增加逐轴扫描。不调用OpenTolerancing，不写/执行TDE。独立误差采样与固定光线seed分开。
-- 参考链硬预检：旧绑定test-2模型OBJ7仍影响多个后续对象，已正确拒绝；不自动拆链。随后探测到API实例2已打开“2T2R-高线-4die-v0.52.1-NONSEQ_0926-公差分析-1.zmx”（90对象），未静默重绑或修改新模型。
-- 实测使用独立CopySystem加载历史已准备的runs/tx-native/260927-06/prepared.zos，非新模型的直接执行：runs/tx-custom/260927-01为2MC/逐轴1轮/每源1000光线，约41.4秒；02为2MC/OD1轮，约91.7秒。两次原模型不变、副本关闭；第一样本after=null，仅末样本补偿；终点局部扫描、NPZ、末MC/最终模型和HTML已保存，文件哈希核对通过。
-- 02末样本die1约0.602428→0.538862 mrad、die2约0.606347→0.532304 mrad；低采样仅验证功能，非收敛/良率结论。DLS入口复用官方局部优化枚举，本轮未实测。
-- 102项光学Python通过（新增9项网格/抽样/末态/参考链/取消边界），报告资源路径隔离测试通过。工作台custom模式/参数切换已只读实测，报告散点/光斑图浏览器已查看；当前新模型尚未通过正式UI启动custom。
-- 项目.venv固定matplotlib 3.10.9及传递依赖，requirements已锁定；未改全局Python。新增授权报告路由可按已完成job打开HTML及同包图片/数据，阻止路径越界；native报告HTTP200回读通过。后端和DSH已重载。
-
-- Tx提交反馈已区分后端明确预检拒绝（未启动）与网络/响应不明（提交状态待核实）。耦合成员关系错误改为列出控制对象与无关成员，说明独立耦合件和刚体成员的区别；不改变参考关系、不放宽预检。
-
-
-## σ输入、依赖预检与当前模型修复（2026-09-27）
-
-- 用户要求本轮不调用子代理，已中止先前启动的视觉子代理，后续由主Agent完成。盲装页支持range/sigma，保留μ；sigma方式按nσ显示Min/Max且后端重新计算，不信任派生字段。浏览器验证±2σ/±3σ联动，耦合行程不变。
-- Capture增加6D位姿Solve、活动参数Pickup与源采样元数据；预检按对象/列追踪直接和间接Pickup，修复“只看RefObject导致跑完OD才发现OBJ4随动”的漏洞。网页Analysis Rays覆盖要求Fixed+数值回读，Layout/Power不得随采样变化。
-- 原位修复已获用户授权。model-repair/260927-02冻结OBJ4/5的四项位姿Pickup，当前名义位姿不变；03按用户确认把OBJ2/3 Power设Fixed 1 W、Analysis Rays设Fixed 10000，Layout=0不变并保存。两包保留旧磁盘ZMX/ZDA和当前内存CopySystem备份。01因4.4e-16矩阵浮点差异触发精确比较，成功恢复旧Solve且未Save；02改数值容差后通过。03报告生成曾因sources列表类型失败，模型修改已回读成功，只续封报告，未重放模型写入。
-- runs/tx-custom/260927-04：修复后的当前模型直接通过正式服务执行2MC、OD1轮、每源2000光线；约283.4秒完成，无未声明随动，主模型不变、副本关闭、42份产物哈希一致。原模型Analysis Rays=10000，运行副本按目标切为2000/0与0/2000，Power保持1 W。
-- 本次是功能验证而非补偿改善验收：OD候选被拒绝，die2功率保持率约94.4%<95%，联合目标也未改善；最终保留末MC的补偿前位置。候选和最终值均在result，未伪报优化成功。
-- 报告新增每轴“角宽灵敏度+名义功率保持率”双纵轴图，共用补偿增量横轴，离散点连线明确。真实HTML五张图均加载并已查看。
-- 105项光学Python、σ/提交反馈4项Node通过；未做大样本或DLS对照。光学后端与DSH均已重载，旧revision草稿不自动迁移。
-
-## 新模型预处理与OD复测（2026-09-27）
-
-- 用户授权先备份再预处理当前optdsh-test-2.zmx。runs/model-repair/260927-04保留磁盘ZMX及未保存内存ZOS备份，解除源位姿Pickup，解耦OBJ7下游参考链，OBJ7/11保持全局位姿重定参考，die2挂die1形成配置所需刚体；两目标源Analysis Fixed10000、Power Fixed1 W，Layout原值保留。全部92对象世界矩阵及形状参数保持；保存后回读通过，10份清单文件哈希一致。
-- runs/tx-consistency/260927-01、03、04：同缓存NSDD与网格RMS一致；MFE/NSTR与显式种子API追迹采样不同；改变单核/默认种子未消除差异。02的SourceDiode Sobol设置回读失败，副本安全关闭，不声称Sobol可用。
-- runs/tx-custom/260927-05：正式服务2MC、OD1轮、每源5000光线、OBJ7 x/z/Tx扰动，die1控制die2刚体XYZ各±0.5 mm。337.8秒完成；末样本die1角宽0.578104→0.463870 mrad，die2 0.607242→0.448868 mrad，名义功率保持99.716%/98.496%，候选采用、行程通过；MFE也改善。预处理后的主模型未变、副本关闭、43份产物哈希一致。
-- 记录每批sameTraceNsddRmsMM/命中数及优化器实际MFE证据，HTML区分内部优化和独立复测。105项Python离线测试通过；真实HTML五张图加载，灵敏度/功率同图已目视确认。当前目标无质心/指向约束，最终光斑中心明显平移；低样本功能验证不外推良率或光学收敛。
-
-## 视觉专家统一中心（2026-09-28）
-
-- visual-designer 0.7.0：optDSH为唯一源，AgentTyvate目录Junction和转发分发器已配置；两边偏好合并，新增用户专利全景研究台的配色参考（黑白灰、青绿、少量洋红，原始截图与取样保留）。
-- 源/私人记录即时同源；中心fleet分发optDSH四宿主和Tyvate三宿主，预检所有目标冲突。公共源移除光学专属正文，按目标项目AGENTS路由；个人偏好和截图Git忽略。
-- 公共源码导出器生成27项文字/来源/模板文件，排除个人偏好、所有PNG及本机路径设置；第三方图片仍只本机参考。旧源和分发资源有哈希核对及备份。
-- 19项中心Python测试、6项专家Node测试通过；新旧宿主模型遵循未复测，运行中DSH未重载。入口：.agents/README.md。
-
-PPT 0.2：语义版式、本地素材等比嵌入、用户修改diff、样页槽位模板、结构/字面事实预检、过程记录及渲染/导出缓存已实现；10项针对性单测与构建通过。真实浏览器逐页预览及PPTX缓存复用已验证；新会话GLM以项目测试证据为准，不将CLI能力等同模型遵循。
-
-PPT 0.2独立GLM四页制作及一轮集中修订已实测，采用语义版式/图片等比嵌入/check/局部render，三图成品比例正确。独立WPS渲染发现一处长段轻微超底框，浏览器估算检查未覆盖，不声称成品自动验收可靠。当前模块11项离线回归通过，模板槽位与diff另有确定性测试；未验证公司机和微软PowerPoint。
-
-## 多专家分发与宿主集成（2026-10-02）
-
-- 分发器支持多专家（`--expert` 默认 all）、agent.json 必填 title、resources.json schema 2（library/kit、skills、hooks）、全部分发 .md 的占位符替换、技能双布局及 Codex/Claude hook 结构化托管合并与 DSH hook 文件；visual-designer 迁移到 schema 2。
-- optdsh-experts 按 `.agents/dsh-presets/*/expert.json` 为每个专家注册 `expert_<name>`，`expert_resource` 增加 expert 参数；spawn 提供方统一为 optdsh-experts；policy 新增软件架构专家的 dsh-hooks-claude-code 桥接，启动器按全部预设加 `--patch`。
-- 30 项分发测试、9 项专家 Node 测试、52 项 kit 测试、npm test 与项目检查通过。2026-10-02 已 `--fleet --expert all --apply` 分发到 optDSH 四宿主与 AgentTyvate 三宿主，`--check` 通过；扫描器跳过分发收据列出的生成文件。
-- 初版实测：临时仓库中 Codex（`codex exec -m gpt-6-luna --dangerously-bypass-hook-trust`）与 Claude Code（claude-ds 配置，glm-5.2）的 SessionStart/Stop hook 均触发，模型按提示运行扫描并 `--record`。这套Stop流程现已退役，现行v0.2流程与验收见本页顶部；DSH授权重启后专家工具/预设与仅SessionStart的桥接已active。Codex项目hook信任仍按宿主要求处理，不以旧流程的模型验收代替新开场规范遵循验收。
+2026-10-18；产品 **0.2.0-dev.17**，开发分支 `codex/platform-dev`。当前运行源码验证基线5d6920e；本轮文档、归档及版本交付，不重新操作Zemax或用户Home。完整历史已进入[归档](../docs/archive/README.md)。
+
+| 能力 | 已实现/验证 | 实际限制 |
+|---|---|---|
+| 独立平台 | 官方DSH 0.2.1-rc.2、Node>=24、独立Home、任意外部workspace、CMD/薄EXE、版本及构建身份 | 首次图形安装向导未做；旧现场保留 |
+| 插件装配 | 画板桥和工作台官方Profile安装/启停/升级/卸载；重启不复活；坏插件不拖垮core | Forms/Experts等其他自有插件仍有过渡装配 |
+| 画板接入 | 独立编辑器已有/全新本地包路径；iframe握手、外部课题保存回读和重启保持已验 | 通用文档协议和真实产品Agent建议端到端未完成 |
+| 光学工作台 | 统一连接窗口、自动检测Python、两类版本、红字错误、Web启停/日志 | 当前服务就绪不等于模型连接 |
+| 静默后台 | 工作台0.13.4；真实Web启动/状态/日志与Windows无控制台通过，模型文件哈希不变 | 本轮无探测/绑定/保存/追迹；当时无运行中的OpticStudio进程 |
+| 双版本 | 正式optics0.4.0；19与2025 Web只读探测/绑定92对象、文件哈希保护已验 | 18及其他年份未测；旧版写入、追迹和公司数值一致性待验 |
+| 交付 | 推荐插件快照重放、完整依赖独立安装/synthetic、构建SHA、历史dev.16测试包 | Sandbox/持久VM/公司实机暂缓；无正式发布 |
+| 文档 | 三张当前Archify图、目录、优先级及181项历史ZIP/逐文件哈希 | 图依据固定源码，不能替代部署和研究验收 |
+
+最近运行代码回归：82项工作台；完整npm test（175项插件、98项安装、11项PPT、139项光学、37项分发、56项架构kit）及模拟DOM/文档检查通过。此为离线和所列现场范围，不包含真实研究业务。
+
+本轮dev.17打包、图形与归档检查结果见[交付回执](../docs/verification/dev17-docs-release.json)。[静默服务回执](../docs/verification/refactor-20261018/workbench-silent-service.json)和[双版本组件说明](../docs/verification/zemax-connection.md)保留原验证范围。
+
+下一步推荐：先收敛其余插件Profile生命周期和升级恢复；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。本轮用户已授权完成后推送开发分支；不自动合主分支、强推、正式Release或公开npm。

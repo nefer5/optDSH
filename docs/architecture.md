@@ -1,58 +1,67 @@
-# 架构与目录
+# 当前架构与目录
 
-当前Canvas桥和光学工作台已经统一官方Profile生命周期：源码仍在plugins，发行tgz安装到Home/Profile；不再从app或源码回流。Bundle只给推荐/默认，停用与卸载遵循官方有效配置。目录与操作见[Profile插件](profile-plugins.md)；Forms等其他自有插件尚在逐项收敛。
+当前产品开发版 **0.2.0-dev.17**；官方DSH固定 **0.2.1-rc.2**。运行源码基线为5d6920e，本轮只整理文档、交付入口和版本。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
-2026-10-18分支实施：optdsh-bundle负责官方Loader装配、认证记录与可选插件隔离；开发平台已固定官方DSH 0.2.1-rc.2，旧现场保留。程序根、独立Home、workspace分离；新画板在课题.agent-canvas/optdsh/boards。编辑器已独立安装接入；光学正式包含legacy/modern组件，19与2025只读连接已验，18及其他年份未实测。Windows光学后台用同环境pythonw静默运行，状态和脱敏日志在Web高级诊断查看。独立Canvas通用文档协议、正式迁移与沙箱/公司验收仍未完成。累计成果与剩余项见[实施进度](refactor/2026-10-18/implementation.md)；具体决定见[决定入口](refactor/2026-10-18/decisions.md)，发布使用见[安装说明](installation/README.md)。
+## 图怎么看
 
-下文描述重构前现役部署，作为过渡对照；不代表新代码仍要求固定仓库根。
+- 运行关系：用户、官方Agent会话、插件、独立编辑器、光学服务和Zemax如何协作，接近C4容器/组件关注视角。
+- 源码包边界：这些职责由scripts、packages、plugins承担，属于代码组织映射；目录树不等于完整C4代码视图。
+- 安装与数据：程序、共享Home、任意课题和StateRoot分别放什么，属于部署与数据归属视角。
 
+三张图都描述当前实现；未来建议只在[路线图](../planning/ROADMAP.md)中列出，不画成已运行的能力。图源、源码范围和自动校验回执随图保留。
 
-optDSH 使用官方 DSH 0.2.0-rc.2（候选发布版），官方代码由 npm 安装在 node_modules/@deepseek-ai 下；不修改安装包。插件通过 config/dsh.local-policy.yml 加载，专家预设由启动器另挂生成的 Cordis patch。
+## 模块与边界
 
-## 产品模块
-
-| 模块 | 自有内容 | 对外边界 |
+| 模块 | 实际职责 | 当前边界 |
 |---|---|---|
-| plugins/optdsh-workbench | lib适配器、web前端、config指令、tests | 官方会话控制器、3081光学HTTP、画板transport接口 |
-| plugins/optdsh-agent-canvas | lib画板状态/工具、web/transport.js、tests | 官方会话；N05的4173嵌入式编辑器 |
-| plugins/optdsh-experts | lib原生专家适配、tests | .agents/experts中性定义和生成预设 |
-| plugins/optdsh-current-info-policy | 最新资讯查询的静态系统提示 | 官方systemPrompt；时间读数由官方time-context提供，本插件不联网或定时执行 |
-| plugins/optdsh-forms | 独立研究背景/临时请求表单、存储、CLI、tests | 官方connection认证；Study声明式文件与data/forms请求；不依赖光学工作台 |
-| packages/optics | src公共光学实现、scripts HTTP/MCP/worker、tests、依赖清单 | 本机ZOS-API；不依赖N02源码或虚拟环境 |
+| 官方DSH | Web、Standard循环、会话、模型、认证及Profile | 唯一会话事实源，不修改node_modules |
+| packages/optdsh-bundle | 组装、版本、能力状态、启动配置 | 不恢复用户停用/卸载的画板桥或工作台 |
+| plugins/optdsh-agent-canvas | 会话画板工具、提交/建议、BoardStore与编辑器桥接 | 官方Profile生命周期；通用文档权威仍在桥内，尚未完全独立 |
+| 独立AgentCanvas | 独立安装的编辑器与宿主无关入口 | 已有安装/全新本地包接入，不依赖N05源码 |
+| plugins/optdsh-workbench | 模型视图、同会话聊天、光学代理和服务管理 | 官方Profile生命周期；缺服务不影响基础平台 |
+| packages/optics | 可安装CLI/HTTP/MCP、版本连接、身份/实例锁与确定性分析 | legacy/modern复用组件；19和2025只读已验，其他版本及业务另验 |
+| Forms/Experts/信息策略/PPT | 可选表单、专家资源与公共工具 | 包已拆分，其他自有插件的Profile全生命周期尚需收敛 |
 
-插件专属资源从包目录解析，npm依赖按模块解析。项目配置/业务数据通过项目根定位，不能把私有文件打进插件包。根package-lock固定第三方版本；插件独立SemVer，新增接口升MINOR。当前lib为手写源码，不是可删除编译缓存。
+## 开发源码组织
 
-工作台/官方Web → 官方3080 → 光学HTTP3081 → 本项目连接封装 → Zemax。
-工作台/官方Web → N05画板iframe → 同一transport → 官方3080的唯一BoardStore。
+```text
+optDSH源码/
+├── plugins/                    # 工作台、画板桥、表单、专家等源码
+├── packages/                   # Bundle、光学公共包、PPT模块
+├── scripts/runtime/            # 开发CMD与安装版共用的生命周期实现
+├── scripts/maintenance/        # 版本、打包、检查、文档构建
+├── packaging/windows/          # 安装、选装、校验和迁移工具
+├── tests/                      # 跨包安装测试；真实业务默认不执行
+├── config/                     # 可分发示例，私人配置忽略Git
+├── .agents/skills/             # 包内公共产品技能
+├── planning/                   # 当前状态、优先级和里程碑
+└── docs/                       # 现行说明、架构图、验证及历史归档
+```
 
-**发布边界**：光学代码和Python环境已经内聚；画板编辑器按用户指示暂保留N05依赖，尚不宣称整个应用完全自包含。N02仅是只读设计参考和来源，不参与运行。
+源码不建立STUDYS；具体课题背景、专用Skill、模型、配置和完整run归任意外部workspace。
 
-## 文件存放
+## 安装与持久数据
 
-| 内容 | 位置/生命周期 |
-|---|---|
-| 日常启动 | 根目录两个cmd薄入口；实现位于scripts/runtime |
-| 正式维护工具 | scripts/maintenance；安装入口scripts/setup.ps1 |
-| 模块测试 | 所属模块tests；跨模块真实验收tests/live，默认不运行 |
-| 平台配置 | config；本机optics.local.json忽略Git |
-| 研究配置/编排 | STUDYS/<study>/configs、workflow；公共模块不得导入Study |
-| 正式证据 | runs/<workflow>/YYMMDD-NN，或Study内runs；完整随包 |
-| DSH会话/设置 | data/dsh（DSH_HOME），必须持久保留 |
-| 会话画板/绑定 | data/canvas、data/workbench |
-| 光学恢复快照/保存回执 | data/optics；不按临时文件清理 |
-| PID/锁/启动令牌 | .runtime；仅在对应服务停止后处理 |
-| 服务日志 | logs/dsh、logs/optics；不再作为重新打开认证入口的数据源 |
-| 一次性开发脚本与输出 | temp/<任务>/scripts、outputs；不得平铺根目录或再次引入artifacts |
-| 历史开发产物 | data/archive/artifacts-20260927；仅保留旧证据，不继续写 |
-| 独立AgentCanvas用户内容 | .agent-canvas；不是DSH会话BoardStore，不能误清 |
+```text
+<InstallRoot>/                 # 版本化程序：官方DSH、Bundle、运行脚本
+<独立Home>/                    # 所有课题共用，路径可配置
+  profiles/web/                # 官方Profile的包、bundle选择和用户patch
+  config/                      # canvas.json、程序管理的optics.json
+  state/web/                   # 默认StateRoot，也可显式另选
+    data/                      # 绑定、快照、恢复与回执
+    logs/                      # Web可读的光学启动日志等
+    .runtime/                  # PID、令牌、锁；不随包
+<独立AgentCanvas安装区>/       # 编辑器程序，与桥分开升级
+<任意课题>/                   # 无须放在平台旁边
+  .agent-canvas/optdsh/boards/  # 当前DSH会话画板
+  .agents/                     # 可选的课题专用能力
+  configs/ models/ runs/       # 由具体课题约定，不是平台强制模板
+```
 
-研究遵循N02的就近原则；配置源位于STUDYS时新run自动归属相应Study。历史run、备份、输入模型不为外观整齐而改写。活动模型仍保留test/zmx旧路径，避免改变正在打开的Zemax文件；新研究模型就近放Study，商业数据不入Git。
+Home与用户级/课题级.agents职责不同。公共能力随包保留，可选分享及冲突预览方案已确认，自动分享尚未实现，不改本机全局.agents。
 
-## 清理与升级
+## 生命周期与验证
 
-node_modules/.venv可按锁文件重建；data、研究模型、run不是缓存。临时任务完成后回收自己的沙箱；不得递归删除未知目录。历史旧聊天链路已从运行源码退役，旧聊天数据保存在data/archive。
-升级DSH只更新依赖并运行模块/页面回归；验证官方会话、画板、认证、MCP与工具接口。禁止用改node_modules解决适配。
+画板桥/工作台通过官方Profile安装、启停、升级和卸载；源码改动要显式打包升级安装副本。光学后台由Web显式启动，Windows使用同环境pythonw静默运行，状态和脱敏日志在高级诊断；打开/轮询不连接Zemax，保存独立授权。
 
-## 重构设计材料（未实施）
-
-2026-10-18已整理[重构设计工作簿](refactor/2026-10-18/index.html)、[目标架构草案](refactor/2026-10-18/design.md)与[决定/待定项](refactor/2026-10-18/decisions.md)。目标是独立安装、可选插件和任意研究workspace；本文件上文仍描述当前实现。具体接口、落点、迁移与验收见[实施计划草案](../.agents/plans/261018-platform-plugin-refactor.md)，尚未开始产品代码或数据迁移。
+[Profile操作](profile-plugins.md) · [安装与数据](installation/README.md) · [实测摘要](../planning/STATUS.md) · [已确认决定](decisions.md) · [历史归档](archive/README.md)
