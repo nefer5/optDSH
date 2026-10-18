@@ -61,3 +61,14 @@
 .experience的README与两份经验均由Git管理。dev.27导出原文与experience-manifest.json，主清单校验经验清单哈希，安装器逐文件校验后保存到Home/.experience。未修改的受管条目可升级，用户修改或新增保留。安装后的文档链接适配实际程序路径；历史run仅留来源说明。源码使用仓库原文，安装版通过官方systemPrompt服务提供Home索引入口；索引注入不等于模型已实际阅读。
 
 经验库及安装变更完成后，安装组129项与test:quick重新通过；完整回归的其余组沿用同轮未改动代码的通过记录。
+
+## 最终交付与远程回验
+
+- main已快进合入codex/platform-dev，两个远程分支均推送；旧重构分支是祖先，无遗漏的分叉改动。保留旧工作树原课题，不删除其Git元数据。
+- dev.27固定源提交与标签v0.2.0-dev.27均为`92da453e8e4ef0510865d9086776659533715261`，构建时工作树干净；后续仅回执文档提交不移动标签。
+- [GitHub开发预览Release](https://github.com/nefer5/optDSH/releases/tag/v0.2.0-dev.27)已公开；用户ZIP为18,285,741字节，SHA256为`8b7ca397288ad154d03140b1353aa149a8dc168355b038e93ef94c897d55879f`。ZIP及.sha256均已实际下载回验，远程摘要匹配。
+- .experience/README.md及两份经验在origin/main的Git blob与本地一致，未被忽略。发行原文三份哈希匹配；独立新依赖安装后Home/.experience三份安装哈希匹配，官方Home发现的光学/PPT共3项正文可读。110份新安装证据及链接元数据归档为validation/历史记录/自动测试/experience-install-dev27.zip，临时程序可恢复回收。
+- 当前人工核验仍为dev.25基础构建，通过npm声明升级Bundle dev.27并安装经验库；PPT0.2.2维护保留。该现场没有伪称完整dev.27安装，原dev.25 ZIP未改写。维护包在releases/维护组件/20261019-experience，回执在home/config/experience-maintenance-20261019.json。
+- 日常源码3380已运行dev.27；安装3080仍回报dev.25基础身份。维护后再次确认三场景官方catalog各5项及15次正文读取。最终根unit为0、临时合成批次为0、源码根无STUDYS；validation只含当前核验/历史记录/临时测试及入口文件。
+
+人工核验可直接使用validation根“启动 dev.25 安装核验”快捷方式；若要检查全新dev.27安装包，用上述Release或releases/0.2.0-dev.27-user/安装optDSH.exe。仍待用户人工与干净Windows/公司环境核验；本轮未运行真实光学分析。

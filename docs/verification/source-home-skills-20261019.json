@@ -319,7 +319,7 @@
     "version": "0.2.0-dev.26",
     "sourceRevision": "158114376a4ee97c6c0db4e0508d7d00d51022a2",
     "sourceDirty": false,
-    "zip": "E:\\Proj-2026-N06_optDSH-releases\\optDSH-0.2.0-dev.26.zip",
+    "zip": "E:/Proj-2026-N06_optDSH-releases/历史版本/optDSH-0.2.0-dev.26.zip",
     "sha256": "dd399cc6a9e88ef7bcae35004fd20b26bdb6907aaaff8f13cd1f7a400ee30d4e",
     "bytes": 18274795,
     "manifestHashesPassed": 15,
@@ -350,5 +350,130 @@
     "installedProgram": "E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/program",
     "installedHome": "E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/home",
     "historicalDev25Zip": "E:/Proj-2026-N06_optDSH-releases/历史版本/optDSH-0.2.0-dev.25.zip"
+  },
+  "finalRelease": {
+    "version": "0.2.0-dev.27",
+    "sourceRevision": "92da453e8e4ef0510865d9086776659533715261",
+    "sourceDirty": false,
+    "checkedReleaseEntries": 13,
+    "experienceFiles": [
+      {
+        "path": "README.md",
+        "sha256": "aa396961a924bde752d995ec919bbde76c14ce968f1658eb0aa36cbeaa568759"
+      },
+      {
+        "path": "rx-skill-dsh-glm-review.md",
+        "sha256": "7eecc210a52b8c2b92b5b65fca993ec3e4dd7a83c6ac83cb935e3a5611b4334c"
+      },
+      {
+        "path": "zemax-source-ray-pickup.md",
+        "sha256": "fecf4370909d82f75007c502da030ef87ca03e39c60b8a7aa8b0e8fc0cb1c2fc"
+      }
+    ],
+    "zipVerified": true,
+    "zipSHA256": "8b7ca397288ad154d03140b1353aa149a8dc168355b038e93ef94c897d55879f",
+    "zip": "E:/Proj-2026-N06_optDSH-releases/optDSH-0.2.0-dev.27.zip"
+  },
+  "githubRelease": {
+    "url": "https://github.com/nefer5/optDSH/releases/tag/v0.2.0-dev.27",
+    "tag": "v0.2.0-dev.27",
+    "draft": false,
+    "prerelease": true,
+    "assets": [
+      {
+        "name": "optDSH-0.2.0-dev.27.zip",
+        "url": "https://github.com/nefer5/optDSH/releases/download/v0.2.0-dev.27/optDSH-0.2.0-dev.27.zip",
+        "digest": "sha256:8b7ca397288ad154d03140b1353aa149a8dc168355b038e93ef94c897d55879f",
+        "downloadVerified": true
+      },
+      {
+        "name": "optDSH-0.2.0-dev.27.zip.sha256",
+        "url": "https://github.com/nefer5/optDSH/releases/download/v0.2.0-dev.27/optDSH-0.2.0-dev.27.zip.sha256",
+        "digest": "sha256:fce1f024e8f8cc987f7c347dba6af2a844d174b2d68e6b684b98dc0533bf3bc9",
+        "downloadVerified": true
+      }
+    ]
+  },
+  "remoteExperience": {
+    "remote": "https://github.com/nefer5/optDSH",
+    "main": "92da453e8e4ef0510865d9086776659533715261",
+    "tagCommit": "92da453e8e4ef0510865d9086776659533715261",
+    "experience": [
+      {
+        "path": ".experience/README.md",
+        "gitBlob": "f2b2a74d9bb4b2b0d28189fbe0b1f95b308235fc",
+        "matches": true
+      },
+      {
+        "path": ".experience/rx-skill-dsh-glm-review.md",
+        "gitBlob": "3a6165be9e584bd2821da09d331089c5840b4e0c",
+        "matches": true
+      },
+      {
+        "path": ".experience/zemax-source-ray-pickup.md",
+        "gitBlob": "056b97dc8bf5d7c409992439c516e6aedc587fc8",
+        "matches": true
+      }
+    ]
+  },
+  "finalCleanInstall": {
+    "actualInstaller": true,
+    "independentDependencies": true,
+    "experienceFiles": [
+      "README.md",
+      "rx-skill-dsh-glm-review.md",
+      "zemax-source-ray-pickup.md"
+    ],
+    "experienceHashesMatch": true,
+    "skills": [
+      {
+        "name": "optdsh-assembly-tolerance",
+        "source": "user-dsh"
+      },
+      {
+        "name": "optdsh-rx-collection-efficiency",
+        "source": "user-dsh"
+      },
+      {
+        "name": "ppt-slidewise",
+        "source": "user-dsh"
+      }
+    ]
+  },
+  "finalDirectoryAudit": {
+    "validationRootEntries": [
+      "E:\\Proj-2026-N06_optDSH-validation\\README.md",
+      "E:\\Proj-2026-N06_optDSH-validation\\临时测试",
+      "E:\\Proj-2026-N06_optDSH-validation\\历史记录",
+      "E:\\Proj-2026-N06_optDSH-validation\\启动 dev.25 安装核验.lnk",
+      "E:\\Proj-2026-N06_optDSH-validation\\当前核验",
+      "E:\\Proj-2026-N06_optDSH-validation\\打开 dev.25 目录.lnk"
+    ],
+    "rootUnits": 0,
+    "activeSyntheticMarkers": 0,
+    "sourceRootStudys": false,
+    "dailyHomeOutsideValidation": true,
+    "currentInstall": "当前核验/dev.25/program",
+    "oldWorktreeStudiesPreserved": true
+  },
+  "runningSnapshot": [
+    {
+      "stateRoot": "E:/.optdsh-source/state/web",
+      "pid": 42640,
+      "version": "0.2.0-dev.27",
+      "sourceRevision": "92da453e8e4ef0510865d9086776659533715261",
+      "buildId": "source-92da453e8e4e"
+    },
+    {
+      "stateRoot": "E:/Proj-2026-N06_optDSH-validation/当前核验/dev.25/home/state/web",
+      "pid": 17496,
+      "version": "0.2.0-dev.25",
+      "sourceRevision": "db862c008049cfeee1f8d1a43b18493dd3e87c6d",
+      "buildId": "0.2.0-dev.25-2026-10-18T17-08-22-926Z-db862c008049"
+    }
+  ],
+  "finalInstallationTests": {
+    "passed": 129,
+    "failed": 0
   }
 }

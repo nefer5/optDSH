@@ -101,3 +101,5 @@ CanvasRoot复用已有兼容安装；InstallCanvas＋CanvasInstallRoot安装发�
 ### 经验库的源码、安装和分享位置
 
 源码权威为仓库`.experience/`，由Git同步。dev.27起，发行包携带`.experience/`原文及`experience-manifest.json`；安装时将可分享Markdown校验后复制到`<DSH_HOME>/.experience/`，记录在`Home/config/experience-installation.json`。安装副本保留用户修改与新增，卸载程序时保留。相关产品任务由官方systemPrompt服务提示读取索引，源码指向仓库，安装版指向Home。它不是Skills发现根，也不是AGENTS或专家Preset；原始run、模型、凭据及会话不随库分享。
+
+当前可下载[dev.27完整用户包](https://github.com/nefer5/optDSH/releases/tag/v0.2.0-dev.27)，为开发预览版。当前本机dev.25核验现场另已维护至Bundle dev.27并补齐经验库，基础包不改写。

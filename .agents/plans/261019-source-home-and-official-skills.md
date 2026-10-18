@@ -29,7 +29,7 @@ flowchart TD
 | Skills投影 | bundle/lib/managed-skills.mjs；compose/index/CLI；install.ps1 | 标准目录、用户冲突、链接身份、可选状态、官方Provider与RPC | 已完成，见本轮验证回执 |
 | unit退出 | tests/installation/verification.test.mjs及测试批次 | 记录归档、无根unit、无遗留进程 | 已完成，见本轮验证回执 |
 | 目录归位 | 既有发布区/验证区、入口说明及映射 | 当前dev.25启动、历史字节/数据保留 | 已完成，见本轮验证回执 |
-| 同步收尾 | development/architecture/STATUS及回执 | 相关测试、项目检查、Git提交、共享日志 | 文档与完整回归通过；固定dev.26构建/最终交接收尾 |
+| 同步收尾 | development/architecture/STATUS及回执 | 相关测试、项目检查、Git提交、共享日志 | 已完成；dev.27固定构建/新安装/远程回验及最终交接见回执 |
 
 ## 用户追加：经验库与远程发布
 

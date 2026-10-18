@@ -2,7 +2,7 @@
 
 2026-10-19；产品 **0.2.0-dev.27**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
 
-本轮目录与Skills收尾：日常源码Home迁入E:/.optdsh-source（3380），validation只保留安装验证。当前人工核验dev.25在validation/当前核验/dev.25（3080），已应用明确记录的Skills组件维护；原dev.25 ZIP不变，新安装逻辑和经验库以dev.27发行。源码.dsh/skills、开发Home/skills及安装Home/skills都有5个受管入口，三种会话的官方catalog和正文读取通过。251个根unit与源码Forms/STUDYS夹具已归档回收，后续测试按批次退出；28个旧case归历史记录。详见[路径及验证回执](../docs/verification/source-home-skills-20261019.md)。
+本轮目录与Skills收尾：日常源码Home迁入E:/.optdsh-source（3380），validation只保留安装验证。经验库已随dev.27发行并安装，远程Git三份文件哈希一致。main已快进合入并推送，[dev.27开发预览Release](https://github.com/nefer5/optDSH/releases/tag/v0.2.0-dev.27)公开且附件下载回验通过。当前人工核验dev.25在validation/当前核验/dev.25（3080），已应用明确记录的Skills组件维护；原dev.25 ZIP不变，新安装逻辑和经验库以dev.27发行。源码.dsh/skills、开发Home/skills及安装Home/skills都有5个受管入口，三种会话的官方catalog和正文读取通过。251个根unit与源码Forms/STUDYS夹具已归档回收，后续测试按批次退出；28个旧case归历史记录。详见[路径及验证回执](../docs/verification/source-home-skills-20261019.md)。
 
 追加完成：路径选择卸载（课题永久排除）与安装端口自动避让/记录；真实测试程序已回收，6项数据哈希不变。最终dev.25用户包已从顶层EXE完成源码外安装、启动和随包卸载日志验证，保留供人工核验。见[交付回执](../docs/verification/dev25-user-release.md)。
 
@@ -28,7 +28,7 @@
 | 光学工作台 | 统一连接窗口、自动检测Python、两类版本、红字错误、Web启停/日志 | 当前服务就绪不等于模型连接 |
 | 静默后台 | 工作台0.13.4；真实Web启动/状态/日志与Windows无控制台通过，模型文件哈希不变 | 本轮无探测/绑定/保存/追迹；当时无运行中的OpticStudio进程 |
 | 双版本 | 正式optics0.4.1（连接沿用0.4.0已验实现）；19与2025 Web只读探测/绑定92对象、文件哈希保护已验 | 18及其他年份未测；旧版写入、追迹和公司数值一致性待验 |
-| 交付 | 推荐插件快照重放、完整依赖独立安装/synthetic、构建SHA、历史dev.16测试包 | Sandbox/持久VM/公司实机暂缓；无正式发布 |
+| 交付 | 推荐插件快照重放、完整依赖独立安装/synthetic、构建SHA、历史dev.16测试包 | Sandbox/持久VM/公司实机暂缓；已发布开发预览；正式稳定版/新机待验 |
 | 文档 | 四张当前Archify图、目录、优先级及181项历史ZIP/逐文件哈希 | 图依据固定源码，不能替代部署和研究验收 |
 
 最近运行代码回归：82项工作台；完整npm test（187项插件、124项安装、11项PPT、142项光学、37项分发、56项架构kit）及模拟DOM/文档检查通过。此为离线和所列现场范围，不包含真实研究业务。
@@ -38,3 +38,5 @@
 下一步推荐：人工核验dev.25安装与产品资源，再完善升级恢复和可选共享导出；完整优先级、可独立推进/需用户配合见[ROADMAP](ROADMAP.md)。用户已授权验证后合入main、推送及GitHub开发预览Release；实际远程结果将追加记录，公开npm不在本轮范围。
 
 开发预览已显式安装Forms0.4.0，core/画板/工作台/Forms实际ready；保持原模型、插件与用户课题资料。手工验证可从原启动DSH.cmd进入当前会话，对Agent说‘打开Rx默认YAML，仅编辑参数，不连接Zemax’。
+
+最终交付回执已记录构建提交、标签、附件哈希、经验安装与目录审计；当前安装基础版本保持dev.25，Bundle维护至dev.27，不能混同全新dev.27安装。
