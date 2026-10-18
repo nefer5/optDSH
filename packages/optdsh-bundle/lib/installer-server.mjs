@@ -49,8 +49,10 @@ export async function createInstaller({releaseRoot,port=0,openBrowser=false,runC
  const status={state:'idle',phase:'等待选择安装位置',log:[]};
  const logDir=join(releaseRoot,'logs'),logPath=join(logDir,'installer.log');
  function log(text){status.log.push(text);if(status.log.length>300)status.log.shift();mkdirSync(logDir,{recursive:true});appendFileSync(logPath,text+'\n');}
- const ps=join(process.env.SystemRoot||'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe');
+ const systemRoot=process.env.SystemRoot||process.env.WINDIR;
+ const ps=systemRoot?join(systemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe'):null;
  const native=runCommand||((args,onData)=>new Promise((fulfill,reject)=>{
+  if(!ps)throw Error('无法定位Windows系统目录，请在Windows中运行安装入口。');
   const child=spawn(ps,args,{windowsHide:true,stdio:['ignore','pipe','pipe']});
   for(const stream of [child.stdout,child.stderr])stream.setEncoding('utf8').on('data',text=>onData(text));
   child.on('error',reject);child.on('exit',code=>code===0?fulfill():reject(Error('安装器退出码 '+code+'，请展开诊断日志查看失败阶段。')));

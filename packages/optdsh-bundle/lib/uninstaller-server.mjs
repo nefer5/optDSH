@@ -24,9 +24,10 @@ export function uninstallInfo(installRoot){
 export async function createUninstaller({installRoot,port=0,openBrowser=false,scriptRoot,runCommand}={}){
  installRoot=resolve(installRoot);const info=uninstallInfo(installRoot),token=randomBytes(24).toString('hex');
  scriptRoot=scriptRoot||resolve(installRoot,'packaging/windows');
- const web=resolve(import.meta.dirname,'../uninstaller-web'),ps=join(process.env.SystemRoot||'C:/Windows','System32/WindowsPowerShell/v1.0/powershell.exe');
+ const systemRoot=process.env.SystemRoot||process.env.WINDIR;
+ const web=resolve(import.meta.dirname,'../uninstaller-web'),ps=systemRoot?join(systemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe'):null;
  const status={state:'idle',phase:'等待选择卸载项目',log:[]};let approved=null,lastRequest=Date.now();
- const native=runCommand||((args,log)=>new Promise((done,reject)=>{const child=spawn(ps,args,{windowsHide:true,stdio:['ignore','pipe','pipe'],cwd:scriptRoot});for(const s of [child.stdout,child.stderr])s.setEncoding('utf8').on('data',text=>log(text.trim()));child.on('error',reject);child.on('exit',code=>code===0?done():reject(Error('卸载未完成；请展开日志查看原因，未选择的数据不会回收。')));}));
+ const native=runCommand||((args,log)=>new Promise((done,reject)=>{if(!ps)throw Error('无法定位Windows系统目录，请在Windows中运行卸载入口。');const child=spawn(ps,args,{windowsHide:true,stdio:['ignore','pipe','pipe'],cwd:scriptRoot});for(const s of [child.stdout,child.stderr])s.setEncoding('utf8').on('data',text=>log(text.trim()));child.on('error',reject);child.on('exit',code=>code===0?done():reject(Error('卸载未完成；请展开日志查看原因，未选择的数据不会回收。')));}));
  const select=body=>{const ids=[...new Set(body.items||[])];if(!ids.length||ids.some(id=>!info.items.some(item=>item.id===id)))throw Error('请选择有效的程序、插件或日志项目。');return ids;};
  const args=(ids,apply)=>['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',join(scriptRoot,'uninstall.ps1'),'-InstallRoot',installRoot,'-Items',ids.join(','),...(apply?['-Apply','-StopRunning']:[])];
  const server=http.createServer(async(req,res)=>{
