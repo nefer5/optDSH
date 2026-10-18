@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdirSync,mkdtempSync,writeFileSync,readFileSync,renameSync,existsSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {replaceBoardFile} from '../lib/boards.js';
+function files(){const root=resolve(import.meta.dirname,'../../../temp');mkdirSync(root,{recursive:true});const dir=mkdtempSync(join(root,'canvas-atomic-')),target=join(dir,'board.json'),source=target+'.tmp';writeFileSync(target,'old');writeFileSync(source,'new');return {source,target};}
+test('transient replacement failure retains original until one atomic replacement succeeds',()=>{const {source,target}=files();let calls=0;replaceBoardFile(source,target,{rename(a,b){calls++;if(calls<3){assert.equal(readFileSync(target,'utf8'),'old');throw Object.assign(new Error('sharing violation'),{code:'EPERM'});}renameSync(a,b);},pause(){}});assert.equal(readFileSync(target,'utf8'),'new');assert.equal(existsSync(source),false);assert.equal(calls,3);});
+test('exhausted replacement retries preserve original and pending snapshot',()=>{const {source,target}=files();let calls=0;assert.throws(()=>replaceBoardFile(source,target,{rename(){calls++;throw Object.assign(new Error('locked'),{code:'EBUSY'});},pause(){}}),/locked/);assert.equal(calls,4);assert.equal(readFileSync(target,'utf8'),'old');assert.equal(readFileSync(source,'utf8'),'new');});
+test('nontransient storage errors fail immediately and retain both files',()=>{const {source,target}=files();let calls=0;assert.throws(()=>replaceBoardFile(source,target,{rename(){calls++;throw Object.assign(new Error('disk failure'),{code:'EIO'});},pause(){throw new Error('unexpected retry');}}),/disk failure/);assert.equal(calls,1);assert.equal(readFileSync(target,'utf8'),'old');assert.equal(readFileSync(source,'utf8'),'new');});

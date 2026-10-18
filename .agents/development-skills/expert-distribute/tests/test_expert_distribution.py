@@ -76,7 +76,7 @@ class ExpertDistributionTests(unittest.TestCase):
         from unittest.mock import patch
         path = self.base / "selection.yaml"
         path.write_text(content, encoding="utf-8")
-        with patch("sys.argv", [str(SCRIPT), "--config", str(path), "--project-root", str(self.product), *extra]), patch.object(dist, "probe", side_effect=lambda n, project_root=None: self.versions[n]), redirect_stdout(io.StringIO()):
+        with patch("sys.argv", [str(SCRIPT), "--config", str(path), "--project-root", str(self.product), *extra]), patch.object(dist, "SOURCE", self.source), patch.object(dist, "probe", side_effect=lambda n, project_root=None: self.versions[n]), redirect_stdout(io.StringIO()):
             return dist.main()
 
     def read_json(self, relative):
@@ -166,9 +166,11 @@ class ExpertDistributionTests(unittest.TestCase):
 
     def test_dsh_preset_and_subagent_share_the_same_persona(self):
         import yaml
+        import copy
         class CordisLoader(yaml.SafeLoader):
             pass
         CordisLoader.add_constructor("tag:yaml.org,2002:js", lambda loader, node: loader.construct_scalar(node))
+        standard = yaml.load((self.product / "node_modules/@deepseek-ai/dsh-web-app/presets/standard.patch.yml").read_text(encoding="utf-8"), Loader=CordisLoader)
         self.assertEqual(self.run_export("all", apply=True), 0)
         for name, title in (("visual-designer", "视觉设计专家"), (ARCH, "软件架构专家")):
             folder = self.product / ".agents/dsh-presets" / name
@@ -184,7 +186,11 @@ class ExpertDistributionTests(unittest.TestCase):
             self.assertIn(f"expert={name}", persona)
             self.assertEqual(packet["upstreamVersion"], self.versions["dsh"])
             self.assertIn(title, (folder / "preset.yml").read_text(encoding="utf-8"))
-            self.assertIn("{{cwd}}", next(r["config"]["suffix"] for r in plugins if r.get("id") == "persona"))
+            # Preserve the complete installed upstream stack, including versions
+            # where cwd/time context moved out of the persona's old suffix.
+            expected = copy.deepcopy(standard[0]["insert"][0]["config"]["plugins"])
+            next(r["config"] for r in expected if r.get("id") == "persona")["prefix"] = persona
+            self.assertEqual(plugins, expected)
             self.assertTrue(any(r.get("id") == "tool-pwsh" for r in plugins))
 
     def test_idempotent_apply_preserves_all_files(self):

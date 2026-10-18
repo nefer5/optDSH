@@ -3,12 +3,28 @@ import json
 from pathlib import Path
 import re
 import sys
+import subprocess
 
 ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file())
 
 
+def is_local_evidence(root, target):
+    """Ignored historical runs may stay in the original private worktree."""
+    try:
+        relative = target.resolve().relative_to(root.resolve())
+    except ValueError:
+        return False
+    parts = relative.parts
+    evidence = bool(parts and parts[0] == 'runs') or (len(parts) > 2 and parts[0] == 'STUDYS' and parts[2] == 'runs')
+    if not evidence:
+        return False
+    result = subprocess.run(['git', 'check-ignore', '-q', '--', relative.as_posix()], cwd=root, capture_output=True)
+    return result.returncode == 0
+
+
 def check():
     errors = []
+    private_evidence = []
     required = ["README.md", "AGENTS.md", "CHANGELOG.md", "docs/README.md", "planning/STATUS.md", "planning/ROADMAP.md"]
     for name in required:
         if not (ROOT / name).is_file():
@@ -28,7 +44,10 @@ def check():
                 continue
             target = target.split("#", 1)[0]
             if target and not (path.parent / target).exists():
-                errors.append(f"Broken link in {path.relative_to(ROOT)}: {target}")
+                if is_local_evidence(ROOT, path.parent / target):
+                    private_evidence.append((path.relative_to(ROOT), target))
+                else:
+                    errors.append(f"Broken link in {path.relative_to(ROOT)}: {target}")
     for folder in ("config", "examples"):
         for path in (ROOT / folder).glob("*.json"):
             if path.name == "local.json" or ".local." in path.name:
@@ -78,6 +97,8 @@ def check():
             if 'from auto_zemax' in text or 'E:/Proj-2026-N02' in text or "config['sourceRoot']" in text:
                 errors.append('Cross-project runtime dependency: '+str(path.relative_to(ROOT)))
     if (ROOT/'artifacts').exists():errors.append('Retired artifacts directory recreated')
+    if private_evidence:
+        print(f"NOTE: {len(private_evidence)} ignored historical run links refer to private local evidence; not included or revalidated in this checkout.")
     return errors
 
 

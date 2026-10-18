@@ -265,3 +265,19 @@ flowchart LR
   W3 --> W4[新目录继续重构和日志]
   W3 -->|依赖失败| F[保留失败证据和旧现场]
 ```
+
+### 工作树迁移与续做当前状态
+
+- W0已完成：完整差异与未跟踪源码快照位于原现场.backup/worktree-transition/20261018-134459；未复制运行用户资料。
+- W1已完成：本地提交ed6fbda；checkpoint/optdsh-pre-worktree-20261018标记该提交；rollback/optdsh-source-baseline-20261018标记原4cb306b提交（先前未提交内容由私有快照保存）。
+- W2已完成：新工作树E:/Proj-2026-N06_optDSH-dev分支codex/platform-dev；原目录分支/文件保留。发布/验证根已按相同前缀建立。
+- W3已完成独立依赖准备：npm ci建立真实node_modules，新建Python venv按锁安装依赖和本包，pip check/import通过。npm默认调用的Node26不在当前产品范围；以现有Node24在测试进程内选择，不改全局PATH。构建工具setuptools来自包内pyproject声明。
+- W4续做T8/T9：新增可重复安装验证入口verify-installation.ps1及8项夹具；生成白名单开发参考包，不复制旧生成物或修改中心。完整回归/真实新case的最终证据随后归入工作树迁移报告。
+
+W4附加真实缺口：boards.js原子替换新增replaceBoardFile，仅重试已准备的文件替换；atomic-write.test.mjs三项验证暂时占用/重试耗尽/不可重试错误。文件属于既有T5的存储边界，不新增平台存储框架。
+
+干净工作树补验：完整npm test还包含独立PPT包，其自身npm锁需单独ci；不将PPT提升为平台运行前置。新环境暴露并按包说明补齐，未复制旧依赖。
+
+新版回归补验：分发器测试run_yaml改用独立fixture源，避免读真实Junction；预设保留检查改为与当前安装的完整Standard插件栈比较（仅persona prefix允许改变），不再硬编码旧suffix字段。仅修改本项目测试，不改用户中心或宿主配置。
+
+干净checkout文档检查：Git忽略的历史runs证据原件留旧现场；检查器仅在限定runs角色且git check-ignore确认时标注本地证据缺席，不当作源文档损坏。普通文档、temp与越界路径仍严格报错；四项交互预检通过。

@@ -4,6 +4,17 @@ import {createHash, randomUUID} from 'node:crypto';
 import {editScene} from './drawing.js';
 
 const hash = (s) => createHash('sha256').update(s).digest('hex');
+// Retry only the prepared atomic replacement, never a canvas operation/prompt.
+export function replaceBoardFile(source,target,{rename=renameSync,pause=ms=>Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,ms)}={}) {
+  const delays=[10,25,50];
+  for(let attempt=0;;attempt++) {
+    try { rename(source,target);return; }
+    catch(error) {
+      if(!['EPERM','EACCES','EBUSY'].includes(error.code)||attempt===delays.length)throw error;
+      pause(delays[attempt]);
+    }
+  }
+}
 export function requireValue(ok, message, code = 'INVALID_INPUT') {
   if (!ok) throw Object.assign(new Error(message), {code});
 }
@@ -42,7 +53,7 @@ export class BoardStore {
   }
   persist(b) {
     const target=join(this.root,b.boardId+'.json'), temp=target+'.tmp';
-    writeFileSync(temp,JSON.stringify(b),'utf8'); renameSync(temp,target);
+    writeFileSync(temp,JSON.stringify(b),'utf8'); replaceBoardFile(temp,target);
   }
   public(b, includeScene=false) {
     return {boardId:b.boardId,sessionId:b.sessionId,revision:b.revision,updatedAt:b.updatedAt,
