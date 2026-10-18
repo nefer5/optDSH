@@ -1,0 +1,280 @@
+{
+  "status": "passed",
+  "productVersion": "0.2.0-dev.11",
+  "workbenchVersion": "0.9.2",
+  "sourceCommit": "38f40639c9abbc596794292b9051114b605f28e4",
+  "profileLifecycle": {
+    "status": "passed",
+    "results": [
+      {
+        "phase": "standalone-no-backend",
+        "inventory": {
+          "availability": "profile",
+          "version": "0.9.2",
+          "removable": true
+        },
+        "platform": {
+          "id": "workbench",
+          "status": "ready",
+          "scopeState": 2
+        },
+        "page": 200,
+        "missingBackend": {
+          "http": 503,
+          "code": "OPTICS_UNAVAILABLE"
+        },
+        "noCanvasOrForms": true,
+        "noOpticsProcess": true
+      },
+      {
+        "phase": "synthetic-only-proxy",
+        "provenance": "synthetic",
+        "requests": 1
+      },
+      {
+        "phase": "disabled-restart",
+        "application": "applied",
+        "platform": {
+          "id": "workbench",
+          "status": "disabled"
+        },
+        "core": "ready"
+      },
+      {
+        "phase": "upgrade-preserves-off",
+        "application": "applied",
+        "platform": {
+          "id": "workbench",
+          "status": "unselected"
+        },
+        "version": "0.9.3"
+      },
+      {
+        "phase": "removed-restarted",
+        "application": "applied",
+        "platform": {
+          "id": "workbench",
+          "status": "not-installed"
+        },
+        "bindingsHashUnchanged": true,
+        "workspacePreserved": true
+      }
+    ],
+    "dshPort": 57227,
+    "realZemax": false,
+    "pythonStarted": false,
+    "modelRequests": false,
+    "upgradeFixture": "0.9.3 test-only"
+  },
+  "faultIsolation": {
+    "status": "passed",
+    "results": [
+      {
+        "kind": "syntax",
+        "version": "0.9.2",
+        "platform": {
+          "core": "ready",
+          "components": [
+            {
+              "id": "workbench",
+              "status": "unavailable",
+              "scopeState": null
+            }
+          ]
+        },
+        "viewHttp": 404,
+        "installRejected": false,
+        "previousVersionRetained": false,
+        "pythonStarted": false,
+        "realZemax": false
+      },
+      {
+        "kind": "incompatible",
+        "version": "0.9.3",
+        "platform": {
+          "core": "ready",
+          "components": [
+            {
+              "id": "workbench",
+              "status": "unavailable",
+              "scopeState": null
+            }
+          ]
+        },
+        "viewHttp": 404,
+        "installRejected": true,
+        "previousVersionRetained": true,
+        "pythonStarted": false,
+        "realZemax": false
+      }
+    ],
+    "fixtureOnly": true
+  },
+  "installedBeforeUninstall": {
+    "status": "passed",
+    "platform": {
+      "core": "ready",
+      "components": [
+        {
+          "id": "workbench",
+          "status": "ready",
+          "scopeState": 2
+        }
+      ]
+    },
+    "version": {
+      "schemaVersion": 1,
+      "product": "optDSH",
+      "version": "0.2.0-dev.11",
+      "dshVersion": "0.2.1-rc.2",
+      "channel": "dev",
+      "buildMode": "package",
+      "buildId": "0.2.0-dev.11-2026-10-18T10-18-11-319Z-38f40639c9ab",
+      "builtAt": "2026-10-18T10:18:11.319Z",
+      "builtWithNode": "v26.12.0",
+      "sourceRevision": "38f40639c9abbc596794292b9051114b605f28e4",
+      "sourceDirty": false,
+      "runningNode": "v26.12.0"
+    },
+    "workbench": {
+      "version": "0.9.2",
+      "availability": "profile",
+      "removable": true,
+      "installed": true,
+      "enabled": true
+    },
+    "appWorkbenchAbsent": true,
+    "profileSharedSdkCopyAbsent": true,
+    "profileWorkbenchPresent": true,
+    "missingBackend": {
+      "http": 503,
+      "code": "OPTICS_UNAVAILABLE"
+    },
+    "realZemax": false,
+    "pythonStarted": false,
+    "modelRequests": false
+  },
+  "installedImmediateUninstall": {
+    "application": "applied",
+    "platform": {
+      "core": "ready",
+      "components": [
+        {
+          "id": "workbench",
+          "status": "not-installed"
+        }
+      ]
+    },
+    "realZemax": false,
+    "modelRequests": false
+  },
+  "installedAfterRestart": {
+    "status": "passed",
+    "platform": {
+      "core": "ready",
+      "components": [
+        {
+          "id": "workbench",
+          "status": "not-installed"
+        }
+      ]
+    },
+    "viewHttp": 404
+  },
+  "dailyPreview": {
+    "status": "passed",
+    "platform": {
+      "core": "ready",
+      "components": [
+        {
+          "id": "canvas",
+          "status": "ready",
+          "scopeState": 2
+        },
+        {
+          "id": "workbench",
+          "status": "ready",
+          "scopeState": 2
+        }
+      ]
+    },
+    "version": {
+      "schemaVersion": 1,
+      "product": "optDSH",
+      "version": "0.2.0-dev.11",
+      "channel": "dev",
+      "buildMode": "source",
+      "buildId": "source-38f40639c9ab",
+      "sourceRevision": "38f40639c9abbc596794292b9051114b605f28e4",
+      "sourceDirty": false,
+      "runningNode": "v26.12.0"
+    },
+    "workbench": {
+      "version": "0.9.2",
+      "availability": "profile",
+      "removable": true,
+      "installed": true,
+      "enabled": true
+    },
+    "appWorkbenchAbsent": true,
+    "profileSharedSdkCopyAbsent": true,
+    "profileWorkbenchPresent": true,
+    "missingBackend": {
+      "http": 503,
+      "code": "OPTICS_UNAVAILABLE"
+    },
+    "realZemax": false,
+    "pythonStarted": false,
+    "modelRequests": false
+  },
+  "browser": {
+    "browser": "Tabbit",
+    "workbenchVersionLabel": "工作台 v0.9.2",
+    "canvasRendered": true,
+    "saveDisabledWithoutBackend": true,
+    "nativeDirectoryPickerUsed": false,
+    "modelSubmitOrConnectClicked": false
+  },
+  "tests": {
+    "fullRegressionBeforePackagingPeerFix": {
+      "plugins": 151,
+      "installation": 98,
+      "ppt": 11,
+      "optics": 123,
+      "distribution": 37,
+      "architectureKit": 56
+    },
+    "afterPeerFix": {
+      "workbench": 58,
+      "installation": 98
+    },
+    "entryAndPolicyChecks": 7,
+    "installerComponentMatrix": 16
+  },
+  "dataProtection": {
+    "workspaceAndBindingsHashesUnchanged": true,
+    "firstPreviewCredentialCheckUnchanged": true,
+    "canvasStillReady": true,
+    "oldPlatformAndOriginal4173Unchanged": true,
+    "globalAgentsAndPathUnchanged": true
+  },
+  "candidateIssues": [
+    "dev.9/dev.10 retained as immutable local candidates",
+    "first workbench dependency layout deleted package but native remove application failed; not accepted as pass",
+    "shared dsh-llm corrected to host peer, final strict lifecycle and installed package remove application=applied"
+  ],
+  "limitations": [
+    "No real Zemax connection/trace/save",
+    "No test model inference requests",
+    "Only Node HTTP synthetic backend used",
+    "Cached dependencies reused; not Sandbox/company/cold-network validation",
+    "Forms/experts remain separate later convergence tasks",
+    "Fault/upgrade metadata versions are test fixtures, not public releases"
+  ],
+  "cleanup": "temporary validation hosts stopped; daily preview retained",
+  "publication": {
+    "localCommitsAndTestPackages": true,
+    "pushed": false,
+    "npmPublished": false
+  }
+}

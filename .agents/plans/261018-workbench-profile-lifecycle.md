@@ -31,8 +31,8 @@ flowchart TD
 - [x] W1 方案落点与依赖勘察。
 - [x] W2 共用Profile状态/安装器泛化，工作台源码副本退出app。
 - [x] W3 工作台独立配置、缺服务边界、启动入口安全行为。
-- [ ] W4 离线及真实隔离Profile生命周期/独立安装/运行身份验证。
-- [ ] W5 日常预览接入、文档/本地提交和测试包/共享日志。
+- [x] W4 离线及真实隔离Profile生命周期/独立安装/运行身份验证。
+- [x] W5 日常预览接入、文档/本地提交和测试包/共享日志。
 
 ## 验收与限制
 
@@ -45,3 +45,5 @@ W4当前结果：完整151插件/98安装/11PPT/123光学/37分发/56架构kit�
 真实页面补充：修正旧UI把插件版本称项目版本、把会话描述成仅只读工具的文案，布局/权限不改。为保留已构建dev.9候选，最终产品推进dev.10、插件0.9.1；该正式包与前面的0.9.1升级测试夹具为不同哈希，不混用。
 
 卸载严格回读补充：首轮0.9.0/0.9.1虽删包且重启不回流，但官方application=failed，因此不算最终通过。确认dsh-llm为共享宿主SDK，改dependencies→peerDependencies，peer探针返回applied；最终产品dev.11/工作台0.9.2重新跑完整流程，entry/Bundle停用、升级、卸载均applied，重启/data保持通过。未改node_modules或豁免版本。
+
+最终收尾：dev.11不可变测试包（源38f4063）、工作台0.9.2。独立安装无Canvas/Forms，官方availability=profile/removable=true、app无同名包、Profile无共享dsh-llm私有副本；missing backend503仍core/UI ready。严格生命周期和实际发行包官方remove均applied，卸载即时core ready、重启无回流。日常预览同Home模型/插件保留，canvas/workbench均ready，根工作台CMD默认只开UI；Tabbit实际渲染且保存禁用，无连接/模型提交。临时服务已停；真实Zemax/公司/沙箱未验。证据docs/refactor/2026-10-18/evidence/workbench-profile-dev11.json。

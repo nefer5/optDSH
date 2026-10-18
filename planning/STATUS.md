@@ -1,5 +1,7 @@
 # 当前状态
 
+2026-10-18 0.2.0-dev.11收尾：工作台0.9.2完整官方Profile生命周期通过。共享dsh-llm改宿主peer，修复首轮“删包但热重载failed”；最终官方卸载applied、即时core ready及重启无回流通过，独立发行安装/构建身份通过，app无工作台副本。日常预览Canvas/工作台ready，CMD仅开UI，缺光学后端503且保存禁用，未连接真实Zemax或模型推理。详见[最终证据](../docs/refactor/2026-10-18/evidence/workbench-profile-dev11.json)。
+
 2026-10-18 0.2.0-dev.9：工作台0.9.0统一官方Profile生命周期，复用Canvas机制且不再app/source回流；默认CMD不启动光学服务。独立Profile无Canvas/Forms/后端、合成代理、官方启停/升级保留off/卸载重启与数据哈希通过；损坏插件core存活、不兼容升级官方拒绝并恢复原包。清理绑定Agent光学提示词，未连接真实Zemax/模型。日常预览/发行安装正在收尾。见[方案](../.agents/plans/261018-workbench-profile-lifecycle.md)。
 
 2026-10-18 0.2.0-dev.8收尾：修复首次Profile创建stderr提示被PS5父重定向误判失败；fresh安装/运行身份通过。Canvas桥0.6.0已迁入日常Home/Profile，官方显示profile且removable；app不带同名包。官方启停、升级保留用户off、卸载重启无回流与画板保护均通过；开发源码修改须显式pack/Upgrade，普通重启不重装。其他自有组件尚待逐项统一，见[生命周期证据](../docs/refactor/2026-10-18/evidence/canvas-profile-dev8.json)。

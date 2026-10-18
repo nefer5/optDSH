@@ -70,3 +70,7 @@ Bundle推荐不等于强制依赖或周期重放。Profile是包、选中Bundle�
 停用/卸载工作台撤销其给绑定Agent注入的光学规则，保留历史会话、绑定文件、报告和课题。无光学服务与不兼容/损坏包的隔离均已取证，不能把synthetic视为真实光学验收。
 
 共享官方SDK应声明宿主peer，不作为插件私有运行依赖重复放进Profile；工作台0.9.2已按此修正dsh-llm。否则卸载可能移除进程正在使用的共享库，使文件删除后官方热重载仍报failed。验收要求检查application结果与重启状态，不能只看包目录消失。
+
+## 工作台本轮验收
+
+最终平台dev.11、工作台0.9.2。独立Profile无Canvas/Forms可加载，缺后端503不影响core；官方启停、停服升级保留off、卸载applied及重启无回流、数据保护通过。实际发行包卸载后core即时保持ready；日常预览保留。前两候选的共享SDK打包问题已修，不把当时application=failed当作成功。最终58工作台/98安装项回归通过（光学等其余完整回归此前通过），无真实Zemax/模型调用。见[工作台证据](refactor/2026-10-18/evidence/workbench-profile-dev11.json)。
