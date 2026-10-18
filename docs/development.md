@@ -80,7 +80,7 @@ $env:PATH = (Split-Path $nodeExe -Parent) + ';' + $env:PATH
 ./scripts/runtime/stop-dsh.ps1 -Home E:/Proj-2026-N06_optDSH-validation/manual-preview/source-home -Workspace E:/Proj-2026-N06_optDSH-validation/manual-preview/workspace -StateRoot E:/Proj-2026-N06_optDSH-validation/manual-preview/source-state -Port 3380
 ```
 
-切换研究目录前先结束预览任务并停服务，再修改-Workspace重启；不要复用同一个运行实例的旧workspace状态。当前Forms HTTP还不能按所有会话cwd自动切换。
+官方DSH允许同一Host中的不同会话使用不同Workspace/cwd；通过官方项目/会话流程打开另一个课题，不要求重启Host。只有更改这个测试启动器记录的Host默认Workspace/StateRoot时，当前归属检查才要求先停止旧实例再以新参数启动，这不是普通用户切换项目的推荐流程。Forms HTTP仍未随所有会话cwd自动切换；工作台部分创建/报告路径仍用默认Workspace。
 
 ### 再对比安装包版
 

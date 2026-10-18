@@ -14,6 +14,14 @@
 
 没有study.yaml也能打开普通会话、使用临时表单请求；长期公共参数表单需要该声明时明确提示缺失，不自动生成课题。存在声明时，默认API id为workspace，亦可显式设置manifest.id；目录名可以包含中文或空格。
 
+## 官方能力与当前自有接入的区别
+
+同一Host与同一DSH_HOME可以管理多个不同目录的Workspace/Session；当前官方SessionController的create接口接收workspaceId/cwd，Web工作区插件提供选择目录流程（需要组合可用的directory-picker后端）。启动参数Workspace是默认值，不应成为所有会话必须相同的目录限制。未在本轮浏览器中实际点击选择器，不将接口/源码证据冒充UI端到端证明。
+
+画板已从session.meta.cwd确定归属并有双目录夹具；工作台可绑定不同目录的已有会话，但其create和部分报告仍取配置Workspace；Forms HTTP仍绑定一个配置目录。这些是自有插件剩余适配，不是官方会话不支持任意目录。全局optdsh命令是否登记与Web内多项目能力也是不同问题。
+
+“必须停服务再换课题”的早先说明过宽。普通项目选择不需要重启服务；当前启动脚本若要更换其记录的默认目录/状态位置，才因归属一致性检查需要先停旧实例。后续统一按所选官方会话cwd完善自有功能，不让用户靠重启Host切课题。
+
 ## 实现约定
 
 - 启动/会话选择workspace；表单从该目录的study.yaml读取，run默认归workspace/runs，输出路径不得逃出明确workspace。可选嵌套study.yaml和旧布局只作兼容。
