@@ -1,6 +1,6 @@
 {
   "name": "optdsh-workbench",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": true,
   "type": "module",
   "main": "lib/index.js",
@@ -23,7 +23,8 @@
     }
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "~4.0.5"
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@deepseek-ai/dsh-llm": "0.2.1-rc.2"
   },
   "files": [
     "lib",
@@ -35,8 +36,7 @@
   ],
   "dependencies": {
     "three": "0.186.1",
-    "manifold-3d": "3.5.4",
-    "@deepseek-ai/dsh-llm": "0.2.1-rc.2"
+    "manifold-3d": "3.5.4"
   },
   "engines": {
     "node": ">=24",

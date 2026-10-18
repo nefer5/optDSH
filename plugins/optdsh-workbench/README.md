@@ -20,3 +20,7 @@
 ## 验证状态
 
 本轮已通过离线配置、真实HTTP合成代理、独立Profile与生命周期测试；无真实Zemax/模型调用。许可证与公开发布仍另行确认，当前private=true，仅本地测试包。
+
+## 宿主SDK与插件依赖
+
+@deepseek-ai/cordis与@deepseek-ai/dsh-llm按宿主peer声明，使用兼容DSH提供的接口，不为工作台重装一份共享LLM SDK。Three/manifold仍是插件自身依赖。0.9.2修复了旧打包方式在卸载时移除共享SDK、令官方热重载报failed的问题；独立Profile与严格卸载回读已重新验证。

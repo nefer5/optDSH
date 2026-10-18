@@ -43,3 +43,5 @@ flowchart TD
 W4当前结果：完整151插件/98安装/11PPT/123光学/37分发/56架构kit通过；20项父侧Profile/入口专项及16项安装器矩阵通过。实际隔离Profile独立工作台无画板/Forms/后端、UI和Three/manifold资源200、光学缺失503、synthetic HTTP代理、entry/Bundle启停/停服升级保持off/官方卸载重启不复活/绑定与课题哈希保护均通过。故障注入语法坏包仍core ready，不兼容版本被官方拒绝并还原，无版本豁免；均为测试夹具不公开。
 
 真实页面补充：修正旧UI把插件版本称项目版本、把会话描述成仅只读工具的文案，布局/权限不改。为保留已构建dev.9候选，最终产品推进dev.10、插件0.9.1；该正式包与前面的0.9.1升级测试夹具为不同哈希，不混用。
+
+卸载严格回读补充：首轮0.9.0/0.9.1虽删包且重启不回流，但官方application=failed，因此不算最终通过。确认dsh-llm为共享宿主SDK，改dependencies→peerDependencies，peer探针返回applied；最终产品dev.11/工作台0.9.2重新跑完整流程，entry/Bundle停用、升级、卸载均applied，重启/data保持通过。未改node_modules或豁免版本。
