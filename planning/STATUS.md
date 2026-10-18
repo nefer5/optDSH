@@ -1,5 +1,7 @@
 # 当前状态
 
+2026-10-18 dev.12：工作台0.10.0增加Web“开启光学服务”、常驻状态和脱敏日志；optics0.3.0提供认证health和--defer-connect。模拟子进程验证重复启动去重、重载复用、无隐式模型采集；前端交互和完整离线回归通过。日常Profile已升级且接口/资源200；当前独立Home未配置optics.json，显示尚未配置。未连接真实Zemax。见[Web服务启动](../.agents/plans/261018-workbench-web-service.md)。
+
 2026-10-18 0.2.0-dev.11收尾：工作台0.9.2完整官方Profile生命周期通过。共享dsh-llm改宿主peer，修复首轮“删包但热重载failed”；最终官方卸载applied、即时core ready及重启无回流通过，独立发行安装/构建身份通过，app无工作台副本。日常预览Canvas/工作台ready，CMD仅开UI，缺光学后端503且保存禁用，未连接真实Zemax或模型推理。详见[最终证据](../docs/refactor/2026-10-18/evidence/workbench-profile-dev11.json)。
 
 2026-10-18 0.2.0-dev.9：工作台0.9.0统一官方Profile生命周期，复用Canvas机制且不再app/source回流；默认CMD不启动光学服务。独立Profile无Canvas/Forms/后端、合成代理、官方启停/升级保留off/卸载重启与数据哈希通过；损坏插件core存活、不兼容升级官方拒绝并恢复原包。清理绑定Agent光学提示词，未连接真实Zemax/模型。日常预览/发行安装正在收尾。见[方案](../.agents/plans/261018-workbench-profile-lifecycle.md)。

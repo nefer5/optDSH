@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-18",
+  "productVersion": "0.2.0-dev.12",
+  "workbenchVersion": "0.10.0",
+  "opticsVersion": "0.3.0",
+  "distribution": "optional module bundled with optDSH; official Profile lifecycle retained",
+  "verification": {
+    "fullOfflineRegression": "passed: plugin, installation, PPT, optics, distribution, architecture-kit, DOM smoke and project checks",
+    "targetedServiceTests": "7 passed after adding live-process guard coverage",
+    "syntheticChild": "concurrent starts share one child, health authenticated, no initial snapshot, repeated start and manager reload reuse child",
+    "pythonHealth": "deferred startup has no capture; unauthenticated health is 401; explicit refresh works; default CLI capture preserved",
+    "dailyProfile": "explicit local tgz Upgrade; 0.10.0; page and service-controls.js HTTP200; service-status unconfigured",
+    "browser": "actual Tabbit page, light/dark and log dialog observed; no horizontal overflow at tested desktop size; pageerror=[]",
+    "configuration": "daily Home/config/optics.json absent; Python and real model setup still required"
+  },
+  "realZemaxConnected": false,
+  "modelInference": false,
+  "sandbox": "deferred by user",
+  "pushed": false,
+  "publicNpmPublished": false
+}

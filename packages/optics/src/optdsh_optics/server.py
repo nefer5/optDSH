@@ -20,6 +20,8 @@ def main():
     parser.add_argument("--workspace", type=Path, default=Path.cwd())
     parser.add_argument("--state-root", type=Path, required=True)
     parser.add_argument("--port", type=int, default=3081)
+    parser.add_argument("--defer-connect", action="store_true",
+                        help="Start the service without capturing or connecting to an optical host")
     args = parser.parse_args()
     from .config_io import load_config
     config = load_config(args.config)
@@ -86,6 +88,13 @@ def main():
                     self.send_response(303)
                     self.send_header('Location',host['url']+'/#optdsh-workbench=1')
                     self.end_headers()
+                elif url.path == "/api/health":
+                    # Process readiness only: never refresh or infer model validity here.
+                    with bridge.state_lock:
+                        connected = bridge.snapshot is not None and not bridge.last_error
+                    self.send(200, {"service": "optdsh-optics", "protocolVersion": 1,
+                                    "pid": os.getpid(), "workspace": str(args.workspace.resolve()),
+                                    "stateRoot": str(args.state_root.resolve()), "connected": connected})
                 elif url.path == "/api/agent/jobs":
                     self.send(410, {'error':{'code':'LEGACY_CHAT_RETIRED','message':'Open the official-host workbench; legacy transcripts are preserved.'}})
                 elif url.path == "/api/snapshot":
@@ -131,10 +140,11 @@ def main():
     state_path.parent.mkdir(parents=True, exist_ok=True)
     state_path.write_text(json.dumps({"url": "http://"+authority, "token": token, "pid": os.getpid(), "parentPid": os.getppid(), "workspace": str(args.workspace.resolve()), "stateRoot": str(args.state_root.resolve())}), encoding="utf-8")
     print(f"optDSH optics listening on http://{authority}; open via scripts/open-optics.ps1", flush=True)
-    try:
-        bridge.refresh()
-    except OpticsError as exc:
-        print(f"Initial capture: {exc.code}; UI remains available for retry", flush=True)
+    if not args.defer_connect:
+        try:
+            bridge.refresh()
+        except OpticsError as exc:
+            print(f"Initial capture: {exc.code}; UI remains available for retry", flush=True)
     server.serve_forever()
 
 

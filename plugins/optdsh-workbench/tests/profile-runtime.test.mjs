@@ -32,6 +32,10 @@ function harness(config,profileContext){
 test('missing service/access and stopped service return 503 while independent Profile page and ordinary actions work',async()=>{
  const home=mkdtempSync(join(tmpdir(),'workbench-no-backend-')),state=join(home,'state/web');
  const {routes,call}=harness({}, {home,name:'web'});
+ assert.equal((await call({action:'service-status'})).body.state,'unconfigured');
+ assert.equal((await call({action:'service-start',python:'arbitrary-command'})).body.state,'unconfigured');
+ const cross=await routes.get('/api/optdsh-workbench')(new Request('http://local/api',{method:'POST',headers:{Origin:'http://other.invalid'},body:JSON.stringify({action:'service-start'})}));
+ assert.equal(cross.status,400);
  const missing=await call({action:'optics',path:'/api/snapshot'});assert.equal(missing.status,503);assert.equal(missing.body.error.code,'OPTICS_UNAVAILABLE');assert.doesNotMatch(missing.body.error.message,/ENOENT/);
  assert.equal((await routes.get('/api/optdsh-workbench/view')()).status,200);
  assert.equal((await call({action:'list'})).status,200);assert.equal((await call({action:'create'})).status,200);

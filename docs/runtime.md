@@ -1,5 +1,7 @@
 # 安装与运行
 
+dev.12工作台新增Web“开启光学服务”入口，先检查状态，再显式启动，服务与模型连接分离。首次配置Python与安装optdsh-optics>=0.3.0后，在工作台完成日常启动，不必到安装目录找CMD。配置路径、诊断和进程保留边界见[Web启动服务](profile-plugins.md#web启动光学服务dev12)。下述StartOptics仍是开发排障入口，其历史启动默认可能执行初始采集，不代表Web延迟连接方式。
+
 工作台入口现使用内置PowerShell5.1，默认只复用/启动基础DSH并打开已启用的Profile工作台，不重装/启用、不启动光学服务。确需启动执行器须显式StartOptics；本轮未连接真实Zemax。参见[Profile插件](profile-plugins.md)。
 
 2026-10-18重构分支入口已改变：默认独立home为用户目录/.optdsh，workspace默认当前工作目录，状态位于home/state/profile。当前旧3080与data/dsh未切换；旧服务占用端口时新入口拒绝接管，请使用独立测试端口。纯平台setup不安装Python；光学选装使用 `pwsh scripts/setup.ps1 -WithOptics`。独立tarball安装、回退与限制见[安装说明](installation/README.md)。

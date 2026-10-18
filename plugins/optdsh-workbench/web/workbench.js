@@ -1,5 +1,6 @@
 import {initTxTolerance} from './tx-tolerance.js';
 import {opticsApi} from './optics-api.js';
+import {initServiceControls} from './service-controls.js';
 import {initWorkbenchAgent} from './workbench-agent.js';
 import {OpticsViewer} from './viewer.js';
 import {CATEGORIES} from './mesh.js';
@@ -113,6 +114,8 @@ $('settings').onclick=()=>{fillBindings(bindings);$('navigation-dialog').showMod
 $('navigation-form').oninput=checkBindings;$('reset-bindings').onclick=()=>fillBindings(DEFAULT_BINDINGS);
 $('navigation-form').onsubmit=e=>{e.preventDefault();const value=getBindings();if(validateBindings(value))return;bindings=value;try{localStorage.setItem('optdsh.navigation.v1',JSON.stringify(value));}catch{error('设置已临时应用，但浏览器拒绝持久保存');}navigationHelp();$('navigation-dialog').close();};
 initWorkbenchAgent({getSnapshot:snapshot,getBinding:()=>state?.binding,getSelected:selected,getSelections:()=>[...selectedIds].map(id=>snapshot().objects.find(o=>o.objectId===id)).filter(Boolean),selectObject,api,highlight:ids=>{viewer?.highlight(ids);$('show-operands').checked=true;$('isolate').classList.remove('active');}});
+const serviceControls=initServiceControls({onReady:()=>void load()});
+window.addEventListener('pagehide',()=>serviceControls.dispose(),{once:true});
 await load();setInterval(()=>{if(!document.hidden)void load();},3000);
 
 initTxTolerance({getSnapshot:snapshot,getSelectedIds:()=>[...selectedIds],api});
