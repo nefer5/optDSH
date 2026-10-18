@@ -1,6 +1,8 @@
 # 当前状态
 
-2026-10-18；产品 **0.2.0-dev.18**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+2026-10-18；产品 **0.2.0-dev.19**，开发分支`codex/platform-dev`。Forms原生YAML重构阶段已实现；完整产品仍有待验事项。
+
+当前修复：日常Profile组合曾因Canvas桥自带第二份dsh-tools使官方工具报prepare未定义，已升级Canvas0.6.2为宿主peer。原失败会话内glob/grep/read/forms_open_yaml及真实右侧栏已恢复；113项相关回归通过。Forms-only隔离成功不能代表插件组合已验，后续组合测试包含官方普通工具调用。
 
 本轮新增：Forms0.4通用YAML引擎、完整配置/注释/字段高亮、原生右侧栏、工具及随包Skill发现，提交自动回当前官方会话；维护原文件和本次Run分别保存。重复编辑/保存/重开复用文档与Run；重复提交不增加快照/回投，重复派生复用子草稿。光学0.4.1执行器领取同一个prepared Run并检查输入哈希。
 

@@ -18,3 +18,7 @@
 这是同机独立Home与官方Host的验证，不是Windows沙箱或公司实机验收。浏览器提交不自动授权分析；真实Zemax、复杂研究业务及其他模型需要按任务另验。崩溃或投递超时标记uncertain，不自动重复投递；需要查看原会话确认。
 
 完整npm test退出0：192项插件、110项安装、11项PPT、142项光学、37项分发、56项架构工具，以及模拟DOM/文档检查通过。开发预览已显式安装加载Forms0.4，基础平台/画板/工作台/Forms均ready；原模型与用户课题资料保留。
+
+## 日常组合现场纠正（dev.19）
+
+用户手测发现prepare未定义，实际失败的是官方glob而非Forms解析。日常Canvas0.6.1直接依赖dsh-tools，安装了第二个SDK实例；调度器使用模块私有Symbol，出现Agent循环与运行库身份不一致。原隔离Forms-only验证未覆盖此组合。Canvas0.6.2改用宿主peer并通过官方Profile升级，多余SDK副本由包管理器移除。原失败会话session-f7ec4d1a的后续turn5，glob/grep/read/forms_open_yaml全部成功，seq86完成；右侧栏实际显示且保持editing，未替用户提交。113项画板/Forms/Profile及宿主SDK边界检查通过。

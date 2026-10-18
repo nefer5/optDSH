@@ -2,6 +2,13 @@
 
 ## 未发布
 
+## 0.2.0-dev.19 — 2026-10-18
+
+- 修复Canvas桥直接安装第二份dsh-tools导致官方glob等工具报prepare未定义；Canvas0.6.2改用宿主peer SDK。
+- 在原失败会话内实际复验glob/grep/read/forms_open_yaml成功，完整Rx配置与H点数高亮打开；不自动提交、不连接Zemax。
+
+- optdsh-agent-canvas: 0.6.1 → 0.6.2，组件变更待补充。
+
 - optdsh-bundle: 0.2.0-dev.5 → 0.2.0-dev.6，组件变更待补充。
 
 ## 0.2.0-dev.18 — 2026-10-18
