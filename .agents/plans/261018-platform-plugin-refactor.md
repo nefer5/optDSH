@@ -299,3 +299,9 @@ W4附加真实缺口：boards.js原子替换新增replaceBoardFile，仅重试�
 - [ ] 冲突及升级：已存在、用户改动、更新、卸载、未知宿主、共享根不可用均有拒绝/保留路径；最终真实宿主验收单列。
 
 本轮先复用已有启动器完成手动预览路径验证，使用外部合成workspace和独立home/state；不新增产品入口，不执行真实模型或Zemax。详见docs/development.md。
+
+## 0.2.0-dev.1及开发Profile续轮
+
+用户已确认版本治理及GLM/市场插件恢复，实施和最终证据见[本轮计划](261018-version-and-profile-migration.md)。产品/Bundle 0.2.0-dev.1本地测试包和不可变源码标签已完成，未推送/正式发布。版本操作说明见docs/versioning.md；开发接续摘要见docs/handoff/2026-10-18-dev-continuation.md。
+
+Home位置可用安装-Home或外置JSON指定，图形安装路径选择仍为明确待办；当前开发Home保持validation/manual-preview/source-home，不在手工验证期间迁移。旧GLM配置及8个启用插件已恢复并实际回读，重启不会清空。官方同Host多项目能力保留，Forms/工作台剩余目录适配、公共专家、独立Canvas协议、18桥及沙箱/公司实机仍按原计划跟进。

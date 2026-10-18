@@ -49,3 +49,7 @@ manual-preview中的installed-home/state是此前独立安装版验证，source-
 - 备份位于当前Home/.backup/profile-import-20261018-151412；含私人凭据，仅留本机，不纳入Git/发布包。失败或回退先停止本Home写入，再按备份恢复，不覆盖旧源Home。
 - 公开回执位于docs/refactor/2026-10-18/evidence/version-dev1-installation.json、profile-import.json。共享环境已记录Home配置持续保存，日志收尾时追加。
 - 当前聊天源ID为01a135e2-26f2-70a2-9236-e1c8db8b1764，原标题“调研光学DSH重构与沙箱方案”。用户要求将上下文归纳后接续到新开发项目，优先用Codex官方项目移动能力；不能直接移动时使用本摘要创建该目录的接续会话，不改Codex内部数据库。
+
+## Codex会话归属状态
+
+已尝试官方move_thread_to_project将本会话移动到已登记项目Proj-2026-N06_optDSH-dev（对应E:/Proj-2026-N06_optDSH-dev）。工具返回confirmation_required，因当前历史仍关联旧目录E:/Proj-2026-N06_optDSH；没有执行迁移，没有改应用内部数据库。用户可在侧栏把本会话拖入新开发项目并确认旧目录访问，以保留完整历史；也可在新项目会话直接读取本摘要继续。不要把“摘要已生成”说成“原会话已迁移”。
