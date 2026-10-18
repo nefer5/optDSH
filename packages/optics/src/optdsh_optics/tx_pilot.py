@@ -74,7 +74,7 @@ def run(config,bridge_config,out):
         return {'scene':read_pass(system),'sourceAnalysisRays':source_settings,'dirty':bool(system.NeedsSave)}
     result={'kind':'functional-pilot','scope':'tx','config':config,'cases':[],'compensationPerformed':False,'manufacturingConclusion':False}
     clone=None;trace=None
-    with OpticStudio(mode='extension',instance=bridge_config['instance']) as z:
+    with OpticStudio(mode='extension',instance=bridge_config['instance'], **({'target':bridge_config['target']} if bridge_config.get('target') else {})) as z:
         from System import Int32,Double,Enum
         primary=z.system
         if Path(str(primary.SystemFile)).resolve()!=Path(bridge_config['expectedFile']).resolve():raise RuntimeError('Unexpected primary model')

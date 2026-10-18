@@ -34,6 +34,10 @@ class ExpertDistributionTests(unittest.TestCase):
         self.write_architect()
         self.product = self.base / "product"
         self.product.mkdir()
+        template = self.product / "node_modules/@deepseek-ai/dsh-web-app/presets/standard.patch.yml"
+        template.parent.mkdir(parents=True)
+        shutil.copy2(ROOT / "node_modules/@deepseek-ai/dsh-web-app/presets/standard.patch.yml", template)
+        self.initial_snapshot = self.snapshot()
         self.versions = {k: v["verified_cli_version"] for k, v in json.loads((self.source / "distribution.json").read_text())["targets"].items()}
 
     def write_architect(self, **overrides):
@@ -72,7 +76,7 @@ class ExpertDistributionTests(unittest.TestCase):
         from unittest.mock import patch
         path = self.base / "selection.yaml"
         path.write_text(content, encoding="utf-8")
-        with patch("sys.argv", [str(SCRIPT), "--config", str(path), "--project-root", str(self.product), *extra]), patch.object(dist, "probe", side_effect=lambda n: self.versions[n]), redirect_stdout(io.StringIO()):
+        with patch("sys.argv", [str(SCRIPT), "--config", str(path), "--project-root", str(self.product), *extra]), patch.object(dist, "probe", side_effect=lambda n, project_root=None: self.versions[n]), redirect_stdout(io.StringIO()):
             return dist.main()
 
     def read_json(self, relative):
@@ -93,12 +97,12 @@ class ExpertDistributionTests(unittest.TestCase):
     def test_yaml_rejects_invalid_input_before_any_write(self):
         for config in ("unknown: value", "expert: 123", "expert: ''", "expert: ../escape", "expert: visual-designer\nonly: codex\nexclude: claude", "expert: visual-designer\nonly: missing", "expert: visual-designer\nexpert: duplicate", "expert: visual-designer,visual-designer"):
             self.assertEqual(self.run_yaml(config, "--apply"), 2)
-            self.assertEqual(list(self.product.iterdir()), [])
+            self.assertEqual(self.snapshot(), self.initial_snapshot)
 
     def test_yaml_rejects_ambiguous_cli_selection(self):
         self.assertEqual(self.run_yaml("expert: visual-designer", "--only", "codex", "--apply"), 2)
         self.assertEqual(self.run_yaml("expert: visual-designer", "--expert", ARCH, "--apply"), 2)
-        self.assertEqual(list(self.product.iterdir()), [])
+        self.assertEqual(self.snapshot(), self.initial_snapshot)
 
     def test_public_export_excludes_private_data_and_keeps_linked_text(self):
         exporter_path = ROOT / "plugins/optdsh-experts/scripts/export-public.py"
@@ -126,10 +130,10 @@ class ExpertDistributionTests(unittest.TestCase):
         (second / ".claude/agents/visual-designer.md").write_text("hand-written")
         config = self.base / "fleet.yaml"
         config.write_text("projects:\n  - path: product\n    hosts: claude\n  - path: second\n    hosts: claude\n")
-        with patch.object(dist, "SOURCE", self.source), patch.object(dist, "probe", side_effect=lambda n: self.versions[n]):
+        with patch.object(dist, "SOURCE", self.source), patch.object(dist, "probe", side_effect=lambda n, project_root=None: self.versions[n]):
             with self.assertRaises(ValueError):
                 dist.distribute_fleet(config, expert=f"{ARCH},visual-designer", apply=True)
-        self.assertEqual(list(self.product.iterdir()), [])
+        self.assertEqual(self.snapshot(), self.initial_snapshot)
         self.assertEqual((second / ".claude/agents/visual-designer.md").read_text(), "hand-written")
 
     def test_public_clone_can_distribute_text_without_private_screenshots(self):
@@ -142,9 +146,9 @@ class ExpertDistributionTests(unittest.TestCase):
 
     def test_preview_is_read_only(self):
         self.assertEqual(self.run_export("all"), 0)
-        self.assertEqual(list(self.product.iterdir()), [])
+        self.assertEqual(self.snapshot(), self.initial_snapshot)
         self.assertEqual(self.run_export("all", check=True), 1)
-        self.assertEqual(list(self.product.iterdir()), [])
+        self.assertEqual(self.snapshot(), self.initial_snapshot)
 
     def test_three_formats_preserve_complete_prompt_and_current_claude_fields(self):
         self.assertEqual(self.run_export(apply=True), 0)
@@ -223,7 +227,7 @@ class ExpertDistributionTests(unittest.TestCase):
     def test_unknown_version_prevents_writes(self):
         self.versions["opencode"] = "2.0.0"
         self.assertEqual(self.run_export("all", apply=True), 2)
-        self.assertEqual(list(self.product.iterdir()), [])
+        self.assertEqual(self.snapshot(), self.initial_snapshot)
 
     def test_targets_and_paths(self):
         self.assertEqual(dist.select(exclude="opencode"), ["codex", "claude", "dsh"])
@@ -273,7 +277,7 @@ class ExpertDistributionTests(unittest.TestCase):
         manifest.write_text(json.dumps({"schema_version": 2, "files": ["preferences.md"]}))
         with self.assertRaises(ValueError):
             self.run_export(apply=True)
-        self.assertEqual(list(self.product.iterdir()), [])
+        self.assertEqual(self.snapshot(), self.initial_snapshot)
 
     def test_every_catalog_image_and_link_is_present(self):
         import hashlib
@@ -295,7 +299,7 @@ class ExpertDistributionTests(unittest.TestCase):
         self.write_architect(**{"agent.json": json.dumps({"name": ARCH, "version": "0.1.0", "description": "x"})})
         with self.assertRaises(ValueError):
             self.run_export(ARCH)
-        self.assertEqual(list(self.product.iterdir()), [])
+        self.assertEqual(self.snapshot(), self.initial_snapshot)
 
     def test_schema2_ships_kit_but_not_tests_and_replaces_placeholders_in_markdown(self):
         self.assertEqual(self.run_export(ARCH, apply=True), 0)
@@ -333,7 +337,7 @@ class ExpertDistributionTests(unittest.TestCase):
             self.write_architect(**overrides)
             with self.assertRaises(ValueError, msg=str(overrides)):
                 self.run_export(ARCH, apply=True)
-            self.assertEqual(list(self.product.iterdir()), [])
+            self.assertEqual(self.snapshot(), self.initial_snapshot)
 
     def test_skills_use_shared_and_claude_layouts(self):
         self.assertEqual(self.run_export(ARCH, targets=["claude"], apply=True), 0)
@@ -459,7 +463,7 @@ class ExpertDistributionTests(unittest.TestCase):
         second.mkdir()
         config = self.base / "fleet.yaml"
         config.write_text("projects:\n  - path: product\n    hosts: codex,claude\n  - path: second\n    hosts: claude\n")
-        with patch.object(dist, "SOURCE", self.source), patch.object(dist, "probe", side_effect=lambda n: self.versions[n]), redirect_stdout(io.StringIO()):
+        with patch.object(dist, "SOURCE", self.source), patch.object(dist, "probe", side_effect=lambda n, project_root=None: self.versions[n]), redirect_stdout(io.StringIO()):
             self.assertEqual(dist.distribute_fleet(config, expert="all", apply=True), 0)
             self.assertEqual(dist.distribute_fleet(config, expert="visual-designer,software-architect", check=True), 0)
         for root in (self.product, second):

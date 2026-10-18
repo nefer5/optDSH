@@ -1,0 +1,3 @@
+- insert:
+    - id: optdsh-current-info-policy
+      name: ./lib/index.js

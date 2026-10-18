@@ -36,7 +36,7 @@ export function handlers(root) {
   };
 }
 export function apply(ctx,config={}) {
-  const h = handlers(resolve(config.projectRoot || process.cwd()));
+  const h = handlers(resolve(config.workspaceRoot || config.projectRoot || process.cwd()));
   for(const key of Object.keys(assets)) ctx.effect(() => ctx.connection.fetch.register({path:PREFIX+'/'+key,methods:['GET'],requestBody:'buffered',fetch:() => h.asset(key)}),'forms '+key);
   ctx.effect(() => ctx.connection.fetch.register({path:PREFIX,methods:['GET','POST'],requestBody:'buffered',fetch:request=>h.api(request)}),'forms api');
 }

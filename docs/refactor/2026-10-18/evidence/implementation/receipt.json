@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-18",
+  "branch": "codex/platform-plugin-refactor",
+  "baseline": ".backup/platform-plugin-refactor/20261018-050425",
+  "targetDsh": "0.2.1-rc.2",
+  "existingRuntime": "root node_modules and old 3080 retained; no live cutover",
+  "checks": {
+    "root_npm_test": "passed, 142 plugins / 19 installation then separate final 22 / 11 PPT / 111 optics / 37 distributor / 56 architecture-kit / DOM smoke / docs",
+    "installation_final": "23 passed together; final log temp/refactor-build-20261018/installation-release-final.log",
+    "newDsh_pluginTests": "113 passed against isolated new dependencies",
+    "externalInstall": "E:/Temp/optdsh-refactor-20261018/app, 649 npm packages, no source checkout ancestor",
+    "newDsh_core": "web and custom research profile authentication/start/reuse/stop passed",
+    "externalPluginGraph": "71 entries; workbench and canvas discoverable; revision scripts 200; 3 components ready",
+    "faultIsolation": [
+      "syntax unavailable / core ready",
+      "runtime apply failed / core ready",
+      "engine incompatibility unavailable / core ready"
+    ],
+    "wheel": "optdsh_optics-0.2.0-py3-none-any.whl",
+    "wheelSHA256": "8f4853e3c4bdf8ed4c5f1c4dd897adf1dbd45ce042f801c4fb40fe97ab205f52",
+    "wheelSynthetic": "clean venv, -I and no PYTHONPATH; synthetic authenticated service, MCP, two Chinese workspaces and launcher start/status/stop passed; no-deps validation only",
+    "official_profile_assembly": "real official plugin add workbench tarball then compose passed; one client source only; fresh profile requires explicit Cordis 4.0.5 peer installation; missing peer disabled optional plugin while core stayed ready"
+  },
+  "pending": [
+    "full optical dependency download did not progress; cancelled, not passed",
+    "Zemax18 bridge not implemented; explicit refusal",
+    "2023+ real host/business tests not run",
+    "independent Canvas document protocol not unified; compatibility bridge retained",
+    "real React/browser mount and external editor handshake not run",
+    "profile market selections captured, full replay/new profile lock and public expert resources pending",
+    "real migration, live cutover, Sandbox/VM/company validation not done",
+    "public license/release not authorized"
+  ],
+  "processes": "all test services/download processes stopped; existing production services preserved",
+  "artifacts": "temp/refactor-build-20261018/release-final"
+}

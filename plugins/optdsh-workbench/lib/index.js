@@ -11,13 +11,14 @@ export const inject=['connection','sessionController','agents','systemPrompt'];
 const PACKAGE_ROOT=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const PREFIX='/api/optdsh-workbench';
 export function apply(ctx,config={}){
- const ROOT=resolve(config.projectRoot||process.cwd());
- const saveLaunch=()=>{const server=ctx.get?.('webServer');if(!server)return;const url='http://127.0.0.1:'+server.port;const target=resolve(ROOT,'.runtime/web-launch.json');mkdirSync(dirname(target),{recursive:true});writeFileSync(target+'.tmp',JSON.stringify({pid:process.pid,url,authenticatedUrl:ctx.connection.authenticatedUrl(url)}));renameSync(target+'.tmp',target);};
- const ready=ctx.get?.('loader')?.await();if(ready)ready.then(saveLaunch);else saveLaunch();
- const store=new WorkbenchStore(resolve(ROOT,'data/workbench/bindings.json')),stop=new AbortController(),owned=new Set();
+ const ROOT=resolve(config.stateRoot||config.projectRoot||process.cwd());
+ const WORKSPACE=resolve(config.workspaceRoot||config.projectRoot||process.cwd());
+ const editor=new URL(config.editorUrl||'http://127.0.0.1:4173');
+ requireValue(['http:','https:'].includes(editor.protocol)&&!editor.username&&!editor.password,'Invalid canvas editor origin');
+ const store=new WorkbenchStore(resolve(ROOT,'data/workbench/bindings.json')),stop=new AbortController(),owned=new Map();
  const applyPolicy=createOpticalPolicy(readFileSync(resolve(PACKAGE_ROOT,'config/instructions.md'),'utf8'));
- const matches=path=>typeof path==='string'&&resolve(path).toLowerCase()===ROOT.toLowerCase();
- async function ownership(id){requireValue(sessionKey(id),'Invalid session identity');if(!owned.has(id)){const s=await ctx.sessionController.inspect(id,stop.signal);requireValue(matches(s.meta.cwd),'会话不属于当前项目','SESSION_SCOPE');owned.add(id);}return id;}
+ const matches=path=>typeof path==='string'&&path.length>0;
+ async function ownership(id){requireValue(sessionKey(id),'Invalid session identity');const s=await ctx.sessionController.inspect(id,stop.signal);requireValue(matches(s.meta.cwd),'会话缺少工作目录','SESSION_SCOPE');const cwd=resolve(s.meta.cwd);requireValue(!owned.has(id)||owned.get(id)===cwd,'会话工作目录已改变，请重新打开工作台以核对资料归属','SESSION_WORKSPACE_CHANGED');owned.set(id,cwd);return id;}
  function installPolicy(agent){if(agent)applyPolicy(agent,store.sessions);}
  ctx.on('agent/created',({agent})=>installPolicy(agent));for(const agent of ctx.agents.list())installPolicy(agent);
  ctx.effect(()=>()=>stop.abort(),'workbench shutdown');
@@ -29,15 +30,15 @@ export function apply(ctx,config={}){
  }
  function register(path,methods,fetcher){ctx.effect(()=>ctx.connection.fetch.register({path,methods,requestBody:'buffered',fetch:fetcher}),path);}
  register(PREFIX+'/events',['GET'],async request=>{try{const id=await ownership(new URL(request.url).searchParams.get('sessionId'));store.get(id);return sessionFeed(ctx,id,request.signal,stop.signal);}catch(e){return Response.json({error:{code:e.code||'SESSION_FEED',message:e.message}},{status:400});}});
- register(PREFIX+'/tx-report',['GET'],async request=>{try{return txReport(ROOT,request.url);}catch{return new Response('报告不存在或路径不允许',{status:404});}});
+ register(PREFIX+'/tx-report',['GET'],async request=>{try{return txReport(ROOT,request.url,{workspaceRoot:WORKSPACE});}catch{return new Response('报告不存在或路径不允许',{status:404});}});
  const assets={'view':['web/workbench.html','text/html; charset=utf-8'],'assets/style.css':['web/workbench.css','text/css; charset=utf-8'],'assets/app.js':['web/workbench.js','text/javascript; charset=utf-8']};
  for(const n of ['chat-state.js','quote-selection.js','tx-statistics.js','tx-tolerance.js','tx-tolerance.css','workbench-shell.css','layout-v4.css','session-workbench.css','viewer.js','navigation.js','mesh.js','mesh-data.js','csg-worker.js','csg-core.js','camera-state.js','reference-editor.js','workbench-agent.js','workbench-layout.js','layout-state.js','chat-message.js','optics-api.js'])assets['assets/'+n]=['web/'+n,n.endsWith('.css')?'text/css; charset=utf-8':'text/javascript; charset=utf-8'];
 
  for(const n of ['three.module.js','three.core.js'])assets['vendor/'+n]=[resolve(dirname(fileURLToPath(import.meta.resolve('three'))),n),'text/javascript'];
  for(const n of ['manifold.js','manifold.wasm'])assets['vendor/'+n]=[resolve(dirname(fileURLToPath(import.meta.resolve('manifold-3d'))),n),n.endsWith('wasm')?'application/wasm':'text/javascript'];
  for(const [key,[file,mime]]of Object.entries(assets))register(PREFIX+'/'+key,['GET'],async()=>{
-  let data=readFileSync(resolve(PACKAGE_ROOT,file));if(!file.endsWith('.wasm')){data=data.toString().replaceAll('/vendor/',PREFIX+'/vendor/');if(key==='view')data=data.replace('__OPTDSH_VERSION__',JSON.parse(readFileSync(resolve(ROOT,'package.json'),'utf8')).version).replaceAll('href="/','href="'+PREFIX+'/assets/').replaceAll('src="/app.js"','src="'+PREFIX+'/assets/app.js"');}
-  return new Response(data,{headers:{'Content-Type':mime,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src http://127.0.0.1:4173; connect-src 'self'; frame-ancestors 'none'"}});
+  let data=readFileSync(resolve(PACKAGE_ROOT,file));if(!file.endsWith('.wasm')){data=data.toString().replaceAll('/vendor/',PREFIX+'/vendor/');if(key==='view')data=data.replace('__OPTDSH_VERSION__',JSON.parse(readFileSync(resolve(PACKAGE_ROOT,'package.json'),'utf8')).version||'preview').replaceAll('href="/','href="'+PREFIX+'/assets/').replaceAll('src="/app.js"','src="'+PREFIX+'/assets/app.js"');}
+  return new Response(data,{headers:{'Content-Type':mime,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src "+editor.origin+"; connect-src 'self'; frame-ancestors 'none'"}});
  });
  register(PREFIX,['POST'],async request=>{
   try{
@@ -46,8 +47,8 @@ export function apply(ctx,config={}){
    else if(input.action==='list'){
     const rows=await ctx.sessionController.list({},stop.signal);value={sessions:rows.items.filter(r=>matches(r.cwd)&&!r.origin).map(r=>({sessionId:r.sessionId,title:store.sessions[r.sessionId]?.title||r.projections?.values?.title||r.sessionId.slice(-8),running:r.running,bound:!!store.sessions[r.sessionId]}))};
    }else if(input.action==='create'){
-    const id='session-'+randomUUID();store.bind(id);const created=await ctx.sessionController.create({cwd:ROOT,agentPreset:'standard',sessionId:id});owned.add(id);installPolicy(ctx.agents.get(id));
-    const model=JSON.parse(readFileSync(resolve(ROOT,'config/optics-model.json'),'utf8'));await ctx.sessionController.selectModel({sessionId:id,provider:model.provider,model:model.model});await ctx.sessionController.rename({sessionId:id,title:'光学协作'});value=created;
+    const id='session-'+randomUUID();store.bind(id);const created=await ctx.sessionController.create({cwd:WORKSPACE,agentPreset:'standard',sessionId:id});owned.set(id,WORKSPACE);installPolicy(ctx.agents.get(id));
+    const model=config.model; if(model?.provider&&model?.model)await ctx.sessionController.selectModel({sessionId:id,provider:model.provider,model:model.model});await ctx.sessionController.rename({sessionId:id,title:'光学协作'});value=created;
    }else{
     const id=await ownership(input.sessionId);
     if(input.action==='bind'){const row=store.bind(id);const live=ctx.agents.get(id);if(live)installPolicy(live);value={sessionId:id,title:row.title};}

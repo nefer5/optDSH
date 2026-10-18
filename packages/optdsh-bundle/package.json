@@ -1,0 +1,14 @@
+{
+  "name": "optdsh-bundle",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Optional optDSH product assembly for the official DSH runtime",
+  "main": "lib/index.js",
+  "exports": {".": "./lib/index.js", "./compose": "./lib/compose.mjs", "./package.json": "./package.json"},
+  "bin": {"optdsh-compose": "lib/cli.mjs"},
+  "files": ["lib", "cordis.patch.yml", "README.md", "NOTICE.md"],
+  "engines": {"node": ">=24 <25", "dsh": "0.2.1-rc.2"},
+  "peerDependencies": {"@deepseek-ai/cordis": "~4.0.5"},
+  "dependencies": {"semver": "7.8.5"},
+  "dsh": {"bundle": {"patch": "cordis.patch.yml"}}
+}

@@ -1,16 +1,16 @@
+[CmdletBinding()]
+param([int]$Port, [Alias('Home')][string]$DshHome, [Alias('Profile')][string]$DshProfile, [string]$Workspace, [string]$StateRoot, [string[]]$Components, [string]$Config)
 $ErrorActionPreference = 'Stop'
-$projectRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-$statePath = Join-Path $projectRoot '.runtime/dsh-host.json'
-if (-not (Test-Path -LiteralPath $statePath)) { Write-Output 'No managed DSH host recorded.'; return }
-$state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
-$process = Get-Process -Id $state.pid -ErrorAction SilentlyContinue
-if (-not $process) { Write-Output 'Recorded DSH process has already exited.'; return }
-if ($process.StartTime.ToUniversalTime() -ne ([DateTimeOffset]$state.startedUtc).UtcDateTime) { throw 'PID has been reused; refusing to stop an unrelated process.' }
-$command = (Get-CimInstance Win32_Process -Filter "ProcessId = $($state.pid)").CommandLine
-$expected = Join-Path $projectRoot 'node_modules/@deepseek-ai/dsh/lib/bin.js'
-if (-not $command -or -not $command.Contains($expected)) { throw 'Process command does not match this project DSH runtime.' }
-# Windows process termination is not a guaranteed graceful DSH shutdown.
-# Stop only after tasks/analyses have finished; keep all session files and logs.
-Stop-Process -Id $state.pid -ErrorAction Stop
-Wait-Process -Id $state.pid -Timeout 10 -ErrorAction SilentlyContinue
-Write-Output 'Project DSH host stopped. Runtime data and logs retained.'
+. (Join-Path $PSScriptRoot 'launch-config.ps1')
+$context = Resolve-OptDshLaunch @PSBoundParameters
+if (-not (Test-Path -LiteralPath $context.StatePath)) { Write-Output 'No managed DSH host recorded for this home/profile.'; return }
+$lock = [IO.File]::Open((Join-Path $context.RuntimeDir 'launch.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+try {
+    $state = Get-Content -LiteralPath $context.StatePath -Raw | ConvertFrom-Json
+    if (-not (Get-Process -Id $state.pid -ErrorAction SilentlyContinue)) { Write-Output 'Recorded host has already exited; data retained.'; return }
+    if (-not (Test-OptDshOwner $context $state)) { throw 'Recorded process does not match this home/profile/workspace and start time. No process changed.' }
+    # Windows termination is not guaranteed graceful; finish active work first.
+    Stop-Process -Id $state.pid -ErrorAction Stop
+    Wait-Process -Id $state.pid -Timeout 10 -ErrorAction SilentlyContinue
+    Write-Output 'DSH host stopped. User home, workspace, logs and PID receipt retained.'
+} finally { $lock.Dispose() }

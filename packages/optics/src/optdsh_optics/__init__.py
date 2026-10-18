@@ -1,1 +1,3 @@
-"""Read-only optics snapshot and query service. No model mutation API."""
+"""Optical snapshots and deterministic executors with explicit save/copy gates."""
+
+__version__ = "0.2.0"

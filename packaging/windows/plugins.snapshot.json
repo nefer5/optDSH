@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "source": "local profile package selection snapshot 2026-10-18; no credentials/config copied",
+  "targetDsh": "0.2.1-rc.2",
+  "plugins": [
+    {
+      "name": "@ahggg/dsh-side-chat",
+      "version": "1.0.1",
+      "enabled": false,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "@changfenhuang/dsh-genui",
+      "version": "0.11.4",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "@goodandready/dsh-voice",
+      "version": "0.9.8",
+      "enabled": false,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "@weibaohui/dsh-tasks",
+      "version": "0.5.9",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "dsh-better-sidebar",
+      "version": "0.25.0",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "dsh-claude-style",
+      "version": "0.13.1",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "dsh-context",
+      "version": "0.68.0",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "dsh-quote-followup",
+      "version": "0.2.10",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "dsh-theme-firefly",
+      "version": "0.1.3",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "dsh-voice-mode",
+      "version": "0.7.15",
+      "enabled": false,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    },
+    {
+      "name": "dshmarket",
+      "version": "1.66.15",
+      "enabled": true,
+      "compatibility": "requires 0.2.1-rc.2 verification; no previous exemption inherited"
+    }
+  ]
+}

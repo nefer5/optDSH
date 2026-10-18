@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "9519e0da-ff1a-4b09-9e59-cc4f6339db76",
+  "status": "current",
+  "command": "deliver",
+  "type": "dataflow",
+  "input": "E:\\Proj-2026-N06_optDSH\\docs\\refactor\\2026-10-18\\diagrams\\data-current\\candidate.json",
+  "output": "E:\\Proj-2026-N06_optDSH\\docs\\refactor\\2026-10-18\\diagrams\\data-current\\diagram.html",
+  "specification": {
+    "sha256": "18ba8b2ec6cfc5a1553a53f1b83a54dc8fc9c614950d69fafcb512ac4f5b1abc",
+    "bytes": 8513
+  },
+  "artifact": {
+    "sha256": "c1eb0de3d1229e9c3dd9f51ca74a0bf10ab9695cb07797538b17f28397e14110",
+    "bytes": 763376
+  }
+}

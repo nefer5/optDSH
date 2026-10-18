@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "type": "module",
-  "description": "Project-local DeepSeek Harness runtime for the optDSH workbench",
+  "description": "Independent optDSH platform and optional optical plugins",
   "engines": {
     "node": ">=24 <25"
   },
@@ -11,10 +11,12 @@
     "dsh:version": "dsh --version",
     "dsh:help": "dsh --help",
     "test": "node scripts/maintenance/test.mjs",
-    "check": ".venv/Scripts/python.exe scripts/maintenance/check_project.py"
+    "check": ".venv/Scripts/python.exe scripts/maintenance/check_project.py",
+    "test:installation": "node --test tests/installation/*.test.mjs",
+    "release:local": "node scripts/maintenance/export-release.mjs"
   },
   "dependencies": {
-    "@deepseek-ai/dsh": "0.2.0-rc.2",
+    "@deepseek-ai/dsh": "0.2.1-rc.2",
     "manifold-3d": "3.5.4",
     "three": "0.186.1"
   },
@@ -22,6 +24,7 @@
     "linkedom": "0.18.13"
   },
   "workspaces": [
-    "plugins/*"
+    "plugins/*",
+    "packages/optdsh-bundle"
   ]
 }

@@ -332,7 +332,7 @@ def run_host(config, bridge, out, execute=False, factory=None, read_scene=None):
         read_scene = read_pass
     out = Path(out)
     result = {'status':'failed', 'rows':[], 'cleanupErrors':[], 'provenance':'zos-api'}
-    with factory(mode='extension', instance=bridge['instance']) as z:
+    with factory(mode='extension', instance=bridge['instance'], **({'target':bridge['target']} if bridge.get('target') else {})) as z:
         primary = z.system
         if Path(str(primary.SystemFile)).resolve() != Path(bridge['expectedFile']).resolve():
             raise ValueError('Unexpected primary model')

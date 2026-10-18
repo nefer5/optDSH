@@ -6,6 +6,8 @@ import subprocess
 import threading
 import time
 import uuid
+import sys
+from .runtime import worker_environment
 
 from .domain import OpticsError, fingerprint
 from .run_bundle import RunBundle, write_json
@@ -14,7 +16,7 @@ from .tx_native import validate
 class TxJobs:
     def __init__(self, bridge):
         self.bridge=bridge;self.root=bridge.root;self.lock=threading.RLock()
-        self.file=self.root/'data/optics/tx-jobs.json';self.jobs=json.loads(self.file.read_text(encoding='utf-8')) if self.file.exists() else []
+        self.file=bridge.state_data/'tx-jobs.json';self.jobs=json.loads(self.file.read_text(encoding='utf-8')) if self.file.exists() else []
         for j in self.jobs:
             if j['status'] in ('running','queued','cancelling'):
                 # Never claim stopped or resubmit an uncertain native operation.
@@ -59,6 +61,7 @@ class TxJobs:
             try:
                 rt={k:self.bridge.config[k] for k in ('expectedFile','instance','python')}
                 rt.update(projectRoot=str(self.root),systemId=snapshot['captureEvidence']['systemId'])
+                if self.bridge.config.get('target'):rt['target']=self.bridge.config['target']
                 config['report']={'title':'Tx 原生公差分析','background':'使用Zemax原生Tolerancing评价盲装误差和耦合补偿。','objective':'对die1/die2 RMS H等效角宽进行独立灵敏度或Monte Carlo分析。','setup':{'距离':'探测器全局Z，相对Z=0；用户已核对','执行目标':'独立CopySystem','模式':config['analysis']['mode'],'补偿方法':config['analysis']['method']}}
                 if custom:config['report'].update(title='Tx 自定义MC与末样本补偿',background='使用脚本生成独立盲装误差，采集两颗die探测器光斑，并仅补偿最后MC状态。',objective='给出名义目标、MC散点、末样本补偿前后与终点局部灵敏度；保存最终副本。')
                 import yaml
@@ -68,11 +71,8 @@ class TxJobs:
                     if parse_config(raw,'.yaml')!=body['config']:raise OpticsError('TX_CONFIG','YAML原文与配置不一致')
                 else:raw=yaml.safe_dump(body['config'],allow_unicode=True,sort_keys=False).encode('utf-8')
                 b=RunBundle.create(self.root,'tx-custom' if custom else 'tx-native',config,runtime=rt,source='input.yaml',source_bytes=raw,mode='execute')
-                for f in ('tx_native.py','tx_jobs.py','connection.py','capture.py','domain.py','model_checks.py','run_bundle.py','reporting.py','tx_native_report.py'):
-                    b.copy(Path(__file__).with_name(f),'code/'+f)
-                if custom:
-                    for f in ('tx_custom.py','tx_custom_math.py','tx_custom_report.py'):b.copy(Path(__file__).with_name(f),'code/'+f)
-                b.copy(self.root/'packages/optics/scripts/tx-native-worker.py','code/tx-native-worker.py')
+                for source in sorted(Path(__file__).parent.glob('*.py')):
+                    b.copy(source, 'code/'+source.name)
                 job={'id':str(uuid.uuid4()),'requestId':rid,'requestHash':sig,'status':'queued','mode':config['analysis']['mode'],'modelId':config['modelId'],'revision':config['expectedRevision'],'stage':'排队','progress':None,'run':str(b.path),'createdAt':time.time()}
                 self.jobs.append(job);self.active=job['id'];self.persist()
                 threading.Thread(target=self._run,args=(job,),daemon=True).start()
@@ -84,7 +84,7 @@ class TxJobs:
         try:
             with self.lock:job['status']='running';self.persist()
             with (p/'worker.log').open('w',encoding='utf-8') as log:
-                process=subprocess.Popen([str(self.root/self.bridge.config['python']),'-X','utf8',str(self.root/'packages/optics/scripts/tx-native-worker.py'),str(p)],cwd=self.root,stdout=log,stderr=log,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+                process=subprocess.Popen([str(self.root/self.bridge.config.get('python',sys.executable)),'-X','utf8','-m','optdsh_optics','tx-native-worker',str(p)],env=worker_environment(self.bridge.config),cwd=self.root,stdout=log,stderr=log,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
                 process.wait() # the worker owns cancellation and cleanup, never kill its host
             result=json.loads((p/'result.json').read_text(encoding='utf-8')) if (p/'result.json').exists() else {'status':'failed','error':'执行进程未产生结果；请核对worker.log和Zemax工具'}
             with self.lock:job.update(status=result['status'],stage='已结束',error=result.get('error'),finishedAt=time.time())

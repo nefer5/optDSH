@@ -1,0 +1,7 @@
+{
+  "profile": "web",
+  "components": [
+    "core"
+  ],
+  "port": 3080
+}

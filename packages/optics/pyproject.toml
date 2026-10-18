@@ -3,10 +3,19 @@ requires = ["setuptools==82.0.1"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "optdsh-optics"
-version = "0.1.0"
+version = "0.2.0"
+description = "Workspace-independent optDSH optical service and deterministic executors"
+readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["numpy==2.5.1", "pythonnet==3.1.0", "PyYAML==6.0.3"]
+dependencies = ["numpy==2.5.1", "pythonnet==3.1.0", "PyYAML==6.0.3", "matplotlib==3.10.9"]
 [tool.setuptools.packages.find]
 where = ["src"]
 [tool.setuptools.package-data]
-optdsh_optics = ["*.css"]
+optdsh_optics = ["*.css", "synthetic.json"]
+
+[project.scripts]
+optdsh-optics = "optdsh_optics.__main__:main"
+optdsh-optics-serve = "optdsh_optics.server:main"
+optdsh-optics-mcp = "optdsh_optics.mcp:main"
+optdsh-optics-worker = "optdsh_optics.capture:main"
+optdsh-optics-tx-native-worker = "optdsh_optics.tx_worker:main"

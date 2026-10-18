@@ -1,6 +1,0 @@
-{
-  "name": "software-architect",
-  "title": "软件架构专家",
-  "version": "0.2.0",
-  "description": "专职软件架构专家：为 Python、TypeScript/JavaScript 及 C++ 项目做模块划分、依赖方向、配置边界与文件落点设计，给出可确认的变更方案和骨架，审查架构偏离、重复实现与硬编码，并把约束落成可自动执行的检查。"
-}

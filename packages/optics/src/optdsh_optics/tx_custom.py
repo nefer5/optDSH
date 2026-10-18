@@ -1,3 +1,4 @@
+from .runtime import instance_lock, mark_instance_uncertain
 """Script-owned MC and last-sample compensation; never opens Tolerancing."""
 from pathlib import Path
 from copy import deepcopy
@@ -250,7 +251,6 @@ class ZemaxDriver:
 def execute_run(path):
     from .connection import OpticStudio
     from .capture import snapshot_in_connection,read_pass
-    import msvcrt
     path=Path(path);c=json.loads((path/'config/resolved.json').read_text(encoding='utf-8'));rt=json.loads((path/'config/runtime.json').read_text(encoding='utf-8'))
     b=RunBundle(path,Path(rt['projectRoot']),json.loads((path/'manifest.json').read_text(encoding='utf-8')))
     result={'status':'running','mode':'custom','engine':'script-controlled','nominal':[],'samples':[],'sensitivity':[],'cleanupErrors':[]}
@@ -271,12 +271,9 @@ def execute_run(path):
     def audit(s):
         src={i:str(properties(s.NCE.GetObjectAt(i).ObjectData)['NumberOfAnalysisRays'].GetValue(s.NCE.GetObjectAt(i).ObjectData)) for i in range(1,s.NCE.NumberOfObjects+1) if 'Source' in str(s.NCE.GetObjectAt(i).TypeName)}
         return {'scene':read_pass(s),'dirty':bool(s.NeedsSave),'sources':src,'systemId':str(s.SystemID)}
-    lock_path=Path(rt['projectRoot'])/'.runtime/tx-pilot.lock'
-    with lock_path.open('a+b') as lock:
-      locked=False
+    with instance_lock(rt['instance']):
       try:
-        lock.seek(0);lock.write(b'0');lock.flush();lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_NBLCK,1);locked=True
-        with OpticStudio(mode='extension',instance=rt['instance']) as z:
+        with OpticStudio(mode='extension',instance=rt['instance'], **({'target':rt['target']} if rt.get('target') else {})) as z:
           primary=z.system
           try:
             require(str(primary.SystemID)==rt['systemId'] and Path(str(primary.SystemFile)).resolve()==Path(rt['expectedFile']).resolve(),'模型身份改变')
@@ -305,8 +302,8 @@ def execute_run(path):
                 except Exception as e:result['cleanupErrors'].append(str(e))
             if result['cleanupErrors'] or result.get('toolStillRunning') or (clone is not None and not result.get('copyClosed')):result['status']='verification-failed'
       except Exception as e:result.update(status='failed',error=str(e),traceback=traceback.format_exc())
-      finally:
-        if locked:lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_UNLCK,1)
+      if result.get('toolStillRunning') or result['cleanupErrors'] or (clone is not None and not result.get('copyClosed')):
+        mark_instance_uncertain(rt['instance'],path)
     # On cancellation/error, keep all completed MC and sweep records.
     if not result['samples'] and (path/'partial-result.json').exists():
         partial=json.loads((path/'partial-result.json').read_text(encoding='utf-8'))

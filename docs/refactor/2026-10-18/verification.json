@@ -1,0 +1,123 @@
+{
+  "status": "passed",
+  "diagram_count": 8,
+  "diagram_checks": [
+    {
+      "name": "architecture-current",
+      "type": "architecture",
+      "specification_sha256": "0074983e7bf41495a807f38a15ffa22180adadef28a6ffbb51db1c4fa0fb1604",
+      "artifact_sha256": "e3d0f19f1db66231ce68f6ee69230c82300fdd04726468fd7153816ff70e2b95",
+      "receipt": "diagrams/architecture-current/verified/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "visual-review/review.md"
+    },
+    {
+      "name": "architecture-target",
+      "type": "architecture",
+      "specification_sha256": "e4fb27fd689516e697560b87ba99d374cfa0fc8fc09f76b64eb640f3ac6df737",
+      "artifact_sha256": "37b21699575af4369aa404e4ed5a5ade0f2fc53c86e7a860ee7359fb59eb6001",
+      "receipt": "diagrams/architecture-target/verified-layout/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "visual-review/review.md"
+    },
+    {
+      "name": "canvas-current",
+      "type": "sequence",
+      "specification_sha256": "163f55c51631b89a58334aa41dac0f205e1196f20848b23af9450f0b22edaeb9",
+      "artifact_sha256": "ac8b7ef8b5d6779e95fc08e7275cfdf4ae947023d7eca7009a87271ae324119b",
+      "receipt": "diagrams/canvas-current/width-review/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "verification.md"
+    },
+    {
+      "name": "canvas-target",
+      "type": "sequence",
+      "specification_sha256": "5e04a2f9030ed5ca07b8a40c0eee0338a8c8a005b1da58439a553946bfd02828",
+      "artifact_sha256": "4d8f61e5fc77434aade2294c81474cb07a6369b690a85ee49ef9b01e032d31a4",
+      "receipt": "diagrams/canvas-target/width-review/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "verification.md"
+    },
+    {
+      "name": "data-current",
+      "type": "dataflow",
+      "specification_sha256": "18ba8b2ec6cfc5a1553a53f1b83a54dc8fc9c614950d69fafcb512ac4f5b1abc",
+      "artifact_sha256": "c1eb0de3d1229e9c3dd9f51ca74a0bf10ab9695cb07797538b17f28397e14110",
+      "receipt": "diagrams/data-current/review-final/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "visual-review/review.md"
+    },
+    {
+      "name": "data-target",
+      "type": "dataflow",
+      "specification_sha256": "5b72f4692b164acf2d84b1a8ee63713cec667d5fa928dbc041d43b38f5cb2c11",
+      "artifact_sha256": "353a05e189b353cee1f40a18487eb739335d177b951c7834a739866ec15dc8a2",
+      "receipt": "diagrams/data-target/review-final/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "visual-review/review.md"
+    },
+    {
+      "name": "install-current",
+      "type": "workflow",
+      "specification_sha256": "6f4e2b415bb9252b319cbacc6e4e202fb37594be356109a71b6a5ad0fe41ab24",
+      "artifact_sha256": "56cc325267b4a43b929ce9b9c7890fd94d08b006e50f3463e4312d1918cb621d",
+      "receipt": "diagrams/install-current/verified/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "visual-review/review.md"
+    },
+    {
+      "name": "install-target",
+      "type": "workflow",
+      "specification_sha256": "dee67955ccd5569876159ae3803501a11e91834d4cd133fe5247bc7a4102ee1f",
+      "artifact_sha256": "d4697f2193bbfdae83928259f3d7b1d7376a2536a4e4e57a52d966391486d624",
+      "receipt": "diagrams/install-target/verified/diagram.finalize.json",
+      "checks": "9/9",
+      "browser": "passed",
+      "visual": "passed",
+      "visual_evidence": "visual-review/review.md"
+    }
+  ],
+  "links": "passed",
+  "implementation_tasks": 12,
+  "implementation_started": false,
+  "product_code_changed": false,
+  "scope": "documentation and visualization only",
+  "portal": {
+    "checks": 12,
+    "status": "passed",
+    "horizontal_overflow": false,
+    "screenshot": "evidence/portal-target.png",
+    "views": 9,
+    "sandbox_checks": {
+      "groups": 4,
+      "status": "passed",
+      "screenshot": "evidence/portal-sandbox.png",
+      "host_feature": "Disabled",
+      "sandbox_enabled": false
+    }
+  },
+  "journals": {
+    "last_original": "2026-10-03T17:04:02+08:00",
+    "sessions_reviewed": 39,
+    "historical_entries_added": 26,
+    "current_entries_added": 1,
+    "dates_covered": 10,
+    "writer": "shared-memory/scripts/write_log.py",
+    "readback": "passed",
+    "historical_work_reexecuted": false
+  }
+}

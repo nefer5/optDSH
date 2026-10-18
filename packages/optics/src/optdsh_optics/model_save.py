@@ -1,3 +1,4 @@
+from .runtime import instance_lock
 """Explicit GUI-button saves of the named primary system; never SaveAs/LoadFile."""
 import json
 from pathlib import Path
@@ -66,15 +67,9 @@ def execute_save_run(run_path):
         if config.get('authorization') != 'explicit-save-button':
             raise OpticsError('SAVE_NOT_AUTHORIZED', '需要显式保存按钮授权')
         from .connection import OpticStudio
-        import msvcrt
-        with (root/'.runtime/tx-pilot.lock').open('a+b') as lock:
-            lock.seek(0);lock.write(b'0');lock.flush();lock.seek(0)
-            try:msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
-            except OSError:raise OpticsError('HOST_BUSY', '公差或其他光学作业占用宿主，未保存') from None
-            try:
-                with OpticStudio(mode='extension', instance=config['instance']) as zos:
-                    raw, saved = save_connected(zos, Path(__file__).with_name('connection.py'), config, bundle)
-            finally:lock.seek(0);msvcrt.locking(lock.fileno(), msvcrt.LK_UNLCK, 1)
+        with instance_lock(config['instance']):
+            with OpticStudio(mode='extension', instance=config['instance'], **({'target':config['target']} if config.get('target') else {})) as zos:
+                raw, saved = save_connected(zos, Path(__file__).with_name('connection.py'), config, bundle)
         bundle.write('snapshot.json', raw)
         bundle.finish('completed', {'status':'completed', 'saved':saved,
             'report':{'summary':'保存完成并回读确认。' if saved['saveAttempted'] else '模型已保存，无需重复写盘。'}},

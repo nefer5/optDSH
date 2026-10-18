@@ -7,10 +7,9 @@
 - ``extension``：连接到 GUI 中已打开的 Interactive Extension 实例，适合用户手动
   打开/检查 Zemax 文件，脚本只做读取或局部修改的工作流。
 
-standalone 初始化流程：
-1. 从注册表 ``HKCU\\Software\\Zemax`` 读 ``ZemaxRoot``，定位 ``ZOSAPI_NetHelper.dll``；
-2. 用 NetHelper 的 ``ZOSAPI_Initializer`` 找到 OpticStudio 安装目录；
-3. 引用 ``ZOSAPI.dll`` / ``ZOSAPI_Interfaces.dll``，建立独立应用实例。
+安装与宿主必须由显式 target.installDir、target.family 和可选 target.year 选择。
+不从注册表、当前工作目录或其他安装版本猜测。2023+先核验实际宿主版本；
+Zemax18保留目标名称，但专用旧版桥尚未实现，连接前明确拒绝。
 
 与示例不同的两点：
 - 封装成 **context manager**：``standalone`` 退出时自动 ``CloseApplication``，
@@ -24,8 +23,9 @@ standalone 初始化流程：
 from __future__ import annotations
 
 import os
+import json
+from .runtime import instance_lock, validate_target, validate_host_version
 from typing import Literal
-import winreg
 
 
 class ZOSAPIError(RuntimeError):
@@ -51,25 +51,6 @@ def _select_runtime() -> None:
     except Exception:
         # 运行时已被加载（例如先前已 import clr），set_runtime 会抛错；忽略并沿用现状。
         pass
-
-
-def _zemax_root() -> str:
-    """从注册表读取 ZemaxRoot（用户数据目录，含 ZOS-API\\Libraries）。"""
-    try:
-        key = winreg.OpenKey(
-            winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER),
-            r"Software\Zemax",
-            0,
-            winreg.KEY_READ,
-        )
-        value, _ = winreg.QueryValueEx(key, "ZemaxRoot")
-        winreg.CloseKey(key)
-        return value
-    except OSError as exc:
-        raise ZOSAPIError(
-            "读不到注册表 HKCU\\Software\\Zemax\\ZemaxRoot；"
-            "请先正常启动一次 OpticStudio 以写入该键。"
-        ) from exc
 
 
 ConnectionMode = Literal["standalone", "extension"]
@@ -103,12 +84,16 @@ class OpticStudio:
         *,
         mode: ConnectionMode = "extension",
         instance: int = 1,
+        target: dict | None = None,
     ) -> None:
         if mode not in {"standalone", "extension"}:
             raise ZOSAPIError(f"未知 ZOS-API 连接模式：{mode!r}")
         if instance < 0:
             raise ZOSAPIError("Interactive Extension instance 必须是非负整数。")
 
+        target = validate_target(target or json.loads(os.environ.get("OPTDSH_ZEMAX_TARGET", "null")))
+        self._lease = instance_lock(instance)
+        self._lease.__enter__()
         self.mode = mode
         self.instance = instance
         self.application = None
@@ -118,21 +103,9 @@ class OpticStudio:
 
         import clr  # 延迟到运行时已选择后再 import
 
-        root = _zemax_root()
-        nethelper = os.path.join(root, "ZOS-API", "Libraries", "ZOSAPI_NetHelper.dll")
-        if not os.path.isfile(nethelper):
-            raise ZOSAPIError(f"找不到 ZOSAPI_NetHelper.dll：{nethelper}")
-        clr.AddReference(nethelper)
-        import ZOSAPI_NetHelper  # noqa: E402  (.NET 程序集，加引用后才可导入)
-
-        if opticstudio_dir is None:
-            initialized = ZOSAPI_NetHelper.ZOSAPI_Initializer.Initialize()
-        else:
-            initialized = ZOSAPI_NetHelper.ZOSAPI_Initializer.Initialize(opticstudio_dir)
-        if not initialized:
-            raise ZOSAPIError("定位 OpticStudio 安装目录失败；可显式传入 opticstudio_dir。")
-
-        install_dir = ZOSAPI_NetHelper.ZOSAPI_Initializer.GetZemaxDirectory()
+        install_dir = str(target['installDir'])
+        if opticstudio_dir is not None and os.path.normcase(os.path.abspath(opticstudio_dir)) != os.path.normcase(os.path.abspath(install_dir)):
+            raise ZOSAPIError('opticstudio_dir differs from selected target.installDir')
         clr.AddReference(os.path.join(install_dir, "ZOSAPI.dll"))
         clr.AddReference(os.path.join(install_dir, "ZOSAPI_Interfaces.dll"))
         import ZOSAPI  # noqa: E402
@@ -161,6 +134,11 @@ class OpticStudio:
                 f"mode={self.mode}, LicenseStatus={license_status}"
             )
 
+        try:
+            validate_host_version(self.application.OpticStudioVersion, target)
+        except Exception:
+            self.close()
+            raise
         self.system = self.application.PrimarySystem
         if self.system is None:
             self.close()
@@ -187,6 +165,10 @@ class OpticStudio:
         self.system = None
         self.application = None
         self._connection = None
+        lease = getattr(self, "_lease", None)
+        if lease is not None:
+            self._lease = None
+            lease.__exit__(None, None, None)
 
     def __enter__(self) -> "OpticStudio":
         return self

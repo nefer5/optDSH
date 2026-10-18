@@ -83,3 +83,11 @@ STUDYS/**/runs/
 
 # Personal scratch notes stay local
 /test/个人临时笔记.md
+
+# Local rollback snapshots, never publish
+/.backup/
+
+# Personal developer authority is linked by bootstrap-dev, never vendored.
+/.agents/experts/
+/.agents/distribution.json
+/.agents/development-skills/project-docs/

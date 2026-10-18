@@ -7,6 +7,7 @@ function run(command,args){const r=spawnSync(command,args,{cwd:root,stdio:'inher
 const suites=['optdsh-workbench','optdsh-agent-canvas','optdsh-experts','optdsh-forms'];
 const files=suites.flatMap(n=>readdirSync(resolve(root,'plugins',n,'tests')).filter(f=>/\.test\.(m?js)$/.test(f)).map(f=>`plugins/${n}/tests/${f}`));
 run(process.execPath,['--test',...files]);
+run(process.execPath,['--test',...readdirSync(resolve(root,'tests/installation')).filter(f=>/\.test\.mjs$/.test(f)).map(f=>`tests/installation/${f}`)]);
 run(process.execPath,['--test',...readdirSync(resolve(root,'packages/ppt-slidewise/tests')).filter(f=>f.endsWith('.test.mjs')).map(f=>`packages/ppt-slidewise/tests/${f}`)]);
 run(python,['-m','unittest','discover','-s','packages/optics/tests','-p','test_*.py']);
 run(python,['-m','unittest','discover','-s','.agents/development-skills/expert-distribute/tests','-p','test_*.py']);

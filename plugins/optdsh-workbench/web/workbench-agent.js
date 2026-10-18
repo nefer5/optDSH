@@ -4,7 +4,6 @@ import {attachQuoteSelection} from './quote-selection.js';
 import {initWorkbenchLayout} from './workbench-layout.js';
 import {renderMessage} from './chat-message.js';
 import {workbenchApi,fullSessionUrl} from './optics-api.js';
-import {attachCanvasBridge,canvasSource} from '/api/optdsh-canvas/transport';
 const $=id=>document.getElementById(id);
 export function initWorkbenchAgent({getSnapshot,getBinding,getSelected,getSelections,selectObject}){
  initWorkbenchLayout();
@@ -16,6 +15,7 @@ export function initWorkbenchAgent({getSnapshot,getBinding,getSelected,getSelect
  function notice(s){$('agent-meta').textContent=s;}
  function saveDraft(){if(!sid)return;try{sessionStorage.setItem('optdsh.draft:'+sid,JSON.stringify(editor.serialize()));}catch{notice('浏览器无法保存草稿，请先复制。');}}
  $('draft').addEventListener('input',saveDraft);
+ const background=$('study-background');if(background)background.onclick=async e=>{e.preventDefault();try{const response=await fetch(background.href);if(!response.ok)throw new Error();window.open(background.href,'_blank','noopener');}catch{notice('参数表单插件未安装或当前不可用。');}};
  function links(){for(const id of ['full-session','canvas-full-session']){const a=$(id);a.href=sid?fullSessionUrl(sid):'#';a.setAttribute('aria-disabled',String(!sid));}}
  async function choose(id){
   if(id===sid)return;const choice=++generation;const bound=await workbenchApi('bind',{sessionId:id});if(choice!==generation)return;saveDraft();feed?.close();sid=bound.sessionId;chat.select(sid);requestDraft=null;quote.clear();paint();
@@ -84,7 +84,9 @@ export function initWorkbenchAgent({getSnapshot,getBinding,getSelected,getSelect
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)paint();});
  window.addEventListener('pagehide',()=>{saveDraft();feed?.close();quote.dispose();});
  window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
- $('open-canvas').onclick=()=>{
+ $('open-canvas').onclick=async()=>{
+  let transport;try{transport=await import('/api/optdsh-canvas/transport');}catch{notice('画板插件未安装或当前不可用，其他功能仍可继续。');return;}
+  const {attachCanvasBridge,canvasSource}=transport;
   if(!sid){notice('请先选择会话。');return;}
   for(const [id,x]of frames)x.frame.hidden=id!==sid;
   if(!frames.has(sid)){

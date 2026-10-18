@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "daa6199e-222b-4436-9005-fb1fd166081b",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "E:\\Proj-2026-N06_optDSH\\docs\\refactor\\2026-10-18\\diagrams\\canvas-target\\candidate.json",
+  "output": "E:\\Proj-2026-N06_optDSH\\docs\\refactor\\2026-10-18\\diagrams\\canvas-target\\diagram.html",
+  "specification": {
+    "sha256": "5e04a2f9030ed5ca07b8a40c0eee0338a8c8a005b1da58439a553946bfd02828",
+    "bytes": 5901
+  },
+  "artifact": {
+    "sha256": "4d8f61e5fc77434aade2294c81474cb07a6369b690a85ee49ef9b01e032d31a4",
+    "bytes": 761930
+  }
+}

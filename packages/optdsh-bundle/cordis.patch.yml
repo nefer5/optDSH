@@ -1,0 +1,3 @@
+- insert:
+    - id: optdsh-platform
+      name: ./lib/index.js

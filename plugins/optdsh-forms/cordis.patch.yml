@@ -1,0 +1,4 @@
+# Optional standalone bundle; runtime roots may be set by an installation overlay.
+- insert:
+    - id: optdsh-forms
+      name: 'optdsh-forms'

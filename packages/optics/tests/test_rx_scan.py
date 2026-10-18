@@ -197,7 +197,9 @@ class RxTests(unittest.TestCase):
     def test_readonly_mcp_guide(self):
         spec=importlib.util.spec_from_file_location('rx_mcp',ROOT/'packages/optics/scripts/mcp.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-        r=module.call('workflow_guide',{'name':'rx-collection-efficiency'})
+        from unittest.mock import patch
+        with patch.dict('os.environ',{'OPTDSH_SKILLS_ROOT':str(ROOT/'.agents/skills')}):
+            r=module.call('workflow_guide',{'name':'rx-collection-efficiency'})
         self.assertFalse(r['isError']);self.assertIn('Rx收光效率',r['content'][0]['text'])
 
 

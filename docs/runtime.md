@@ -1,5 +1,10 @@
 # 安装与运行
 
+2026-10-18重构分支入口已改变：默认独立home为用户目录/.optdsh，workspace默认当前工作目录，状态位于home/state/profile。当前旧3080与data/dsh未切换；旧服务占用端口时新入口拒绝接管，请使用独立测试端口。纯平台setup不安装Python；光学选装使用 `pwsh scripts/setup.ps1 -WithOptics`。独立tarball安装、回退与限制见[安装说明](installation/README.md)。
+
+下面保留此前部署记录，涉及旧data/dsh路径、项目根、19版与旧DSH版本的条目属于历史现场，不作为新默认配置。
+
+
 ## 高频入口
 
 - 根目录 `启动光学工作台.cmd`：按需启动3081及3080并打开工作台。
@@ -62,6 +67,28 @@ scripts/runtime 下保留 start/open/status/stop-dsh.ps1 与 optics 对应脚本
 
 本轮证据：[验收记录](../runs/model/261002-01/report.html)。测试只处理合成文字与指定文件，未访问Zemax。本轮按用户指示不接光学工作台；其历史 SESSION_SCOPE/400 问题未修复。全天稳定、复杂Agent任务、游戏共存及DSH图片仍待验证。
 
+## 本地 Strata IQ3_S（2026-10-03）
+
+已通过官方配置热加载接入，无需重启。在模型选择器选择 **本地 Strata · Qwen3.8-Flash-Next → Qwen3.8-Flash-Next ·125B/A6B ·IQ3_S ·MTP → Medium**，必要时刷新当前页面。
+
+| 字段 | 当前配置 |
+| --- | --- |
+| Provider / 协议 | local-strata / openai-completions |
+| Base URL | http://127.0.0.1:8080/v1 |
+| DSH模型ID | Qwen3.8-Flash-Next-125B-A6B-GSQ-RCO-IQ3_S |
+| 后端responseModel | qwen3.8-flash-next-iq3_s，客户端完整ID为别名映射 |
+| 窗口 / 输出额度 / 思考 | 131072 / 32768（含思考）/ medium |
+| 超时 / 流空闲 | 600000 / 300000 ms |
+| 本地占位鉴权 | Authorization: Bearer local-no-key；非秘密或远端API key |
+
+原默认DeepSeek官方Flash/high已保留，既有Bonsai选项保留；子Agent允许模型目录追加Strata但未改子Agent默认、未执行子Agent验收。现行持久配置在data/dsh/profiles/web/cordis.patch.yml。
+
+Standard真实文字、分开的思考流、一次read及结果回传、原始截图附件均通过。验收未调用/绑定光学工作台，不改变工具权限，也没有修改模型加载参数。复杂业务、光学、游戏/耐久尚未验。
+
+模型由N07独立管理：[启动](../../Proj-2026-N07_LLM-study/启动Strata-IQ3S.cmd)／[停止](../../Proj-2026-N07_LLM-study/停止Strata模型.cmd)／[运行与配置](../../Proj-2026-N07_LLM-study/docs/guides/strata-iq3s-runtime.md)。DSH关闭不等于模型停止；服务不可达时检查health，不自动换云端掩盖失败。上下文是总窗口，留32K输出额度时输入预算约96K。
+
+验收会话`session-ec0a3175-e60a-4b60-959a-90cea40c1b3f`。证据：[原生事件及验证](../runs/model/261003-01/verification.json)；人读报告统一在[模型研究项目](../../Proj-2026-N07_LLM-study/reports/2026-10-03-Strata-IQ3S-DSH接入.md)。
+
 ## 当前日期与最新资讯规则（2026-10-02）
 
 本机Web profile已启用官方 `@deepseek-ai/dsh-time-context@0.2.0-rc.2`，ID `time-context`，`timeZone: Asia/Singapore`、`refreshIntervalMs: 600000`。持久配置在 `data/dsh/profiles/web/cordis.patch.yml` 的insert条目，无需启用Schedule，也没有后台提醒任务。首次进入模型步骤注入；后续距本会话上次读数满10分钟才在下一步骤刷新，间隔内沿用读数，空闲时不注入。浏览器请求时区优先，配置是回退时区。
@@ -82,3 +109,9 @@ npm test
 ```
 
 默认检查只运行离线测试与DOM冒烟；tests/live需要显式选择，可能创建会话或消耗模型，不自动执行。实际GUI/ZOS验收单独报告。
+
+## Strata256K与自动压缩（2026-10-03）
+
+local-strata当前窗口262144，medium/32768。Standard/PTC/Cordis的compaction-basic thresholdRatio=0.9；Minimal无自动压缩，独立专家预设未改。保留65536额外余量和输出预留，实际阈值min(窗口×0.9,窗口−输出额度−65536)，Strata为163840。正式重启后认证/全部预设/78聊天回读通过，原默认选择保留；真实长输入压缩未测。报告E:/Proj-2026-N07_LLM-study/reports/2026-10-03-Strata-IQ3S-256K与DSH压缩90.md，证据runs/model/261003-02。
+
+后续当前状态（2026-10-03）：用户选择保守方案，Standard/PTC/Cordis ratio已改回0.8，默认headroom65536保留，有效Strata阈值163840。正式重启后实际预设回读通过、全部6预设正常、81聊天可读，Strata256K/medium/32K持续加载；证据runs/model/261003-03/readback.json。上文0.9为此前配置。

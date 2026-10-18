@@ -1,5 +1,10 @@
 # 架构与目录
 
+2026-10-18分支实施：新增optdsh-bundle负责官方Loader装配、认证记录与可选插件隔离；DSH目标升级到0.2.1-rc.2，现役旧版依赖/3080暂保留。程序根、独立home、workspace分离，插件状态在home/state/profile；新画板在课题.agent-canvas/optdsh/boards。独立Canvas文档协议尚未统一，18适配桥尚未实现，真实迁移/沙箱/切换未做。具体决定见[决定入口](refactor/2026-10-18/decisions.md)，发布使用见[安装说明](installation/README.md)。
+
+下文描述重构前现役部署，作为过渡对照；不代表新代码仍要求固定仓库根。
+
+
 optDSH 使用官方 DSH 0.2.0-rc.2（候选发布版），官方代码由 npm 安装在 node_modules/@deepseek-ai 下；不修改安装包。插件通过 config/dsh.local-policy.yml 加载，专家预设由启动器另挂生成的 Cordis patch。
 
 ## 产品模块
@@ -45,3 +50,7 @@ optDSH 使用官方 DSH 0.2.0-rc.2（候选发布版），官方代码由 npm �
 
 node_modules/.venv可按锁文件重建；data、研究模型、run不是缓存。临时任务完成后回收自己的沙箱；不得递归删除未知目录。历史旧聊天链路已从运行源码退役，旧聊天数据保存在data/archive。
 升级DSH只更新依赖并运行模块/页面回归；验证官方会话、画板、认证、MCP与工具接口。禁止用改node_modules解决适配。
+
+## 重构设计材料（未实施）
+
+2026-10-18已整理[重构设计工作簿](refactor/2026-10-18/index.html)、[目标架构草案](refactor/2026-10-18/design.md)与[决定/待定项](refactor/2026-10-18/decisions.md)。目标是独立安装、可选插件和任意研究workspace；本文件上文仍描述当前实现。具体接口、落点、迁移与验收见[实施计划草案](../.agents/plans/261018-platform-plugin-refactor.md)，尚未开始产品代码或数据迁移。

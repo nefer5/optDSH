@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "候选方案・未实施｜独立Canvas与DSH薄桥",
+    "locale": "zh-CN",
+    "output": "docs/refactor/2026-10-18/diagrams/canvas-target/diagram.html",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "user",
+      "type": "external",
+      "label": "用户",
+      "sublabel": "选择宿主与确认操作"
+    },
+    {
+      "id": "canvas",
+      "type": "backend",
+      "label": "独立Canvas",
+      "sublabel": "文档与通用恢复唯一源"
+    },
+    {
+      "id": "bridge",
+      "type": "security",
+      "label": "DSH薄桥",
+      "sublabel": "认证、绑定、投递回执"
+    },
+    {
+      "id": "session",
+      "type": "backend",
+      "label": "官方DSH会话",
+      "sublabel": "权限、队列与Agent循环"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m1",
+      "from": "user",
+      "to": "canvas",
+      "label": "编辑并保存草稿",
+      "y": 170,
+      "variant": "default",
+      "note": "Canvas校验revision并持久化"
+    },
+    {
+      "id": "m2",
+      "from": "canvas",
+      "to": "user",
+      "label": "保存成功／版本冲突",
+      "y": 215,
+      "variant": "return",
+      "note": "冲突副本与合并由Canvas管理"
+    },
+    {
+      "id": "m3",
+      "from": "user",
+      "to": "canvas",
+      "label": "选择会话并明确提交",
+      "y": 275,
+      "variant": "emphasis",
+      "note": "保存快照＋稳定submissionId"
+    },
+    {
+      "id": "m4",
+      "from": "canvas",
+      "to": "bridge",
+      "label": "已授权宿主的提交请求",
+      "y": 320,
+      "variant": "security",
+      "note": "只携绑定身份与快照引用／内容"
+    },
+    {
+      "id": "m5",
+      "from": "bridge",
+      "to": "session",
+      "label": "检查认证、会话、workspace",
+      "y": 365,
+      "variant": "security",
+      "note": "保留官方会话权限；不得跨宿主冒用"
+    },
+    {
+      "id": "m6",
+      "from": "session",
+      "to": "bridge",
+      "label": "已授权绑定／拒绝",
+      "y": 410,
+      "variant": "return"
+    },
+    {
+      "id": "m7",
+      "from": "bridge",
+      "to": "session",
+      "label": "仅新请求：prompt(queue)",
+      "y": 455,
+      "variant": "emphasis",
+      "note": "稳定requestId；薄桥持久化投递幂等回执"
+    },
+    {
+      "id": "m8",
+      "from": "session",
+      "to": "bridge",
+      "label": "受理／结果不确定",
+      "y": 500,
+      "variant": "return"
+    },
+    {
+      "id": "m9",
+      "from": "bridge",
+      "to": "canvas",
+      "label": "ack／uncertain回执",
+      "y": 545,
+      "variant": "return",
+      "note": "未确认不得显示已处理；重试先核对同一请求"
+    },
+    {
+      "id": "m10",
+      "from": "canvas",
+      "to": "user",
+      "label": "展示投递状态与待核验项",
+      "y": 590,
+      "variant": "return"
+    },
+    {
+      "id": "m11",
+      "from": "session",
+      "to": "bridge",
+      "label": "Agent请求画板工具",
+      "y": 650,
+      "variant": "dashed",
+      "note": "官方会话权限和绑定仍生效"
+    },
+    {
+      "id": "m12",
+      "from": "bridge",
+      "to": "canvas",
+      "label": "受权读取／请求生成建议",
+      "y": 695,
+      "variant": "security",
+      "note": "工具适配；不另建文档事实源"
+    },
+    {
+      "id": "m13",
+      "from": "canvas",
+      "to": "bridge",
+      "label": "版本化建议稿与预览引用",
+      "y": 740,
+      "variant": "return",
+      "note": "建议与通用恢复归Canvas"
+    },
+    {
+      "id": "m14",
+      "from": "bridge",
+      "to": "session",
+      "label": "工具结果／建议引用",
+      "y": 785,
+      "variant": "return",
+      "note": "Agent回复完成≠建议应用"
+    },
+    {
+      "id": "m15",
+      "from": "user",
+      "to": "canvas",
+      "label": "预览后明确应用建议",
+      "y": 845,
+      "variant": "security",
+      "note": "Canvas校验proposal状态与baseRevision"
+    },
+    {
+      "id": "m16",
+      "from": "canvas",
+      "to": "user",
+      "label": "应用成功／冲突待处理",
+      "y": 890,
+      "variant": "return",
+      "note": "成功才更新文档版本；不自动批准"
+    }
+  ],
+  "segments": [
+    {
+      "from": 150,
+      "to": 235,
+      "label": "一、Canvas独立保存"
+    },
+    {
+      "from": 255,
+      "to": 610,
+      "label": "二、用户提交、宿主授权与幂等回执"
+    },
+    {
+      "from": 630,
+      "to": 910,
+      "label": "三、工具适配、建议生成与明确应用"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "候选方案，尚未实现",
+      "items": [
+        "这些接口、授权协议和状态映射仍待设计确认、实现与验收。",
+        "独立Canvas唯一拥有画板文档、revision、快照、通用建议及恢复机制。",
+        "DSH薄桥只保存宿主绑定、投递幂等记录和回执，不再复制整套画板状态机。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "两侧权限不能混用",
+      "items": [
+        "用户明确提交只授权该次投递，不授予其他会话或宿主文件权限。",
+        "Canvas与DSH间采用显式授权绑定；接口、凭据保管和workspace校验方式列为设计门禁。",
+        "官方队列接收、模型完成、用户应用建议分别记录，不能互相替代。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "验收重点",
+      "items": [
+        "断网／进程中断后显示uncertain，核对后再恢复，不能盲重投。",
+        "双客户端版本冲突、同请求重复提交、跨会话越权、建议过期均需测试。",
+        "本图仅表达候选契约，不表示现有N05或DSH已支持这些能力。"
+      ]
+    }
+  ]
+}

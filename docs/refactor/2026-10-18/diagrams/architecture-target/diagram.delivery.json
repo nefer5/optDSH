@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "cb8a5328-c07b-4119-9db4-b0168924dfe0",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "E:\\Proj-2026-N06_optDSH\\docs\\refactor\\2026-10-18\\diagrams\\architecture-target\\candidate.json",
+  "output": "E:\\Proj-2026-N06_optDSH\\docs\\refactor\\2026-10-18\\diagrams\\architecture-target\\diagram.html",
+  "specification": {
+    "sha256": "e4fb27fd689516e697560b87ba99d374cfa0fc8fc09f76b64eb640f3ac6df737",
+    "bytes": 7486
+  },
+  "artifact": {
+    "sha256": "37b21699575af4369aa404e4ed5a5ade0f2fc53c86e7a860ee7359fb59eb6001",
+    "bytes": 774633
+  }
+}

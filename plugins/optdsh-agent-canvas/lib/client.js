@@ -1,6 +1,6 @@
 window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
   const React=require('react'),h=React.createElement;
-  const ID='optdsh-agent-canvas/canvas', KIND='agentCanvas', ORIGIN='http://127.0.0.1:4173';
+  const ID='optdsh-agent-canvas/canvas', KIND='agentCanvas';
   const inject=['slots','locale','sidebarRightTabs','sidebarRight'];
   const labels={accepting:'正在交付',queued:'已排队',running:'处理中',answered:'已回答，待确认',processed:'已确认处理',uncertain:'交付状态待核对（不会自动重发）','needs-attention':'需要处理'};
   async function api(sessionId,action,data={}) {
@@ -61,7 +61,7 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
   function CanvasBody({sessionId}) {
     const frame=React.useRef(null),[channel]=React.useState(()=>crypto.randomUUID());
     const [state,setState]=React.useState(null),[error,setError]=React.useState(''),[ready,setReady]=React.useState(false);
-    const [transportReady,setTransportReady]=React.useState(false);
+    const [transportReady,setTransportReady]=React.useState(false),[source,setSource]=React.useState('');
     const [snapshot,setSnapshot]=React.useState(''),[attempt,setAttempt]=React.useState(0);
     React.useEffect(()=>{
       let live=true;
@@ -71,10 +71,9 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
     React.useEffect(()=>{
       setReady(false);setError('');setTransportReady(false);let live=true,bridge;
       const loading=window.__optdshCanvasTransport?Promise.resolve(window.__optdshCanvasTransport):import('/api/optdsh-canvas/transport');
-      loading.then(({attachCanvasBridge})=>{if(!live)return;bridge=attachCanvasBridge({frame:frame.current,sessionId,channel,snapshot,onState:setState,onError:setError,onReady:()=>setReady(true)});setTransportReady(true);}).catch(e=>{if(live)setError(e.message);});
+      loading.then(({attachCanvasBridge,canvasSource})=>{if(!live)return;bridge=attachCanvasBridge({frame:frame.current,sessionId,channel,snapshot,onState:setState,onError:setError,onReady:()=>setReady(true)});setSource(canvasSource(channel));setTransportReady(true);}).catch(e=>{if(live)setError(e.message);});
       return()=>{live=false;bridge?.dispose();};
     },[sessionId,channel,snapshot,attempt]);
-    const src=ORIGIN+'/?embed=dsh&parentOrigin='+encodeURIComponent(location.origin)+'&channel='+channel;
     const rows=(state?.submissions||[]).slice(-12).reverse();
     return h('div',{'data-agent-canvas-session':sessionId,style:{display:'flex',flexDirection:'column',height:'100%',minHeight:0}},
       h('div',{style:{padding:8,display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}},
@@ -83,7 +82,7 @@ window.__ModuleLoader__.load({id:'optdsh-agent-canvas',factory:(require)=>{
         h('button',{onClick:()=>{setAttempt(x=>x+1);setError('');}},'重新打开'),
         snapshot&&h('button',{onClick:()=>setSnapshot('')},'返回当前画板')),
       error&&h('p',{role:'alert',style:{padding:'0 8px',color:'#bd572f'}},error),
-      h('iframe',{key:sessionId+snapshot+attempt,ref:frame,src:transportReady?src:undefined,title:snapshot?'历史画板快照':'本会话绑定画板',style:{flex:'1 1 auto',width:'100%',minHeight:320,border:0}}),
+      h('iframe',{key:sessionId+snapshot+attempt,ref:frame,src:transportReady?source:undefined,title:snapshot?'历史画板快照':'本会话绑定画板',style:{flex:'1 1 auto',width:'100%',minHeight:320,border:0}}),
       rows.length>0&&h('details',{style:{padding:8,maxHeight:180,overflow:'auto'},open:true},h('summary',null,'本会话提交记录'),
         rows.map(s=>h('div',{key:s.id,style:{display:'flex',gap:8,marginTop:6,alignItems:'center'}},
           h('button',{onClick:()=>setSnapshot(s.id)},'版本 '+s.revision),

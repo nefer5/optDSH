@@ -1,5 +1,13 @@
 # 当前状态
 
+2026-10-18首轮重构阶段完成，分支 `codex/platform-plugin-refactor`，详见[实施摘要](../docs/refactor/2026-10-18/implementation.md)与[计划状态](../.agents/plans/261018-platform-plugin-refactor.md)。独立home/workspace启动、可选Bundle/三插件、光学wheel、共享锁、本地发布/复制迁移工具已实现。DSH声明/锁升级0.2.1-rc.2，新版在隔离目录实测；现役root node_modules/3080和旧数据未切换。完整npm test与23项安装相关测试通过；仓库外实际包组件ready、官方客户端加载图/脚本与创建会话/加载画板通过。18专用桥、Canvas独立文档协议、真实React/编辑器握手、市场全组合/公共专家发行、光学完整依赖全新联网安装及真实业务仍待完成；Sandbox/VM/公司验证用户明确暂缓。未提交/发布/推送。
+
+2026-10-03最新：恢复Standard/PTC/Cordis保守压缩ratio0.8、默认64K余量，正式重启与回读通过；81聊天可读，Strata256K/medium/32K持续加载，没有重载模型。实际阈值160K；证据runs/model/261003-03/readback.json。
+
+2026-10-03最新：Strata目录已同步256K/medium/32K，Standard/PTC/Cordis压缩ratio0.9，正式重启与配置/预设/78聊天回读通过；原默认保留。实际压缩阈值受输出及64K额外余量限制，Strata为160K；真实触发未测。见docs/runtime.md及runs/model/261003-02。
+
+2026-10-03：本地Strata原版IQ3_S已通过llm-pi-ai热配置接入，128K/medium/32K，回环8080；Standard文字/思考流、原生read闭环及截图附件实测通过。默认DeepSeek官方Flash/high恢复保留，测试会话本地选择保留；没有DSH/模型重启或光学工作台绑定。子Agent仅追加可选条目，复杂任务/子Agent/耐久未验。[使用](../docs/runtime.md) · [证据](../runs/model/261003-01/verification.json)。
+
 2026-10-02 架构专家v0.2.0轻量化：会话开始/恢复仅注入规范；Codex/Claude/DSH架构Stop handler已移除，遗留stop命令无payload/Git/扫描/状态操作。Git pre-commit按真实暂存区检查一次，只报告不阻断；用户审查/整改入口arch-review，不再要求--record。optDSH四宿主、AgentTyvate三宿主托管配置已分发且--check通过；OpenCode没有原命令hook，更新角色/技能并共用Git hook。npm test通过138项插件、11项PPT、105项光学、37项分发和56项架构kit测试；真实隔离Git提交、部分暂存与--only临时索引通过，实际DSH桥接的控制服务回归25次Stop零脚本/零续轮、SessionStart一次注入通过。用户授权后DSH Web已从PID35952重启至46292，认证HTTP200，专家/桥接/预设active，73会话可读；Bonsai PID69432/1235及模型配置保留。没有真实模型调用/Zemax/新会话首请求遵循验收；Codex/Claude新开场上下文待下一SessionStart加载。[方案与证据](../.agents/plans/261002-architecture-trigger-simplification.md) · [用法](../.agents/experts/software-architect/README.md)。
 
 2026-10-02启动器恢复：实际监听进程诊断、过期/损坏PID记录恢复、当前认证检查和显式`-Restart`已实现；真实3080正常复用、旧PID/损坏记录恢复、失效认证保留进程与无关端口占用（含Restart）拒绝均通过。后续架构触发优化中获用户授权，显式重启完整分支已实测：PID35952停止、新PID46292认证Ready/HTTP200，既有会话可读，模型服务未停止。用法见[运行指南](../docs/runtime.md)。

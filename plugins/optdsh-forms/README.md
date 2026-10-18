@@ -83,3 +83,15 @@ HTTP 调用可对 `/api/optdsh-forms` POST JSON：`action:create` 加上述请�
 2026-09-27 v0.3：未经改造的rx-scan.example.yaml直接推断并渲染，真实浏览器修改H点数、V数值列表、面积和布尔值后保存重载/提交；CLI导出新YAML，原Rx模块纯离线validate/plan确认15点有效，源文件SHA256不变，未连接模型或生成run。混合类型、null、空列表的JSON回退及无效JSON跨分组保留/删除恢复已浏览器验证。默认并发检查两次遇到其他模块的Windows临时文件rename EPERM，串行复测通过，未为本任务改动这些模块。详情在temp/forms-rx-import。
 
 用户指出验收后打开的是已提交只读页，本轮已替换为新的可编辑请求；新增回执状态提示和“继续修改”入口，浏览器验证副本字段可编辑、已有值保留且旧回执仍submitted。交付时保留待提交页，不把验收回执当填写入口。
+
+## 安装目录与工作目录
+
+插件资源从包内 lib/web/shared 加载。`workspaceRoot`（兼容 projectRoot）指定 Study、临时请求与锁的项目根，不依赖安装 checkout。CLI `--root` 可明确覆盖；省略时使用当前工作目录。Forms 可独立于工作台装配，禁用不影响官方聊天。Node.js 24+；包仍 private=true，公开发布和许可证待单独处理。
+
+## 独立装配
+
+包内 `dsh.bundle.patch` 指向 cordis.patch.yml。可先 `npm pack` 生成本地 tgz，再通过 DSH 官方插件/Bundle 安装入口选择该文件；启用前在 Profile overlay 注入上述 workspaceRoot/stateRoot（画板还可注入 editorUrl）。不把 checkout 路径写进包，外部运行依赖由用户准备。独立安装后的官方宿主加载仍需验收，不能把 tarball 校验当作端到端成功。
+
+### 全新官方Profile的Cordis前置条件
+
+通过官方 `dsh plugin --profile web add <本插件tgz>` 独立安装时，先在同一DSH_HOME/Profile执行 `dsh plugin --profile web add @deepseek-ai/cordis@4.0.5 --config.auto-install-peers=false`，再安装本插件。宿主范围是DSH 0.2.1-rc.2/Cordis ~4.0.5，不继承旧版豁免。已实测全新Profile仅装工作台会因传递包缺Cordis被预检禁用，补齐后加载通过；不要编辑node_modules解决。产品app安装器已提供宿主依赖，和Profile独立安装是不同路径。

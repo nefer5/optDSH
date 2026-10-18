@@ -2,12 +2,12 @@ import {readFileSync} from 'node:fs';
 import {resolve,relative,extname,basename} from 'node:path';
 
 function inside(root,path){const rel=relative(root,path);return rel!==''&&!rel.startsWith('..')&&!rel.includes(':');}
-export function txReport(root,requestUrl){
+export function txReport(root,requestUrl,{workspaceRoot=root}={}){
  const url=new URL(requestUrl,'http://local'),id=url.searchParams.get('job'),file=url.searchParams.get('file')||'report.html';
  if(!/^[a-f0-9-]{36}$/.test(id||''))throw new Error('Invalid job');
  const jobs=JSON.parse(readFileSync(resolve(root,'data/optics/tx-jobs.json'),'utf8')),job=jobs.find(j=>j.id===id);
  if(!job)throw new Error('Unknown job');
- const run=resolve(job.run),target=resolve(run,file);if(!inside(resolve(root,'runs'),run)||!inside(run,target))throw new Error('Invalid artifact path');
+ const run=resolve(job.run),target=resolve(run,file);if(!inside(resolve(workspaceRoot,'runs'),run)||!inside(run,target))throw new Error('Invalid artifact path');
  const ext=extname(target).toLowerCase(),mimes={'.html':'text/html; charset=utf-8','.png':'image/png','.json':'application/json; charset=utf-8','.txt':'text/plain; charset=utf-8','.yaml':'text/plain; charset=utf-8','.npz':'application/octet-stream','.zos':'application/octet-stream','.zmx':'application/octet-stream'};
  if(!mimes[ext])throw new Error('Unsupported artifact');
  let data=readFileSync(target);

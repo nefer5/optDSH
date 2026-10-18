@@ -1,7 +1,8 @@
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readFileSync} from 'node:fs';
-import {BoardStore, requireValue, sceneContext} from './boards.js';
+import {requireValue, sceneContext} from './boards.js';
+import {WorkspaceBoardStore} from './workspace-store.js';
 import {registerCanvasTools} from './tools.js';
 import {canvasMessage} from './messages.js';
 
@@ -10,22 +11,26 @@ export const inject = ['connection', 'sessionController', 'tools', 'agents', 'sy
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 export function apply(ctx, options={}) {
-  const ROOT=resolve(options.projectRoot||process.cwd());
-  const config=JSON.parse(readFileSync(resolve(ROOT,'config/agent-canvas-bridge.json'),'utf8'));
-  if(config.enabled===false)return;
-  const store = new BoardStore(resolve(ROOT,'data/canvas/boards'));
+  const ROOT=resolve(options.stateRoot||options.projectRoot||process.cwd());
+  if(options.enabled===false)return;
+  const editor=new URL(options.editorUrl||'http://127.0.0.1:4173');
+  requireValue(['http:','https:'].includes(editor.protocol)&&!editor.username&&!editor.password&&editor.pathname==='/'&&!editor.search&&!editor.hash,'编辑器地址必须是无凭据的HTTP(S) origin');
+  const store = new WorkspaceBoardStore({legacyRoot:options.legacyRoot||resolve(ROOT,'data/canvas/boards')});
   const stop = new AbortController();
   ctx.effect(() => () => stop.abort(), 'canvas shutdown');
   ctx.on('session/event',(session,event)=>store.observe(session.id,event));
   const active = new Set();
-  const bindings=new Map();
+  const bindings=new Map(),workspaces=new Map();
   async function binding(sessionId) {
+    const current=await ctx.sessionController.inspect(sessionId,stop.signal);
+    requireValue(typeof current.meta.cwd==='string'&&current.meta.cwd.length>0,'会话缺少工作目录');
+    const cwd=resolve(current.meta.cwd);
+    requireValue(!workspaces.has(sessionId)||workspaces.get(sessionId)===cwd,'会话工作目录已改变，请重新打开插件核对画板归属','SESSION_WORKSPACE_CHANGED');
+    workspaces.set(sessionId,cwd);
     if(!bindings.has(sessionId)) {
       const pending=(async()=>{
-        const inspection=await ctx.sessionController.inspect(sessionId,stop.signal);
-        requireValue(inspection.meta.cwd && resolve(inspection.meta.cwd).toLowerCase()===ROOT.toLowerCase(),
-          '此画板插件仅服务 optDSH 项目会话');
-        const b=store.board(sessionId);
+        const inspection=current;
+        const b=store.board(sessionId,inspection.meta.cwd);
         for(const event of inspection.events)store.observe(b.sessionId,event);
         return b;
       })();
@@ -37,7 +42,7 @@ export function apply(ctx, options={}) {
   registerCanvasTools(ctx,store,binding);
   ctx.systemPrompt.section({name:'optdsh:canvas',order:80,text:
     '本项目官方Web会话画板已支持双向协作。用户要求画图/修改画板时，先canvas_read，再canvas_propose_edit。允许修改用户绘制的图形，包括带绑定文字的方框；移动必须update原ID，标签/箭头会联动，不能用复制代替移动。用户拒绝并给出反馈时，按意见重新读取并生成建议稿。工具自动绑定当前聊天；未应用前不得声称已改原图。正常回复只说明改动，不输出proposalId/revision、端口/协议或反复添加免责声明水印。不要使用旧agent-canvas CLI、inbox或扫描4173猜接口。图片/手绘像素未解析，画板坐标为px而非光学模型坐标；画板编辑不修改Zemax，光学分析执行另按对应Skill和授权流程处理。'});
-  ctx.effect(()=>ctx.connection.fetch.register({path:'/api/optdsh-canvas/transport',methods:['GET'],requestBody:'buffered',fetch:async()=>new Response(readFileSync(resolve(PACKAGE_ROOT,'web/transport.js')),{headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store'}})}),'shared canvas transport');
+  ctx.effect(()=>ctx.connection.fetch.register({path:'/api/optdsh-canvas/transport',methods:['GET'],requestBody:'buffered',fetch:async()=>new Response(readFileSync(resolve(PACKAGE_ROOT,'web/transport.js'),'utf8').replace("'http://127.0.0.1:4173'",JSON.stringify(editor.origin)),{headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store'}})}),'shared canvas transport');
   ctx.effect(() => ctx.connection.fetch.register({
     path:'/api/optdsh-canvas', methods:['POST'], requestBody:'buffered',
     async fetch(request) {

@@ -23,3 +23,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Project distribution status
+
+The MIT text above applies to the attributed third-party interaction only. No open-source license has been selected for the optDSH project itself. This private development package does not grant public redistribution rights; the owner must confirm project licensing before publication.

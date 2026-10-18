@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "optDSH 建议架构 · 安装、配置与研究分离（待确认草案・未实施）",
+    "locale": "zh-CN",
+    "output": "docs/refactor/2026-10-18/diagrams/architecture-target/diagram.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "浏览器工作界面",
+      "sublabel": "在任意研究目录打开 DSH",
+      "pos": [
+        50,
+        240
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "候选：工具安装一次"
+    },
+    {
+      "id": "runtime",
+      "type": "backend",
+      "label": "官方 DSH 平台",
+      "sublabel": "保留原生 Agent / 会话 / 权限",
+      "pos": [
+        380,
+        240
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "独立用户级安装"
+    },
+    {
+      "id": "profile",
+      "type": "database",
+      "label": "独立 DSH 用户资料",
+      "sublabel": "profiles / 插件 / 会话 / 设置",
+      "pos": [
+        710,
+        240
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "平台安装目录之外"
+    },
+    {
+      "id": "workbench",
+      "type": "frontend",
+      "label": "光学工作台插件",
+      "sublabel": "独立发布；Canvas 缺席仍可用",
+      "pos": [
+        50,
+        460
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "用户选装"
+    },
+    {
+      "id": "workspaceRouter",
+      "type": "backend",
+      "label": "会话与项目关联",
+      "sublabel": "sessionId → workspace / 实例",
+      "pos": [
+        380,
+        460
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "不再用安装根代替课题"
+    },
+    {
+      "id": "canvasBridge",
+      "type": "backend",
+      "label": "DSH 画板薄桥",
+      "sublabel": "认证 · 绑定 · 工具与消息适配",
+      "pos": [
+        710,
+        460
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "用户选装"
+    },
+    {
+      "id": "optics",
+      "type": "backend",
+      "label": "独立光学执行器",
+      "sublabel": "可安装包 · 显式配置 · 作业恢复",
+      "pos": [
+        50,
+        680
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "选择光学功能才安装"
+    },
+    {
+      "id": "workspace",
+      "type": "database",
+      "label": "研究目录 A / B / …",
+      "sublabel": "模型 · 配置 · Skills · runs",
+      "pos": [
+        380,
+        680
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "每个会话明确归属"
+    },
+    {
+      "id": "canvasService",
+      "type": "backend",
+      "label": "独立 AgentCanvas 产品",
+      "sublabel": "绘图 · revision · 建议稿 · 历史",
+      "pos": [
+        710,
+        680
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "独立安装 / 版本能力协商"
+    },
+    {
+      "id": "zemax",
+      "type": "external",
+      "label": "目标 Zemax 实例",
+      "sublabel": "按版本连接与实例级串行化",
+      "pos": [
+        50,
+        900
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "身份检查 + 写入门禁"
+    },
+    {
+      "id": "canvasStore",
+      "type": "database",
+      "label": "Canvas 唯一文档库",
+      "sublabel": "工作区 / 画板 / 版本 / 恢复",
+      "pos": [
+        710,
+        900
+      ],
+      "size": [
+        230,
+        86
+      ],
+      "tag": "数据路径与迁移映射待定"
+    },
+    {
+      "id": "bundle",
+      "type": "backend",
+      "label": "optDSH 组合包",
+      "sublabel": "独立发布的产品装配",
+      "tag": "dsh.bundle.patch",
+      "pos": [
+        380,
+        30
+      ],
+      "size": [
+        230,
+        86
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "browser-host",
+      "from": "browser",
+      "to": "runtime",
+      "label": "认证 Web",
+      "variant": "emphasis"
+    },
+    {
+      "id": "profile-host",
+      "from": "profile",
+      "to": "runtime",
+      "label": "用户覆盖设置"
+    },
+    {
+      "id": "optional-workbench",
+      "from": "runtime",
+      "to": "workbench",
+      "label": "选装挂载",
+      "variant": "dashed"
+    },
+    {
+      "id": "session-context",
+      "from": "runtime",
+      "to": "workspaceRouter",
+      "label": "会话关联",
+      "variant": "emphasis"
+    },
+    {
+      "id": "optional-canvas",
+      "from": "runtime",
+      "to": "canvasBridge",
+      "label": "选装挂载",
+      "variant": "dashed"
+    },
+    {
+      "id": "context-optics-ui",
+      "from": "workspaceRouter",
+      "to": "workbench",
+      "label": "项目上下文"
+    },
+    {
+      "id": "context-canvas",
+      "from": "workspaceRouter",
+      "to": "canvasBridge",
+      "label": "会话身份"
+    },
+    {
+      "id": "workbench-optics",
+      "from": "workbench",
+      "to": "optics",
+      "label": "认证 HTTP",
+      "variant": "emphasis"
+    },
+    {
+      "id": "executor-workspace",
+      "from": "optics",
+      "to": "workspace",
+      "label": "配置 / 结果"
+    },
+    {
+      "id": "resolve-workspace",
+      "from": "workspaceRouter",
+      "to": "workspace",
+      "label": "按会话定位",
+      "variant": "emphasis"
+    },
+    {
+      "id": "optics-zemax",
+      "from": "optics",
+      "to": "zemax",
+      "label": "授权 / 实例锁",
+      "variant": "security"
+    },
+    {
+      "id": "canvas-product",
+      "from": "canvasBridge",
+      "to": "canvasService",
+      "label": "协商 / 协议"
+    },
+    {
+      "id": "canvas-documents",
+      "from": "canvasService",
+      "to": "canvasStore",
+      "label": "读写文档"
+    },
+    {
+      "id": "profile-bundle",
+      "from": "profile",
+      "to": "bundle",
+      "label": "选择组合包"
+    },
+    {
+      "id": "bundle-host",
+      "from": "bundle",
+      "to": "runtime",
+      "label": "包内装配",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "这是一份候选，不是现状",
+      "items": [
+        "未修改实现，也未选定新包名、安装路径或数据迁移位置。",
+        "这里选择由独立 Canvas 拥有通用画板数据；仍需方案确认。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "三类位置各司其职",
+      "items": [
+        "程序安装区只放版本化程序；Profile 放用户组装、插件与官方会话。",
+        "研究 workspace 可在任意目录；每次任务显式携带目录与实例身份。",
+        "Forms、专家、PPT 等可选能力采用相同包契约，详见目录说明。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "独立可选安装的验收",
+      "items": [
+        "纯 DSH、仅工作台、仅画板、两者共存都要能安装和使用。",
+        "同一 Zemax 实例的锁由执行器统一管理，不能按研究目录各锁各的。",
+        "发布包固定依赖组合；Windows Sandbox / VM 验证换机安装。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Optional standalone bundle; runtime roots may be set by an installation overlay.
+- insert:
+    - id: optdsh-agent-canvas
+      name: 'optdsh-agent-canvas'

@@ -1,3 +1,4 @@
+from .runtime import instance_lock
 """Short-lived read-only ZOS worker; reuses the opt-assist connection owner."""
 import argparse
 from datetime import datetime, timezone
@@ -93,15 +94,8 @@ def _capture_unlocked(expected_file, instance, probe=False):
 
 def capture(expected_file, instance, probe=False):
     # Coordinate across service restarts and CLI/native workers, not only HTTP threads.
-    import msvcrt
-    root=Path(__file__).resolve().parents[4]
-    (root/'.runtime').mkdir(exist_ok=True)
-    with (root/'.runtime/tx-pilot.lock').open('a+b') as lock:
-        lock.seek(0);lock.write(b'0');lock.flush();lock.seek(0)
-        try:msvcrt.locking(lock.fileno(),msvcrt.LK_NBLCK,1)
-        except OSError:raise OpticsError('HOST_BUSY','原生公差或其他光学作业占用宿主') from None
-        try:return _capture_unlocked(expected_file, instance, probe)
-        finally:lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_UNLCK,1)
+    with instance_lock(instance):
+        return _capture_unlocked(expected_file, instance, probe)
 
 
 def connection_error(exc, instance):

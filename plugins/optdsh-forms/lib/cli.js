@@ -8,7 +8,7 @@ import {pageUrl,briefReceipt} from './receipt.js';
 const args = process.argv.slice(2), command = args.shift();
 const option = name => { const i=args.indexOf('--'+name); return i<0?undefined:args[i+1]; };
 try {
-  const store = new FormStore(resolve(option('root') || resolve(import.meta.dirname,'../../..')));
+  const store = new FormStore(resolve(option('root') || process.cwd()));
   let value;
   if(command === 'create' && option('config')) value = store.create(importYaml(option('config'),{formFile:option('form'),title:option('title')}));
   else if(command === 'create' && option('input')) value = store.create(parse(readFileSync(resolve(option('input')),'utf8'),{maxAliasCount:0}));

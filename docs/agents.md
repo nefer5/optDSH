@@ -73,7 +73,7 @@ DSH安装了`dsh-hooks-codex`和`dsh-hooks-claude-code`兼容桥。软件架构�
 
 # 开发自定义专家
 
-optDSH 是专家源定义与四宿主分发的唯一中心。当前启用两位专家：视觉设计专家（`visual-designer`，工作台、报告、页面的设计或实际画面评估）与软件架构专家（`software-architect`，Python、TS/JS、C++ 的模块划分、依赖方向、落点设计与架构审查，附 arch-plan/arch-review 技能和审查 hook）。同时支持开发宿主与DSH原生专家会话/子Agent；没有新增模型供应商或光学写工具。
+用户Agent中心C:/Users/admin/.agents是专家源定义与分发的唯一中心；optDSH保留项目适配入口。当前启用两位专家：视觉设计专家（`visual-designer`，工作台、报告、页面的设计或实际画面评估）与软件架构专家（`software-architect`，Python、TS/JS、C++ 的模块划分、依赖方向、落点设计与架构审查，附 arch-plan/arch-review 技能和审查 hook）。同时支持开发宿主与DSH原生专家会话/子Agent；没有新增模型供应商或光学写工具。
 
 ## 使用
 
@@ -108,7 +108,7 @@ python .agents/development-skills/expert-distribute/scripts/distribute.py --expe
 
 ## 来源与验证边界
 
-来源：本机 AgentTyvate 的 visual-designer 0.4.2、分发脚本及白名单图库；历史适配版0.4.3曾增加光学约束；当前0.7.0以optDSH为通用专家唯一中心，光学约束改按目标项目AGENTS路由，两项目个人偏好已统一。
+来源：本机 AgentTyvate 的 visual-designer 0.4.2、分发脚本及白名单图库；历史适配版0.4.3曾增加光学约束；当前0.7.0以用户Agent中心为通用专家唯一中心，光学约束改按目标项目AGENTS路由，两项目个人偏好已统一。
 
 Codex 格式按[官方自定义 Agent 文档](https://learn.chatgpt.com/docs/agent-configuration/subagents)核对：项目 `.codex/agents/*.toml` 必填 name、description、developer_instructions。OpenCode/Claude 保留源项目已核对的格式，分发时核对实际 CLI 版本。文件分发、宿主发现、真实设计调用分别验收，当前状态见 planning/STATUS.md。
 
@@ -157,4 +157,4 @@ Codex 格式按[官方自定义 Agent 文档](https://learn.chatgpt.com/docs/age
 
 ## 单一权威（2026-09-28）
 
-当前版本0.7.0；源和偏好仅在本仓库维护，AgentTyvate链接引用。多项目命令和恢复说明见[专家中心](../.agents/README.md)；[公共源码边界](../.agents/experts/visual-designer/PUBLICATION.md)区分通用规范、文字来源与私人截图。旧聊天需按宿主重新加载；本轮没有重启DSH或调用模型验收新偏好。
+当前版本0.7.0；源和偏好仅在用户Agent中心维护，AgentTyvate链接引用。多项目命令和恢复说明见[专家中心](../.agents/README.md)；[公共源码边界](../.agents/experts/visual-designer/PUBLICATION.md)区分通用规范、文字来源与私人截图。旧聊天需按宿主重新加载；本轮没有重启DSH或调用模型验收新偏好。

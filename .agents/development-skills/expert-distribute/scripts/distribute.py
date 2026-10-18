@@ -248,9 +248,9 @@ def substitute(text, pack, expert, label):
     return text
 
 
-def dsh_outputs(meta, body, target):
+def dsh_outputs(meta, body, target, project_root=None):
     # Preserve upstream Cordis tags and plugin scopes verbatim; change only persona.
-    template = SOURCE.parent / "node_modules/@deepseek-ai/dsh-web-app/presets/standard.patch.yml"
+    template = (project_root or SOURCE.parent) / "node_modules/@deepseek-ai/dsh-web-app/presets/standard.patch.yml"
     standard = template.read_text(encoding="utf-8")
     expected = "              prefix: You are a coding agent powered by the {{model}} model."
     if standard.count(expected) != 1:
@@ -449,7 +449,7 @@ def prepare(source, root, expert, targets, versions):
 
     for name in targets:
         target = registry[name]
-        outputs = dsh_outputs(meta, body, target) if name == "dsh" else [(f"{target['directory']}/{expert}{target['extension']}", render(meta, body, target))]
+        outputs = dsh_outputs(meta, body, target, root) if name == "dsh" else [(f"{target['directory']}/{expert}{target['extension']}", render(meta, body, target))]
         for relative, data in outputs:
             add(name, relative, data, versions[name], target["verified_cli_version"])
     stale(resource_root + "/", {f"{resource_root}/{relative}" for relative, _ in resources})
@@ -589,8 +589,7 @@ def distribute(source, root, expert, targets, versions, apply=False, check=False
 
 
 def distribute_fleet(path, expert="all", apply=False, check=False):
-    sys.path.insert(0, str(SOURCE.parent / "packages/optics/src"))
-    from optdsh_optics.config_io import load_config
+    from config_io import load_config
     config = load_config(path)
     if set(config) != {"projects"} or not isinstance(config["projects"], list) or not config["projects"]:
         raise ValueError("Fleet requires a non-empty projects list")
@@ -604,7 +603,7 @@ def distribute_fleet(path, expert="all", apply=False, check=False):
             raise ValueError("Duplicate fleet project")
         seen.add(root)
         targets = select(only=item["hosts"])
-        versions = {n: probe(n) for n in targets}
+        versions = {n: probe(n, root) if n == "dsh" else probe(n) for n in targets}
         rows = [row for name in experts for row in prepare(SOURCE, root, name, targets, versions)[2]]
         if is_blocked(rows):
             raise ValueError(f"Fleet preflight blocked at {root}; no project written")
@@ -614,9 +613,9 @@ def distribute_fleet(path, expert="all", apply=False, check=False):
     return max(distribute(SOURCE, root, experts, targets, versions, apply, check) for root, targets, versions in plans)
 
 
-def probe(name):
+def probe(name, project_root=None):
     if name == "dsh":
-        return json.loads((SOURCE.parent / "node_modules/@deepseek-ai/dsh/package.json").read_text(encoding="utf-8"))["version"]
+        return json.loads(((project_root or SOURCE.parent) / "node_modules/@deepseek-ai/dsh/package.json").read_text(encoding="utf-8"))["version"]
     executable = shutil.which(name)
     if not executable:
         return "missing"
@@ -641,7 +640,7 @@ def select(only=None, exclude=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--expert", help="expert name, comma list or all (default: all)")
-    parser.add_argument("--project-root", type=Path, default=SOURCE.parent)
+    parser.add_argument("--project-root", type=Path, default=None)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--apply", action="store_true")
     mode.add_argument("--check", action="store_true")
@@ -653,12 +652,11 @@ def main():
     args = parser.parse_args()
     try:
         if args.fleet:
-            if args.config or args.only or args.exclude or args.project_root != SOURCE.parent:
+            if args.config or args.only or args.exclude or args.project_root is not None:
                 raise ValueError("--fleet cannot combine with config, host or project selection")
             return distribute_fleet(args.fleet, args.expert or "all", args.apply, args.check)
         if args.config:
-            sys.path.insert(0, str(SOURCE.parent / "packages/optics/src"))
-            from optdsh_optics.config_io import load_config
+            from config_io import load_config
             config = load_config(args.config)
             if set(config) - {"expert", "only", "exclude"} or "expert" not in config:
                 raise ValueError("Config requires expert and allows only/exclude")
@@ -668,9 +666,15 @@ def main():
                 raise ValueError("Do not combine YAML selection with CLI selection")
             args.expert = config["expert"]
             args.only, args.exclude = config.get("only"), config.get("exclude")
+        if args.project_root is None:
+            lexical = Path(__file__).absolute()
+            if lexical != lexical.resolve():
+                args.project_root = lexical.parents[4]
+            else:
+                raise ValueError("Central entry requires --project-root or --fleet")
         targets = select(args.only, args.exclude)
         return distribute(SOURCE, args.project_root, args.expert or "all", targets,
-                          {n: probe(n) for n in targets}, args.apply, args.check)
+                          {n: probe(n, args.project_root) if n == "dsh" else probe(n) for n in targets}, args.apply, args.check)
     except (ValueError, OSError, KeyError, subprocess.SubprocessError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 2

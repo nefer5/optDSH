@@ -63,3 +63,11 @@
 项目Skill可被DSH产品Agent发现，不假设只供Codex；当前能力清单看实际目录与说明，不把它当禁止新增业务的永久白名单。视觉专家源在.agents/experts，分发维护用.agents/development-skills/expert-distribute。通用经验见.experience/README.md，本机环境事实按shared-memory维护。
 
 检查入口：npm test；.venv/Scripts/python.exe scripts/maintenance/check_project.py。
+
+## 6. 项目梳理与文档同步
+
+用户说“项目初始化”“初始化项目”“新建项目”“新建一个项目”“创建项目”“项目梳理”“同步项目文档”，或要求统一项目背景、术语/数据定义、重要决策与路线图时，读取[项目梳理 Skill](.agents/development-skills/project-docs/SKILL.md)。它沿用 README、planning/STATUS.md、planning/ROADMAP.md、docs/architecture.md 和领域契约，先识别权威入口再补缺口；已有项目不重置，单独新建聊天/空目录/Git初始化按原任务完成。重要定义与决定只在一处维护，其他文档链接引用。
+
+软件结构方案和审查继续由 arch-plan、arch-review 与 software-architect 负责，项目梳理统一组织问题并同步受影响文档；不改变现有任务分级、只读体检和提交检查触发方式。小改动仅更新实际受影响内容，区分计划、已实现和已验证。
+
+权威源在 Agent 中心 `~/.agents/skills/project-docs`；各宿主和本项目开发技能入口通过链接引用同一源。迁移后先恢复中心 Skill 再建立各入口。若项目入口缺失，先使用宿主实际发现的 project-docs；两者均缺失则报告缺口，不能声称已按完整流程执行。

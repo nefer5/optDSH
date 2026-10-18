@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "目标数据归属 · 各有唯一事实源（草案）",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/refactor/2026-10-18/diagrams/data-target/diagram.html",
+    "viewBox": [
+      1020,
+      650
+    ]
+  },
+  "stages": [
+    {
+      "label": "输入"
+    },
+    {
+      "label": "数据所有者"
+    },
+    {
+      "label": "唯一持久位置"
+    },
+    {
+      "label": "消费 / 恢复"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "formInput",
+      "type": "frontend",
+      "label": "研究表单输入",
+      "sublabel": "用户编辑 / 显式提交",
+      "stage": 0,
+      "row": 0,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "forms",
+      "type": "backend",
+      "label": "独立 Forms 插件",
+      "sublabel": "校验当前 workspace",
+      "stage": 1,
+      "row": 0,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "formData",
+      "type": "database",
+      "label": "课题 configs",
+      "sublabel": "显式选择的研究目录",
+      "stage": 2,
+      "row": 0,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "formRead",
+      "type": "backend",
+      "label": "获授权的执行器",
+      "sublabel": "消费冻结配置",
+      "stage": 3,
+      "row": 0,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "canvasInput",
+      "type": "frontend",
+      "label": "用户画板操作",
+      "sublabel": "草稿 / 提交 / 建议应用",
+      "stage": 0,
+      "row": 1,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "boardOwner",
+      "type": "backend",
+      "label": "独立 Canvas 服务",
+      "sublabel": "revision / 历史 / 恢复",
+      "stage": 1,
+      "row": 1,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "boardFiles",
+      "type": "database",
+      "label": "Canvas 文档库",
+      "sublabel": "路径待定；唯一文档权威",
+      "stage": 2,
+      "row": 1,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "bridge",
+      "type": "backend",
+      "label": "DSH 薄桥",
+      "sublabel": "仅引用 / 绑定 / 投递回执",
+      "stage": 3,
+      "row": 1,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "configInput",
+      "type": "database",
+      "label": "冻结研究配置",
+      "sublabel": "带 workspace / modelId",
+      "stage": 0,
+      "row": 2,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "runOwner",
+      "type": "backend",
+      "label": "独立光学执行器",
+      "sublabel": "实例锁 / 版本 / 作业",
+      "stage": 1,
+      "row": 2,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "runFiles",
+      "type": "database",
+      "label": "课题 runs",
+      "sublabel": "证据包完整且可追溯",
+      "stage": 2,
+      "row": 2,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "report",
+      "type": "frontend",
+      "label": "报告与研究分析",
+      "sublabel": "结果 / 限制 / 来源",
+      "stage": 3,
+      "row": 2,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "sessionInput",
+      "type": "frontend",
+      "label": "会话请求",
+      "sublabel": "sessionId / workspace",
+      "stage": 0,
+      "row": 3,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "dsh",
+      "type": "backend",
+      "label": "官方 DSH 引擎",
+      "sublabel": "保留原生循环与权限",
+      "stage": 1,
+      "row": 3,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "sessionFiles",
+      "type": "database",
+      "label": "DSH_HOME 会话库",
+      "sublabel": "官方格式；插件不另存",
+      "stage": 2,
+      "row": 3,
+      "width": 150,
+      "height": 78
+    },
+    {
+      "id": "history",
+      "type": "frontend",
+      "label": "官方历史与恢复",
+      "sublabel": "按会话读取 / 继续",
+      "stage": 3,
+      "row": 3,
+      "width": 150,
+      "height": 78
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "from": "formInput",
+      "to": "forms",
+      "label": "表单值",
+      "variant": "default",
+      "labelAt": [
+        207.5,
+        119
+      ]
+    },
+    {
+      "id": "f2",
+      "from": "forms",
+      "to": "formData",
+      "label": "保存配置",
+      "variant": "default",
+      "labelAt": [
+        422.5,
+        119
+      ]
+    },
+    {
+      "id": "f3",
+      "from": "formData",
+      "to": "formRead",
+      "label": "冻结输入",
+      "variant": "default",
+      "labelAt": [
+        637.5,
+        119
+      ]
+    },
+    {
+      "id": "b1",
+      "from": "canvasInput",
+      "to": "boardOwner",
+      "label": "场景 / 操作",
+      "variant": "default",
+      "labelAt": [
+        207.5,
+        233
+      ]
+    },
+    {
+      "id": "b2",
+      "from": "boardOwner",
+      "to": "boardFiles",
+      "label": "文档 / 版本",
+      "variant": "default",
+      "labelAt": [
+        422.5,
+        233
+      ]
+    },
+    {
+      "id": "b3",
+      "from": "boardFiles",
+      "to": "bridge",
+      "label": "文档引用",
+      "variant": "emphasis",
+      "labelAt": [
+        637.5,
+        233
+      ]
+    },
+    {
+      "id": "r1",
+      "from": "configInput",
+      "to": "runOwner",
+      "label": "研究输入",
+      "variant": "default",
+      "labelAt": [
+        207.5,
+        347
+      ]
+    },
+    {
+      "id": "r2",
+      "from": "runOwner",
+      "to": "runFiles",
+      "label": "结果 / 回执",
+      "variant": "default",
+      "labelAt": [
+        422.5,
+        347
+      ]
+    },
+    {
+      "id": "r3",
+      "from": "runFiles",
+      "to": "report",
+      "label": "证据数据",
+      "variant": "default",
+      "labelAt": [
+        637.5,
+        347
+      ]
+    },
+    {
+      "id": "s1",
+      "from": "sessionInput",
+      "to": "dsh",
+      "label": "用户请求",
+      "variant": "default",
+      "labelAt": [
+        207.5,
+        461
+      ]
+    },
+    {
+      "id": "s2",
+      "from": "dsh",
+      "to": "sessionFiles",
+      "label": "官方记录",
+      "variant": "default",
+      "labelAt": [
+        422.5,
+        461
+      ]
+    },
+    {
+      "id": "s3",
+      "from": "sessionFiles",
+      "to": "history",
+      "label": "会话历史",
+      "variant": "default",
+      "labelAt": [
+        637.5,
+        461
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "待确认的数据方案",
+      "items": [
+        "候选由 Canvas 服务拥有通用文档；存放 workspace 或 Canvas 用户根尚待决定。",
+        "DSH 薄桥只保存必要绑定和投递回执，不复制可写画板或官方聊天历史。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "隔离与恢复",
+      "items": [
+        "研究配置/结果就近放课题；运行时锁按 Zemax 实例管理。",
+        "迁移保留旧boardId/revision/历史证据，校验哈希与路径映射后再切换。"
+      ]
+    }
+  ]
+}

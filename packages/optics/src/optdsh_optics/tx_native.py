@@ -1,3 +1,4 @@
+from .runtime import instance_lock, mark_instance_uncertain
 """Native NSC tolerancing on an independently identified CopySystem."""
 from pathlib import Path
 import copy
@@ -96,7 +97,6 @@ def set_prop(o,name,value):
 def execute_run(path):
     from .connection import OpticStudio
     from .capture import snapshot_in_connection,read_pass
-    import msvcrt
     path=Path(path);c=json.loads((path/'config/resolved.json').read_text(encoding='utf-8'));rt=json.loads((path/'config/runtime.json').read_text(encoding='utf-8'))
     root=Path(rt['projectRoot']);b=RunBundle(path,root,json.loads((path/'manifest.json').read_text(encoding='utf-8')))
     result={'status':'running','mode':c['analysis']['mode'],'nominal':[],'samples':[],'sensitivity':[],'cleanupErrors':[]}
@@ -124,11 +124,9 @@ def execute_run(path):
         for i in range(1,s.MFE.NumberOfOperands+1):
             r=s.MFE.GetOperandAt(i);data['mfe'].append([str(r.Type),str(r.Target),str(r.Weight)])
         return data
-    with (root/'.runtime/tx-pilot.lock').open('a+b') as lock:
-      lock.seek(0);lock.write(b'0');lock.flush();lock.seek(0)
+    with instance_lock(rt['instance']):
       try:
-        msvcrt.locking(lock.fileno(),msvcrt.LK_NBLCK,1)
-        with OpticStudio(mode='extension',instance=rt['instance']) as z:
+        with OpticStudio(mode='extension',instance=rt['instance'], **({'target':rt['target']} if rt.get('target') else {})) as z:
           primary=z.system;api=z.ZOSAPI
           try:
             progress('检查模型身份');raw=snapshot_in_connection(z,Path(__file__).with_name('connection.py'),rt['instance']);snap=make_snapshot(raw)
@@ -279,9 +277,8 @@ def execute_run(path):
                 except Exception as e:result['cleanupErrors'].append(str(e))
             if result['cleanupErrors'] or result.get('toolStillRunning'):result['status']='verification-failed'
       except Exception as exc:result.update(status='failed',error=str(exc),traceback=traceback.format_exc())
-      finally:
-        try:lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_UNLCK,1)
-        except OSError:pass
+      if result.get('toolStillRunning') or result['cleanupErrors'] or (clone is not None and not result.get('copyClosed')):
+        mark_instance_uncertain(rt['instance'],path)
     result['elapsedSeconds']=time.monotonic()-started
     result['report']={'summary':'Zemax原生公差运行：'+result['status'],'interpretation':'每die角宽按冻结的探测器全局Z计算；MC回读同一原生样本并恢复名义耦合位置取得补偿前值。灵敏度每die值通过原生SAVE端点模型回读，联合MF与角宽分列。'}
     write_json(path/'progress.json',{'status':result['status'],'stage':'已结束','progress':100 if result['status']=='completed' else None,'error':result.get('error')})

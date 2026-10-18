@@ -141,7 +141,7 @@ class SaveTests(unittest.TestCase):
             def __init__(self,**kwargs):self.options=kwargs
             def __enter__(self):return zos
             def __exit__(self,*args):pass
-        with patch('optdsh_optics.connection.OpticStudio',Connection):
+        with patch('optdsh_optics.connection.OpticStudio',Connection), patch('optdsh_optics.runtime.instance_lock_path',return_value=self.root/'shared-instance.lock'):
             result=execute_save_run(bundle.path)
             self.assertTrue(result['ok']);self.assertEqual(self.calls,1)
             again=execute_save_run(bundle.path);self.assertFalse(again['ok']);self.assertEqual(self.calls,1)

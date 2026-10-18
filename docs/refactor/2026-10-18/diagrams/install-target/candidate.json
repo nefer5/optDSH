@@ -1,0 +1,239 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "目标安装流程 · 固定清单与可选组件（草案）",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/refactor/2026-10-18/diagrams/install-target/diagram.html",
+    "viewBox": [
+      1120,
+      708
+    ]
+  },
+  "lanes": [
+    {
+      "id": "prepare",
+      "label": "用户选择与预检"
+    },
+    {
+      "id": "install",
+      "label": "安装与第一轮验收"
+    },
+    {
+      "id": "accept",
+      "label": "分层确认"
+    },
+    {
+      "id": "failure",
+      "label": "失败与恢复",
+      "variant": "exception"
+    }
+  ],
+  "mainPath": [
+    "release",
+    "choice",
+    "check",
+    "packages",
+    "profile",
+    "workspace",
+    "smoke"
+  ],
+  "nodes": [
+    {
+      "id": "release",
+      "lane": "prepare",
+      "col": 0,
+      "type": "external",
+      "label": "取得发布包",
+      "sublabel": "版本清单 / SHA / 离线说明",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "choice",
+      "lane": "prepare",
+      "col": 1,
+      "type": "frontend",
+      "label": "选择安装能力",
+      "sublabel": "纯平台 / 画板 / 光学",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "check",
+      "lane": "prepare",
+      "col": 2,
+      "type": "security",
+      "label": "检查前置条件",
+      "sublabel": "只检查所选能力的依赖",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "packages",
+      "lane": "prepare",
+      "col": 3,
+      "type": "backend",
+      "label": "安装独立包",
+      "sublabel": "保留用户数据和停用选择",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "profile",
+      "lane": "prepare",
+      "col": 4,
+      "type": "backend",
+      "label": "合并 Profile 组装",
+      "sublabel": "登记 bundle / 锁定组合",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "workspace",
+      "lane": "install",
+      "col": 4,
+      "type": "backend",
+      "label": "选择研究目录",
+      "sublabel": "安装根 / home / cwd 分开",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "smoke",
+      "lane": "install",
+      "col": 5,
+      "type": "backend",
+      "label": "安装组合冒烟",
+      "sublabel": "加载 / UI / synthetic 分层",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "ready",
+      "lane": "accept",
+      "col": 5,
+      "type": "database",
+      "label": "交付检查回执",
+      "sublabel": "真实模型与Zemax另验",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "recover",
+      "lane": "failure",
+      "col": 2,
+      "type": "security",
+      "label": "回滚未完成安装",
+      "sublabel": "保存诊断与恢复点",
+      "width": 140,
+      "height": 80
+    },
+    {
+      "id": "fix",
+      "lane": "failure",
+      "col": 0,
+      "type": "external",
+      "label": "用户处理缺失条件",
+      "sublabel": "不静默换版或豁免",
+      "width": 140,
+      "height": 80
+    }
+  ],
+  "edges": [
+    {
+      "id": "release-choice",
+      "from": "release",
+      "to": "choice",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "choice-check",
+      "from": "choice",
+      "to": "check",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "check-install",
+      "from": "check",
+      "to": "packages",
+      "label": "满足",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "install-profile",
+      "from": "packages",
+      "to": "profile",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "profile-workspace",
+      "from": "profile",
+      "to": "workspace",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "workspace-smoke",
+      "from": "workspace",
+      "to": "smoke",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "smoke-ready",
+      "from": "smoke",
+      "to": "ready",
+      "label": "通过",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "missing",
+      "from": "check",
+      "to": "fix",
+      "label": "缺失",
+      "role": "error",
+      "variant": "security"
+    },
+    {
+      "id": "install-fail",
+      "from": "packages",
+      "to": "recover",
+      "label": "失败",
+      "role": "error",
+      "variant": "security"
+    },
+    {
+      "id": "verify-fail",
+      "from": "smoke",
+      "to": "recover",
+      "label": "未通过",
+      "role": "error",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "全部为候选流程",
+      "items": [
+        "未创建新安装器、未安装组件、未启用Windows功能。",
+        "基础平台不因未选择光学功能而要求 Python 或 Zemax。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "分层验收",
+      "items": [
+        "先用 Sandbox 检查干净安装，再用持久 VM 检查升级与恢复。",
+        "公司出口、许可证与目标 Zemax 最后在获授权环境验证。"
+      ]
+    }
+  ]
+}

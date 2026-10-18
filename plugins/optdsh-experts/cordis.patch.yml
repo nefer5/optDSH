@@ -1,0 +1,3 @@
+- insert:
+    - id: optdsh-experts
+      name: ./lib/index.js

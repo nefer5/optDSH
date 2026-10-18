@@ -9,6 +9,8 @@ import time
 import secrets
 import os
 import re
+import sys
+from .runtime import worker_environment
 
 from .domain import OpticsError, make_snapshot, relative, resolve_object, fingerprint
 from .run_bundle import RunBundle, write_json
@@ -17,10 +19,12 @@ from .run_bundle import RunBundle, write_json
 class Bridge:
     def __init__(self, config, root, config_path=None):
         self.config, self.root = dict(config), Path(root)
+        self.state_root = Path(config.get("stateRoot", self.root/".runtime"))
+        self.state_data = self.state_root/"data/optics" if config.get("stateRoot") else self.root/"data/optics"
         self.config_path = Path(config_path) if config_path else None
         self.config_bytes = self.config_path.read_bytes() if self.config_path else None
         self.candidates = {}
-        self.save_receipt_file = self.root/'data/optics/save-requests.json'
+        self.save_receipt_file = self.state_data/'save-requests.json'
         self.save_receipts = json.loads(self.save_receipt_file.read_text(encoding='utf-8')) if self.save_receipt_file.exists() else {}
         self.capture_lock, self.state_lock = threading.Lock(), threading.Lock()
         self.snapshot, self.last_error = None, None
@@ -29,7 +33,7 @@ class Bridge:
         # stale until a live refresh succeeds; queries already reject last_error.
         if config.get('backend') == 'zos-api':
             from .boolean_geometry import attach_boolean_geometry
-            for path in sorted((self.root / 'data/optics/captures').glob('*.json'), reverse=True):
+            for path in sorted((self.state_data / 'captures').glob('*.json'), reverse=True):
                 try:
                     saved = json.loads(path.read_text(encoding='utf-8'))
                     if (saved.get('provenance') != 'zos-api' or
@@ -52,11 +56,11 @@ class Bridge:
             self.events = self.events[-60:]
 
     def _worker(self, config, probe=False):
-        args = [str(self.root/config['python']), '-X', 'utf8', str(self.root/'packages/optics/scripts/worker.py'),
+        args = [str(self.root/config.get('python', sys.executable)), '-X', 'utf8', '-m', 'optdsh_optics', 'worker',
                 '--instance', str(config.get('instance', 1))]
         args += ['--probe'] if probe else ['--expected-file', config['expectedFile']]
         try:
-            run = subprocess.run(args, cwd=self.root, capture_output=True, text=True, encoding='utf-8',
+            run = subprocess.run(args, env=worker_environment(config), cwd=self.root, capture_output=True, text=True, encoding='utf-8',
                                  timeout=30, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
         except subprocess.TimeoutExpired:
             raise OpticsError('HOST_TIMEOUT', '只读连接超过30秒，请检查 Interactive Extension') from None
@@ -108,8 +112,8 @@ class Bridge:
 
     def _save_worker(self, run):
         try:
-            result = subprocess.run([str(self.root/self.config['python']), '-X', 'utf8', str(self.root/'packages/optics/scripts/worker.py'),
-                                     '--save-run', str(run)], cwd=self.root, capture_output=True,
+            result = subprocess.run([str(self.root/self.config.get('python', sys.executable)), '-X', 'utf8', '-m', 'optdsh_optics', 'worker',
+                                     '--save-run', str(run)], env=worker_environment(self.config), cwd=self.root, capture_output=True,
                                     text=True, encoding='utf-8', timeout=30,
                                     creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
             if result.returncode:
@@ -167,6 +171,8 @@ class Bridge:
                           report={'background':'用户点击工作台保存按钮，将目标Zemax当前内存状态保存到原文件。',
                                   'objective':'版本与系统身份校验、旧磁盘备份、保存后回读。'})
             bundle = RunBundle.create(self.root, 'model-save', config, mode='execute', complexity='simple')
+            for source in sorted(Path(__file__).parent.glob('*.py')):
+                bundle.copy(source, 'code/'+source.name)
             record = {'hash':signature, 'status':'started', 'run':str(bundle.path)}
             self.save_receipts[request_id] = record
             write_json(self.save_receipt_file, self.save_receipts)
@@ -221,7 +227,7 @@ class Bridge:
                           'binding': {'id': secrets.token_hex(12), 'changedAt': datetime.now(timezone.utc).isoformat(),
                                       'previousFile': self.config.get('expectedFile')}}
             if self.config["backend"] == "synthetic":
-                raw = json.loads((self.root / "examples/bridge-demo.json").read_text(encoding="utf-8"))
+                raw = json.loads(Path(__file__).with_name("synthetic.json").read_text(encoding="utf-8"))
                 raw["capturedAt"] = datetime.now(timezone.utc).isoformat()
             elif self.config["backend"] == "zos-api":
                 raw = self._worker(config)
@@ -230,7 +236,7 @@ class Bridge:
             snapshot = make_snapshot(raw)
             if config['backend'] == 'zos-api' and Path(snapshot['sourceFile']).resolve() != Path(config['expectedFile']).resolve():
                 raise OpticsError('UNEXPECTED_MODEL', '确认后宿主模型已变化，请重新探测')
-            target = self.root / "data/optics/captures"
+            target = self.state_data / "captures"
             target.mkdir(parents=True, exist_ok=True)
             name = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
             (target / f"{name}-{snapshot['revision']}.json").write_text(

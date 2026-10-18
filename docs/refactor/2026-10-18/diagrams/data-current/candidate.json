@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "当前数据归属 · 画板、表单与研究结果",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/refactor/2026-10-18/diagrams/data-current/diagram.html",
+    "repository": {
+      "url": "https://github.com/nefer5/optDSH.git",
+      "revision": "4cb306bf4a1b200adc1b0d9d5dc3358c70c823af",
+      "link_mode": "local-only"
+    },
+    "viewBox": [
+      940,
+      550
+    ]
+  },
+  "stages": [
+    {
+      "label": "输入"
+    },
+    {
+      "label": "实际读写者"
+    },
+    {
+      "label": "持久数据"
+    },
+    {
+      "label": "使用与投递"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "formInput",
+      "type": "frontend",
+      "label": "研究表单输入",
+      "sublabel": "用户明确保存 / 提交",
+      "stage": 0,
+      "row": 0,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-forms/lib/index.js",
+          "line": 27,
+          "end_line": 35
+        }
+      ]
+    },
+    {
+      "id": "forms",
+      "type": "backend",
+      "label": "FormStore",
+      "sublabel": "校验 / 原子写入",
+      "stage": 1,
+      "row": 0,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-forms/lib/store.js",
+          "line": 22,
+          "end_line": 25
+        },
+        {
+          "path": "plugins/optdsh-forms/lib/store.js",
+          "line": 64,
+          "end_line": 72
+        }
+      ]
+    },
+    {
+      "id": "formData",
+      "type": "database",
+      "label": "仓库内表单文件",
+      "sublabel": "Study configs / data/forms",
+      "stage": 2,
+      "row": 0,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-forms/lib/store.js",
+          "line": 45,
+          "end_line": 64
+        },
+        {
+          "path": "plugins/optdsh-forms/lib/store.js",
+          "line": 70,
+          "end_line": 72
+        }
+      ]
+    },
+    {
+      "id": "formRead",
+      "type": "backend",
+      "label": "表单读取接口",
+      "sublabel": "读回配置供后续使用",
+      "stage": 3,
+      "row": 0,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-forms/lib/index.js",
+          "line": 35,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "canvasInput",
+      "type": "frontend",
+      "label": "内嵌画板编辑器",
+      "sublabel": "用户草稿 / 显式提交",
+      "stage": 0,
+      "row": 1,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-agent-canvas/web/transport.js",
+          "line": 8,
+          "end_line": 17
+        }
+      ]
+    },
+    {
+      "id": "boardOwner",
+      "type": "backend",
+      "label": "DSH 画板插件",
+      "sublabel": "BoardStore 是文档权威",
+      "stage": 1,
+      "row": 1,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/index.js",
+          "line": 12,
+          "end_line": 16
+        },
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/boards.js",
+          "line": 27,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "boardFiles",
+      "type": "database",
+      "label": "data/canvas/boards",
+      "sublabel": "scene / revision / 回执",
+      "stage": 2,
+      "row": 1,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/boards.js",
+          "line": 27,
+          "end_line": 45
+        }
+      ]
+    },
+    {
+      "id": "sessionQueue",
+      "type": "backend",
+      "label": "官方会话队列",
+      "sublabel": "提交快照 / 幂等投递",
+      "stage": 3,
+      "row": 1,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/index.js",
+          "line": 77,
+          "end_line": 93
+        }
+      ]
+    },
+    {
+      "id": "configInput",
+      "type": "database",
+      "label": "研究配置文件",
+      "sublabel": "Study 内冻结原始输入",
+      "stage": 0,
+      "row": 2,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "packages/optics/src/optdsh_optics/run_bundle.py",
+          "line": 57,
+          "end_line": 90
+        }
+      ]
+    },
+    {
+      "id": "runOwner",
+      "type": "backend",
+      "label": "光学运行包执行链",
+      "sublabel": "RunBundle / 分析 / 报告",
+      "stage": 1,
+      "row": 2,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "packages/optics/src/optdsh_optics/run_bundle.py",
+          "line": 57,
+          "end_line": 93
+        },
+        {
+          "path": "packages/optics/src/optdsh_optics/reporting.py",
+          "line": 136,
+          "end_line": 145
+        }
+      ]
+    },
+    {
+      "id": "runFiles",
+      "type": "database",
+      "label": "Study 或仓库 runs",
+      "sublabel": "配置 / 结果 / manifest",
+      "stage": 2,
+      "row": 2,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "packages/optics/src/optdsh_optics/run_bundle.py",
+          "line": 65,
+          "end_line": 92
+        }
+      ]
+    },
+    {
+      "id": "report",
+      "type": "frontend",
+      "label": "研究结果报告",
+      "sublabel": "HTML / MD 与证据链接",
+      "stage": 3,
+      "row": 2,
+      "width": 150,
+      "height": 78,
+      "sources": [
+        {
+          "path": "packages/optics/src/optdsh_optics/reporting.py",
+          "line": 136,
+          "end_line": 145
+        }
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "from": "formInput",
+      "to": "forms",
+      "label": "表单值",
+      "variant": "default",
+      "labelAt": [
+        207.5,
+        119
+      ]
+    },
+    {
+      "id": "f2",
+      "from": "forms",
+      "to": "formData",
+      "label": "配置 / 请求",
+      "variant": "default",
+      "labelAt": [
+        422.5,
+        119
+      ]
+    },
+    {
+      "id": "f3",
+      "from": "formData",
+      "to": "formRead",
+      "label": "读回值",
+      "variant": "default",
+      "labelAt": [
+        637.5,
+        119
+      ]
+    },
+    {
+      "id": "b1",
+      "from": "canvasInput",
+      "to": "boardOwner",
+      "label": "场景 / 版本",
+      "variant": "default",
+      "labelAt": [
+        207.5,
+        233
+      ]
+    },
+    {
+      "id": "b2",
+      "from": "boardOwner",
+      "to": "boardFiles",
+      "label": "文档 / 回执",
+      "variant": "default",
+      "labelAt": [
+        422.5,
+        233
+      ]
+    },
+    {
+      "id": "b3",
+      "from": "boardFiles",
+      "to": "sessionQueue",
+      "label": "提交快照",
+      "variant": "emphasis",
+      "labelAt": [
+        637.5,
+        233
+      ]
+    },
+    {
+      "id": "r1",
+      "from": "configInput",
+      "to": "runOwner",
+      "label": "冻结输入",
+      "variant": "default",
+      "labelAt": [
+        207.5,
+        347
+      ]
+    },
+    {
+      "id": "r2",
+      "from": "runOwner",
+      "to": "runFiles",
+      "label": "结果 / 清单",
+      "variant": "default",
+      "labelAt": [
+        422.5,
+        347
+      ]
+    },
+    {
+      "id": "r3",
+      "from": "runFiles",
+      "to": "report",
+      "label": "配置与结果",
+      "variant": "default",
+      "labelAt": [
+        637.5,
+        347
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "当前归属",
+      "items": [
+        "N05 内嵌编辑器不消费独立 CLI inbox；DSH BoardStore 管本会话文档。",
+        "官方会话仍由 DSH 管理；本图聚焦插件和研究文件，不复制聊天事实源。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "重要限制",
+      "items": [
+        "这些路径仍相对 N06 仓库；不能据此说研究已支持任意外部目录。",
+        "回执 queued/uncertain 与模型完成、用户应用建议是不同状态。"
+      ]
+    }
+  ]
+}

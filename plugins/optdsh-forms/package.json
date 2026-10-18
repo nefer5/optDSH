@@ -4,5 +4,34 @@
   "private": true,
   "type": "module",
   "main": "lib/index.js",
-  "dependencies": { "yaml": "2.9.1" }
+  "dependencies": {
+    "yaml": "2.9.1"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5"
+  },
+  "engines": {
+    "node": ">=24",
+    "dsh": ">=0.2.1-rc.2 <0.3.0"
+  },
+  "files": [
+    "lib",
+    "web",
+    "shared",
+    "README.md",
+    "protocol-v2.md",
+    "skill-packaging.md",
+    "cordis.patch.yml",
+    "NOTICE.md"
+  ],
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
 }

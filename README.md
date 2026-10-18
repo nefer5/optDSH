@@ -1,8 +1,10 @@
 # optDSH
 
-当前版本 **v0.1.1 · 功能预览**；本轮结构重整尚未发布新版本，见[CHANGELOG](CHANGELOG.md)。
+当前版本 **v0.1.1 · 重构开发分支，未发布**；本轮结构重整尚未发布新版本，见[CHANGELOG](CHANGELOG.md)。
 
 面向光学模型的专家—Agent协作工作台：官方DSH会话、三维近似视图、会话画板和独立光学工具。
+
+**过渡说明：新启动器默认使用独立home；旧3080尚未切换，端口占用会保守拒绝接管。独立安装与启动见[说明](docs/installation/README.md)。**
 
 **日常双击根目录 `启动光学工作台.cmd` 或 `启动DSH.cmd`。** 首次安装：`pwsh scripts/setup.ps1`。具体前置条件见[运行指南](docs/runtime.md)。
 
@@ -10,9 +12,11 @@
 
 | 入口 | 内容 |
 |---|---|
+| [开发与验证目录](docs/development.md) | 工作树、独立依赖、发布及安装验证 |
 | [当前状态](planning/STATUS.md) | 已实测、待验证和下一步 |
 | [推荐插件](推荐插件.md) | 市场插件固定版本、安装命令与新机器 Agent 适配检查 |
 | [模块和目录](docs/architecture.md) | 官方依赖/插件/公共光学能力/数据分类 |
+| [重构设计工作簿](docs/refactor/2026-10-18/index.html) | 现状/目标多视图、已确认决定与实施进度 |
 | [文档导航](docs/README.md) | 7个现行主题；旧文档归档ZIP |
 | [工作台操作](docs/workbench.md) | 连接、保存、视图、会话与画板 |
 | [研究区](STUDYS/README.md) | 模型、配置和研究run就近组织 |

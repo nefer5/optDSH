@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 
 ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file() and (p/"package.json").is_file())
 sys.path.insert(0,str(ROOT/'packages/optics/src'))
@@ -38,27 +39,18 @@ class TxPilotTests(unittest.TestCase):
     def test_readonly_guide_routes_and_keeps_legacy_aliases(self):
         spec=importlib.util.spec_from_file_location('mcp',ROOT/'packages/optics/scripts/mcp.py')
         m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
-        for side in ['tx','rx']:
-            result=m.call('workflow_guide',{'name':side+'-tolerance'})
-            self.assertFalse(result['isError'])
-            data=json.loads(result['content'][0]['text'])
-            self.assertEqual(data['preflight']['scope'],side)
-            self.assertEqual(data['skillName'],'optdsh-assembly-tolerance')
-            unified=m.call('workflow_guide',{'name':'assembly-tolerance','scope':side})
-            self.assertEqual(data,json.loads(unified['content'][0]['text']))
-            self.assertEqual(set(data['branches']),{side})
-        ambiguous=json.loads(m.call('workflow_guide',{'name':'assembly-tolerance'})['content'][0]['text'])
-        self.assertTrue(ambiguous['intentRequired'])
-        self.assertNotIn('preflight',ambiguous)
-        self.assertNotIn('pilotConfig',ambiguous)
-        both=json.loads(m.call('workflow_guide',{'name':'assembly-tolerance','scope':'both'})['content'][0]['text'])
-        self.assertEqual(set(both['branches']),{'tx','rx'})
-        for side,other in [('tx','rx'),('rx','tx')]:
-            self.assertNotIn(other,both['branches'][side]['caseSummary'])
-            self.assertFalse(any(x.startswith(other+'.') for x in both['branches'][side]['preflight']['missing']))
-        self.assertTrue(m.call('workflow_guide',{'name':'tx-tolerance','scope':'rx'})['isError'])
-        self.assertTrue(m.call('workflow_guide',{'name':'assembly-tolerance','scope':'invalid'})['isError'])
-        self.assertIn('workflow_guide',[t['name'] for t in m.TOOLS])
+        with patch.dict('os.environ',{'OPTDSH_SKILLS_ROOT':str(ROOT/'.agents/skills')}):
+            for side in ['tx','rx']:
+                result=m.call('workflow_guide',{'name':side+'-tolerance'})
+                self.assertFalse(result['isError'])
+                data=json.loads(result['content'][0]['text'])
+                self.assertEqual(data['skillName'],'optdsh-assembly-tolerance')
+                self.assertNotIn('pilotConfig',data)
+                self.assertNotIn('caseSummary',data)
+                self.assertIn('choose current workspace configuration explicitly',data['execution'])
+            self.assertTrue(m.call('workflow_guide',{'name':'invalid'})['isError'])
+        with patch.dict('os.environ',{'OPTDSH_SKILLS_ROOT':''}):
+            self.assertTrue(m.call('workflow_guide',{'name':'assembly-tolerance'})['isError'])
 
     def test_yaml_preflight_scopes_are_independent_and_non_executable(self):
         from optdsh_optics.config_io import load_config
