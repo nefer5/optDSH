@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-18",
+  "productVersion": "0.2.0-dev.16",
+  "workbenchVersion": "0.13.3",
+  "sourceCommit": "b54b835",
+  "localTestPackage": "E:/Proj-2026-N06_optDSH-releases/0.2.0-dev.16",
+  "rootCause": "官方carrier将Request.url规范为http://dsh.internal并保留原Host；自有插件错误将浏览器Origin与内部URL比较",
+  "fix": "使用官方已鉴权/Host校验后的原始Host比较Origin，保留cross-site拒绝，不改node_modules或放开来源检查",
+  "before": {"browserOrigin":"http://127.0.0.1:3380","http":400,"code":"INVALID_ARGUMENT","message":"拒绝跨站配置或停止光学服务"},
+  "browserVerification": {"normalOriginPassedToBusinessValidation":true,"normalConfigSaveAndStartObserved":true,"realProbeObjects":92,"candidateVisibleAfterPolling":true,"confirmEnabled":true,"errorClearedAfterSuccess":true,"modelSaveCalls":0,"bindCalls":0,"sourceFileHashUnchanged":true},
+  "crossSiteVerification": {"realHttpStatus":403,"unitCases":"cross-site marker, mismatched Origin/Host, wrong port, null origin and missing carrier Host rejected for all service mutations"},
+  "errorPresentation": {"lightColor":"rgb(180, 35, 24)","darkCssColor":"#ffb4a8","accessibleRole":"alert","actualLightAndDarkScreenshotsInspected":true,"testMethod":"无效实例0在Bridge参数校验时拒绝，不连接真实API；最终恢复实例1并真实只读探测"},
+  "additionalFixes": ["RESTORED_SNAPSHOT/MODEL_CHANGED旧快照不误清新候选；实际绑定/版本/实例变化仍失效","读取状态与环境检测全程锁定探测/关闭/版本控件，避免使用旧就绪摘要"],
+  "tests": {"workbench":80,"actualModuleSimulation":"passed; source validation, preparation failure, error styling, stale snapshot candidate retention and loading lock"},
+  "pushed":false,
+  "publicRelease":false,
+  "modelSaved":false,
+  "rayTracing":false
+}
