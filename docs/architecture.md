@@ -2,7 +2,7 @@
 
 当前Canvas桥和光学工作台已经统一官方Profile生命周期：源码仍在plugins，发行tgz安装到Home/Profile；不再从app或源码回流。Bundle只给推荐/默认，停用与卸载遵循官方有效配置。目录与操作见[Profile插件](profile-plugins.md)；Forms等其他自有插件尚在逐项收敛。
 
-2026-10-18分支实施：新增optdsh-bundle负责官方Loader装配、认证记录与可选插件隔离；DSH目标升级到0.2.1-rc.2，现役旧版依赖/3080暂保留。程序根、独立home、workspace分离，插件状态在home/state/profile；新画板在课题.agent-canvas/optdsh/boards。编辑器已支持独立安装及连接，独立Canvas文档协议尚未统一，18适配桥尚未实现，真实迁移/沙箱/切换未做。具体决定见[决定入口](refactor/2026-10-18/decisions.md)，发布使用见[安装说明](installation/README.md)。
+2026-10-18分支实施：optdsh-bundle负责官方Loader装配、认证记录与可选插件隔离；开发平台已固定官方DSH 0.2.1-rc.2，旧现场保留。程序根、独立Home、workspace分离；新画板在课题.agent-canvas/optdsh/boards。编辑器已独立安装接入；光学正式包含legacy/modern组件，19与2025只读连接已验，18及其他年份未实测。Windows光学后台用同环境pythonw静默运行，状态和脱敏日志在Web高级诊断查看。独立Canvas通用文档协议、正式迁移与沙箱/公司验收仍未完成。累计成果与剩余项见[实施进度](refactor/2026-10-18/implementation.md)；具体决定见[决定入口](refactor/2026-10-18/decisions.md)，发布使用见[安装说明](installation/README.md)。
 
 下文描述重构前现役部署，作为过渡对照；不代表新代码仍要求固定仓库根。
 

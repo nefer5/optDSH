@@ -6,6 +6,13 @@ import {createServiceSettings} from './service-settings.js';
 const read=path=>JSON.parse(readFileSync(path,'utf8').replace(/^\uFEFF/,''));
 const alive=pid=>{try{if(!Number.isInteger(pid)||pid<=0)return false;process.kill(pid,0);return true;}catch{return false;}};
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
+export function backgroundPython(python,platform=process.platform){
+ // Windows虚拟环境的python.exe可能重新创建控制台；同环境pythonw不分配控制台。
+ if(platform!=='win32')return python;
+ const executable=resolve(dirname(python),'pythonw.exe');
+ if(!existsSync(executable))throw new Error('Python 环境缺少后台启动组件 pythonw.exe，请修复该 Python 环境后重试；未启动服务。');
+ return executable;
+}
 export function createServiceManager(config,{settings:providedSettings}={}){
  const root=resolve(config.stateRoot),workspace=resolve(config.workspaceRoot),runtime=resolve(root,'.runtime');
  const configFile=config.opticsConfig||(config.home&&resolve(config.home,'config/optics.json'));
@@ -51,8 +58,9 @@ export function createServiceManager(config,{settings:providedSettings}={}){
    const python=isAbsolute(opt.python)?opt.python:resolve(dirname(configFile),opt.python);
    if(!existsSync(python))throw new Error('配置的 Python 文件不存在，请检查 optics.json。');
    const port=config.opticsPort??3081;if(!Number.isInteger(port)||port<1024||port>65535)throw new Error('光学服务端口必须为1024–65535。');
+   const executable=backgroundPython(python);
    const fd=openSync(logPath,'w');
-   try{child=spawn(python,['-X','utf8','-m','optdsh_optics','serve','--config',resolve(configFile),'--workspace',workspace,'--state-root',root,'--port',String(port),'--defer-connect'],{cwd:workspace,windowsHide:true,detached:true,stdio:['ignore',fd,fd]});}finally{closeSync(fd);}
+   try{child=spawn(executable,['-u','-X','utf8','-m','optdsh_optics','serve','--config',resolve(configFile),'--workspace',workspace,'--state-root',root,'--port',String(port),'--defer-connect'],{cwd:workspace,windowsHide:true,detached:true,stdio:['ignore',fd,fd]});}finally{closeSync(fd);}
    let spawnError;child.on('error',e=>{spawnError=e;});child.unref();
    writeFileSync(recordFile,JSON.stringify({pid:child.pid||null,startedUtc:new Date().toISOString(),workspace}));
    for(let i=0;i<40;i++){

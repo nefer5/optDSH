@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-18",
+  "workbenchVersion": "0.13.4",
+  "productLine": "0.2.0-dev.16",
+  "publication": "local plugin package only; not pushed or publicly published",
+  "checks": {
+    "healthReady": true,
+    "zemaxProcessesBefore": 0,
+    "workbenchTests": 82,
+    "fullOfflineSuite": "passed: npm test; plugin/installation/PPT/optics/expert/architecture suites, simulated DOM and document checks",
+    "windowsInterpreter": "pythonw.exe",
+    "webStatus": "服务已就绪",
+    "consoleAttachError": 6,
+    "recordedModelFiles": 1,
+    "consoleAttachSucceeded": false,
+    "webLogReadable": true,
+    "previousZemaxProcessesUnchanged": true,
+    "modelOperationRequests": 0,
+    "moduleSmoke": "passed; simulated API and WebGL stub",
+    "modelFilesUnchanged": true,
+    "connected": false
+  },
+  "scope": "Only own idle optical service and development DSH host restarted. No Zemax probe, bind, save or trace; no Zemax process opened or closed."
+}

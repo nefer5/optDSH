@@ -6,6 +6,10 @@
 
 根目录“启动光学工作台.cmd”按需启动光学服务及官方DSH。页面由3080承载，3081只提供光学接口；完整Web与工作台共用官方session，不使用旧headless聊天。
 
+## Windows静默后台与诊断
+
+Windows服务使用自动检测环境内的pythonw.exe启动，不创建控制台；缺少该组件时明确报错，不退回会弹窗的python.exe。stdout/stderr即时写入StateRoot/logs/optics/web-service.log，在连接窗口→高级与诊断查看脱敏日志及状态。服务启动保持延迟连接，不触发模型采集；停止仅针对已确认归属的空闲后台，不关闭Zemax。无需寻找或保留黑色终端窗口。
+
 ## 错误与浏览器来源检查（dev.15）
 
 错误以红色及可访问alert显示，准备服务失败时不误导为Zemax实例错误。来源校验依据官方carrier已验证的原始Host与浏览器Origin，不拿内部dsh.internal地址比较；保留官方认证与跨站拒绝。打开页面未配置/服务失败和真实模型探测失败分别诊断。旧绑定的RESTORED_SNAPSHOT/MODEL_CHANGED提示不撤销新探测候选，真实绑定、版本或实例变化仍清除；是否可确认以新候选及服务端门禁为准。

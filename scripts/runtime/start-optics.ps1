@@ -12,6 +12,8 @@ if ($Python -match '[/\\]' -and -not [IO.Path]::IsPathRooted($Python)) {$Python=
 $Python=(Get-Command $Python -ErrorAction Stop).Source
 & $Python -c 'import optdsh_optics.server'
 if($LASTEXITCODE -ne 0){throw 'Install the optdsh-optics wheel and declared dependencies in the selected interpreter first.'}
+$backgroundPython=Join-Path (Split-Path $Python -Parent) 'pythonw.exe'
+if(-not (Test-Path -LiteralPath $backgroundPython -PathType Leaf)){throw 'Python environment is missing pythonw.exe; repair this environment before starting the background service.'}
 $pidFile=Join-Path $ctx.RuntimeDir 'optics-process.json'
 if(Test-Path -LiteralPath $pidFile){
     $old=Get-Content -LiteralPath $pidFile -Raw|ConvertFrom-Json
@@ -22,8 +24,8 @@ if(Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction SilentlyCont
 $logs=Join-Path $ctx.StateRoot 'logs/optics'
 New-Item -ItemType Directory -Path $ctx.RuntimeDir,$logs -Force|Out-Null
 $stamp=Get-Date -Format 'yyyyMMdd-HHmmss-fff'
-$argsList=@('-X','utf8','-m','optdsh_optics','serve','--config',('"'+$OpticsConfig+'"'),'--workspace',('"'+$ctx.Workspace+'"'),'--state-root',('"'+$ctx.StateRoot+'"'),'--port',"$Port")
-$child=Start-Process -FilePath $Python -ArgumentList $argsList -WorkingDirectory $ctx.Workspace -WindowStyle Hidden -RedirectStandardOutput (Join-Path $logs "$stamp.stdout.log") -RedirectStandardError (Join-Path $logs "$stamp.stderr.log") -PassThru
+$argsList=@('-u','-X','utf8','-m','optdsh_optics','serve','--config',('"'+$OpticsConfig+'"'),'--workspace',('"'+$ctx.Workspace+'"'),'--state-root',('"'+$ctx.StateRoot+'"'),'--port',"$Port")
+$child=Start-Process -FilePath $backgroundPython -ArgumentList $argsList -WorkingDirectory $ctx.Workspace -WindowStyle Hidden -RedirectStandardOutput (Join-Path $logs "$stamp.stdout.log") -RedirectStandardError (Join-Path $logs "$stamp.stderr.log") -PassThru
 [IO.File]::WriteAllText($pidFile,(@{schemaVersion=1;pid=$child.Id;startedUtc=$child.StartTime.ToUniversalTime().ToString('o');python=$Python;workspace=$ctx.Workspace;stateRoot=$ctx.StateRoot;port=$Port;config=$OpticsConfig}|ConvertTo-Json),[Text.UTF8Encoding]::new($false))
 $ready=$false
 for($i=0;$i -lt 40;$i++){

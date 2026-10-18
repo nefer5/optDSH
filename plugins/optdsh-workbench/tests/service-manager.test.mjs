@@ -4,7 +4,8 @@ import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,existsSync} from 'node:
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {createServer} from 'node:net';
-import {createServiceManager} from '../lib/service-manager.js';
+import {createServiceManager,backgroundPython} from '../lib/service-manager.js';
+import {spawn} from 'node:child_process';
 
 function fixture(){const root=mkdtempSync(join(tmpdir(),'optdsh-web-service-'));return {root,config:{stateRoot:join(root,'state'),workspaceRoot:root,home:join(root,'home')}};}
 test('status never starts a process; missing config reports setup requirement',async()=>{
@@ -36,6 +37,19 @@ test('an existing recorded live process is never duplicated or terminated when h
  assert.equal(JSON.parse(readFileSync(join(config.stateRoot,'.runtime/optics-web-service.json'))).pid,process.pid);
 });
 const python=resolve('.venv/Scripts/python.exe');
+test('background interpreter stays in the selected environment and never falls back to a console',()=>{
+ const {root}=fixture();const exe=join(root,'python.exe');
+ assert.equal(backgroundPython(exe,'linux'),exe);
+ assert.throws(()=>backgroundPython(exe,'win32'),/pythonw.exe/);
+ writeFileSync(join(root,'pythonw.exe'),'');assert.equal(backgroundPython(exe,'win32'),join(root,'pythonw.exe'));
+});
+test('Windows background Python has no console and preserves stdout/stderr for Web diagnostics', {skip:process.platform!=='win32'||!existsSync(python)},async()=>{
+ const script='import ctypes,json,sys; print(json.dumps({"console":bool(ctypes.windll.kernel32.GetConsoleWindow())})); print("diagnostic-stderr",file=sys.stderr)';
+ const child=spawn(backgroundPython(python),['-u','-c',script],{windowsHide:true,detached:true,stdio:['ignore','pipe','pipe']});
+ let stdout='',stderr='';child.stdout.on('data',x=>stdout+=x);child.stderr.on('data',x=>stderr+=x);
+ const code=await new Promise((r,j)=>{child.on('error',j);child.on('close',r);});
+ assert.equal(code,0);assert.equal(JSON.parse(stdout).console,false);assert.match(stderr,/diagnostic-stderr/);
+});
 test('real synthetic child: concurrent starts share one process, health is not model connection', {skip:!existsSync(python)},async t=>{
  const {config}=fixture();mkdirSync(join(config.home,'config'),{recursive:true});
  writeFileSync(join(config.home,'config/optics.json'),JSON.stringify({python,backend:'synthetic',expectedFile:null,instance:1}));
@@ -44,6 +58,7 @@ test('real synthetic child: concurrent starts share one process, health is not m
  t.after(()=>{try{const a=JSON.parse(readFileSync(join(config.stateRoot,'.runtime/optics-access.json'),'utf8'));process.kill(a.pid);}catch{}});
  const ready=await first;assert.equal(ready.state,'ready',JSON.stringify({ready,logs:manager.logs()}));assert.equal(ready.connected,false);
  const a=JSON.parse(readFileSync(join(config.stateRoot,'.runtime/optics-access.json'),'utf8'));
+ assert.match(manager.logs().text,/optdsh|HTTP|serv|127\.0\.0\.1/i);
  assert.equal((await manager.start()).state,'ready');assert.equal(JSON.parse(readFileSync(join(config.stateRoot,'.runtime/optics-access.json'),'utf8')).pid,a.pid);
  const view=await (await fetch(a.url+'/api/snapshot',{headers:{Authorization:'Bearer '+a.token}})).json();assert.equal(view.snapshot,null);
  assert.equal((await manager.status()).state,'ready');
