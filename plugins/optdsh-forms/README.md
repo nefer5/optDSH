@@ -26,7 +26,7 @@ values: configs/background.local.yaml
 
 旧父目录中的 `STUDYS/<id>/study.yaml` 仅作只读兼容，保存返回明确错误，不创建或迁移该目录。显式将某个旧课题目录自身指定为 workspaceRoot 后，其根 study.yaml 按正常独立课题处理。
 
-同一 Study 可通过 `forms` 增加多个配置页面，用 `defaultForm` 指定默认页。2t2rLidar 的参数页保存至 `configs/parameters.local.yaml`，旧说明页仍使用 `configs/background.local.yaml`；不自动搬迁、合并或重解释旧值。API GET 查询 `form=parameters|background`，保存携带 `formId`。CLI `read --root "E:/任意 课题目录" --mode study --id workspace --form parameters`。
+同一 Study 可通过 `forms` 增加多个配置页面，用 `defaultForm` 指定默认页。例如参数页可保存至 `configs/parameters.local.yaml`，旧说明页仍使用 `configs/background.local.yaml`；实际文件由课题声明，不自动搬迁、合并或重解释旧值。API GET 查询 `form=parameters|background`，保存携带 `formId`。CLI `read --root "E:/任意 课题目录" --mode study --id workspace --form parameters`。
 
 ## 临时 Skill 请求
 

@@ -21,4 +21,4 @@
 | PPT独立模块 | [SlideWise](ppt-slidewise.md) |
 | 历史方案/重复图稿/阶段流水 | [归档索引与恢复](archive/README.md) |
 
-研究课题的业务背景、专用配置和结果归所选workspace。docs/2t2rLidar仅保留跨模型术语契约；具体对象与指标不提升为平台通用规则。
+研究课题的业务背景、术语/H-V映射、专用配置和结果全部归所选workspace。平台不保留课题专属文档目录或导航占位；按该workspace的README、AGENTS及docs/domain读取约定，缺失时明确报告，不回退到旧课题。

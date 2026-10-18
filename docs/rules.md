@@ -97,4 +97,4 @@ ZDA不在现有轻量磁盘备份内。依赖ZDA、外部CAD/材料/源文件或
 
 画板的草稿保存、显式提交、建议应用和版本冲突属于[画板插件](../plugins/optdsh-agent-canvas/AGENTS.md)。画板坐标不能当光学坐标，但这不禁止普通绘图、文字或设计协作。
 
-2T2R术语和H/V映射属于[领域契约](2t2rLidar/README.md)；具体对象、指标、阈值和运行参数属于Study与Skill。不将D86/RMS、SPAD位置、对象号或某次研究的采样选择写成平台通用要求。
+课题术语、H/V映射、具体对象、指标、阈值和运行参数属于所选workspace的领域契约与Skill。按该课题的README、AGENTS及docs/domain读取；缺失时报告，不默认采用某个既有课题。不将D86/RMS、SPAD位置、对象号或某次研究的采样选择写成平台通用要求。
