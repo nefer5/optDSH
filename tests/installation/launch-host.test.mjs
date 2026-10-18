@@ -72,7 +72,7 @@ test('synthetic host lifecycle, authentication, workspace isolation and unrelate
 });
 
 
-test('one-click opener uses local preview configuration and preserves explicit home override',{skip:process.platform!=='win32',timeout:90000},async()=>{
+test('one-click reuse and explicit restart preserve ownership and home overrides',{skip:process.platform!=='win32',timeout:90000},async()=>{
   const previewHome=join(root,'preview home'),port=await freePort();
   const preview=join(install,'.runtime');mkdirSync(preview,{recursive:true});
   writeFileSync(join(preview,'preview.json'),JSON.stringify({home:previewHome,profile:'preview',workspace:secondWorkspace,port,components:['core']}));
@@ -82,6 +82,13 @@ test('one-click opener uses local preview configuration and preserves explicit h
     const opened=run('open-dsh.ps1',[],'-NoBrowser');assert.equal(opened.status,0,opened.stderr+opened.stdout);
     const state=JSON.parse(readFileSync(join(previewHome,'state/preview/.runtime/dsh-host.json'),'utf8'));
     assert.equal(state.home,previewHome);assert.equal(state.workspace,secondWorkspace);assert.equal(state.port,port);
+    const reused=run('open-dsh.ps1',[],'-NoBrowser');assert.equal(reused.status,0,reused.stderr+reused.stdout);
+    assert.equal(JSON.parse(readFileSync(join(previewHome,'state/preview/.runtime/dsh-host.json'),'utf8')).pid,state.pid);
+    const reopened=run('open-dsh.ps1',[],'-NoBrowser -Restart');assert.equal(reopened.status,0,reopened.stderr+reopened.stdout);
+    const restarted=JSON.parse(readFileSync(join(previewHome,'state/preview/.runtime/dsh-host.json'),'utf8'));
+    assert.notEqual(restarted.pid,state.pid);
+    const reuse=run('open-dsh.ps1',[],'-NoBrowser -Restart:$false');assert.equal(reuse.status,0,reuse.stderr+reuse.stdout);
+    assert.equal(JSON.parse(readFileSync(join(previewHome,'state/preview/.runtime/dsh-host.json'),'utf8')).pid,restarted.pid);
     const override=run('open-dsh.ps1',[],`-NoBrowser -Home ${quote(join(root,'explicit home'))} -Profile explicit -Workspace ${quote(workspace)} -Port ${port}`);
     assert.notEqual(override.status,0);assert.match(override.stderr,/unverified process/);
     // A different explicit home must not silently reuse the preview host.

@@ -6,7 +6,7 @@
 
 **过渡说明：新启动器默认使用独立home；旧3080尚未切换，端口占用会保守拒绝接管。独立安装与启动见[说明](docs/installation/README.md)。**
 
-**日常双击根目录 `启动光学工作台.cmd` 或 `启动DSH.cmd`。** 首次安装：`pwsh scripts/setup.ps1`。具体前置条件见[运行指南](docs/runtime.md)。
+**日常双击根目录 `启动光学工作台.cmd` 或 `启动DSH.cmd`；修改源码后用 `重启DSH.cmd`。启动DSH复用已有进程，重启DSH核验后关闭再拉起。** 首次安装：`pwsh scripts/setup.ps1`。具体前置条件见[运行指南](docs/runtime.md)。
 
 光学模块使用本项目Python环境和连接代码；画板编辑器暂依赖本机N05的4173服务，这是用户指定保留的边界。
 
