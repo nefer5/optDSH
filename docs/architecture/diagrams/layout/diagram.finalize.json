@@ -5,16 +5,16 @@
   "status": "pass",
   "type": "architecture",
   "quality": "showcase",
-  "startedAt": "2026-10-18T15:56:57.150Z",
+  "startedAt": "2026-10-18T16:37:35.813Z",
   "specification": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\candidate.json",
-    "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
-    "bytes": 6230
+    "sha256": "e416b0a595105c3bde01c7036735ca519250dcd774d1707deca5356721ab35e7",
+    "bytes": 6198
   },
   "artifact": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
-    "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
-    "bytes": 759586
+    "sha256": "40e6d79cd75de65c52aa5e400752cddcecbc77d14601f3900bb8c41086745562",
+    "bytes": 759593
   },
   "stages": {
     "validate": {
@@ -40,8 +40,8 @@
         "ok": true,
         "command": "validate",
         "specification": {
-          "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
-          "bytes": 6230
+          "sha256": "e416b0a595105c3bde01c7036735ca519250dcd774d1707deca5356721ab35e7",
+          "bytes": 6198
         },
         "validation": {
           "checksPassed": 9,
@@ -56,7 +56,7 @@
     "deliver": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 472,
+      "durationMs": 1431,
       "command": [
         "C:\\Program Files\\nodejs\\node.exe",
         "C:\\Users\\admin\\.agents\\skills\\archify\\bin\\archify.mjs",
@@ -72,19 +72,19 @@
       ],
       "receipt": {
         "schemaVersion": 1,
-        "receiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58",
+        "receiptId": "a2273388-3974-445a-b074-70e3bbfd9687",
         "ok": true,
         "command": "deliver",
         "type": "architecture",
         "input": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\candidate.json",
         "output": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
         "specification": {
-          "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
-          "bytes": 6230
+          "sha256": "e416b0a595105c3bde01c7036735ca519250dcd774d1707deca5356721ab35e7",
+          "bytes": 6198
         },
         "artifact": {
-          "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
-          "bytes": 759586
+          "sha256": "40e6d79cd75de65c52aa5e400752cddcecbc77d14601f3900bb8c41086745562",
+          "bytes": 759593
         },
         "validation": {
           "checksPassed": 9,
@@ -97,7 +97,7 @@
         "evidence": {
           "verified": true,
           "repository": "https://github.com/nefer5/optDSH",
-          "revision": "534c3a44d0f02e020436d1d15490b880c1a71e89",
+          "revision": "09e7c00811c3049781203b003558e108c1a7ead2",
           "references": 9,
           "linkMode": "local-only"
         },
@@ -117,7 +117,7 @@
     "check": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 110,
+      "durationMs": 238,
       "command": [
         "C:\\Program Files\\nodejs\\node.exe",
         "C:\\Users\\admin\\.agents\\skills\\archify\\bin\\archify.mjs",
@@ -129,8 +129,8 @@
         "ok": true,
         "file": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
         "artifact": {
-          "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
-          "bytes": 759586
+          "sha256": "40e6d79cd75de65c52aa5e400752cddcecbc77d14601f3900bb8c41086745562",
+          "bytes": 759593
         },
         "checks": [
           {
@@ -258,13 +258,13 @@
           "issues": []
         },
         "provenance": "current",
-        "deliveryReceiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58"
+        "deliveryReceiptId": "a2273388-3974-445a-b074-70e3bbfd9687"
       }
     },
     "browser-check": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 1247,
+      "durationMs": 1728,
       "command": [
         "C:\\Program Files\\nodejs\\node.exe",
         "C:\\Users\\admin\\.agents\\skills\\archify\\bin\\archify.mjs",
@@ -273,7 +273,7 @@
         "--json",
         "--require-provenance",
         "--out-dir",
-        "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review"
+        "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout"
       ],
       "execution": "in-process",
       "receipt": {
@@ -284,11 +284,11 @@
         "status": "pass",
         "visualReview": "not-requested",
         "provenance": "current",
-        "deliveryReceiptId": "62f6504a-0bca-49f3-a6da-5ac5bc574a58",
+        "deliveryReceiptId": "a2273388-3974-445a-b074-70e3bbfd9687",
         "artifact": {
           "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
-          "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
-          "bytes": 759586
+          "sha256": "40e6d79cd75de65c52aa5e400752cddcecbc77d14601f3900bb8c41086745562",
+          "bytes": 759593
         },
         "state": {
           "detail": "read",
@@ -993,7 +993,7 @@
           "contactSheet": null
         },
         "sidecars": {
-          "directory": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review",
+          "directory": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout",
           "receipt": "diagram.browser-check.json",
           "files": []
         }
@@ -1002,13 +1002,13 @@
   },
   "diagnostics": [],
   "evidence": {
-    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.finalize.json",
-    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.finalize-summary.json",
-    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.browser-check.json"
+    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout\\diagram.finalize.json",
+    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout\\diagram.finalize-summary.json",
+    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout\\diagram.browser-check.json"
   },
   "visualReview": "not-requested",
-  "finishedAt": "2026-10-18T15:56:59.250Z",
-  "durationMs": 2100,
+  "finishedAt": "2026-10-18T16:37:39.798Z",
+  "durationMs": 3984,
   "update": {
     "status": "update_available",
     "installedVersion": "3.0.1",

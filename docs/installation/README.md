@@ -30,7 +30,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File <发布目录>/packaging
 
 程序目录可整体替换，用户目录包含官方 `profiles/`、`sessions/` 与 `state/<profile>/`；课题内容及 `.agent-canvas/` 跟随workspace。旧 `data/dsh` 不会自动搬迁。升级先并排安装，完成隔离验证；切换同一home前停止旧版写入并留存备份，禁止两个版本同时写同一profile。
 
-当前本机root依赖声明/锁升级为DSH 0.2.1-rc.2；现役node_modules与3080服务暂不更换。隔离测试与现役加载分别记录。
+开发源码与安装版分别管理依赖和Profile；源码修改不会自动升级已安装的插件。隔离验收与日常实例分别记录。
 
 卸载脚本默认预览，只接受带安装回执的程序根并保留home/workspace。实际回收使用safe-delete；目标机若未安装该技能，脚本拒绝并保留程序，不作永久删除。
 

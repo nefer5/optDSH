@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "optDSH · 产品Skills与官方专家装配",
+    "locale": "zh-CN",
+    "output": "docs/architecture/diagrams/resources/diagram.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/nefer5/optDSH.git",
+      "revision": "09e7c00811c3049781203b003558e108c1a7ead2",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "parent",
+      "type": "frontend",
+      "label": "当前官方会话",
+      "sublabel": "课题cwd / 模型 / 权限",
+      "pos": [
+        460,
+        40
+      ],
+      "size": [
+        290,
+        88
+      ],
+      "sources": [
+        {
+          "path": "plugins/optdsh-experts/cordis.patch.yml",
+          "line": 1,
+          "end_line": 24
+        }
+      ]
+    },
+    {
+      "id": "skills",
+      "type": "backend",
+      "label": "官方Skills Provider",
+      "sublabel": "随包资源；保留用户与课题覆盖",
+      "pos": [
+        40,
+        300
+      ],
+      "size": [
+        290,
+        88
+      ],
+      "sources": [
+        {
+          "path": "packages/optdsh-bundle/lib/product-skills.mjs",
+          "line": 1,
+          "end_line": 17
+        }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "type": "backend",
+      "label": "官方专家派工工具",
+      "sublabel": "expert_* 绑定独立Preset",
+      "pos": [
+        460,
+        300
+      ],
+      "size": [
+        290,
+        88
+      ],
+      "sources": [
+        {
+          "path": "plugins/optdsh-experts/cordis.patch.yml",
+          "line": 256,
+          "end_line": 271
+        }
+      ]
+    },
+    {
+      "id": "preset",
+      "type": "backend",
+      "label": "官方Preset注册",
+      "sublabel": "Profile声明角色与工具组合",
+      "pos": [
+        880,
+        300
+      ],
+      "size": [
+        290,
+        88
+      ],
+      "sources": [
+        {
+          "path": "plugins/optdsh-experts/cordis.patch.yml",
+          "line": 1,
+          "end_line": 24
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "产品技能包",
+      "sublabel": "光学 / PPT / 插件skills",
+      "pos": [
+        40,
+        570
+      ],
+      "size": [
+        290,
+        88
+      ],
+      "sources": [
+        {
+          "path": "packages/optdsh-bundle/lib/product-skills.mjs",
+          "line": 1,
+          "end_line": 17
+        },
+        {
+          "path": "plugins/optdsh-agent-canvas/lib/index.js",
+          "line": 10,
+          "end_line": 23
+        }
+      ]
+    },
+    {
+      "id": "child",
+      "type": "backend",
+      "label": "官方spawn子Agent",
+      "sublabel": "独立子会话；完成通知回主会话",
+      "pos": [
+        460,
+        570
+      ],
+      "size": [
+        290,
+        88
+      ],
+      "sources": [
+        {
+          "path": "plugins/optdsh-experts/cordis.patch.yml",
+          "line": 256,
+          "end_line": 271
+        }
+      ]
+    },
+    {
+      "id": "resources",
+      "type": "database",
+      "label": "公共专家参考包",
+      "sublabel": "固定版本白名单；无私人截图",
+      "pos": [
+        880,
+        570
+      ],
+      "size": [
+        290,
+        88
+      ],
+      "sources": [
+        {
+          "path": "plugins/optdsh-experts/lib/index.js",
+          "line": 1,
+          "end_line": 19
+        },
+        {
+          "path": "plugins/optdsh-experts/lib/core.js",
+          "line": 1,
+          "end_line": 18
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "parent-skills",
+      "from": "parent",
+      "to": "skills",
+      "label": "读取技能"
+    },
+    {
+      "id": "skills-assets",
+      "from": "skills",
+      "to": "assets",
+      "label": "按需读取正文"
+    },
+    {
+      "id": "parent-dispatch",
+      "from": "parent",
+      "to": "dispatch",
+      "label": "委派任务"
+    },
+    {
+      "id": "preset-dispatch",
+      "from": "preset",
+      "to": "dispatch",
+      "label": "绑定Preset"
+    },
+    {
+      "id": "dispatch-child",
+      "from": "dispatch",
+      "to": "child",
+      "label": "spawn / 完成通知"
+    },
+    {
+      "id": "child-resources",
+      "from": "child",
+      "to": "resources",
+      "label": "expert_resource"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "已实现与实测",
+      "items": [
+        "Skills归所属包；官方Provider在外部课题发现，开发技能不注入产品。",
+        "Experts角色/派工/参考适配由同一官方Profile组管理；停用后不回流。",
+        "源码外GLM会话已读取Skill、派工并读取专家参考，收到完成通知。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "两类文本不混淆",
+      "items": [
+        "AGENTS.md提供用户/课题规则，不会定义或注册专家。",
+        "专家角色通过官方Preset声明；自建层只保留公共内容与资源访问适配。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "后续计划",
+      "items": [
+        "跨宿主可选共享、定制冲突升级与完整回退矩阵仍待完成。",
+        "公共专家不包含私人偏好/截图；真实光学业务及公司新机另验。"
+      ]
+    }
+  ]
+}

@@ -32,7 +32,7 @@ flowchart TD
 | 产品Skills | 所属plugins/packages的skills、官方注册/文件Provider、开发兼容入口 | 空共享根/外部项目catalog及正文/资源路径、停用不暴露 | 已实现/原型及真实会话验证通过 |
 | 官方专家 | optdsh-experts的Preset、公共基线、资源工具、Profile安装器 | 注册、固定专家工具、官方spawn、资源隔离、停用卸载保持 | 已实现；真实派工和停用保持通过 |
 | 安装向导 | packaging/windows与可分发web资源；本地plan/install/status API | 路径校验、Origin/令牌、单任务、失败回执、真实浏览器安装 | 已实现；原型真实安装/视觉审查通过 |
-| 文档与回归 | architecture正文/网页/图、STATUS/ROADMAP/安装指南 | 项目检查、适用测试、浏览器截图审查 | 待做 |
+| 文档与回归 | architecture正文/网页/图、STATUS/ROADMAP/安装指南 | 项目检查、适用测试、浏览器截图审查 | 已更新四视图；自动门禁与截图复核通过 |
 | 本地发行 | 版本/CHANGELOG、export-release、安装清单/图形入口 | clean Git构建、SHA、安装回读、源码外课题与小范围真实Agent | 待做 |
 
 保留他人已有改动及上一阶段文档改动。不得通过改node_modules解决适配，不覆盖真实Home、旧安装或课题。

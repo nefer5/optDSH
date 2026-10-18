@@ -7,13 +7,13 @@
   "quality": "showcase",
   "specification": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\candidate.json",
-    "sha256": "dd4b1e88873c9cbba9c34364a8c255b02f0f9aa88fa41e8bfd276ca9cc6744b1",
-    "bytes": 6230
+    "sha256": "e416b0a595105c3bde01c7036735ca519250dcd774d1707deca5356721ab35e7",
+    "bytes": 6198
   },
   "artifact": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\layout\\diagram.html",
-    "sha256": "5100c377057bb473cbcc188e45d64bbd471c7e4d19a502d32b3fb0ff94b5872e",
-    "bytes": 759586
+    "sha256": "40e6d79cd75de65c52aa5e400752cddcecbc77d14601f3900bb8c41086745562",
+    "bytes": 759593
   },
   "gates": {
     "validate": "pass",
@@ -28,9 +28,9 @@
     "truncated": false
   },
   "evidence": {
-    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.finalize.json",
-    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.finalize-summary.json",
-    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\directory-docs\\browser-review\\diagram.browser-check.json"
+    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout\\diagram.finalize.json",
+    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout\\diagram.finalize-summary.json",
+    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-layout\\diagram.browser-check.json"
   },
   "update": {
     "status": "update_available",
@@ -45,5 +45,5 @@
     "eventKey": "archify@sha256:ffedc53390c9da6e859f41e432c5d2d0615a23cf00a503181f07efbba88a7ce8"
   },
   "visualReview": "not-requested",
-  "durationMs": 2100
+  "durationMs": 3984
 }

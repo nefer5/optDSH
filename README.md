@@ -2,7 +2,7 @@
 
 当前版本 **v0.2.0-dev.21 · 重构开发版，未正式发布**。基于官方DSH的光学协作平台，保留官方Web、Agent循环与会话，通过可选插件接入画板、光学工作台和专家能力。
 
-先看[当前架构三视图](docs/architecture/index.html)、[当前状态](planning/STATUS.md)和[剩余工作优先级](planning/ROADMAP.md)。
+先看[当前架构四视图](docs/architecture/index.html)、[当前状态](planning/STATUS.md)和[剩余工作优先级](planning/ROADMAP.md)。
 
 本地发行包提供`安装optDSH.exe`图形向导（备用CMD），产品Skills与公共专家基线随包；无需复制源码.agents。当前为待人工核验的开发版，安装/验证范围见当前状态。
 

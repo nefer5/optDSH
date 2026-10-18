@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/nefer5/optDSH.git",
-      "revision": "5d6920e4bf43209435f10fd9e7ffca38dc4d5676",
+      "revision": "09e7c00811c3049781203b003558e108c1a7ead2",
       "link_mode": "local-only"
     }
   },
@@ -64,7 +64,7 @@
       "id": "packages",
       "type": "backend",
       "label": "packages",
-      "sublabel": "Bundle / optics / PPT 公共包",
+      "sublabel": "Bundle / 光学 / PPT / 产品Skills",
       "pos": [
         440,
         330
@@ -90,7 +90,7 @@
       "id": "plugins",
       "type": "frontend",
       "label": "plugins",
-      "sublabel": "画板桥 / 工作台 / Forms / 专家",
+      "sublabel": "画板 / 工作台 / Forms / 官方专家装配",
       "pos": [
         840,
         330
@@ -141,7 +141,7 @@
       "dot": "cyan",
       "title": "源码不等于安装位置",
       "items": [
-        "plugins 保存源码；画板桥和工作台打成 tgz 后安装到 Home/Profile。",
+        "plugins保存源码；画板、工作台、Forms、Experts通过tgz安装到Home/Profile。",
         "Bundle 配置推荐组合，不复制运行副本或重启用已关闭功能。"
       ]
     },
@@ -157,8 +157,8 @@
       "dot": "amber",
       "title": "尚未收敛",
       "items": [
-        "Forms、专家等其他可选包仍需逐项统一 Profile 生命周期。",
-        "精确目录树及职责见本页面“目录结构”；不把文件树误当运行服务图。"
+        "产品Skills与公共专家基线已归包；源码.agents保留开发用途。",
+        "可选全局共享导出、信息策略的Profile收敛与升级恢复矩阵仍待完成。"
       ]
     }
   ]

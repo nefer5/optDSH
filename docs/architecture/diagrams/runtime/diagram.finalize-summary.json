@@ -7,13 +7,13 @@
   "quality": "showcase",
   "specification": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\runtime\\candidate.json",
-    "sha256": "fab843482a450eb6f5fb7e1df08a7e4496496f2ac2da912836facdf124f5e99b",
-    "bytes": 7695
+    "sha256": "6f0e8a814a67227c30f20d9847c8909a2f53ade5935cdf9c1556aac47a24b27e",
+    "bytes": 7738
   },
   "artifact": {
     "path": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\runtime\\diagram.html",
-    "sha256": "d41e2284dfc7b44c3c6c793a3e1d1a987a36017d9c4d275da3f2a1a56a069ae6",
-    "bytes": 764506
+    "sha256": "ee42645ab46773358f594a5249a13f301cb5096a1014ec514c665b39a68f8178",
+    "bytes": 764549
   },
   "gates": {
     "validate": "pass",
@@ -28,9 +28,9 @@
     "truncated": false
   },
   "evidence": {
-    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\runtime\\diagram.finalize.json",
-    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\runtime\\diagram.finalize-summary.json",
-    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\docs\\architecture\\diagrams\\runtime\\diagram.browser-check.json"
+    "receipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-runtime\\diagram.finalize.json",
+    "summaryReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-runtime\\diagram.finalize-summary.json",
+    "browserCheckReceipt": "E:\\Proj-2026-N06_optDSH-dev\\temp\\product-resources\\archify-runtime\\diagram.browser-check.json"
   },
   "update": {
     "status": "update_available",
@@ -38,12 +38,12 @@
     "availableVersion": "3.1.0",
     "releaseNotes": "https://github.com/tt-a1i/archify/releases/tag/v3.1.0",
     "severity": "normal",
-    "checkedAt": "2026-10-17T18:15:25.575Z",
+    "checkedAt": "2026-10-18T15:56:49.666Z",
     "source": "cache",
     "noticeRequired": true,
-    "noticeText": "Archify update: 3.0.1 → 3.1.0. A previous check at 2026-10-17T18:15:25.575Z found a newer release. Release notes: https://github.com/tt-a1i/archify/releases/tag/v3.1.0. The installed Skill has not changed; ask to snooze or ignore this reminder.",
+    "noticeText": "Archify update: 3.0.1 → 3.1.0. A previous check at 2026-10-18T15:56:49.666Z found a newer release. Release notes: https://github.com/tt-a1i/archify/releases/tag/v3.1.0. The installed Skill has not changed; ask to snooze or ignore this reminder.",
     "eventKey": "archify@sha256:ffedc53390c9da6e859f41e432c5d2d0615a23cf00a503181f07efbba88a7ce8"
   },
   "visualReview": "not-requested",
-  "durationMs": 2132
+  "durationMs": 3900
 }

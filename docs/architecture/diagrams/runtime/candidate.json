@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/nefer5/optDSH.git",
-      "revision": "5d6920e4bf43209435f10fd9e7ffca38dc4d5676",
+      "revision": "09e7c00811c3049781203b003558e108c1a7ead2",
       "link_mode": "local-only"
     }
   },
@@ -319,7 +319,7 @@
       "dot": "cyan",
       "title": "插件与基础平台",
       "items": [
-        "画板桥与工作台均由官方 Profile 管理。",
+        "画板桥、工作台、Forms与Experts均由官方Profile管理。",
         "停用后不会被启动器恢复；缺少光学服务不影响普通会话。"
       ]
     },
@@ -335,7 +335,7 @@
       "dot": "emerald",
       "title": "证据范围",
       "items": [
-        "运行源码固定于 5d6920e，本轮图示未改运行逻辑。",
+        "资源与装配源码固定于 09e7c00；Skills与官方专家机制见独立资源视图。",
         "Zemax 19 与 2025 只读连接已验；18及其他年份、沙箱和公司环境待验。"
       ]
     }

@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/nefer5/optDSH.git",
-      "revision": "534c3a44d0f02e020436d1d15490b880c1a71e89",
+      "revision": "09e7c00811c3049781203b003558e108c1a7ead2",
       "link_mode": "local-only"
     }
   },
@@ -16,8 +16,8 @@
     {
       "id": "app",
       "type": "backend",
-      "label": "InstallRoot · 安装时必选",
-      "sublabel": "官方DSH运行包 / Bundle / 脚本",
+      "label": "InstallRoot · 安装程序区",
+      "sublabel": "CLI必填；GUI建议用户Programs/optDSH/版本",
       "pos": [
         40,
         40
@@ -237,7 +237,7 @@
       "title": "默认路径 · 本机展开示例",
       "items": [
         "Home：C:/Users/admin/.optdsh；共享根：C:/Users/admin/.agents。",
-        "InstallRoot目前无固定默认值；Home必须在程序目录之外。",
+        "CLI路径必填；GUI建议 %LOCALAPPDATA%/Programs/optDSH/版本。",
         "StateRoot默认 Home/state/web；课题默认取当前目录，可另选。"
       ]
     },
@@ -247,16 +247,16 @@
       "items": [
         "Skills：Home/skills、共享根/skills、项目 .agents/skills 与 .dsh/skills。",
         "规则：Home/AGENTS.md、共享根/AGENTS.md、项目根至cwd的规则文件。",
-        "支持显式技能目录和插件注册；Forms已随包注册。不是扫描全部安装目录。"
+        "包内Skills由官方Provider/注册服务提供；无需复制源码.agents。"
       ]
     },
     {
       "dot": "amber",
       "title": "后续计划 · 尚未全部落地",
       "items": [
-        "完整公共Skills与专家基线随包、可选共享导出及冲突回执尚待完成。",
-        "源码 .agents 不会自动对外部课题可见；专家并非通用目录自动发现。",
-        "当前可分享开发源码或阶段包；完整资源的新用户交付仍需隔离验收。"
+        "Skills与公共专家基线已随包，图形安装向导已实现并做原型实装。",
+        "可选共享导出、用户冲突升级及新机/公司环境验收仍待完成。",
+        "AGENTS是规则；专家通过Profile声明Preset，不扫描用户专家目录。"
       ]
     }
   ]

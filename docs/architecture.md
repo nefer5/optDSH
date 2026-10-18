@@ -1,14 +1,15 @@
 # 当前架构与目录
 
-当前产品开发版 **0.2.0-dev.21**；官方DSH固定 **0.2.1-rc.2**。已新增Forms原生YAML编辑器、画板共享右栏与统一安装。运行关系/源码包图保留dev.17取证范围；安装与数据图已按本次目录与资源发现核对更新，各图源码版本见图源JSON。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
+当前产品开发版 **0.2.0-dev.21**；官方DSH固定 **0.2.1-rc.2**。已新增Forms原生YAML编辑器、画板共享右栏与统一安装。四视图已按dev.21产品资源、官方专家与图形安装实现更新，各图源码版本见图源JSON。交互图见[当前架构页面](architecture/index.html)，剩余工作见[优先级](../planning/ROADMAP.md)。
 
 ## 图怎么看
 
 - 运行关系：用户、官方Agent会话、插件、独立编辑器、光学服务和Zemax如何协作，接近C4容器/组件关注视角。
 - 源码包边界：这些职责由scripts、packages、plugins承担，属于代码组织映射；目录树不等于完整C4代码视图。
+- Skills与专家：官方技能发现、Profile声明Preset、官方spawn派工与公共资源适配。
 - 安装与数据：程序、共享Home、任意课题和StateRoot分别放什么，属于部署与数据归属视角。
 
-三张图都描述当前实现；未来建议只在[路线图](../planning/ROADMAP.md)中列出，不画成已运行的能力。图源、源码范围和自动校验回执随图保留。
+四张图都描述当前实现；未来建议只在[路线图](../planning/ROADMAP.md)中列出，不画成已运行的能力。图源、源码范围和自动校验回执随图保留。
 
 ## 模块与边界
 
@@ -96,7 +97,7 @@ optDSH源码/
 | 用户AGENTS | `<DSH_HOME>/AGENTS.md`及`<DSH_AGENTS_HOME>/AGENTS.md` | 产品范围与共享范围分别加载；相同内容有去重 |
 | 项目规则 | 当前项目根至cwd的`AGENTS.md`，默认也识别`CLAUDE.md`及对应local文件 | 当前项目及其子目录；不是读取所有磁盘上的AGENTS |
 
-`DSH_AGENTS_HOME`缺省仍指向用户`.agents`；显式配置的`agentsHome`优先于该环境变量。启动器把选定产品Home传给`DSH_HOME`，不会把操作系统用户主目录改成Home。专家角色不等于Skill：当前专家插件读取配置根下的`.agents/dsh-presets`和`.agents/resources`，不能凭目录叫`experts`就断言官方自动发现。
+`DSH_AGENTS_HOME`缺省仍指向用户`.agents`；显式配置的`agentsHome`优先于该环境变量。启动器把选定产品Home传给`DSH_HOME`，不会把操作系统用户主目录改成Home。专家角色通过官方Profile声明Preset注册，参考资料从所属包读取；AGENTS只提供规则，不是专家发现目录。
 
 ### 专家与Skills：官方机制及产品装配
 
